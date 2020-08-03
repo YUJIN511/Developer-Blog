@@ -1,0 +1,23 @@
+@import "@/assets/_variables.scss";
+.container-base {
+  background-color: $bgColor;
+  min-width: 100vw;
+  min-height: 100vh;
+  text-align: left;
+  padding: 20px;
+  padding-top: 86px;
+}
+.title {
+  font-size: 1rem;
+}
+
+@media (min-width: $twoArticles) {
+  .title {
+    font-size: 1.3rem;
+  }
+}
+@media (min-width: $threeArticles) {
+  .container-base {
+    padding: 86px;
+  }
+}

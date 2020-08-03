@@ -1,0 +1,122 @@
+@import "@/assets/_variables.scss";
+
+.article {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 2%;
+  height: 350px;
+  padding: 10px 10px;
+}
+.btn-read {
+  height: 85%;
+  .header-article {
+    height: 55%;
+    img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: fill;
+      border-radius: 5px 5px 0% 0%;
+    }
+  }
+  .body-article {
+    height: 45%;
+    padding: 10px;
+    text-align: left;
+    overflow: hidden;
+    background-color: white;
+    border-bottom: 1px solid rgb(238, 238, 238);
+    .description {
+      word-break: break-word;
+      overflow-wrap: break-word;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      height: 3.9375rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+      color: rgb(73, 80, 87);
+      margin: 0px 0px 1.5rem;
+      overflow: hidden;
+    }
+  }
+}
+
+.footer-article {
+  display: flex;
+  height: 15%;
+  padding-left: 10px;
+  align-items: center;
+  background-color: white;
+  border-radius: 0 0 5px 5px;
+  .img-profile {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  .level-icon {
+    width: 1.2em;
+    height: 1.2em;
+    margin-bottom: 5px;
+  }
+}
+
+.nickname {
+  font-size: 0.8em;
+  margin-left: 3px;
+}
+
+.like {
+  margin-left: auto;
+  margin-right: 10px;
+  svg {
+    width: 1em;
+    height: 1em;
+    fill: rgb(228, 228, 228);
+    :hover {
+      cursor: pointer;
+    }
+  }
+  svg.selected {
+    fill: crimson;
+  }
+  span {
+    font-size: 0.7em;
+    margin-left: 7px;
+  }
+}
+
+@media (min-width: $twoArticles) {
+  .article {
+    width: 50%;
+    flex-grow: 0;
+  }
+}
+@media (min-width: $threeArticles) {
+  .article {
+    width: 33.3%;
+  }
+}
+@media (min-width: $fourArticles) {
+  .article {
+    width: 25%;
+  }
+}
+@media (min-width: $fiveArticles) {
+  .article {
+    width: 20%;
+  }
+}
+@media (min-width: $sixArticles) {
+  .article {
+    width: 16.6%;
+  }
+}
+@media (min-width: $sevenArticles) {
+  .article {
+    width: 14.28%;
+  }
+}
