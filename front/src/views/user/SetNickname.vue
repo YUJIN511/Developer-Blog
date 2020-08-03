@@ -1,14 +1,11 @@
 <template>
   <div id="outerdiv">
-    <div class="container">
-      <div class="row">
-        <div class="col-10">
-          <input id="nickname" v-model="nickname" placeholder="닉네임 입력" />
-        </div>
-        <div class="col-2">
-          <i class="fas fa-angle-right" @click="setNickname"></i>
-        </div>
+    <div class="container-nickname">
+      <div></div>
+      <div>
+        <input class="input-nickname" v-model="nickname" placeholder="닉네임 입력 (영문)" />
       </div>
+      <div class="more-arrow" @click="setNickname()"></div>
     </div>
   </div>
 </template>
@@ -22,7 +19,7 @@ export default {
   data() {
     return {
       email: this.$route.params.email,
-      nickname: "",
+      nickname: ""
     };
   },
   methods: {
@@ -31,46 +28,98 @@ export default {
         .get(`${SERVER_URL}/api/auth/nicknameUpdate`, {
           params: {
             email: this.email,
-            nickname: this.nickname,
-          },
+            nickname: this.nickname
+          }
         })
-        .then((res) => {
+        .then(res => {
           console.log(res);
-          alert("환영합니다.");
           this.$router.push({
             name: "LoginPassword",
-            params: { email: this.email },
+            params: { email: this.email }
           });
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 #outerdiv {
   height: 100vh;
+  width: 100vw;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
-.container {
+
+.container-nickname {
   margin: 0;
-  width: 100%;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 80px;
 }
-i {
-  font-size: 2rem;
+
+// 화살표
+
+$background: whitesmoke;
+.more-arrow {
+  transform: rotate(270deg);
+  background-color: transparent;
+  border: transparent;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  position: relative;
+
+  &:after,
+  &:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-color: transparent;
+    border-left-width: 40px;
+    border-right-width: 40px;
+    border-top-width: 30px;
+    position: absolute;
+    left: 10px;
+  }
+  &:before {
+    border-top-color: darken($background, 25%);
+    top: 30px;
+  }
+  &:after {
+    border-top-color: white;
+    top: 26px;
+  }
+  &:hover {
+    // background: darken($background, 5%);
+    // border-color: darken($background, 15%);
+    &:before {
+      border-top-color: darken($background, 50%);
+    }
+    // &:after {
+    //   border-top-color: darken($background, 5%);
+    // }
+  }
 }
-input {
+
+// 입력창
+
+.input-nickname {
   background-image: linear-gradient(lightgrey, lightgrey);
   background-position: bottom 5px center;
   background-size: calc(100% - 10px) 1px;
   background-repeat: no-repeat;
-  width: 350px;
+  width: 500px;
   border: 0;
   padding: 10px;
   padding-bottom: 15px;
+  justify-self: center;
+  font-size: 25px;
 }
+
 input:focus {
   outline: none;
 }

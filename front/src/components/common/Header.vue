@@ -2,7 +2,7 @@
   <div>
     <div class="header-container">
       <div class="header-item header-front">
-        <div class="btn-navbar-toggle">
+        <div class="btn-navbar-toggle" v-if="$route.meta.header !== 0">
           <button @click="showNavBar">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +54,7 @@
         </router-link>
       </div>
 
-      <div class="header-item header-center">
+      <div class="header-item header-center" v-if="$route.meta.header !== 0">
         <div class="container-main-search">
           <input type="search" class="input-main-search" />
           <button @click="search" class="btn-main-search desktop">
@@ -72,7 +72,7 @@
         </div>
       </div>
 
-      <div class="header-item header-end">
+      <div class="header-item header-end" v-if="$route.meta.header !== 0">
         <button class="btn-main-search mobile">
           <div class="icon-main-search">
             <img
