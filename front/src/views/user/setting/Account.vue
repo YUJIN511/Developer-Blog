@@ -50,23 +50,23 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   methods: {
     ...mapActions({
-      fetchUserInfo: "user/fetchUserInfo",
+      fetchUserInfo: "user/fetchUserInfo"
     }),
     ...mapGetters({
       getUserInfo: "user/getUserInfo",
       getEmail: "user/getEmail",
-      getIsLogin: "user/getIsLogin",
+      getIsLogin: "user/getIsLogin"
     }),
     guestBlur() {
       if (!this.getIsLogin()) {
         document.querySelector(".container-account").classList.add("blurred");
       }
-    },
+    }
   },
   mounted() {
-    this.fetchUserInfo(this.getEmail()).then((res) => console.log(res));
+    this.fetchUserInfo(this.getEmail()).then(res => console.log(res));
     this.guestBlur();
-  },
+  }
 };
 </script>
 

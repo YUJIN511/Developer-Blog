@@ -75,14 +75,16 @@
       <div class="header-item header-end">
         <button class="btn-main-search mobile">
           <div class="icon-main-search">
-            <img
-              class="svg"
-              width="20px"
-              height="20px"
-              viewBox="0 0 24 24"
-              src="@/assets/icons/Main_search_icon.svg"
-              alt="level icon"
-            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              viewBox="0 0 26 26"
+            >
+              <path
+                d="M18.1,16H17l-0.3-0.3c1.3-1.6,2.1-3.5,2.1-5.8c0-5-4-9-9-9S1,4.9,1,9.9s4,9,9,9c2.2,0,4.3-0.8,5.8-2.1l0.3,0.3v1.1l6.9,6.9
+	L25,23L18.1,16z M10,16c-3.4,0-6.2-2.7-6.2-6.2S6.4,3.5,10,3.5s6.2,2.7,6.2,6.2S13.3,16,10,16z"
+              />
+            </svg>
           </div>
         </button>
         <button class="btn-login" @click="openLogin" v-if="!getIsLogin()">
@@ -96,14 +98,17 @@
           >글쓰기</router-link
         >
         <router-link class="profile-icon" v-if="getIsLogin()" to="/setting">
-          <img
-            class="svg"
-            width="24px"
-            height="24px"
-            viewBox="0 0 24 24"
-            src="@/assets/icons/Main_account_icon.svg"
-            alt="level icon"
-          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 26 26"
+          >
+            <path
+              d="M13,1C6.4,1,1,6.4,1,13s5.4,12,12,12s12-5.4,12-12S19.6,1,13,1z M13,4.6c2,0,3.6,1.6,3.6,3.6S15,11.8,13,11.8
+	s-3.6-1.6-3.6-3.6S11,4.6,13,4.6z M13,21.6c-3,0-5.7-1.5-7.2-3.9c0-2.4,4.8-3.7,7.2-3.7c2.4,0,7.2,1.3,7.2,3.7
+	C18.7,20.1,16,21.6,13,21.6z"
+            />
+          </svg>
         </router-link>
       </div>
     </div>
@@ -208,6 +213,9 @@ export default {
   align-items: center;
   width: 200px;
   margin-left: auto;
+  svg {
+    width: 24px;
+  }
 }
 
 .btn-login {
