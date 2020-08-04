@@ -115,16 +115,7 @@ public class PostController {
 	public ResponseEntity<List<Post>> searchHashTag(@PathVariable String hashtag, @PathVariable String email) throws Exception {
 		System.out.println("내가 쓴 특정 해시태그의 글들을 출력");
 		return new ResponseEntity<List<Post>>(postService.findMyHashPost(hashtag, email), HttpStatus.OK);
-	}
-	
-	
-//	@PutMapping("hashtag/{id}")
-//	@ApiOperation(value = "해시태그 수정 - 해당 글의 해시태그를 지우고, 다시 생성하는 로직")
-//	public ResponseEntity<Sting> modifyHashTag(@PathVariable Long id) {
-//		
-//		
-//	}
-	
+	}	
 	
 	@GetMapping("myCategory/{email}")
 	@ApiOperation(value = "내가 쓴 글들의 HashTag 리스트 출력(Category) - 정렬됨")
@@ -192,8 +183,8 @@ public class PostController {
 	}
 	
 	@PutMapping
-	@ApiOperation(value = "포스트 수정")
-	public ResponseEntity<String> modify(@RequestBody Post post) {
+	@ApiOperation(value = "포스트 수정 (+해시태그 수정 - 해당 글의 해시태그를 모두 지우고, 다시 생성하는 로직)")
+	public ResponseEntity<String> modify(@RequestBody Post post, HashtagList hashtag) {
 		System.out.println("글 수정");
 		Optional<Post> tem = postService.findById(post.getId());
 		if(tem != null) {
@@ -204,10 +195,17 @@ public class PostController {
 				Post newPost = postService.save(selectPost);
 				System.out.println(newPost);
 			});
+			
+			hashtagService.deleteHashtagByPostId(post.getId());	//해당 글의 해시태그 모두 삭제
+			for(int i=0;i<hashtag.getHashtagList().size();i++) {	//다시 생성
+				Hashtag ht = new Hashtag(new HashtagPK(post.getId(), hashtag.getHashtagList().get(i)));
+				hashtagService.save(ht);
+			}
+			
 			return new ResponseEntity<>("success", HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
-	}
+	}	
 	
 	@PutMapping("good")
 	@ApiOperation(value = "포스트 좋아요++")
