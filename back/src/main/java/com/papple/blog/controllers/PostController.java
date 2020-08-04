@@ -147,25 +147,25 @@ public class PostController {
 	}
 	
 	@PostMapping
-	@ApiOperation(value = "새 글 게시 : access 정보를 ")
+	@ApiOperation(value = "새 글 게시 - 글 정보 + 파일의 접근경로 DB에 저장")
 	public ResponseEntity<String> insert(@RequestBody Post post, HashtagList hashtag) {
 		System.out.println("새 글 게시");
-		System.out.println(post);
-		if(post.getPicture() != null && !post.getPicture().equals("")) {
-			System.out.println(post.getPicture());
-			String tem = post.getPicture().replace("/images", "+");
-			
-			StringTokenizer st = new StringTokenizer(tem, "+");
-			
-			String prev = st.nextToken();	// http://i3a604.p.ssafy.io
-			String next = st.nextToken();	// /dateString_mFile.getOriginalFilename()
-			
-			String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources" + next;
-			
-			post.setPicture(path);
-			
-			
-		}
+//		System.out.println(post);
+//		if(post.getPicture() != null && !post.getPicture().equals("")) {
+//			System.out.println(post.getPicture());
+//			String tem = post.getPicture().replace("/images", "+");
+//			
+//			StringTokenizer st = new StringTokenizer(tem, "+");
+//			
+//			String prev = st.nextToken();	// http://i3a604.p.ssafy.io
+//			String next = st.nextToken();	// /dateString_mFile.getOriginalFilename()
+//			
+//			String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources" + next;
+//			
+//			post.setPicture(path);
+//			
+//			
+//		}
 		
 		Post p = postService.save(post);
 		
@@ -173,7 +173,6 @@ public class PostController {
 			Hashtag ht = new Hashtag(new HashtagPK(p.getId(), hashtag.getHashtagList().get(i)));
 			hashtagService.save(ht);
 		}
-		
 		
 		if(p != null) return new ResponseEntity<>("success", HttpStatus.OK);
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
@@ -188,14 +187,12 @@ public class PostController {
 		
 		String real_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep/" + 
 				dateString + "_" + mFile.getOriginalFilename();	//경로 + 날짜시간 + _ +파일이름으로 저장
-		
-		System.out.println(real_path);
-		
+
 		String access_path = "http://i3a604.p.ssafy.io/images/postRep/" + dateString + "_" + mFile.getOriginalFilename();
 		
 		try {
-			mFile.transferTo(new File(real_path));
-			return new ResponseEntity<String>(access_path, HttpStatus.OK);
+			mFile.transferTo(new File(real_path));	//실제경로로 파일을 저장
+			return new ResponseEntity<String>(access_path, HttpStatus.OK);	//접근경로 return
 		} catch (IOException e) {
 			System.out.println("파일 업로드 실패");
 			return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
@@ -219,10 +216,6 @@ public class PostController {
 		String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
 		
 		String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep" + next;
-		
-		System.out.println("prev : " + prev);
-		System.out.println("next : " + next);
-		System.out.println("path : " + path);
 		
 		File delFile = new File(path);
 		if(delFile.exists()) delFile.delete();
@@ -334,4 +327,5 @@ public class PostController {
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}
+
 }
