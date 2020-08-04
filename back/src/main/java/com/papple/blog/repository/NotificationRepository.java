@@ -18,12 +18,12 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE notification SET alert = true WHERE id = ?1", nativeQuery = true)
-	void updateAlertById(Long id);
+	@Query(value = "UPDATE notification SET isalert = true WHERE id = ?1", nativeQuery = true)
+	void updateIsalertById(Long id);
 
 	@Transactional
 	@Modifying
-	@Query(value = "DELETE TABLE notification", nativeQuery = true)
+	@Query(value = "TRUNCATE notification", nativeQuery = true)
 	void deleteNotificationByCron();
   
 }

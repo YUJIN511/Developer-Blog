@@ -67,7 +67,6 @@ public class NotificationServiceImpl implements NotificationService{
             final User user = dataSet.getUser();
             final List<Notification> receivingAlert = notificationRepository.findByTargetuserAndIsreadIsFalse(user.getEmail());
             final int noneReadCount = receivingAlert.size();
-
             /** 접속 유저가 읽지 않은 알람의 개수 **/
             if (noneReadCount == 0) {
                 continue;
@@ -81,7 +80,7 @@ public class NotificationServiceImpl implements NotificationService{
             if (alertList.size() == 0) {
                 continue;
             }
-
+           
             /** 알림데이터 생성 **/
             NotificationAlert alert = NotificationAlert.builder()
                     .email(user.getEmail())
@@ -96,7 +95,6 @@ public class NotificationServiceImpl implements NotificationService{
                                     .collect(Collectors.toList()));
 
             try {
-
                 /** 알림 전송 수행 **/
                 emitter.send(alert, MediaType.APPLICATION_JSON_UTF8);
 
@@ -107,7 +105,7 @@ public class NotificationServiceImpl implements NotificationService{
 
         } // for
 
-        /** 전송된 알람들 IS_ALERT 'Y' 로 변경 **/
+        /** 전송된 알람들 Isalert true 로 변경 **/
         updateIsAlert(alertIdList);
 
         /** 전송 오류 SseEmitter 제거 **/
@@ -117,21 +115,21 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     /**
-     * - 30분 이전에 발생된 알람 여부
+     * - 하루 이전에 발생된 알람 여부
      * - 알람 푸시 수행 여부
      *
      * @param paramList 현재 접속 사용자에게 존재하는 전체 알림
-     * @return 현재 시간으로부터 30분 이전에 발생한 알림 목록
+     * @return 현재 시간으로부터 하루 이전에 발생한 알림 목록
      */
     private ArrayList<Notification> getListAnMinuteAndAlertFalse(List<Notification> paramList) {
 
         ArrayList<Notification> alertList = new ArrayList<>();
 
-        LocalDateTime beforeTime = LocalDateTime.now().minusMinutes(30);
+        LocalDateTime beforeTime = LocalDateTime.now().minusMinutes(60*24);
 
         for (Notification notification : paramList) {
 
-            boolean isAlert = notification.isAlert();
+            boolean isAlert = notification.isIsalert();
             LocalDateTime createdAt = notification.getCreateat();
 
             if (createdAt.isBefore(beforeTime) || isAlert) {
@@ -152,7 +150,7 @@ public class NotificationServiceImpl implements NotificationService{
     private void updateIsAlert(List<Long> alertIds) {
 
         Set<Long> idSet = new HashSet<>(alertIds);
-        idSet.stream().forEach(notificationRepository::updateAlertById);
+        idSet.stream().forEach(notificationRepository::updateIsalertById);
 
     }
     
@@ -167,5 +165,10 @@ public class NotificationServiceImpl implements NotificationService{
         notificationRepository.deleteNotificationByCron();
         
     }
+
+	@Override
+	public Notification save(Notification notification) {
+		return notificationRepository.save(notification);
+	}
 
 }
