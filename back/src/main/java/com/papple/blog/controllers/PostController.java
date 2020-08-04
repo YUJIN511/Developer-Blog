@@ -2,7 +2,9 @@ package com.papple.blog.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -33,35 +35,36 @@ import com.papple.blog.models.HashtagList;
 import com.papple.blog.models.HashtagPK;
 import com.papple.blog.models.History;
 import com.papple.blog.models.HistoryPK;
+import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
 import com.papple.blog.models.Storage;
 import com.papple.blog.models.StoragePK;
 import com.papple.blog.models.User;
 import com.papple.blog.repository.HistoryRepository;
+import com.papple.blog.repository.NotificationRepository;
 import com.papple.blog.repository.StorageRepository;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.HashtagService;
+import com.papple.blog.security.services.NotificationService;
 import com.papple.blog.security.services.PostService;
 
-// http://localhost:8080/swagger-ui.html
+// http://localhost:8081/swagger-ui.html
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/post")
 public class PostController {
 	@Autowired
 	UserRepository userRepository;
-
 	@Autowired
 	private PostService postService;
-	
 	@Autowired
 	private HashtagService hashtagService;
-
 	@Autowired
 	private HistoryRepository historyRepository;
-	
 	@Autowired
 	private StorageRepository storageRepository;
+	@Autowired
+	private NotificationService notificationService;
 
 	@GetMapping("/all")
 	@ApiOperation(value = "모든 포스트 보기")
@@ -159,16 +162,20 @@ public class PostController {
 	@PutMapping("/upload")
 	@ApiOperation(value = "post 대표 사진 업로드 / Encoding 호환문제로 새 글 게시와 한번에 불가능")
 	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, HttpServletRequest request){
-//		웹서비스 경로 지정(로컬에서 사용시 이 코드 사용)
-		String root_path = request.getSession().getServletContext().getRealPath("/");
-		String attach_path = "resources/postRep/";
-		String final_path = root_path + attach_path + mFile.getOriginalFilename();
-		//서버에서 돌릴 때는 해당 코드 사용
-//		String final_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep/" + mFile.getOriginalFilename();
-		System.out.println(final_path);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date nowdate = new Date();
+		String dateString = formatter.format(nowdate);	//현재시간 문자열
+		
+		String real_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep/" + 
+				dateString + "_" + mFile.getOriginalFilename();	//경로 + 날짜시간 + _ +파일이름으로 저장
+		
+		System.out.println(real_path);
+		
+		String access_path = "http://i3a604.p.ssafy.io/images/postRep/" + dateString + "_" + mFile.getOriginalFilename();
+		
 		try {
-			mFile.transferTo(new File(final_path));
-			return new ResponseEntity<String>(final_path, HttpStatus.OK);
+			mFile.transferTo(new File(real_path));
+			return new ResponseEntity<String>(access_path, HttpStatus.OK);
 		} catch (IOException e) {
 			System.out.println("파일 업로드 실패");
 			return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
@@ -225,10 +232,21 @@ public class PostController {
 				selectPost.setGood(tem.get().getGood()+1);
 				Post newPost = postService.save(selectPost);
 
-				if(!newPost.getWriter().equals(email)){	// post 작성자의 글은 보관함 반영 X
+				if(!newPost.getWriter().equals(email)){	//자신의 글은 보관함, 알림 반영 X
 					// 보관함에 담기
 					Storage storage = new Storage(new StoragePK(email, id));
 					storageRepository.save(storage);
+
+					// 알람 발생
+					String actionName = userRepository.getUserByEmail(email).getNickname();
+					String targetName = userRepository.getUserByEmail(newPost.getWriter()).getNickname();
+					Notification notification = Notification.builder()
+								.message(actionName +"님이 "+ targetName +"님의 글에 좋아요를 누르셨습니다.")
+								.actionuser(email)
+								.targetuser(newPost.getWriter())
+								.notiurl("http://localhost:8081/api/post/postDetail/"+id+"/"+email)
+								.build();
+					notificationService.save(notification);
 				}
 			});
 			postService.insertGood(email, id);	//goodList 테이블에 좋아요 기록

@@ -2,7 +2,6 @@ package com.papple.blog.models;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,6 +10,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Entity
@@ -21,24 +21,27 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    private boolean alert = false;
+    private boolean isalert;            // 알람이 울렸는지
 
-    private boolean isread = false;
+    private boolean isread;             // 알람을 읽었는지
 
-    private String message;
+    private String message;             // 알람 메세지
 
-    private String targetuser;
+    private String targetuser;          // 알람 갈 사용자
 
-    private String actionuser;
+    private String actionuser;          // 알람 발생시킨 사용자
 
-    private String notiurl;
+    private String notiurl;             // 알람 클릭시 이동 url
 
     @CreationTimestamp
     private LocalDateTime createat;
     
-    public Notification( boolean alert, boolean isread, String message, String targetuser, String actionuser, String notiurl){
-        this.alert = alert;
-        this.isread = isread;
+    public Notification(){}
+
+    @Builder
+    public Notification(String message, String targetuser, String actionuser, String notiurl){
+        this.isalert = false;
+        this.isread = false;
         this.message = message;
         this.targetuser = targetuser;
         this.actionuser = actionuser;
