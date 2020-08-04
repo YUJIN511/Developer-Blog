@@ -160,11 +160,11 @@ public class PostController {
 	@ApiOperation(value = "post 대표 사진 업로드 / Encoding 호환문제로 새 글 게시와 한번에 불가능")
 	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam Long id, HttpServletRequest request){
 //		웹서비스 경로 지정(로컬에서 사용시 이 코드 사용)
-		String root_path = request.getSession().getServletContext().getRealPath("/");
-		String attach_path = "resources/postRep/";
-		String final_path = root_path + attach_path + mFile.getOriginalFilename();
+//		String root_path = request.getSession().getServletContext().getRealPath("/");
+//		String attach_path = "resources/postRep/";
+//		String final_path = root_path + attach_path + mFile.getOriginalFilename();
 		//서버에서 돌릴 때는 해당 코드 사용
-//		String final_path = "/home/ubuntu/s03p12a604/back/src/main/webapp/resources/postRep/" + mFile.getOriginalFilename();
+		String final_path = "/home/ubuntu/s03p12a604/back/src/main/webapp/resources/postRep/" + mFile.getOriginalFilename();
 		System.out.println(final_path);
 		try {
 			mFile.transferTo(new File(final_path));
