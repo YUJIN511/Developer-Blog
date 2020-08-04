@@ -193,12 +193,17 @@ public class PostController {
 	@DeleteMapping("/delfile")
 	@ApiOperation(value = "서버에 저장된 사진 지우기")
 	public ResponseEntity<String> fileDelete(String filePath) {
+		String tem = filePath.replace("/postRep", "+");
+		StringTokenizer st = new StringTokenizer(tem, "+");
 		
-		StringTokenizer st = new StringTokenizer(filePath, "/postRep");
 		String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
 		String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
 		
 		String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep" + next;
+		
+		System.out.println("prev : " + prev);
+		System.out.println("next : " + next);
+		System.out.println("path : " + path);
 		
 		File delFile = new File(path);
 		if(delFile.exists()) delFile.delete();
