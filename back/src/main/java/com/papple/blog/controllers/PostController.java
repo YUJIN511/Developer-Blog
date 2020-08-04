@@ -146,12 +146,13 @@ public class PostController {
 	@ApiOperation(value = "새 글 게시")
 	public ResponseEntity<String> insert(@RequestBody Post post, HashtagList hashtag) {
 		System.out.println("새 글 게시");
+		Post p = postService.save(post);
 		for(int i=0;i<hashtag.getHashtagList().size();i++) {
-			Hashtag ht = new Hashtag(new HashtagPK(post.getId(), hashtag.getHashtagList().get(i)));
+			Hashtag ht = new Hashtag(new HashtagPK(p.getId(), hashtag.getHashtagList().get(i)));
 			hashtagService.save(ht);
 		}
 		
-		if(postService.save(post) != null) return new ResponseEntity<>("success", HttpStatus.OK);
+		if(p != null) return new ResponseEntity<>("success", HttpStatus.OK);
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}
 
@@ -251,13 +252,14 @@ public class PostController {
 	}
 	
 	@DeleteMapping
-	@ApiOperation(value = "포스트 삭제 - 보관함, 기록, 해시태그도 함께 삭제")
+	@ApiOperation(value = "포스트 삭제 - 보관함, 기록, 해시태그, 좋아요도 함께 삭제")
 	public ResponseEntity<String> delete(Long id) {
 		System.out.println("글 삭제");
 		if(postService.findById(id) != null) {
 			storageRepository.deleteByPostId(id);
 			historyRepository.deleteByPostId(id);
 			hashtagService.deleteHashtagByPostId(id);
+			postService.deleteGoodByPostid(id);
 			postService.deleteById(id);
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}

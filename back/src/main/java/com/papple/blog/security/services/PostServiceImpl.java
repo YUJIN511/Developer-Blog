@@ -110,4 +110,14 @@ public class PostServiceImpl implements PostService{
 		goodRepository.deleteGood(email, postid);
 		
 	}
+
+	@Override
+	public void deleteGoodByPostid(Long postid) {
+		goodRepository.deleteGoodByPostid(postid);
+	}
+
+	@Override
+	public void deleteGoodByEmail(String email) {
+		goodRepository.deleteGoodByEmail(email);
+	}
 }
