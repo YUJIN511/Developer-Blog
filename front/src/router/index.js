@@ -42,6 +42,11 @@ const router = new VueRouter({
       name: "Article",
       component: () => import("@/views/Article.vue"),
       children: articlePageRouter
+    },
+    {
+      path: '/notification',
+      name: 'notification',
+      component: notification
     }
   ]
 });
