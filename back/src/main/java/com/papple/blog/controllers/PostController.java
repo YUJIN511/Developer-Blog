@@ -116,7 +116,7 @@ public class PostController {
 	public ResponseEntity<List<Post>> searchHashTag(@PathVariable String hashtag, @PathVariable String email) throws Exception {
 		System.out.println("내가 쓴 특정 해시태그의 글들을 출력");
 		return new ResponseEntity<List<Post>>(postService.findMyHashPost(hashtag, email), HttpStatus.OK);
-	}
+	}	
 	
 	@GetMapping("myCategory/{email}")
 	@ApiOperation(value = "내가 쓴 글들의 HashTag 리스트 출력(Category) - 정렬됨")
@@ -147,29 +147,29 @@ public class PostController {
 	@ApiOperation(value = "새 글 게시")
 	public ResponseEntity<String> insert(@RequestBody Post post, HashtagList hashtag) {
 		System.out.println("새 글 게시");
+		Post p = postService.save(post);
 		for(int i=0;i<hashtag.getHashtagList().size();i++) {
-			Hashtag ht = new Hashtag(new HashtagPK(post.getId(), hashtag.getHashtagList().get(i)));
+			Hashtag ht = new Hashtag(new HashtagPK(p.getId(), hashtag.getHashtagList().get(i)));
 			hashtagService.save(ht);
 		}
 		
-		if(postService.save(post) != null) return new ResponseEntity<>("success", HttpStatus.OK);
+		if(p != null) return new ResponseEntity<>("success", HttpStatus.OK);
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}
 
 	@PutMapping("/upload")
 	@ApiOperation(value = "post 대표 사진 업로드 / Encoding 호환문제로 새 글 게시와 한번에 불가능")
-	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam Long id, HttpServletRequest request){
-		//웹서비스 경로 지정(로컬에서 사용시 이 코드 사용)
-//		String root_path = request.getSession().getServletContext().getRealPath("/");
-//		String attach_path = "resources/postRep/";
-//		String final_path = root_path + attach_path + mFile.getOriginalFilename();
+	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, HttpServletRequest request){
+//		웹서비스 경로 지정(로컬에서 사용시 이 코드 사용)
+		String root_path = request.getSession().getServletContext().getRealPath("/");
+		String attach_path = "resources/postRep/";
+		String final_path = root_path + attach_path + mFile.getOriginalFilename();
 		//서버에서 돌릴 때는 해당 코드 사용
-		String final_path = "/home/ubuntu/s03p12a604/back/src/main/webapp/resources/postRep/" + mFile.getOriginalFilename();
+//		String final_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep/" + mFile.getOriginalFilename();
 		System.out.println(final_path);
 		try {
 			mFile.transferTo(new File(final_path));
-			postService.updatePicture(final_path, id);
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			return new ResponseEntity<String>(final_path, HttpStatus.OK);
 		} catch (IOException e) {
 			System.out.println("파일 업로드 실패");
 			return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
@@ -183,9 +183,17 @@ public class PostController {
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
+	@DeleteMapping("/delfile")
+	@ApiOperation(value = "서버에 저장된 사진 지우기")
+	public ResponseEntity<String> fileDelete(String filePath) {
+		File delFile = new File(filePath);
+		if(delFile.exists()) delFile.delete();
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
+	
 	@PutMapping
-	@ApiOperation(value = "포스트 수정")
-	public ResponseEntity<String> modify(@RequestBody Post post) {
+	@ApiOperation(value = "포스트 수정 (+해시태그 수정 - 해당 글의 해시태그를 모두 지우고, 다시 생성하는 로직)")
+	public ResponseEntity<String> modify(@RequestBody Post post, HashtagList hashtag) {
 		System.out.println("글 수정");
 		Optional<Post> tem = postService.findById(post.getId());
 		if(tem != null) {
@@ -196,15 +204,21 @@ public class PostController {
 				Post newPost = postService.save(selectPost);
 				System.out.println(newPost);
 			});
+			
+			hashtagService.deleteHashtagByPostId(post.getId());	//해당 글의 해시태그 모두 삭제
+			for(int i=0;i<hashtag.getHashtagList().size();i++) {	//다시 생성
+				Hashtag ht = new Hashtag(new HashtagPK(post.getId(), hashtag.getHashtagList().get(i)));
+				hashtagService.save(ht);
+			}
+			
 			return new ResponseEntity<>("success", HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
-	}
+	}	
 	
 	@PutMapping("good")
-	@ApiOperation(value = "포스트 좋아요++")
-	public ResponseEntity<String> incGood(@RequestParam(required = true) Long id, 
-											@RequestParam(required = true) String email) {
+	@ApiOperation(value = "포스트 좋아요++ : 좋아요 정보 생성, 보관함에 추가")
+	public ResponseEntity<String> incGood(@RequestParam(required = true) Long id, @RequestParam(required = true) String email) {
 		System.out.println("좋아요 수 count++");
 		Optional<Post> tem = postService.findById(id);
 		if(tem != null) {
@@ -229,18 +243,50 @@ public class PostController {
 					notificationService.save(notification);
 				}
 			});
+			postService.insertGood(email, id);	//goodList 테이블에 좋아요 기록
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}
 	
+	@PutMapping("ungood")
+	@ApiOperation(value = "포스트 좋아요-- : 좋아요 정보 삭제, 보관함에서 지우기")
+	public ResponseEntity<String> decGood(@RequestParam(required = true) Long id, @RequestParam(required = true) String email) {
+		System.out.println("좋아요 수 count--");
+		Optional<Post> tem = postService.findById(id);
+		if(tem != null) {
+			tem.ifPresent(selectPost -> {
+				selectPost.setGood(tem.get().getGood()-1);
+				Post newPost = postService.save(selectPost);
+
+				if(!newPost.getWriter().equals(email)){	// post 작성자의 글은 보관함 반영 X
+					// 보관함에서 지우기
+					storageRepository.deleteByEmailAndPostid(email, id);
+				}
+			});
+			postService.deleteGood(email, id);	//goodList 테이블에 좋아요 삭제
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
+	}
+	
+	@GetMapping("isgood")
+	@ApiOperation(value = "좋아요를 누른 게시물인지 true, false 문자열로 반환")
+	public ResponseEntity<String> isGood(@RequestParam(required = true) Long id, @RequestParam(required = true) String email) {
+		System.out.println("좋아요 확인");
+		if(postService.isGood(email, id) > 0) return new ResponseEntity<String>("true", HttpStatus.OK);
+		return new ResponseEntity<String>("false", HttpStatus.FORBIDDEN);
+	}
+	
 	@DeleteMapping
-	@ApiOperation(value = "포스트 삭제")
+	@ApiOperation(value = "포스트 삭제 - 보관함, 기록, 해시태그, 좋아요도 함께 삭제")
 	public ResponseEntity<String> delete(Long id) {
 		System.out.println("글 삭제");
 		if(postService.findById(id) != null) {
 			storageRepository.deleteByPostId(id);
 			historyRepository.deleteByPostId(id);
+			hashtagService.deleteHashtagByPostId(id);
+			postService.deleteGoodByPostid(id);
 			postService.deleteById(id);
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
