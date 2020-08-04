@@ -45,6 +45,7 @@ import com.papple.blog.models.User;
 import com.papple.blog.models.UserAuth;
 import com.papple.blog.payload.request.LoginRequest;
 import com.papple.blog.payload.request.SignupRequest;
+import com.papple.blog.payload.request.UpdateRequest;
 import com.papple.blog.payload.response.JwtResponse;
 import com.papple.blog.payload.response.MessageResponse;
 import com.papple.blog.repository.AuthRepository;
@@ -250,15 +251,31 @@ public class AuthController {
 	@PostMapping("/nicknameUpdate")
 	@ApiOperation(value="계정 설정 [닉네임]")
 	public ResponseEntity<?> nicknameUpdate(@RequestBody User user){
+
+		if (userRepository.existsByNickname(user.getNickname())) {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: Nickname is already taken!"));
+		}
+
 		userRepository.updateNickname(user.getNickname(), user.getEmail());					// 닉네임 재설정
 		return ResponseEntity.ok(new MessageResponse("Nickname updated successfully!"));
 	}
 
 	@PostMapping("/passwordUpdate")
 	@ApiOperation(value="계정 설정 [비밀번호]")
-	public ResponseEntity<?> passwordUpdate(@RequestBody User user){
-		userRepository.resetPassword(encoder.encode(user.getPassword()), user.getEmail());	// 비밀번호 재설정
+	public ResponseEntity<?> passwordUpdate(@Valid @RequestBody UpdateRequest updateRequest){
+
+		User user = userRepository.getUserByEmail(updateRequest.getEmail());
+
+		// 사용자 인증
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(updateRequest.getEmail(), updateRequest.getPassword()));
+
+		// 인증된 사용자인 경우 업데이트
+		userRepository.resetPassword(encoder.encode(updateRequest.getNewpassword()), updateRequest.getEmail());	
 		return ResponseEntity.ok(new MessageResponse("Password updated successfully!"));
+
 	}
 
 	@GetMapping("/passwordEmail")
