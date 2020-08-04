@@ -320,7 +320,21 @@ public class PostController {
 			hashtagService.deleteHashtagByPostId(id);
 			postService.deleteGoodByPostid(id);
 			
-			
+			post.ifPresent(selectPost -> {
+				String path = selectPost.getPicture();
+				if(path != null && !path.equals("")) {
+					String tem = path.replace("/postRep", "+");
+					StringTokenizer st = new StringTokenizer(tem, "+");
+					
+					String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
+					String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
+					
+					String realpath = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep" + next;
+					
+					File delFile = new File(realpath);
+					if(delFile.exists()) delFile.delete();
+				}
+			});
 			
 			postService.deleteById(id);
 			return new ResponseEntity<String>("success", HttpStatus.OK);
