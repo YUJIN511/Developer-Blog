@@ -149,7 +149,7 @@ public class PostController {
 	@PostMapping
 	@ApiOperation(value = "새 글 게시 - 글 정보 + 파일의 접근경로 DB에 저장")
 	public ResponseEntity<String> insert(@RequestBody Post post, HashtagList hashtag) {
-		System.out.println("새 글 게시");
+		System.out.println("새 글 게시");  
 //		System.out.println(post);
 //		if(post.getPicture() != null && !post.getPicture().equals("")) {
 //			System.out.println(post.getPicture());
