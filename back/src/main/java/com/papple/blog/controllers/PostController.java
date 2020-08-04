@@ -164,7 +164,7 @@ public class PostController {
 //		String attach_path = "resources/postRep/";
 //		String final_path = root_path + attach_path + mFile.getOriginalFilename();
 		//서버에서 돌릴 때는 해당 코드 사용
-		String final_path = "/home/ubuntu/s03p12a604/back/src/main/webapp/resources/postRep/" + mFile.getOriginalFilename();
+		String final_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep/" + mFile.getOriginalFilename();
 		System.out.println(final_path);
 		try {
 			mFile.transferTo(new File(final_path));
