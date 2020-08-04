@@ -182,6 +182,14 @@ public class PostController {
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
+	@DeleteMapping("/delfile")
+	@ApiOperation(value = "서버에 저장된 사진 지우기")
+	public ResponseEntity<String> fileDelete(String filePath) {
+		File delFile = new File(filePath);
+		if(delFile.exists()) delFile.delete();
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
+	
 	@PutMapping
 	@ApiOperation(value = "포스트 수정 (+해시태그 수정 - 해당 글의 해시태그를 모두 지우고, 다시 생성하는 로직)")
 	public ResponseEntity<String> modify(@RequestBody Post post, HashtagList hashtag) {
