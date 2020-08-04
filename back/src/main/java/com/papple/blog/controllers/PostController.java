@@ -2,7 +2,9 @@ package com.papple.blog.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -159,16 +161,20 @@ public class PostController {
 	@PutMapping("/upload")
 	@ApiOperation(value = "post 대표 사진 업로드 / Encoding 호환문제로 새 글 게시와 한번에 불가능")
 	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, HttpServletRequest request){
-//		웹서비스 경로 지정(로컬에서 사용시 이 코드 사용)
-		String root_path = request.getSession().getServletContext().getRealPath("/");
-		String attach_path = "resources/postRep/";
-		String final_path = root_path + attach_path + mFile.getOriginalFilename();
-		//서버에서 돌릴 때는 해당 코드 사용
-//		String final_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep/" + mFile.getOriginalFilename();
-		System.out.println(final_path);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date nowdate = new Date();
+		String dateString = formatter.format(nowdate);	//현재시간 문자열
+		
+		String real_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep/" + 
+				dateString + "_" + mFile.getOriginalFilename();	//경로 + 날짜시간 + _ +파일이름으로 저장
+		
+		System.out.println(real_path);
+		
+		String access_path = "http://i3a604.p.ssafy.io/images/postRep/" + dateString + "_" + mFile.getOriginalFilename();
+		
 		try {
-			mFile.transferTo(new File(final_path));
-			return new ResponseEntity<String>(final_path, HttpStatus.OK);
+			mFile.transferTo(new File(real_path));
+			return new ResponseEntity<String>(access_path, HttpStatus.OK);
 		} catch (IOException e) {
 			System.out.println("파일 업로드 실패");
 			return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
