@@ -1,5 +1,6 @@
 <template>
   <div class="editor">
+    <input type="text" v-model="title" class="title" placeholder="제목" />
     <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
       <div class="menubar">
         <button
@@ -251,6 +252,7 @@ export default {
           new Underline(),
           new History()
         ],
+
         content: `
           <h2>
             Hi there,
@@ -274,6 +276,7 @@ export default {
           </blockquote>
         `
       }),
+      title: "",
       linkUrl: null,
       linkMenuIsActive: false
     };
@@ -297,6 +300,18 @@ export default {
   },
   beforeDestroy() {
     this.editor.destroy();
+  },
+  mounted() {
+    const menubar = document.querySelector(".menubar");
+
+    window.addEventListener("scroll", () => {
+      const scrollY = window.scrollY;
+      if (scrollY > 0) {
+        menubar.classList.add("stick-top");
+      } else {
+        menubar.classList.remove("stick-top");
+      }
+    });
   }
 };
 </script>
@@ -304,6 +319,17 @@ export default {
 <style lang="scss" scope>
 .editor {
   text-align: left;
+}
+
+.title {
+  width: 100%;
+  border: none;
+  font-size: 2em;
+  font-weight: 700;
+  border-bottom: 3px solid #f1f4f7;
+  padding: 10px;
+  padding-bottom: 20px;
+  margin-bottom: 60px;
 }
 
 // icon design
