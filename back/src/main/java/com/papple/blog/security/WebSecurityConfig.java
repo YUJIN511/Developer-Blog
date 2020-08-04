@@ -64,6 +64,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/webjars/**").permitAll()				//swagger
 			.antMatchers("/v2/**").permitAll()					//swagger
 			.antMatchers("/api/**").permitAll()
+			.antMatchers("/resources/**").permitAll()
+			.antMatchers("/webapp/**").permitAll()
 			.anyRequest().authenticated();
 
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
