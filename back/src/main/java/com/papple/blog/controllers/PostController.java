@@ -147,21 +147,37 @@ public class PostController {
 	}
 	
 	@PostMapping
-	@ApiOperation(value = "새 글 게시")
+	@ApiOperation(value = "새 글 게시 : access 정보를 ")
 	public ResponseEntity<String> insert(@RequestBody Post post, HashtagList hashtag) {
 		System.out.println("새 글 게시");
+		if(post.getPicture() != null && post.getPicture().equals("")) {
+			String tem = post.getPicture().replace("/images", "+");
+			//http://i3a604.p.ssafy.io/images/dateString_mFile.getOriginalFilename()
+			//http://i3a604.p.ssafy.io+/dateString_mFile.getOriginalFilename()
+			StringTokenizer st = new StringTokenizer(tem, "+");
+			
+			String prev = st.nextToken();	// http://i3a604.p.ssafy.io
+			String next = st.nextToken();	// /dateString_mFile.getOriginalFilename()
+			
+			String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep" + next;
+			
+			post.setPicture(path);
+		}
+		
 		Post p = postService.save(post);
+		
 		for(int i=0;i<hashtag.getHashtagList().size();i++) {
 			Hashtag ht = new Hashtag(new HashtagPK(p.getId(), hashtag.getHashtagList().get(i)));
 			hashtagService.save(ht);
 		}
+		
 		
 		if(p != null) return new ResponseEntity<>("success", HttpStatus.OK);
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}
 
 	@PutMapping("/upload")
-	@ApiOperation(value = "post 대표 사진 업로드 / Encoding 호환문제로 새 글 게시와 한번에 불가능")
+	@ApiOperation(value = "post 대표 사진 업로드")
 	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, HttpServletRequest request){
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date nowdate = new Date();
@@ -298,14 +314,18 @@ public class PostController {
 	}
 	
 	@DeleteMapping
-	@ApiOperation(value = "포스트 삭제 - 보관함, 기록, 해시태그, 좋아요도 함께 삭제")
+	@ApiOperation(value = "포스트 삭제 - 보관함, 기록, 해시태그, 좋아요, 파일도 함께 삭제")
 	public ResponseEntity<String> delete(Long id) {
 		System.out.println("글 삭제");
-		if(postService.findById(id) != null) {
+		Optional<Post> post = postService.findById(id);
+		if(post != null) {
 			storageRepository.deleteByPostId(id);
 			historyRepository.deleteByPostId(id);
 			hashtagService.deleteHashtagByPostId(id);
 			postService.deleteGoodByPostid(id);
+			
+			
+			
 			postService.deleteById(id);
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
