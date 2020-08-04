@@ -208,9 +208,8 @@ public class PostController {
 	}	
 	
 	@PutMapping("good")
-	@ApiOperation(value = "포스트 좋아요++")
-	public ResponseEntity<String> incGood(@RequestParam(required = true) Long id, 
-											@RequestParam(required = true) String email) {
+	@ApiOperation(value = "포스트 좋아요++ : 좋아요 정보 생성, 보관함에 추가")
+	public ResponseEntity<String> incGood(@RequestParam(required = true) Long id, @RequestParam(required = true) String email) {
 		System.out.println("좋아요 수 count++");
 		Optional<Post> tem = postService.findById(id);
 		if(tem != null) {
@@ -224,6 +223,28 @@ public class PostController {
 					storageRepository.save(storage);
 				}
 			});
+			postService.insertGood(email, id);	//goodList 테이블에 좋아요 기록
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
+	}
+	
+	@PutMapping("ungood")
+	@ApiOperation(value = "포스트 좋아요-- : 좋아요 정보 삭제, 보관함에서 지우기")
+	public ResponseEntity<String> decGood(@RequestParam(required = true) Long id, @RequestParam(required = true) String email) {
+		System.out.println("좋아요 수 count--");
+		Optional<Post> tem = postService.findById(id);
+		if(tem != null) {
+			tem.ifPresent(selectPost -> {
+				selectPost.setGood(tem.get().getGood()-1);
+				Post newPost = postService.save(selectPost);
+
+				if(!newPost.getWriter().equals(email)){	// post 작성자의 글은 보관함 반영 X
+					// 보관함에서 지우기
+					storageRepository.deleteByEmailAndPostid(email, id);
+				}
+			});
+			postService.deleteGood(email, id);	//goodList 테이블에 좋아요 삭제
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);

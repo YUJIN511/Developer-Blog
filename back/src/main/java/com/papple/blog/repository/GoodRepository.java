@@ -15,4 +15,10 @@ public interface GoodRepository extends JpaRepository<GoodList, GoodListPK>{
 	@Modifying
 	@Query(value = "insert into goodlist(email, postid) values(?1, ?2)", nativeQuery = true)
 	void insertGood(String email, Long postid);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "delete from goodlist where email = ?1 and postid = ?2", nativeQuery = true)
+	void deleteGood(String email, Long postid);
+	
 }

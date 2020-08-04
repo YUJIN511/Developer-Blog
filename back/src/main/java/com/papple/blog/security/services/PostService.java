@@ -23,4 +23,5 @@ public interface PostService {
 	void updatePicture(String picture, Long id);
 	void deletePicture(Long id);
 	void insertGood(String email, Long postid);
+	void deleteGood(String email, Long postid);
 }

@@ -104,4 +104,10 @@ public class PostServiceImpl implements PostService{
 	public void insertGood(String email, Long postid) {
 		goodRepository.insertGood(email, postid);
 	}
+
+	@Override
+	public void deleteGood(String email, Long postid) {
+		goodRepository.deleteGood(email, postid);
+		
+	}
 }
