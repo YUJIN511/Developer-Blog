@@ -218,7 +218,6 @@ public class AuthController {
 			hashtagRepository.deleteHashtagByPostId(post.getId());
 			postService.deleteGoodByPostid(post.getId());
 		}
-		
 		postService.deleteByWriter(email);				// 쓴 글 삭제
 		userRepository.deleteById(email);				// 회원 삭제
 		

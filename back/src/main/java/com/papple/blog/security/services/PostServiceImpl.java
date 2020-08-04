@@ -120,4 +120,9 @@ public class PostServiceImpl implements PostService{
 	public void deleteGoodByEmail(String email) {
 		goodRepository.deleteGoodByEmail(email);
 	}
+
+	@Override
+	public int isGood(String email, Long postid) {
+		return goodRepository.isGood(email, postid);
+	}
 }

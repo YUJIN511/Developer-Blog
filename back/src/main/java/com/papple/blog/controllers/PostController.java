@@ -251,6 +251,14 @@ public class PostController {
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}
 	
+	@GetMapping("isgood")
+	@ApiOperation(value = "좋아요를 누른 게시물인지 true, false 문자열로 반환")
+	public ResponseEntity<String> isGood(@RequestParam(required = true) Long id, @RequestParam(required = true) String email) {
+		System.out.println("좋아요 확인");
+		if(postService.isGood(email, id) > 0) return new ResponseEntity<String>("true", HttpStatus.OK);
+		return new ResponseEntity<String>("false", HttpStatus.FORBIDDEN);
+	}
+	
 	@DeleteMapping
 	@ApiOperation(value = "포스트 삭제 - 보관함, 기록, 해시태그, 좋아요도 함께 삭제")
 	public ResponseEntity<String> delete(Long id) {
