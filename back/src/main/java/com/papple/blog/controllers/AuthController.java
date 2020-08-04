@@ -238,15 +238,19 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("Nickname registered successfully!"));
 	}
 	
-	@PostMapping("/userUpdate")
-	@ApiOperation(value="계정 설정")
-	public ResponseEntity<?> userUpdate(@RequestBody User user){
-		userRepository.resetPassword(encoder.encode(user.getPassword()), user.getEmail());	// 비밀번호 재설정
+	@PostMapping("/nicknameUpdate")
+	@ApiOperation(value="계정 설정 [닉네임]")
+	public ResponseEntity<?> nicknameUpdate(@RequestBody User user){
 		userRepository.updateNickname(user.getNickname(), user.getEmail());					// 닉네임 재설정
-		// 레벨티콘 변경은 추후
-		return ResponseEntity.ok(new MessageResponse("user updated successfully!"));
+		return ResponseEntity.ok(new MessageResponse("Nickname updated successfully!"));
 	}
 
+	@PostMapping("/passwordUpdate")
+	@ApiOperation(value="계정 설정 [비밀번호]")
+	public ResponseEntity<?> passwordUpdate(@RequestBody User user){
+		userRepository.resetPassword(encoder.encode(user.getPassword()), user.getEmail());	// 비밀번호 재설정
+		return ResponseEntity.ok(new MessageResponse("Password updated successfully!"));
+	}
 
 	@GetMapping("/passwordEmail")
 	@ApiOperation(value = "비밀번호 재설정 이메일")
