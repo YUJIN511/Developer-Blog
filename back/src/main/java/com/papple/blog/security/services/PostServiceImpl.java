@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.papple.blog.models.Post;
+import com.papple.blog.repository.GoodRepository;
 import com.papple.blog.repository.PostRepository;
 
 @Service
@@ -14,6 +15,9 @@ public class PostServiceImpl implements PostService{
 
 	@Autowired
 	private PostRepository postRepository;
+	
+	@Autowired
+	private GoodRepository goodRepository;
 	
 	@Override
 	public List<Post> findAll() {
@@ -94,5 +98,10 @@ public class PostServiceImpl implements PostService{
 	@Override
 	public void deletePicture(Long id) {
 		postRepository.deletePicture(id);
+	}
+
+	@Override
+	public void insertGood(String email, Long postid) {
+		goodRepository.insertGood(email, postid);
 	}
 }

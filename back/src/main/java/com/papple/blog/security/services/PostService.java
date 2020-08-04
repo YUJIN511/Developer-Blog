@@ -22,4 +22,5 @@ public interface PostService {
 	List<Post> findFollowPopularByUser(String email);
 	void updatePicture(String picture, Long id);
 	void deletePicture(Long id);
+	void insertGood(String email, Long postid);
 }
