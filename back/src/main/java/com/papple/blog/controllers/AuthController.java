@@ -39,6 +39,7 @@ import io.swagger.annotations.ApiOperation;
 import com.papple.blog.email.MailHandler;
 import com.papple.blog.email.TempKey;
 import com.papple.blog.models.ERole;
+import com.papple.blog.models.Post;
 import com.papple.blog.models.Role;
 import com.papple.blog.models.User;
 import com.papple.blog.models.UserAuth;
@@ -207,10 +208,18 @@ public class AuthController {
 		historyRepository.deleteByEmail(email);			// 히스토리 삭제
 		storageRepository.deleteByEmail(email);			// 보관함 삭제
 		followService.deleteByEmail(email);				// 팔로우 삭제
+		hashtagRepository.deleteHashtagByEmail(email);	// Hashtag 삭제
+		postService.deleteGoodByEmail(email);			// 좋아요 삭제
+		
+		List<Post> postList= postService.findByWriter(email);
+		for(Post post : postList) {	//해당 사용자가 작성했던 글 관련 데이터 삭제
+			historyRepository.deleteByPostId(post.getId());
+			storageRepository.deleteByPostId(post.getId());
+			hashtagRepository.deleteHashtagByPostId(post.getId());
+			postService.deleteGoodByPostid(post.getId());
+		}
 		postService.deleteByWriter(email);				// 쓴 글 삭제
-		hashtagRepository.deleteHashtagByEmail(email);	// Hashtag 삭제	
 		userRepository.deleteById(email);				// 회원 삭제
-
 		
         return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
 	} 
