@@ -117,6 +117,15 @@ public class PostController {
 		return new ResponseEntity<List<Post>>(postService.findMyHashPost(hashtag, email), HttpStatus.OK);
 	}
 	
+	
+//	@PutMapping("hashtag/{id}")
+//	@ApiOperation(value = "해시태그 수정 - 해당 글의 해시태그를 지우고, 다시 생성하는 로직")
+//	public ResponseEntity<Sting> modifyHashTag(@PathVariable Long id) {
+//		
+//		
+//	}
+	
+	
 	@GetMapping("myCategory/{email}")
 	@ApiOperation(value = "내가 쓴 글들의 HashTag 리스트 출력(Category) - 정렬됨")
 	public ResponseEntity<List<String>> searchMyHashCategory(@PathVariable String email) throws Exception {
@@ -223,12 +232,13 @@ public class PostController {
 	}
 	
 	@DeleteMapping
-	@ApiOperation(value = "포스트 삭제")
+	@ApiOperation(value = "포스트 삭제 - 보관함, 기록, 해시태그도 함께 삭제")
 	public ResponseEntity<String> delete(Long id) {
 		System.out.println("글 삭제");
 		if(postService.findById(id) != null) {
 			storageRepository.deleteByPostId(id);
 			historyRepository.deleteByPostId(id);
+			hashtagService.deleteHashtagByPostId(id);
 			postService.deleteById(id);
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
