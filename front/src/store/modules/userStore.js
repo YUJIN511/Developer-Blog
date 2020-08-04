@@ -57,7 +57,6 @@ export default {
     async login(context, userInfo) {
       try {
         const res = await axios.post(`${SERVER_URL}/api/auth/signin`, userInfo);
-        console.log(res);
         if (res.status === 200) {
           context.commit("setIsLogin", true);
           context.commit("setToken", res.data.accessToken);

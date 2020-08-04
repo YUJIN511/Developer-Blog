@@ -1,5 +1,6 @@
 <template>
   <div class="editor">
+    <Modal ref="ytmodal" @onConfirm="addCommand" />
     <input type="text" v-model="title" class="title" placeholder="제목" />
     <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
       <div class="menubar">
@@ -118,6 +119,10 @@
         <button class="menubar__button" @click="commands.redo">
           <img class="icon" src="@/assets/images/icons/redo.svg" alt="" />
         </button>
+
+        <button class="menubar__button" @click="openModal(commands.image)">
+          <img class="icon" src="@/assets/images/icons/image.svg" alt="" />
+        </button>
       </div>
     </editor-menu-bar>
 
@@ -189,14 +194,17 @@
     </editor-menu-bubble>
 
     <editor-content class="editor__content" :editor="editor" />
+
+    <button class="btn-submit" @click="submit">작성 완료</button>
   </div>
 </template>
 
 <script>
 import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from "tiptap";
-
+import axios from "axios";
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
+import Modal from "./Modal";
 
 import {
   CodeBlockHighlight,
@@ -216,13 +224,15 @@ import {
   Link,
   Strike,
   Underline,
-  History
+  History,
+  Image
 } from "tiptap-extensions";
 export default {
   components: {
     EditorContent,
     EditorMenuBar,
-    EditorMenuBubble
+    EditorMenuBubble,
+    Modal
   },
   data() {
     return {
@@ -250,7 +260,8 @@ export default {
           new Italic(),
           new Strike(),
           new Underline(),
-          new History()
+          new History(),
+          new Image()
         ],
 
         content: `
@@ -282,6 +293,18 @@ export default {
     };
   },
   methods: {
+    openModal(command) {
+      this.$refs.ytmodal.showModal(command);
+    },
+    addCommand(data) {
+      console.dir(data);
+      if (data.command !== null) {
+        data.data.forEach(elem => {
+          data.command(elem);
+        });
+        //data.command(data.data);
+      }
+    },
     showLinkMenu(attrs) {
       this.linkUrl = attrs.href;
       this.linkMenuIsActive = true;
@@ -296,6 +319,20 @@ export default {
     setLinkUrl(command, url) {
       command({ href: url });
       this.hideLinkMenu();
+    },
+    submit() {
+      const title = this.title;
+      const content = document.querySelector(".editor__content").outerHTML;
+      const writer = "sombody_to_love";
+
+      axios.post(
+        "http://i3a604.p.ssafy.io:8081/api/post?hashtagList=dummytag",
+        {
+          title,
+          content,
+          writer
+        }
+      );
     }
   },
   beforeDestroy() {
@@ -330,6 +367,13 @@ export default {
   padding: 10px;
   padding-bottom: 20px;
   margin-bottom: 60px;
+}
+
+.btn-submit {
+  background: #6699cc;
+  width: 200px;
+  height: 50px;
+  border-radius: 5px;
 }
 
 // icon design
