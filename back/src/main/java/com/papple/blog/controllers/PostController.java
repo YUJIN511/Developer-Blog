@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -183,7 +184,7 @@ public class PostController {
 	}
 	
 	@PutMapping("/unupload")
-	@ApiOperation(value = "post 대표 사진 지우기, 사진이 없을 때는 picture column null임.")
+	@ApiOperation(value = "post 대표 사진 지우기(picture column null로)")
 	public ResponseEntity<String> fileUnUpload(Long id) {
 		postService.deletePicture(id);
 		return new ResponseEntity<String>("success", HttpStatus.OK);
@@ -192,7 +193,14 @@ public class PostController {
 	@DeleteMapping("/delfile")
 	@ApiOperation(value = "서버에 저장된 사진 지우기")
 	public ResponseEntity<String> fileDelete(String filePath) {
-		File delFile = new File(filePath);
+		
+		StringTokenizer st = new StringTokenizer(filePath, "/postRep");
+		String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
+		String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
+		
+		String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep" + next;
+		
+		File delFile = new File(path);
 		if(delFile.exists()) delFile.delete();
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
