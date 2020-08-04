@@ -33,35 +33,36 @@ import com.papple.blog.models.HashtagList;
 import com.papple.blog.models.HashtagPK;
 import com.papple.blog.models.History;
 import com.papple.blog.models.HistoryPK;
+import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
 import com.papple.blog.models.Storage;
 import com.papple.blog.models.StoragePK;
 import com.papple.blog.models.User;
 import com.papple.blog.repository.HistoryRepository;
+import com.papple.blog.repository.NotificationRepository;
 import com.papple.blog.repository.StorageRepository;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.HashtagService;
+import com.papple.blog.security.services.NotificationService;
 import com.papple.blog.security.services.PostService;
 
-// http://localhost:8080/swagger-ui.html
+// http://localhost:8081/swagger-ui.html
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/post")
 public class PostController {
 	@Autowired
 	UserRepository userRepository;
-
 	@Autowired
 	private PostService postService;
-	
 	@Autowired
 	private HashtagService hashtagService;
-
 	@Autowired
 	private HistoryRepository historyRepository;
-	
 	@Autowired
 	private StorageRepository storageRepository;
+	@Autowired
+	private NotificationService notificationService;
 
 	@GetMapping("/all")
 	@ApiOperation(value = "모든 포스트 보기")
@@ -211,10 +212,21 @@ public class PostController {
 				selectPost.setGood(tem.get().getGood()+1);
 				Post newPost = postService.save(selectPost);
 
-				if(!newPost.getWriter().equals(email)){	// post 작성자의 글은 보관함 반영 X
+				if(!newPost.getWriter().equals(email)){	//자신의 글은 보관함, 알림 반영 X
 					// 보관함에 담기
 					Storage storage = new Storage(new StoragePK(email, id));
 					storageRepository.save(storage);
+
+					// 알람 발생
+					String actionName = userRepository.getUserByEmail(email).getNickname();
+					String targetName = userRepository.getUserByEmail(newPost.getWriter()).getNickname();
+					Notification notification = Notification.builder()
+								.message(actionName +"님이 "+ targetName +"님의 글에 좋아요를 누르셨습니다.")
+								.actionuser(email)
+								.targetuser(newPost.getWriter())
+								.notiurl("http://localhost:8081/api/post/postDetail/"+id+"/"+email)
+								.build();
+					notificationService.save(notification);
 				}
 			});
 			return new ResponseEntity<String>("success", HttpStatus.OK);
