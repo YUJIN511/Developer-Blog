@@ -161,7 +161,13 @@ public class PostController {
 			
 			String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep" + next;
 			
+			System.out.println(prev);
+			System.out.println(next);
+			System.out.println(path);
+			
 			post.setPicture(path);
+			
+			
 		}
 		
 		Post p = postService.save(post);
