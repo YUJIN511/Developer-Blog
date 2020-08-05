@@ -159,23 +159,7 @@ public class PostController {
 	@ApiOperation(value = "새 글 게시 - 글 정보 + 파일의 접근경로 DB에 저장")
 	public ResponseEntity<String> insert(@RequestBody Post post, HashtagList hashtag) {
 		System.out.println("새 글 게시");  
-//		System.out.println(post);
-//		if(post.getPicture() != null && !post.getPicture().equals("")) {
-//			System.out.println(post.getPicture());
-//			String tem = post.getPicture().replace("/images", "+");
-//			
-//			StringTokenizer st = new StringTokenizer(tem, "+");
-//			
-//			String prev = st.nextToken();	// http://i3a604.p.ssafy.io
-//			String next = st.nextToken();	// /dateString_mFile.getOriginalFilename()
-//			
-//			String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources" + next;
-//			
-//			post.setPicture(path);
-//			
-//			
-//		}
-		
+	
 		Post p = postService.save(post);
 		
 		for(int i=0;i<hashtag.getHashtagList().size();i++) {
