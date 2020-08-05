@@ -25,12 +25,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.ApiOperation;
 
+import com.papple.blog.models.GoodList;
+import com.papple.blog.models.GoodListPK;
 import com.papple.blog.models.Hashtag;
 import com.papple.blog.models.HashtagList;
 import com.papple.blog.models.HashtagPK;
@@ -40,9 +41,7 @@ import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
 import com.papple.blog.models.Storage;
 import com.papple.blog.models.StoragePK;
-import com.papple.blog.models.User;
 import com.papple.blog.repository.HistoryRepository;
-import com.papple.blog.repository.NotificationRepository;
 import com.papple.blog.repository.StorageRepository;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.HashtagService;
@@ -257,19 +256,23 @@ public class PostController {
 					Storage storage = new Storage(new StoragePK(email, id));
 					storageRepository.save(storage);
 
-					// 알람 발생
-					String actionName = userRepository.getUserByEmail(email).getNickname();
-					String targetName = userRepository.getUserByEmail(newPost.getWriter()).getNickname();
-					Notification notification = Notification.builder()
-								.message(actionName +"님이 "+ targetName +"님의 글에 좋아요를 누르셨습니다.")
-								.actionuser(email)
-								.targetuser(newPost.getWriter())
-								.notiurl("http://localhost:8081/api/post/postDetail/"+id+"/"+email)
-								.build();
-					notificationService.save(notification);
+					// 알람 발생[ 좋아요 눌렀었었는지 체크 ]	>>> notiurl 주소 front로 추후 변경
+					if(notificationService.findByActionuserAndPostidoflike(email, id) == null){
+						String actionName = userRepository.getUserByEmail(email).getNickname();
+						Notification notification = Notification.builder()
+									.message(actionName +"님이 회원님의 게시물을 좋아합니다.")
+									.actionuser(email)
+									.targetuser(newPost.getWriter())
+									.notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+id)
+									.build();
+						notification.setPostidoflike(id);
+						notificationService.save(notification);
+					}
 				}
 			});
-			postService.insertGood(email, id);	//goodList 테이블에 좋아요 기록
+			GoodList goodlist = new GoodList(new GoodListPK(email, id));
+			postService.save(goodlist);	//goodList 테이블에 좋아요 기록
+
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);

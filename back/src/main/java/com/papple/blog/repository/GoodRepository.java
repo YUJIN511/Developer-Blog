@@ -11,10 +11,6 @@ import com.papple.blog.models.GoodListPK;
 
 @Repository
 public interface GoodRepository extends JpaRepository<GoodList, GoodListPK>{
-	@Transactional
-	@Modifying
-	@Query(value = "insert into goodlist(email, postid) values(?1, ?2)", nativeQuery = true)
-	void insertGood(String email, Long postid);
 	
 	@Transactional
 	@Modifying
