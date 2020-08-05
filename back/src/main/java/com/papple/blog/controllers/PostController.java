@@ -82,8 +82,8 @@ public class PostController {
 	}
 	 
 	@GetMapping("/postDetail")
-	@ApiOperation(value = "해당 POST ID의 포스트 보기")
-	public ResponseEntity<Post> searchById(@RequestParam(required = true) Long id, 
+	@ApiOperation(value = "해당 POST ID의 포스트 보기 - 조회수++, history 추가")
+	public ResponseEntity<Post> searchByIdAndEmail(@RequestParam(required = true) Long id, 
 														@RequestParam(required = true) String email) throws Exception {
 		System.out.println("해당 id의 포스트 출력");
 		Post temp = postService.findById(id).get();
@@ -97,9 +97,18 @@ public class PostController {
 			historyRepository.save(history);
 
 			return new ResponseEntity<Post>(post, HttpStatus.OK);
-		} else{
+		} 
+		else{
 			return new ResponseEntity<Post>(temp, HttpStatus.OK);
 		}
+	}
+	
+	@GetMapping("/{id}")
+	@ApiOperation(value = "id로 해당 포스트 조회")
+	public ResponseEntity<Post> searchById(@PathVariable Long id) {
+		System.out.println("해당 id의 포스트 출력");
+		Post post = postService.findById(id).get();
+		return new ResponseEntity<Post>(post, HttpStatus.OK);
 	}
 	
 	@GetMapping("postTag/{postid}")
