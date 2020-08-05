@@ -318,7 +318,7 @@ public class AuthController {
 	}
 	
 	@PutMapping("/profile")
-	@ApiOperation(value = "프로필 사진 업로드 - Access경로로 return할게")
+	@ApiOperation(value = "프로필 사진 업로드 - Access Path return")
 	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam String email, HttpServletRequest request) {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");

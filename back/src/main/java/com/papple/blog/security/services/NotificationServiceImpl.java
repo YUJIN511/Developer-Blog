@@ -166,9 +166,20 @@ public class NotificationServiceImpl implements NotificationService{
         
     }
 
+    // >>>>>>>>>>>> 부가기능
 	@Override
 	public Notification save(Notification notification) {
-		return notificationRepository.save(notification);
-	}
+        return notificationRepository.save(notification);
+    }
+
+    @Override
+    public Notification findByActionuserAndPostidoflike(String actionuser, Long postid) {
+        return notificationRepository.findByActionuserAndPostidoflike(actionuser, postid);
+    }
+
+    @Override
+    public Notification findByActionuserAndFollowed(String follower, String followed) {
+        return notificationRepository.findByActionuserAndFollowed(follower, followed);
+    }
 
 }

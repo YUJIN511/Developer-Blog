@@ -6,8 +6,9 @@ import javax.persistence.Embeddable;
 import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-
+@Data
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,19 +20,4 @@ public class FollowPK implements Serializable {
 	@NotBlank
 	private String followed;
 
-	public String getFollower() {
-		return follower;
-	}
-
-	public void setFollower(String follower) {
-		this.follower = follower;
-	}
-
-	public String getFollowed() {
-		return followed;
-	}
-
-	public void setFollowed(String followed) {
-		this.followed = followed;
-	}
 }

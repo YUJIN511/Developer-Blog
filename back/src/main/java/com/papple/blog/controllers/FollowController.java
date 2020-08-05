@@ -19,7 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.papple.blog.models.Follow;
 import com.papple.blog.models.FollowPK;
+import com.papple.blog.models.Notification;
+import com.papple.blog.repository.NotificationRepository;
+import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.FollowService;
+import com.papple.blog.security.services.NotificationService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -30,6 +34,15 @@ public class FollowController {
 	@Autowired
 	private FollowService followService;
 	
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private NotificationService notificationService;
+
+	@Autowired
+	private NotificationRepository NotificationRepository;
+
 	@GetMapping("/list/{follower}")
 	@ApiOperation(value = "내가 팔로우한 사람들을 return (내가 팔로우 한 유저 리스트)")
 	public ResponseEntity<List<Follow>> searchByEmail(@PathVariable String follower) throws Exception {
@@ -55,11 +68,22 @@ public class FollowController {
 	@ApiOperation(value = "팔로우 추가 - 내가 follower, 상대가 followed (성공시 success 반환, 실패시 fail 반환)")
 	public ResponseEntity<String> addFollow(String follower, String followed) throws Exception {
 		System.out.println("이 사람을 팔로우");
-		try {
-			followService.addFollow(follower, followed);
-		} catch(Exception e) {
-			return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
-		}
+
+		Follow follow = new Follow(new FollowPK(follower, followed));
+		followService.save(follow);
+
+		// >>> notiurl 주소 front로 추후 변경
+		String actionName = userRepository.getUserByEmail(follower).getNickname();
+		Notification notification = Notification.builder()
+			.message(actionName +"님이 당신을 팔로우 합니다.")
+			.actionuser(follower)
+			.targetuser(followed)
+			.notiurl("http://i3a604.p.ssafy.io/"+follower)
+			.build();
+
+			notification.setFollowed(followed);
+			notificationService.save(notification);
+		
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
@@ -68,6 +92,11 @@ public class FollowController {
 	public ResponseEntity<String> delFollow(String follower, String followed) throws Exception {
 		System.out.println("팔로우 취소");
 		followService.deleteFollow(follower, followed);
+
+		// 팔로우 알림 삭제
+		Notification notification = NotificationRepository.findByActionuserAndFollowed(follower, followed);
+		NotificationRepository.deleteById(notification.getId());
+
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
