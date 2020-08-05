@@ -2,7 +2,8 @@
   <div class="container-account">
     <header>
       <div class="profile-image">
-        <button class="banner-image-edit">수정하기</button>
+        <input type="file" id="file" style="display: none;" />
+        <button class="banner-image-edit" @click="clickFileUpload">수정하기</button>
       </div>
     </header>
     <main>
@@ -44,24 +45,22 @@
         <div class="edit-password hide">
           <div class="background" @click="disablePassword()"></div>
           <div class="container-inputPassword">
+            <input class="input-password" v-model="password" type="password" placeholder="현재 비밀번호" />
             <input
               class="input-password"
-              v-model="currentPassword"
+              v-model="newpassword"
               type="password"
-              placeholder="현재 비밀번호"
-            />
-            <input
-              class="input-password"
-              v-model="newPassword"
-              type="password"
+              @keyup="passwordEqualCheck"
               placeholder="새 비밀번호"
             />
             <input
               class="input-password"
-              v-model="newPasswordConfirm"
+              v-model="newpasswordConfirm"
               type="password"
+              @keyup="passwordEqualCheck"
               placeholder="새 비밀번호 확인"
             />
+            <div class="msg msg-password-confirm hide">비밀번호가 일치하지 않습니다.</div>
           </div>
           <button class="btn btn-pw" @click="updatePassword">변경하기</button>
         </div>
@@ -87,13 +86,19 @@ export default {
     return {
       email: this.getUserInfo().email,
       nickname: this.getUserInfo().nickname,
-      password: ""
+      password: "",
+      newpassword: "",
+      newpasswordConfirm: "",
+      dom: {
+        passwordConfirmErrMsg: ""
+      }
     };
   },
   methods: {
     ...mapActions({
       fetchUserInfo: "user/fetchUserInfo",
       UpdateNickname: "user/updateNickname",
+      UpdatePassword: "user/updatePassword",
       Unregister: "user/unregister"
     }),
     ...mapGetters({
@@ -120,15 +125,41 @@ export default {
       document.querySelector(".edit-password").classList.remove("hide");
     },
     disablePassword() {
-      console.log("background");
       document.querySelector(".edit-password").classList.add("hide");
+    },
+    updatePassword() {
+      this.UpdatePassword({
+        email: this.email,
+        password: this.password,
+        newpassword: this.newpassword
+      })
+        .then(() => {
+          alert("비밀번호가 변경되었습니다.");
+          this.$router.go();
+        })
+        .catch(err => console.log(err));
+    },
+    passwordEqualCheck() {
+      if (!(this.newpassword === this.newpasswordConfirm)) {
+        this.dom.passwordConfirmErrMsg.classList.remove("hide");
+        // console.log(this.dom.passwordConfirmErrMsg.classList);
+        return false;
+      }
+      this.dom.passwordConfirmErrMsg.classList.add("hide");
+      return true;
     },
     openUnregisterModal() {
       document.querySelector(".container-unregister").classList.remove("hide");
+    },
+    clickFileUpload() {
+      document.querySelector("#file").click();
     }
   },
   mounted() {
     this.fetchUserInfo(this.getEmail()).then(res => console.log(res));
+    this.dom.passwordConfirmErrMsg = document.querySelector(
+      ".msg-password-confirm"
+    );
   },
   updated() {}
 };

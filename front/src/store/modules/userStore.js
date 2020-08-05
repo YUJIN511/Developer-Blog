@@ -117,6 +117,16 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+    updatePassword(getters, userInfo) {
+      axios
+        .post(
+          `${SERVER_URL}/api/auth/passwordUpdate`,
+          userInfo,
+          getters.getAuthHeader
+        )
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+    },
     unregister(context, email) {
       axios
         .get(`${SERVER_URL}/api/auth/unregister`, {
