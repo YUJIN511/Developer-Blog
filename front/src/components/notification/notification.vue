@@ -11,14 +11,13 @@
         name: "notification",
         data() {
             return {
-                email: this.$route.params.email,
                 eventSource: null,
             }
         },
         methods: {
             setupStream() {
                 console.log("==> 이벤트 소스 수행");
-                this.eventSource = new EventSource('http://i3a604.p.ssafy.io:8081/api/notification/user/push?email='+ this.email, { withCredentials: true });
+                this.eventSource = new EventSource('http://i3a604.p.ssafy.io:8081/api/notification/user/push?email=test@test.com', { withCredentials: true });
                 this.eventSource.onopen = (function (e) {
                     console.log("이벤트 소스 오픈");
                     console.log(e);
