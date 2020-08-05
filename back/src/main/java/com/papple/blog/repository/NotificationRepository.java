@@ -14,8 +14,9 @@ import org.springframework.data.jpa.repository.Query;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long>{
 
-	List<Notification> findByTargetuserAndIsreadIsFalse(String email);
-	Notification findByActionuserAndPostidoflike(String actionuser, Long postid);	// 글 좋아요 눌렀던 사용자인지
+	List<Notification> findByTargetuserAndIsreadIsFalse(String email);				// 안읽은 알림
+	Notification findByActionuserAndPostidoflike(String actionuser, Long postid);	// 글 좋아요 눌렀던 사용자 알림
+	Notification findByActionuserAndFollowed(String actionuser, String followed);	// 팔로우 알림
 
 	@Transactional
 	@Modifying

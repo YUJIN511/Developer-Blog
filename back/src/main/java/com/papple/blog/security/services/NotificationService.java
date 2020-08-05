@@ -14,4 +14,5 @@ public interface NotificationService {
     // 부가기능
     Notification save(Notification notification);
     Notification findByActionuserAndPostidoflike(String actionuser, Long postid);
+    Notification findByActionuserAndFollowed(String follower, String followed);
 }
