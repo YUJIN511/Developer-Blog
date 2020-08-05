@@ -159,7 +159,9 @@ public class PostController {
 	@ApiOperation(value = "해시태그로 게시물 검색")
 	public ResponseEntity<List<Post>> searchByHashtag(@PathVariable String word) throws Exception {
 		System.out.println("해시태그 검색");
-		return new ResponseEntity<List<Post>>(postService.searchByHashtag(word), HttpStatus.OK);
+		List<Post> list = postService.searchByHashtag(word);
+		for(Post post : list) post.setContent("");
+		return new ResponseEntity<List<Post>>(list, HttpStatus.OK);
 	}
 	
 	@PostMapping
