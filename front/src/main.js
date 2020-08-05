@@ -8,6 +8,7 @@ import "@/assets/sass/main.scss";
 Vue.use(VueCryptojs);
 
 Vue.config.productionTip = false;
+Vue.prototype.$apiServer = "http://i3a604.p.ssafy.io:8081/api";
 
 new Vue({
   router,

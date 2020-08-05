@@ -325,14 +325,18 @@ export default {
       const content = document.querySelector(".editor__content").outerHTML;
       const writer = "sombody_to_love";
 
-      axios.post(
-        "http://i3a604.p.ssafy.io:8081/api/post?hashtagList=dummytag",
-        {
+      axios
+        .post("http://i3a604.p.ssafy.io:8081/api/post?hashtagList=dummytag", {
           title,
           content,
           writer
-        }
-      );
+        })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   beforeDestroy() {

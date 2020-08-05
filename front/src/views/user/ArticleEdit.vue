@@ -1,14 +1,14 @@
 <template>
   <div class="container-article-edit">
-    <Tiptap></Tiptap>
+    <editor></editor>
   </div>
 </template>
 
 <script>
-import Tiptap from "@/components/user/editor/Editor.vue";
+import Editor from "@/components/user/article/Editor.vue";
 export default {
   components: {
-    Tiptap
+    Editor
   }
 };
 </script>

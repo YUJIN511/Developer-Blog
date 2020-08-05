@@ -1,12 +1,12 @@
 <template>
   <div class="article">
-    <button class="btn-read">
+    <button @click="readArticle" class="btn-read">
       <div class="header-article">
         <img :src="data.thumbUrl" alt />
       </div>
       <div class="body-article">
         <h5>{{ data.title }}</h5>
-        <div class="description">{{ data.desc }}</div>
+        <div class="description">{{ data.content }}</div>
       </div>
     </button>
     <div class="footer-article">
@@ -62,6 +62,13 @@ export default {
       } else {
         likeIcon.classList.add("selected");
       }
+    },
+    readArticle() {
+      console.dir(this.data);
+      this.$router.push({
+        name: "ArticleView",
+        query: { articleId: this.data.id }
+      });
     }
   }
 };
