@@ -70,14 +70,18 @@ public class PostController {
 	@ApiOperation(value = "모든 포스트 보기")
 	public ResponseEntity<List<Post>> searchAll() throws Exception {
 		System.out.println("모든 포스트 출력");
-		return new ResponseEntity<List<Post>>(postService.findAll(), HttpStatus.OK);
+		List<Post> list = postService.findAll();
+		for(Post post : list) post.setContent("");
+		return new ResponseEntity<List<Post>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("writer/{writer}")
 	@ApiOperation(value = "해당 이메일의 포스트 리스트 보기")
 	public ResponseEntity<List<Post>> searchByEmail(@PathVariable String writer) throws Exception {
 		System.out.println("해당 이메일의 포스트 출력");
-		return new ResponseEntity<List<Post>>(postService.findByWriter(writer), HttpStatus.OK);
+		List<Post> list = postService.findByWriter(writer);
+		for(Post post : list) post.setContent("");
+		return new ResponseEntity<List<Post>>(list, HttpStatus.OK);
 	}
 	 
 	@GetMapping("/postDetail")
@@ -126,7 +130,9 @@ public class PostController {
 	@ApiOperation(value = "내가 쓴 특정 해시태그의 글들을 출력(HashTag Category 안 게시물들) ")
 	public ResponseEntity<List<Post>> searchHashTag(@PathVariable String hashtag, @PathVariable String email) throws Exception {
 		System.out.println("내가 쓴 특정 해시태그의 글들을 출력");
-		return new ResponseEntity<List<Post>>(postService.findMyHashPost(hashtag, email), HttpStatus.OK);
+		List<Post> list = postService.findMyHashPost(hashtag, email);
+		for(Post post : list) post.setContent("");
+		return new ResponseEntity<List<Post>>(list, HttpStatus.OK);
 	}	
 	
 	@GetMapping("myCategory/{email}")
@@ -144,14 +150,18 @@ public class PostController {
 	@GetMapping("search/{word}")
 	@ApiOperation(value = "해당 word를 제목 또는 내용에 포함하고 있는 포스트 리스트 출력.")
 	public ResponseEntity<List<Post>> searchByWord(@PathVariable String word) throws Exception {
-		return new ResponseEntity<List<Post>>(postService.searchByWord(word), HttpStatus.OK);
+		List<Post> list = postService.searchByWord(word);
+		for(Post post : list) post.setContent("");
+		return new ResponseEntity<List<Post>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("hashSearch/{word}")
 	@ApiOperation(value = "해시태그로 게시물 검색")
 	public ResponseEntity<List<Post>> searchByHashtag(@PathVariable String word) throws Exception {
 		System.out.println("해시태그 검색");
-		return new ResponseEntity<List<Post>>(postService.searchByHashtag(word), HttpStatus.OK);
+		List<Post> list = postService.searchByHashtag(word);
+		for(Post post : list) post.setContent("");
+		return new ResponseEntity<List<Post>>(list, HttpStatus.OK);
 	}
 	
 	@PostMapping
