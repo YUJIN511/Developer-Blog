@@ -2,7 +2,15 @@
   <div class="editor">
     <Modal ref="ytmodal" @onConfirm="addCommand" />
     <input type="text" v-model="title" class="title" placeholder="제목" />
-    <input type="text" v-model="tags" class="tags" placeholder="#태그" />
+    <div class="container-tags">
+      <input
+        type="text"
+        v-model="tagName"
+        class="input-tags"
+        placeholder="태그명 + Enter"
+        @keydown="makeTags"
+      />
+    </div>
     <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
       <div class="menubar">
         <button
@@ -206,8 +214,6 @@ import axios from "axios";
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
 import Modal from "./Modal";
-import Doc from "./Doc";
-import Title from "./Title";
 
 import {
   CodeBlockHighlight,
@@ -228,8 +234,7 @@ import {
   Strike,
   Underline,
   History,
-  Image,
-  Placeholder
+  Image
 } from "tiptap-extensions";
 export default {
   components: {
@@ -240,6 +245,11 @@ export default {
   },
   data() {
     return {
+      title: "",
+      tagName: "",
+      tagList: [],
+      linkUrl: null,
+      linkMenuIsActive: false,
       editor: new Editor({
         autoFocus: true,
         extensions: [
@@ -247,17 +257,6 @@ export default {
             languages: {
               javascript,
               css
-            }
-          }),
-          new Doc(),
-          new Title(),
-          new Placeholder({
-            showOnlyCurrent: false,
-            emptyNodeText: node => {
-              if (node.type.name === "title") {
-                return "Give me a name";
-              }
-              return "Write something";
             }
           }),
           new Blockquote(),
@@ -302,13 +301,42 @@ export default {
             – mom
           </blockquote>
         `
-      }),
-      title: "",
-      linkUrl: null,
-      linkMenuIsActive: false
+      })
     };
   },
   methods: {
+    makeTags(e) {
+      const curKey = e.key;
+      if (curKey === "Enter") {
+        if (this.tagList.includes(this.tagName)) {
+          this.tagName = "";
+          return;
+        }
+
+        const removeBtn = document.createElement("button");
+        removeBtn.addEventListener("click", e => {
+          const selectedTag = e.currentTarget.parentElement;
+          const tagName = selectedTag.querySelector("span").innerText;
+          const idx = this.tagList.indexOf(tagName);
+          this.tagList.splice(idx, 1);
+          console.dir(this.tagList);
+          selectedTag.remove();
+        });
+        removeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>delete-2-alternate</title><path d="M20.485,3.511A12.01,12.01,0,1,0,24,12,12.009,12.009,0,0,0,20.485,3.511Zm-1.767,15.21A9.51,9.51,0,1,1,21.5,12,9.508,9.508,0,0,1,18.718,18.721Z"/><path d="M16.987,7.01a1.275,1.275,0,0,0-1.8,0l-3.177,3.177L8.829,7.01A1.277,1.277,0,0,0,7.024,8.816L10.2,11.993,7.024,15.171a1.277,1.277,0,0,0,1.805,1.806L12.005,13.8l3.177,3.178a1.277,1.277,0,0,0,1.8-1.806l-3.176-3.178,3.176-3.177A1.278,1.278,0,0,0,16.987,7.01Z"/></svg>
+`;
+        const span = document.createElement("span");
+        span.innerText = this.tagName;
+        this.tagList.push(this.tagName);
+        this.tagName = "";
+
+        const newTag = document.createElement("div");
+        newTag.appendChild(span);
+        newTag.appendChild(removeBtn);
+
+        const container = document.querySelector(".container-tags");
+        container.insertBefore(newTag, e.path[0]);
+      }
+    },
     openModal(command) {
       this.$refs.ytmodal.showModal(command);
     },
@@ -340,8 +368,13 @@ export default {
       const title = this.title;
       const content = document.querySelector(".editor__content").outerHTML;
       const writer = "sombody_to_love";
+      let tagString = "";
+      this.tagList.forEach(elem => {
+        tagString += `hashtagList=${elem}&`;
+      });
+
       axios
-        .post(`${this.$apiServer}/post?hashtagList=dummytag`, {
+        .post(`${this.$apiServer}/post?${tagString}`, {
           title,
           content,
           writer
@@ -379,6 +412,10 @@ export default {
   text-align: left;
 }
 
+input {
+  caret-color: #999999;
+}
+
 .title {
   width: 100%;
   border: none;
@@ -388,11 +425,44 @@ export default {
   padding: 10px;
   padding-bottom: 20px;
   margin-bottom: 60px;
-  caret-color: #6699cc;
 }
 
-.tags {
+.container-tags {
+  display: flex;
+  flex-wrap: wrap;
+
   width: 100%;
+  div {
+    display: flex;
+    align-items: center;
+    height: 1.8em;
+    background-color: darkcyan;
+    border-radius: 15px;
+    padding: 0px 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    color: white;
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 9px;
+      margin-top: 2px;
+    }
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: rgb(230, 230, 230);
+    }
+  }
+}
+
+.input-tags {
+  width: 100%;
+  height: 2em;
+  border-radius: 5px;
+  padding: 0px 10px;
+  margin-bottom: 20px;
   border: none;
   background-color: $bgColor;
 }
@@ -402,17 +472,6 @@ export default {
   width: 200px;
   height: 50px;
   border-radius: 5px;
-}
-
-// title, tags
-.editor *.is-empty:nth-child(1)::before,
-.editor *.is-empty:nth-child(2)::before {
-  content: attr(data-empty-text);
-  float: left;
-  color: #aaa;
-  pointer-events: none;
-  height: 0;
-  font-style: italic;
 }
 
 // icon design
