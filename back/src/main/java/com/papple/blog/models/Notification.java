@@ -33,6 +33,12 @@ public class Notification {
 
     private String notiurl;             // 알람 클릭시 이동 url
 
+    private Long postidoflike;          // 좋아요한 post id
+
+    private Long postidoffollowed;       // 팔로우한 사람의 새로운 글 post id
+
+    private String followed;            // 팔로우한 사람 email
+
     @CreationTimestamp
     private LocalDateTime createat;
     
