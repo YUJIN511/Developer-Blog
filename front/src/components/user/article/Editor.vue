@@ -2,6 +2,7 @@
   <div class="editor">
     <Modal ref="ytmodal" @onConfirm="addCommand" />
     <input type="text" v-model="title" class="title" placeholder="제목" />
+    <input type="text" v-model="tags" class="tags" placeholder="#태그" />
     <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
       <div class="menubar">
         <button
@@ -205,6 +206,8 @@ import axios from "axios";
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
 import Modal from "./Modal";
+import Doc from "./Doc";
+import Title from "./Title";
 
 import {
   CodeBlockHighlight,
@@ -225,7 +228,8 @@ import {
   Strike,
   Underline,
   History,
-  Image
+  Image,
+  Placeholder
 } from "tiptap-extensions";
 export default {
   components: {
@@ -237,11 +241,23 @@ export default {
   data() {
     return {
       editor: new Editor({
+        autoFocus: true,
         extensions: [
           new CodeBlockHighlight({
             languages: {
               javascript,
               css
+            }
+          }),
+          new Doc(),
+          new Title(),
+          new Placeholder({
+            showOnlyCurrent: false,
+            emptyNodeText: node => {
+              if (node.type.name === "title") {
+                return "Give me a name";
+              }
+              return "Write something";
             }
           }),
           new Blockquote(),
@@ -324,9 +340,8 @@ export default {
       const title = this.title;
       const content = document.querySelector(".editor__content").outerHTML;
       const writer = "sombody_to_love";
-
       axios
-        .post("http://i3a604.p.ssafy.io:8081/api/post?hashtagList=dummytag", {
+        .post(`${this.$apiServer}/post?hashtagList=dummytag`, {
           title,
           content,
           writer
@@ -358,6 +373,8 @@ export default {
 </script>
 
 <style lang="scss" scope>
+@import "@/assets/sass/main.scss";
+
 .editor {
   text-align: left;
 }
@@ -371,6 +388,13 @@ export default {
   padding: 10px;
   padding-bottom: 20px;
   margin-bottom: 60px;
+  caret-color: #6699cc;
+}
+
+.tags {
+  width: 100%;
+  border: none;
+  background-color: $bgColor;
 }
 
 .btn-submit {
@@ -378,6 +402,17 @@ export default {
   width: 200px;
   height: 50px;
   border-radius: 5px;
+}
+
+// title, tags
+.editor *.is-empty:nth-child(1)::before,
+.editor *.is-empty:nth-child(2)::before {
+  content: attr(data-empty-text);
+  float: left;
+  color: #aaa;
+  pointer-events: none;
+  height: 0;
+  font-style: italic;
 }
 
 // icon design

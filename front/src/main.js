@@ -3,7 +3,6 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import VueCryptojs from "vue-cryptojs";
-import "@/assets/sass/main.scss";
 
 Vue.use(VueCryptojs);
 

@@ -20,4 +20,7 @@ export default {
   padding: 60px;
   background-color: #f1f4f7;
 }
+input {
+  padding: 10px;
+}
 </style>

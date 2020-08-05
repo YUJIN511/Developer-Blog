@@ -113,6 +113,8 @@ export default {
 </script>
 
 <style lang="scss" scope>
+@import "@/assets/sass/main.scss";
+
 .editor {
   text-align: left;
 }
