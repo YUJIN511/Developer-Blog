@@ -35,7 +35,7 @@ export default [
     component: () => import("@/views/Library.vue"),
   },
   {
-    path: "search",
+    path: "search/:keyword",
     name: "Search",
     component: () => import("@/views/Search.vue"),
   },
