@@ -49,17 +49,24 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "UnregisterModal",
   methods: {
+    ...mapActions({
+      Unregister: "user/unregister"
+    }),
     closeModal() {
       document.querySelector(".container-unregister").classList.add("hide");
     },
     unregister() {
-      this.Unregister(this.email).then(() => {
-        alert("회원 탈퇴가 완료되었습니다.");
-        this.$router.push({ name: "Main" });
-      });
+      this.Unregister()
+        .then(() => {
+          this.closeModal();
+          this.$router.push({ name: "Main" });
+        })
+        .catch(err => console.log(err));
     }
   }
 };
