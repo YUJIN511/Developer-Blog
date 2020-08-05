@@ -71,7 +71,9 @@ public class PostController {
 	@ApiOperation(value = "모든 포스트 보기")
 	public ResponseEntity<List<Post>> searchAll() throws Exception {
 		System.out.println("모든 포스트 출력");
-		return new ResponseEntity<List<Post>>(postService.findAll(), HttpStatus.OK);
+		List<Post> list = postService.findAll();
+		for(Post post : list) post.setContent("");
+		return new ResponseEntity<List<Post>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("writer/{writer}")
