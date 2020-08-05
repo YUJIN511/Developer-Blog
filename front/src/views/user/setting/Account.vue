@@ -2,8 +2,15 @@
   <div class="container-account">
     <header>
       <div class="profile-image">
-        <input type="file" id="file" style="display: none;" />
-        <button class="banner-image-edit" @click="clickFileUpload">수정하기</button>
+        <input
+          type="file"
+          id="file"
+          style="display: none;"
+          @change="uploadFile"
+        />
+        <button class="banner-image-edit" @click="clickFileUpload">
+          수정하기
+        </button>
       </div>
     </header>
     <main>
@@ -41,11 +48,18 @@
         </div>
       </div>
       <div class="level-icon">
-        <span class="span-password" @click="enablePassword()">비밀번호 바꾸기</span>
+        <span class="span-password" @click="enablePassword()"
+          >비밀번호 바꾸기</span
+        >
         <div class="edit-password hide">
           <div class="background" @click="disablePassword()"></div>
           <div class="container-inputPassword">
-            <input class="input-password" v-model="password" type="password" placeholder="현재 비밀번호" />
+            <input
+              class="input-password"
+              v-model="password"
+              type="password"
+              placeholder="현재 비밀번호"
+            />
             <input
               class="input-password"
               v-model="newpassword"
@@ -60,13 +74,17 @@
               @keyup="passwordEqualCheck"
               placeholder="새 비밀번호 확인"
             />
-            <div class="msg msg-password-confirm hide">비밀번호가 일치하지 않습니다.</div>
+            <div class="msg msg-password-confirm hide">
+              비밀번호가 일치하지 않습니다.
+            </div>
           </div>
           <button class="btn btn-pw" @click="updatePassword">변경하기</button>
         </div>
       </div>
       <div class="container-unregister">
-        <span class="span-unregister" @click="openUnregisterModal()">회원 탈퇴</span>
+        <span class="span-unregister" @click="openUnregisterModal()"
+          >회원 탈퇴</span
+        >
       </div>
     </main>
     <!-- 블러효과 용 -->
@@ -90,8 +108,15 @@ export default {
       newpassword: "",
       newpasswordConfirm: "",
       dom: {
-        passwordConfirmErrMsg: ""
-      }
+        passwordConfirmErrMsg: "",
+      },
+      items: [
+        { title: "Click Me" },
+        { title: "Click Me" },
+        { title: "Click Me" },
+        { title: "Click Me 2" },
+      ],
+      file: "",
     };
   },
   methods: {
@@ -99,12 +124,13 @@ export default {
       fetchUserInfo: "user/fetchUserInfo",
       UpdateNickname: "user/updateNickname",
       UpdatePassword: "user/updatePassword",
-      Unregister: "user/unregister"
+      Unregister: "user/unregister",
+      UploadFile: "user/uploadFile",
     }),
     ...mapGetters({
       getUserInfo: "user/getUserInfo",
       getEmail: "user/getEmail",
-      getIsLogin: "user/getIsLogin"
+      getIsLogin: "user/getIsLogin",
     }),
     enableNickname() {
       document.querySelector(".p-nickname").classList.add("hide");
@@ -118,7 +144,7 @@ export default {
     updateNickname() {
       this.UpdateNickname({ email: this.email, nickname: this.nickname })
         .then(() => {})
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
       this.$router.go();
     },
     enablePassword() {
@@ -131,13 +157,13 @@ export default {
       this.UpdatePassword({
         email: this.email,
         password: this.password,
-        newpassword: this.newpassword
+        newpassword: this.newpassword,
       })
         .then(() => {
           alert("비밀번호가 변경되었습니다.");
           this.$router.go();
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     passwordEqualCheck() {
       if (!(this.newpassword === this.newpasswordConfirm)) {
@@ -153,15 +179,28 @@ export default {
     },
     clickFileUpload() {
       document.querySelector("#file").click();
-    }
+    },
+    uploadFile(event) {
+      this.file = event.target.files[0];
+      let formData = new FormData();
+      formData.append("file", this.file);
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+      }
+      this.UploadFile({ email: this.email, formData: formData })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
+    },
   },
   mounted() {
-    this.fetchUserInfo(this.getEmail()).then(res => console.log(res));
+    this.fetchUserInfo(this.getEmail()).then((res) => console.log(res));
     this.dom.passwordConfirmErrMsg = document.querySelector(
       ".msg-password-confirm"
     );
   },
-  updated() {}
+  updated() {},
 };
 </script>
 

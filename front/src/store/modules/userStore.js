@@ -141,5 +141,14 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+    uploadFile(context, data) {
+      console.log(data);
+      axios
+        .put(`${SERVER_URL}/api/auth/profile`, data)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
+    },
   },
 };
