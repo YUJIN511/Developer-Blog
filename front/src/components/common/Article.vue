@@ -67,7 +67,7 @@ export default {
       console.dir(this.data);
       this.$router.push({
         name: "ArticleView",
-        query: { articleId: this.data.id }
+        query: { articleData: this.data }
       });
     }
   }

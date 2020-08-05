@@ -7,6 +7,9 @@
       placeholder="제목"
       readonly
     />
+    <div class="article-info">
+      <span class="create-date">{{ createDate }} </span>
+    </div>
     <editor-content class="editor__content" :editor="editor" />
   </div>
 </template>
@@ -77,6 +80,7 @@ export default {
       }),
       articleId: 0,
       title: "",
+      createDate: "",
       linkUrl: null,
       linkMenuIsActive: false
     };
@@ -90,10 +94,10 @@ export default {
 
         if (res.status === 200) {
           const articleData = res.data;
+          console.dir(articleData);
+          this.createDate = articleData.createdate.split("T")[0];
           this.title = articleData.title;
-          console.dir(articleData.content);
           this.editor.setContent(articleData.content);
-          console.log("done");
         }
       } catch (error) {
         console.log(error);
@@ -104,10 +108,8 @@ export default {
     this.editor.destroy();
   },
   created() {
-    this.getArticleData();
-  },
-  mounted() {
-    //console.log(this.$route.params.articleId);
+    this.articleData;
+    //this.getArticleData();
   }
 };
 </script>

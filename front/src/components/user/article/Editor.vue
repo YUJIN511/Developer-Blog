@@ -1,6 +1,7 @@
 <template>
   <div class="editor">
-    <Modal ref="ytmodal" @onConfirm="addCommand" />
+    <ImageModal ref="ytmodal" @onConfirm="addCommand" />
+    <SummaryModal />
     <input type="text" v-model="title" class="title" placeholder="제목" />
     <div class="container-tags">
       <input
@@ -213,7 +214,9 @@ import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from "tiptap";
 import axios from "axios";
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
-import Modal from "./Modal";
+import ImageModal from "./ImageModal";
+import SummaryModal from "./SummaryModal";
+import { mapGetters } from "vuex";
 
 import {
   CodeBlockHighlight,
@@ -241,7 +244,8 @@ export default {
     EditorContent,
     EditorMenuBar,
     EditorMenuBubble,
-    Modal
+    ImageModal,
+    SummaryModal
   },
   data() {
     return {
@@ -305,6 +309,9 @@ export default {
     };
   },
   methods: {
+    ...mapGetters({
+      getUserInfo: "user/getUserInfo"
+    }),
     makeTags(e) {
       const curKey = e.key;
       if (curKey === "Enter") {
@@ -346,7 +353,6 @@ export default {
         data.data.forEach(elem => {
           data.command(elem);
         });
-        //data.command(data.data);
       }
     },
     showLinkMenu(attrs) {
@@ -367,7 +373,6 @@ export default {
     submit() {
       const title = this.title;
       const content = document.querySelector(".editor__content").outerHTML;
-      const writer = "sombody_to_love";
       let tagString = "";
       this.tagList.forEach(elem => {
         tagString += `hashtagList=${elem}&`;
@@ -377,7 +382,7 @@ export default {
         .post(`${this.$apiServer}/post?${tagString}`, {
           title,
           content,
-          writer
+          writer: this.getUserInfo().email
         })
         .then(res => {
           console.log(res);
