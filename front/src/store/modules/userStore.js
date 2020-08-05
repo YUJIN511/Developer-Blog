@@ -78,8 +78,8 @@ export default {
       try {
         const res = await axios.post(`${SERVER_URL}/api/auth/signup`, userInfo);
         if (res.status === 200) {
-          context.commit("setIsLogin", true);
-          context.commit("setToken", res.data.accessToken);
+          // context.commit("setIsLogin", true);
+          // context.commit("setToken", res.data.accessToken);
           return true;
         }
       } catch (error) {
@@ -127,16 +127,17 @@ export default {
         .then((res) => console.log(res))
         .catch((err) => console.log(err));
     },
-    unregister(context, email) {
+    unregister({ commit, getters }) {
       axios
         .get(`${SERVER_URL}/api/auth/unregister`, {
           params: {
-            email: email,
+            email: getters.getEmail,
           },
         })
         .then((res) => {
           console.log(res);
-          context.commit("setLogout", false);
+          alert("회원 탈퇴가 완료되었습니다.");
+          commit("setLogout", false);
         })
         .catch((err) => console.log(err));
     },
