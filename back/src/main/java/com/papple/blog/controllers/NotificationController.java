@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-@CrossOrigin(origins = "*", maxAge = 3600)
+
+// @CrossOrigin(origins = "http://i3a604.p.ssafy.io", allowedHeaders = "*",allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*",allowCredentials = "true")
 @RestController
 @RequestMapping("/api/notification")
 public class NotificationController {
