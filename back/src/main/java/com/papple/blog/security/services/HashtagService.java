@@ -10,4 +10,5 @@ public interface HashtagService {
 	List<Hashtag> findByPostid(Long Id);
 	List<Hashtag> myHashCategory(String email);
 	void deleteHashtagByEmail(String email);
+	void deleteHashtagByPostId(Long postid);
 }

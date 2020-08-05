@@ -31,12 +31,6 @@ public class FollowServiceImpl implements FollowService {
 	}
 
 	@Override
-	public void addFollow(String follower, String followed) {
-		followRepository.addFollow(follower, followed);
-		return;
-	}
-
-	@Override
 	public void deleteFollow(String follower, String followed) {
 		followRepository.deleteFollow(follower, followed);
 		return;
@@ -45,6 +39,11 @@ public class FollowServiceImpl implements FollowService {
 	public void deleteByEmail(String email) {
 		followRepository.deleteByEmail(email);
 		return;
+	}
+
+	@Override
+	public Follow save(Follow follow) {
+		return followRepository.save(follow);
 	}
 	
 }

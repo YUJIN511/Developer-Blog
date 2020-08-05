@@ -30,11 +30,16 @@ public class Post {
 	@Size(max = 100000)
 	private String content;
 	
+	@Size(max = 10000)
+	private String summary;
+	
 	private String picture;
 //	@ManyToOne(targetEntity = User.class)
 //	@JoinColumn(name="email")
 	@Size(max = 50)
 	private String writer;
+	
+	private String nickname;
 	
 	private int good;		// 좋아요
 

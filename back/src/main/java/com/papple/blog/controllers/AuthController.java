@@ -2,11 +2,14 @@ package com.papple.blog.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 //import java.lang.StackWalker.Option;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,11 +42,13 @@ import io.swagger.annotations.ApiOperation;
 import com.papple.blog.email.MailHandler;
 import com.papple.blog.email.TempKey;
 import com.papple.blog.models.ERole;
+import com.papple.blog.models.Post;
 import com.papple.blog.models.Role;
 import com.papple.blog.models.User;
 import com.papple.blog.models.UserAuth;
 import com.papple.blog.payload.request.LoginRequest;
 import com.papple.blog.payload.request.SignupRequest;
+import com.papple.blog.payload.request.UpdateRequest;
 import com.papple.blog.payload.response.JwtResponse;
 import com.papple.blog.payload.response.MessageResponse;
 import com.papple.blog.repository.AuthRepository;
@@ -207,10 +212,18 @@ public class AuthController {
 		historyRepository.deleteByEmail(email);			// 히스토리 삭제
 		storageRepository.deleteByEmail(email);			// 보관함 삭제
 		followService.deleteByEmail(email);				// 팔로우 삭제
+		hashtagRepository.deleteHashtagByEmail(email);	// Hashtag 삭제
+		postService.deleteGoodByEmail(email);			// 좋아요 삭제
+		
+		List<Post> postList= postService.findByWriter(email);
+		for(Post post : postList) {	//해당 사용자가 작성했던 글 관련 데이터 삭제
+			historyRepository.deleteByPostId(post.getId());
+			storageRepository.deleteByPostId(post.getId());
+			hashtagRepository.deleteHashtagByPostId(post.getId());
+			postService.deleteGoodByPostid(post.getId());
+		}
 		postService.deleteByWriter(email);				// 쓴 글 삭제
-		hashtagRepository.deleteHashtagByEmail(email);	// Hashtag 삭제	
 		userRepository.deleteById(email);				// 회원 삭제
-
 		
         return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
 	} 
@@ -238,15 +251,35 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("Nickname registered successfully!"));
 	}
 	
-	@PostMapping("/userUpdate")
-	@ApiOperation(value="계정 설정")
-	public ResponseEntity<?> userUpdate(@RequestBody User user){
-		userRepository.resetPassword(encoder.encode(user.getPassword()), user.getEmail());	// 비밀번호 재설정
+	@PostMapping("/nicknameUpdate")
+	@ApiOperation(value="계정 설정 [닉네임]")
+	public ResponseEntity<?> nicknameUpdate(@RequestBody User user){
+
+		if (userRepository.existsByNickname(user.getNickname())) {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: Nickname is already taken!"));
+		}
+
 		userRepository.updateNickname(user.getNickname(), user.getEmail());					// 닉네임 재설정
-		// 레벨티콘 변경은 추후
-		return ResponseEntity.ok(new MessageResponse("user updated successfully!"));
+		return ResponseEntity.ok(new MessageResponse("Nickname updated successfully!"));
 	}
 
+	@PostMapping("/passwordUpdate")
+	@ApiOperation(value="계정 설정 [비밀번호]")
+	public ResponseEntity<?> passwordUpdate(@Valid @RequestBody UpdateRequest updateRequest){
+
+		User user = userRepository.getUserByEmail(updateRequest.getEmail());
+
+		// 사용자 인증
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(updateRequest.getEmail(), updateRequest.getPassword()));
+
+		// 인증된 사용자인 경우 업데이트
+		userRepository.resetPassword(encoder.encode(updateRequest.getNewpassword()), updateRequest.getEmail());	
+		return ResponseEntity.ok(new MessageResponse("Password updated successfully!"));
+
+	}
 
 	@GetMapping("/passwordEmail")
 	@ApiOperation(value = "비밀번호 재설정 이메일")
@@ -285,19 +318,22 @@ public class AuthController {
 	}
 	
 	@PutMapping("/profile")
-	@ApiOperation(value = "프로필 사진 업로드")
+	@ApiOperation(value = "프로필 사진 업로드 - Access Path return")
 	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam String email, HttpServletRequest request) {
-		//웹서비스 경로 지정(로컬에서 사용시 이 코드 사용)
-//		String root_path = request.getSession().getServletContext().getRealPath("/");
-//		String attach_path = "resources/profile/";
-//		String final_path = root_path + attach_path + mFile.getOriginalFilename();
-		//서버에서 돌릴 때는 해당 코드 사용
-		String final_path = "/home/ubuntu/s03p12a604/back/src/main/webapp/resources/profile/" + mFile.getOriginalFilename();
-		System.out.println(final_path);
+
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date nowdate = new Date();
+		String dateString = formatter.format(nowdate);	//현재시간 문자열
+		
+		String real_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile/" + 
+				dateString + "_" + mFile.getOriginalFilename();	//경로 + 날짜시간 + _ +파일이름으로 저장
+
+		String access_path = "http://i3a604.p.ssafy.io/images/profile/" + dateString + "_" + mFile.getOriginalFilename();
+
 		try {
-			mFile.transferTo(new File(final_path));
-			userRepository.updateProfile(final_path, email);
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			mFile.transferTo(new File(real_path));
+			userRepository.updateProfile(access_path, email);
+			return new ResponseEntity<String>(access_path, HttpStatus.OK);
 		} catch (IOException e) {
 			System.out.println("파일 업로드 실패");
 			return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
@@ -305,8 +341,24 @@ public class AuthController {
 		
 	}
 	
+	@DeleteMapping("/delprofile")
+	@ApiOperation(value = "서버에 있는 프로필 사진 파일을 삭제")
+	public ResponseEntity<String> fileDelete(String filePath) {
+		String tem = filePath.replace("/profile", "+");
+		StringTokenizer st = new StringTokenizer(tem, "+");
+		
+		String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
+		String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
+		
+		String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile" + next;
+		
+		File delFile = new File(path);
+		if(delFile.exists()) delFile.delete();
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
+	
 	@PutMapping("/unprofile")
-	@ApiOperation(value = "프로필 사진 삭제, 삭제시 profile 컬럼은 null")
+	@ApiOperation(value = "프로필 사진 삭제, (사용자의 profile 컬럼을 null로)")
 	public ResponseEntity<String> fileUnUpload(@RequestParam String email) {
 		userRepository.deleteProfile(email);
 		return new ResponseEntity<String>("success", HttpStatus.OK);

@@ -6,15 +6,20 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.papple.blog.models.GoodList;
 import com.papple.blog.models.Post;
+import com.papple.blog.repository.GoodRepository;
 import com.papple.blog.repository.PostRepository;
 
 @Service
-public class PostServiceImpl implements PostService{
+public class PostServiceImpl implements PostService {
 
 	@Autowired
 	private PostRepository postRepository;
-	
+
+	@Autowired
+	private GoodRepository goodRepository;
+
 	@Override
 	public List<Post> findAll() {
 		return postRepository.findAll();
@@ -34,7 +39,7 @@ public class PostServiceImpl implements PostService{
 	public Optional<Post> findById(Long id) {
 		return postRepository.findById(id);
 	}
-	
+
 	@Override
 	public List<Post> searchByWord(String word) {
 		return postRepository.searchByWord(word);
@@ -65,7 +70,7 @@ public class PostServiceImpl implements PostService{
 	public List<Post> findFollowLatestByUser(String email) {
 		return postRepository.findFollowLatestByUser(email);
 	}
-	
+
 	public List<Post> searchByHashtag(String word) {
 		return postRepository.searchByHashtag(word);
 	}
@@ -94,5 +99,36 @@ public class PostServiceImpl implements PostService{
 	@Override
 	public void deletePicture(Long id) {
 		postRepository.deletePicture(id);
+	}
+
+	@Override
+	public void deleteGood(String email, Long postid) {
+		goodRepository.deleteGood(email, postid);
+
+	}
+
+	@Override
+	public void deleteGoodByPostid(Long postid) {
+		goodRepository.deleteGoodByPostid(postid);
+	}
+
+	@Override
+	public void deleteGoodByEmail(String email) {
+		goodRepository.deleteGoodByEmail(email);
+	}
+
+	@Override
+	public int isGood(String email, Long postid) {
+		return goodRepository.isGood(email, postid);
+	}
+
+	@Override
+	public GoodList save(GoodList goodlist) {
+		return goodRepository.save(goodlist);
+	}
+
+	@Override
+	public int cntCategory(String email, String hashtag) {
+		return postRepository.cntCategory(email, hashtag);
 	}
 }
