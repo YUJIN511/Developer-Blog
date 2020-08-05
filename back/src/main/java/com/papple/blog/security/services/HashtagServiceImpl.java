@@ -33,7 +33,11 @@ public class HashtagServiceImpl implements HashtagService {
 	@Override
 	public void deleteHashtagByEmail(String email) {
 		hashtagRepository.deleteHashtagByEmail(email);
-		return;
+	}
+
+	@Override
+	public void deleteHashtagByPostId(Long postid) {
+		hashtagRepository.deleteHashtagByPostId(postid);
 	}
 
 }
