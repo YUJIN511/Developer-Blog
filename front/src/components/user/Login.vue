@@ -87,18 +87,20 @@ export default {
     return {
       userInfo: {
         email: "",
-        password: ""
-      }
+        password: "",
+      },
     };
   },
   methods: {
     ...mapGetters({
-      getIsLogin: "user/getIsLogin"
+      getIsLogin: "user/getIsLogin",
     }),
     ...mapActions({
-      Login: "user/login"
+      Login: "user/login",
     }),
     closeLogin() {
+      this.email = "";
+      this.password = "";
       document.querySelector(".container-login").classList.add("hide");
     },
     moveToJoin() {
@@ -117,8 +119,8 @@ export default {
       } else {
         alert("아이디 혹은 비밀번호가 틀립니다.");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
