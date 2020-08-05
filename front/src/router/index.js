@@ -4,6 +4,7 @@ import mainPageRouter from "@/router/modules/main.js";
 import settingPageRouter from "@/router/modules/setting.js";
 import accountPageRouter from "@/router/modules/account.js";
 import articlePageRouter from "@/router/modules/article.js";
+import notification from '@/components/notification/notification.vue'
 // import userRouter from "@/router/modules/userRouter.js";
 
 Vue.use(VueRouter);
