@@ -2,11 +2,14 @@ package com.papple.blog.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 //import java.lang.StackWalker.Option;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -315,19 +318,22 @@ public class AuthController {
 	}
 	
 	@PutMapping("/profile")
-	@ApiOperation(value = "프로필 사진 업로드")
+	@ApiOperation(value = "프로필 사진 업로드 - Access경로로 return할게")
 	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam String email, HttpServletRequest request) {
-		//웹서비스 경로 지정(로컬에서 사용시 이 코드 사용)
-//		String root_path = request.getSession().getServletContext().getRealPath("/");
-//		String attach_path = "resources/profile/";
-//		String final_path = root_path + attach_path + mFile.getOriginalFilename();
-		//서버에서 돌릴 때는 해당 코드 사용
-		String final_path = "/home/ubuntu/s03p12a604/back/src/main/webapp/resources/profile/" + mFile.getOriginalFilename();
-		System.out.println(final_path);
+
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date nowdate = new Date();
+		String dateString = formatter.format(nowdate);	//현재시간 문자열
+		
+		String real_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile/" + 
+				dateString + "_" + mFile.getOriginalFilename();	//경로 + 날짜시간 + _ +파일이름으로 저장
+
+		String access_path = "http://i3a604.p.ssafy.io/images/profile/" + dateString + "_" + mFile.getOriginalFilename();
+
 		try {
-			mFile.transferTo(new File(final_path));
-			userRepository.updateProfile(final_path, email);
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			mFile.transferTo(new File(real_path));
+			userRepository.updateProfile(access_path, email);
+			return new ResponseEntity<String>(access_path, HttpStatus.OK);
 		} catch (IOException e) {
 			System.out.println("파일 업로드 실패");
 			return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
@@ -335,8 +341,24 @@ public class AuthController {
 		
 	}
 	
+	@DeleteMapping("/delprofile")
+	@ApiOperation(value = "서버에 있는 프로필 사진 파일을 삭제")
+	public ResponseEntity<String> fileDelete(String filePath) {
+		String tem = filePath.replace("/profile", "+");
+		StringTokenizer st = new StringTokenizer(tem, "+");
+		
+		String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
+		String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
+		
+		String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile" + next;
+		
+		File delFile = new File(path);
+		if(delFile.exists()) delFile.delete();
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
+	
 	@PutMapping("/unprofile")
-	@ApiOperation(value = "프로필 사진 삭제, 삭제시 profile 컬럼은 null")
+	@ApiOperation(value = "프로필 사진 삭제, (사용자의 profile 컬럼을 null로)")
 	public ResponseEntity<String> fileUnUpload(@RequestParam String email) {
 		userRepository.deleteProfile(email);
 		return new ResponseEntity<String>("success", HttpStatus.OK);

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -80,8 +81,8 @@ public class PostController {
 	}
 	 
 	@GetMapping("/postDetail")
-	@ApiOperation(value = "해당 POST ID의 포스트 보기")
-	public ResponseEntity<Post> searchById(@RequestParam(required = true) Long id, 
+	@ApiOperation(value = "해당 POST ID의 포스트 보기 - 조회수++, history 추가")
+	public ResponseEntity<Post> searchByIdAndEmail(@RequestParam(required = true) Long id, 
 														@RequestParam(required = true) String email) throws Exception {
 		System.out.println("해당 id의 포스트 출력");
 		Post temp = postService.findById(id).get();
@@ -95,9 +96,18 @@ public class PostController {
 			historyRepository.save(history);
 
 			return new ResponseEntity<Post>(post, HttpStatus.OK);
-		} else{
+		} 
+		else{
 			return new ResponseEntity<Post>(temp, HttpStatus.OK);
 		}
+	}
+	
+	@GetMapping("/{id}")
+	@ApiOperation(value = "id로 해당 포스트 조회")
+	public ResponseEntity<Post> searchById(@PathVariable Long id) {
+		System.out.println("해당 id의 포스트 출력");
+		Post post = postService.findById(id).get();
+		return new ResponseEntity<Post>(post, HttpStatus.OK);
 	}
 	
 	@GetMapping("postTag/{postid}")
@@ -145,10 +155,12 @@ public class PostController {
 	}
 	
 	@PostMapping
-	@ApiOperation(value = "새 글 게시")
+	@ApiOperation(value = "새 글 게시 - 글 정보 + 파일의 접근경로 DB에 저장")
 	public ResponseEntity<String> insert(@RequestBody Post post, HashtagList hashtag) {
-		System.out.println("새 글 게시");
+		System.out.println("새 글 게시");  
+	
 		Post p = postService.save(post);
+		
 		for(int i=0;i<hashtag.getHashtagList().size();i++) {
 			Hashtag ht = new Hashtag(new HashtagPK(p.getId(), hashtag.getHashtagList().get(i)));
 			hashtagService.save(ht);
@@ -159,7 +171,7 @@ public class PostController {
 	}
 
 	@PutMapping("/upload")
-	@ApiOperation(value = "post 대표 사진 업로드 / Encoding 호환문제로 새 글 게시와 한번에 불가능")
+	@ApiOperation(value = "post 대표 사진 업로드")
 	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, HttpServletRequest request){
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date nowdate = new Date();
@@ -167,14 +179,12 @@ public class PostController {
 		
 		String real_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep/" + 
 				dateString + "_" + mFile.getOriginalFilename();	//경로 + 날짜시간 + _ +파일이름으로 저장
-		
-		System.out.println(real_path);
-		
+
 		String access_path = "http://i3a604.p.ssafy.io/images/postRep/" + dateString + "_" + mFile.getOriginalFilename();
 		
 		try {
-			mFile.transferTo(new File(real_path));
-			return new ResponseEntity<String>(access_path, HttpStatus.OK);
+			mFile.transferTo(new File(real_path));	//실제경로로 파일을 저장
+			return new ResponseEntity<String>(access_path, HttpStatus.OK);	//접근경로 return
 		} catch (IOException e) {
 			System.out.println("파일 업로드 실패");
 			return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
@@ -182,7 +192,7 @@ public class PostController {
 	}
 	
 	@PutMapping("/unupload")
-	@ApiOperation(value = "post 대표 사진 지우기, 사진이 없을 때는 picture column null임.")
+	@ApiOperation(value = "post 대표 사진 지우기(picture column null로)")
 	public ResponseEntity<String> fileUnUpload(Long id) {
 		postService.deletePicture(id);
 		return new ResponseEntity<String>("success", HttpStatus.OK);
@@ -191,7 +201,15 @@ public class PostController {
 	@DeleteMapping("/delfile")
 	@ApiOperation(value = "서버에 저장된 사진 지우기")
 	public ResponseEntity<String> fileDelete(String filePath) {
-		File delFile = new File(filePath);
+		String tem = filePath.replace("/postRep", "+");
+		StringTokenizer st = new StringTokenizer(tem, "+");
+		
+		String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
+		String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
+		
+		String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep" + next;
+		
+		File delFile = new File(path);
 		if(delFile.exists()) delFile.delete();
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
@@ -288,17 +306,36 @@ public class PostController {
 	}
 	
 	@DeleteMapping
-	@ApiOperation(value = "포스트 삭제 - 보관함, 기록, 해시태그, 좋아요도 함께 삭제")
+	@ApiOperation(value = "포스트 삭제 - 보관함, 기록, 해시태그, 좋아요, 파일도 함께 삭제")
 	public ResponseEntity<String> delete(Long id) {
 		System.out.println("글 삭제");
-		if(postService.findById(id) != null) {
+		Optional<Post> post = postService.findById(id);
+		if(post != null) {
 			storageRepository.deleteByPostId(id);
 			historyRepository.deleteByPostId(id);
 			hashtagService.deleteHashtagByPostId(id);
 			postService.deleteGoodByPostid(id);
+			
+			post.ifPresent(selectPost -> {
+				String path = selectPost.getPicture();
+				if(path != null && !path.equals("")) {
+					String tem = path.replace("/postRep", "+");
+					StringTokenizer st = new StringTokenizer(tem, "+");
+					
+					String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
+					String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
+					
+					String realpath = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/postRep" + next;
+					
+					File delFile = new File(realpath);
+					if(delFile.exists()) delFile.delete();
+				}
+			});
+			
 			postService.deleteById(id);
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}
+
 }
