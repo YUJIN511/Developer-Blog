@@ -42,6 +42,7 @@ import com.papple.blog.models.Post;
 import com.papple.blog.models.Storage;
 import com.papple.blog.models.StoragePK;
 import com.papple.blog.repository.HistoryRepository;
+import com.papple.blog.repository.PostRepository;
 import com.papple.blog.repository.StorageRepository;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.HashtagService;
@@ -135,7 +136,7 @@ public class PostController {
 		return new ResponseEntity<List<Post>>(list, HttpStatus.OK);
 	}	
 	
-	@GetMapping("myCategory/{email}")
+	@GetMapping("mycategory/{email}")
 	@ApiOperation(value = "내가 쓴 글들의 HashTag 리스트 출력(Category) - 정렬됨")
 	public ResponseEntity<List<String>> searchMyHashCategory(@PathVariable String email) throws Exception {
 		System.out.println("내 Category 출력(정렬됨)");
@@ -145,6 +146,12 @@ public class PostController {
 		List<String> res = new ArrayList<String>();
 		for(String hash : s) res.add(hash);
 		return new ResponseEntity<List<String>>(res, HttpStatus.OK);
+	}
+	
+	@GetMapping("mycategory/cnt")
+	@ApiOperation(value = "나의 해시태그 카테고리의 글 개수 리턴")
+	public ResponseEntity<Integer> searchMyHashCategoryCnt(String email, String hashtag) {
+		return new ResponseEntity<Integer>(postService.cntCategory(email, hashtag), HttpStatus.OK);
 	}
 	
 	@GetMapping("search/{word}")
@@ -234,6 +241,7 @@ public class PostController {
 				selectPost.setTitle(post.getTitle());
 				selectPost.setContent(post.getContent());
 				selectPost.setPicture(post.getPicture());
+				selectPost.setSummary(post.getSummary());
 				Post newPost = postService.save(selectPost);
 				System.out.println(newPost);
 			});

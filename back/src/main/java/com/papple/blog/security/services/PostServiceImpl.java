@@ -126,4 +126,9 @@ public class PostServiceImpl implements PostService {
 	public GoodList save(GoodList goodlist) {
 		return goodRepository.save(goodlist);
 	}
+
+	@Override
+	public int cntCategory(String email, String hashtag) {
+		return postRepository.cntCategory(email, hashtag);
+	}
 }
