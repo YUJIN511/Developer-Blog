@@ -150,7 +150,9 @@ public class PostController {
 	@GetMapping("search/{word}")
 	@ApiOperation(value = "해당 word를 제목 또는 내용에 포함하고 있는 포스트 리스트 출력.")
 	public ResponseEntity<List<Post>> searchByWord(@PathVariable String word) throws Exception {
-		return new ResponseEntity<List<Post>>(postService.searchByWord(word), HttpStatus.OK);
+		List<Post> list = postService.searchByWord(word);
+		for(Post post : list) post.setContent("");
+		return new ResponseEntity<List<Post>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("hashSearch/{word}")
