@@ -6,16 +6,17 @@
 
 	<!-- 모든 post 조회 -->
 	<select id="searchAllPost" resultType="PostList">
-		select email, nickname, profile, score, id, title, content, summary, picture, writer, good, views, createdate
+		select nickname, profile, score, id, title, content, summary, picture, writer, good, views, createdate
 		from user join post on email = writer
 	</select>
 	
 	<!-- 해당 이메일의 post 조회 -->
 	<select id="searchByEmail" resultType="PostList">
-		select email, nickname, profile, score, id, title, content, summary, picture, writer, good, views, createdate
+		select nickname, profile, score, id, title, content, summary, picture, writer, good, views, createdate
 		from user join post on email = writer
+		where writer = #{email}
 	</select>
 	
-	searchByEmail
+	
 </mapper>
 
