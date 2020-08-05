@@ -130,7 +130,9 @@ public class PostController {
 	@ApiOperation(value = "내가 쓴 특정 해시태그의 글들을 출력(HashTag Category 안 게시물들) ")
 	public ResponseEntity<List<Post>> searchHashTag(@PathVariable String hashtag, @PathVariable String email) throws Exception {
 		System.out.println("내가 쓴 특정 해시태그의 글들을 출력");
-		return new ResponseEntity<List<Post>>(postService.findMyHashPost(hashtag, email), HttpStatus.OK);
+		List<Post> list = postService.findMyHashPost(hashtag, email);
+		for(Post post : list) post.setContent("");
+		return new ResponseEntity<List<Post>>(list, HttpStatus.OK);
 	}	
 	
 	@GetMapping("myCategory/{email}")
