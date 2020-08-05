@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostList {
-	private String email;
 	private String nickname;
 	private String profile;
 	private Long score;
