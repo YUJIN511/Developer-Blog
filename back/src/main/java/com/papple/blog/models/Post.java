@@ -39,8 +39,6 @@ public class Post {
 	@Size(max = 50)
 	private String writer;
 	
-	private String nickname;
-	
 	private int good;		// 좋아요
 
 	private int views;		// 조회수

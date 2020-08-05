@@ -41,7 +41,9 @@ import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
 import com.papple.blog.models.Storage;
 import com.papple.blog.models.StoragePK;
+import com.papple.blog.payload.response.PostList;
 import com.papple.blog.repository.HistoryRepository;
+import com.papple.blog.repository.PostListRepository;
 import com.papple.blog.repository.PostRepository;
 import com.papple.blog.repository.StorageRepository;
 import com.papple.blog.repository.UserRepository;
@@ -66,23 +68,21 @@ public class PostController {
 	private StorageRepository storageRepository;
 	@Autowired
 	private NotificationService notificationService;
+	@Autowired
+	private PostListRepository postListRepository;
 
 	@GetMapping("/all")
 	@ApiOperation(value = "모든 포스트 보기")
-	public ResponseEntity<List<Post>> searchAll() throws Exception {
+	public ResponseEntity<List<PostList>> searchAll() throws Exception {
 		System.out.println("모든 포스트 출력");
-		List<Post> list = postService.findAll();
-		for(Post post : list) post.setContent("");
-		return new ResponseEntity<List<Post>>(list, HttpStatus.OK);
+		return new ResponseEntity<List<PostList>>(postListRepository.searchAllPost(), HttpStatus.OK);
 	}
 	
 	@GetMapping("writer/{writer}")
-	@ApiOperation(value = "해당 이메일의 포스트 리스트 보기")
-	public ResponseEntity<List<Post>> searchByEmail(@PathVariable String writer) throws Exception {
+	@ApiOperation(value = "해당 이메일의 포스트 리스트 보기(나 혹은 다른 사람 블로그에서)")
+	public ResponseEntity<List<PostList>> searchByEmail(@PathVariable String writer) throws Exception {
 		System.out.println("해당 이메일의 포스트 출력");
-		List<Post> list = postService.findByWriter(writer);
-		for(Post post : list) post.setContent("");
-		return new ResponseEntity<List<Post>>(list, HttpStatus.OK);
+		return new ResponseEntity<List<PostList>>(postListRepository.searchByEmail(), HttpStatus.OK);
 	}
 	 
 	@GetMapping("/postDetail")

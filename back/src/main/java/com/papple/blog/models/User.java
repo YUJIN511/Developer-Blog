@@ -26,6 +26,8 @@ public class User {
 
 	private String profile;
 	
+	private Long score;
+	
 	private Integer usercertification;
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -37,11 +39,12 @@ public class User {
 	public User() {
 	}
 
-	public User(String email, String nickname, String password, Integer usercertification) {
+	public User(String email, String nickname, String password, Integer usercertification, Long score) {
 		super();
 		this.email = email;
 		this.nickname = nickname;
 		this.password = password;
+		this.score = score;
 		this.usercertification = usercertification;
 	}
 

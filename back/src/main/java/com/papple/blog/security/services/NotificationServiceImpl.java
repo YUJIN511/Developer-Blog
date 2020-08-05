@@ -143,7 +143,7 @@ public class NotificationServiceImpl implements NotificationService{
         return alertList;
     }
     /**
-     * - 전송된 알림에 대해서 IS_READ 값을 'Y' 로 변경
+     * - 전송된 알림에 대해서 IS_Alert 값을 'true' 로 변경
      *
      * @param alertIds 전송된 알림 ID 목록
      */
