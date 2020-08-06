@@ -72,7 +72,7 @@ public class PostController {
 	private PostListRepository postListRepository;
 
 	@GetMapping("/all")
-	@ApiOperation(value = "모든 포스트 보기+")
+	@ApiOperation(value = "모든 포스트 보기")
 	public ResponseEntity<List<PostList>> searchAll() throws Exception {
 		System.out.println("모든 포스트 출력");
 		return new ResponseEntity<List<PostList>>(postListRepository.searchAllPost(), HttpStatus.OK);
