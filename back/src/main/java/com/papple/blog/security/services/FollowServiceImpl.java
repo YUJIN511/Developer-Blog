@@ -45,5 +45,10 @@ public class FollowServiceImpl implements FollowService {
 	public Follow save(Follow follow) {
 		return followRepository.save(follow);
 	}
+
+	@Override
+	public List<Follow> findByFollowed(String followed) {
+		return followRepository.findByFollowed(followed);
+	}
 	
 }

@@ -2,15 +2,12 @@ package com.papple.blog.security.services;
 
 import java.util.List;
 import java.util.Optional;
-
-import com.papple.blog.models.GoodList;
 import com.papple.blog.models.Post;
 
 public interface PostService {
 	List<Post> findAll();
 	List<Post> findByWriter(String writer);
 	Post save(Post post);
-	GoodList save(GoodList goodlist);
 	Optional<Post> findById(Long id);
 	void deleteById(Long id);
 	void deleteByWriter(String email);
@@ -24,9 +21,5 @@ public interface PostService {
 	List<Post> findFollowPopularByUser(String email);
 	void updatePicture(String picture, Long id);
 	void deletePicture(Long id);
-	void deleteGood(String email, Long postid);
-	void deleteGoodByPostid(Long postid);
-	void deleteGoodByEmail(String email);
-	int isGood(String email, Long postid);
 	int cntCategory(String email, String hashtag);
 }

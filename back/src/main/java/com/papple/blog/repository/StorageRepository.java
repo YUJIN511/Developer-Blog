@@ -26,5 +26,8 @@ public interface StorageRepository  extends JpaRepository<Storage, FollowPK>{
 	@Transactional
 	@Modifying
 	@Query(value="DELETE FROM storage WHERE email=?1 and postid = ?2", nativeQuery = true)
-    void deleteByEmailAndPostid(String email, Long postid); 	// 회원 탈퇴시 보관함 글 삭제
+    void deleteByEmailAndPostid(String email, Long postid);
+	
+	@Query(value = "select count(*) from storage where email = ?1 and postid = ?2", nativeQuery = true)
+	int isGood(String email, Long postid);
 }
