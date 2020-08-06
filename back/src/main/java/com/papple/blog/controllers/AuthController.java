@@ -336,7 +336,7 @@ public class AuthController {
 	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam String email, 
 			@RequestParam(required = false) String path, HttpServletRequest request) {
 
-		if(path == null || !path.equals("")) {	// path 변수가 안들어오면 (새 첨부 파일로 대표이미지를 등록하면)
+		if(path == null || path.equals("")) {	// path 변수가 안들어오면 (새 첨부 파일로 대표이미지를 등록하면)
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 			Date nowdate = new Date();
 			String dateString = formatter.format(nowdate);	//현재시간 문자열
