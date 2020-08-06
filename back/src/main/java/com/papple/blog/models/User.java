@@ -30,6 +30,8 @@ public class User {
 	
 	private Integer usercertification;
 
+	private String notification;
+	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(	name = "user_roles", 
 				joinColumns = @JoinColumn(name = "user_id"), 
@@ -46,6 +48,7 @@ public class User {
 		this.password = password;
 		this.score = score;
 		this.usercertification = usercertification;
+		this.notification = "1111111";
 	}
 
 }

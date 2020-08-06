@@ -15,8 +15,9 @@ import org.springframework.data.jpa.repository.Query;
 public interface NotificationRepository extends JpaRepository<Notification, Long>{
 
 	List<Notification> findByTargetuserAndIsreadIsFalse(String email);				// 안읽은 알림
-	Notification findByActionuserAndPostidoflike(String actionuser, Long postid);	// 글 좋아요 눌렀던 사용자 알림
-	Notification findByActionuserAndFollowed(String actionuser, String followed);	// 팔로우 알림
+	// 내 글 좋아요 (이전에 좋아요 눌렀었는지)
+	Notification findByActionuserAndPostidAndType(String actionuser, Long postid, Integer type);
+	Notification findByActionuserAndTargetuserAndType(String actionuser, String targetuser, Integer type);	// 팔로우 알림
 
 	@Transactional
 	@Modifying
@@ -27,5 +28,10 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 	@Modifying
 	@Query(value = "TRUNCATE notification", nativeQuery = true)
 	void deleteNotificationByCron();
+
+	@Transactional
+	@Modifying
+	@Query(value = "DELETE FROM notification WHERE targetuser=?1 AND type=?2", nativeQuery = true)
+	void deleteByTargetuserAndType(String targetuser, Integer type);
   
 }

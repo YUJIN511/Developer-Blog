@@ -188,7 +188,7 @@ public class PostController {
 			hashtagService.save(ht);
 		}
 
-		// 알림 발생
+		// 알림 발생(0100000)
 		List<Follow> followerList = followService.findByFollowed(post.getWriter());	
 		String actionName = userRepository.getUserByEmail(post.getWriter()).getNickname();
 		for(Follow f : followerList){
@@ -199,7 +199,7 @@ public class PostController {
 				.notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+post.getId())
 				.build();
 			
-			notification.setPostidoffollowed(post.getId());
+			notification.setType(1<<5);
 			notificationService.save(notification);
 		}
 		if(p != null) return new ResponseEntity<>("success", HttpStatus.OK);
@@ -291,8 +291,9 @@ public class PostController {
 					Storage storage = new Storage(new StoragePK(email, id));
 					storageRepository.save(storage);
 
-					// 알람 발생[ 좋아요 눌렀었었는지 체크 ]	>>> notiurl 주소 front로 추후 변경
-					if(notificationService.findByActionuserAndPostidoflike(email, id) == null){
+					// 알람 발생(0000001)
+					// 이전에 좋아요 눌렀었었는지 확인	>>>  notiurl 주소 front로 추후 변경
+					if(notificationService.findByActionuserAndPostidAndType(email, id, 1) == null){
 						String actionName = userRepository.getUserByEmail(email).getNickname();
 						Notification notification = Notification.builder()
 									.message(actionName +"님이 회원님의 게시물을 좋아합니다.")
@@ -300,7 +301,8 @@ public class PostController {
 									.targetuser(newPost.getWriter())
 									.notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+id)
 									.build();
-						notification.setPostidoflike(id);
+						notification.setPostid(id);
+						notification.setType(1<<0);
 						notificationService.save(notification);
 					}
 				}
