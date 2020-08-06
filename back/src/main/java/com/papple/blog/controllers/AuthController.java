@@ -130,11 +130,12 @@ public class AuthController {
 	@ApiOperation(value = "회원 가입")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
-		if (userRepository.existsById(signUpRequest.getEmail())) {
-			return ResponseEntity
-					.badRequest()
-					.body(new MessageResponse("Error: Email is already in use!"));
-		}
+		// 이메일 중복체크
+		// if (userRepository.existsById(signUpRequest.getEmail())) {
+		// 	return ResponseEntity
+		// 			.badRequest()
+		// 			.body(new MessageResponse("Error: Email is already in use!"));
+		// }
 		
 		// Create new user's account
 		User user = new User(signUpRequest.getEmail(), null,
