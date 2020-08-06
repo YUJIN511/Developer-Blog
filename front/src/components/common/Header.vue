@@ -113,6 +113,7 @@
     <Repassword />
     <EmailModal />
     <UnregisterModal />
+    <ProfilePicModal />
   </div>
 </template>
 
@@ -123,6 +124,7 @@ import Join from "@/components/user/Join.vue";
 import Repassword from "@/components/user/Repassword.vue";
 import EmailModal from "@/components/user/EmailModal.vue";
 import UnregisterModal from "@/components/user/setting/UnregisterModal.vue";
+import ProfilePicModal from "@/components/user/setting/ProfilePicModal.vue";
 
 import { mapActions, mapGetters } from "vuex";
 // import NavbarMini from "@/components/common/Navbar-mini.vue";
@@ -135,19 +137,20 @@ export default {
     Join,
     Repassword,
     EmailModal,
-    UnregisterModal
+    UnregisterModal,
+    ProfilePicModal,
   },
   data() {
     return {
-      searchWord: ""
+      searchWord: "",
     };
   },
   methods: {
     ...mapActions({
-      Logout: "user/logout"
+      Logout: "user/logout",
     }),
     ...mapGetters({
-      getIsLogin: "user/getIsLogin"
+      getIsLogin: "user/getIsLogin",
     }),
     showNavBar() {
       const navbar = document.querySelector(".navbar");
@@ -170,11 +173,11 @@ export default {
     search() {
       this.$router.push({
         name: "Search",
-        params: { keyword: this.searchWord }
+        params: { keyword: this.searchWord },
       });
-    }
+    },
   },
-  computed: {}
+  computed: {},
 };
 </script>
 

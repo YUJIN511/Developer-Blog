@@ -2,15 +2,29 @@
   <div class="container-account">
     <header>
       <div class="profile-image">
-        <input
+        <!-- <input
           type="file"
           id="file"
           style="display: none;"
           @change="uploadFile"
-        />
-        <button class="banner-image-edit" @click="clickFileUpload">
+        /> -->
+        <button
+          class="banner-image-edit"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          @click="showMenu"
+        >
           수정하기
         </button>
+        <!-- <div v-if="menu" class="dropdown-menu" @mouseleave="menu = false">
+          <a class="dropdown-item" @click="clickFileUpload">
+            프로필 사진 변경
+          </a>
+          <a class="dropdown-item" href="#">프로필 사진 삭제</a>
+        </div> -->
       </div>
     </header>
     <main>
@@ -98,6 +112,9 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import axios from "axios";
+
+const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 
 export default {
   data() {
@@ -110,13 +127,9 @@ export default {
       dom: {
         passwordConfirmErrMsg: "",
       },
-      items: [
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me 2" },
-      ],
+      items: [{ title: "프로필 사진 변경" }, { title: "프로필 사진 삭제" }],
       file: "",
+      menu: false,
     };
   },
   methods: {
@@ -168,7 +181,6 @@ export default {
     passwordEqualCheck() {
       if (!(this.newpassword === this.newpasswordConfirm)) {
         this.dom.passwordConfirmErrMsg.classList.remove("hide");
-        // console.log(this.dom.passwordConfirmErrMsg.classList);
         return false;
       }
       this.dom.passwordConfirmErrMsg.classList.add("hide");
@@ -183,15 +195,22 @@ export default {
     uploadFile(event) {
       this.file = event.target.files[0];
       let formData = new FormData();
-      formData.append("file", this.file);
-      for (var pair of formData.entries()) {
-        console.log(pair[0] + ", " + pair[1]);
-      }
-      this.UploadFile({ email: this.email, formData: formData })
+      formData.append("filename", this.file);
+      formData.append("email", this.email);
+
+      axios
+        .put(`${SERVER_URL}/api/auth/profile`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
         .then((res) => {
           console.log(res);
         })
         .catch((err) => console.log(err));
+    },
+    showMenu() {
+      document.querySelector(".container-profilepic").classList.remove("hide");
     },
   },
   mounted() {

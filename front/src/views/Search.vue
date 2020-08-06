@@ -24,18 +24,24 @@ const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 
 export default {
   components: {
-    FlexArticles
+    FlexArticles,
   },
   data: function() {
     return {
       articleData: [],
-      keyword: this.$route.params.keyword
+      keyword: this.$route.params.keyword,
+      items: [
+        { title: "Click Me" },
+        { title: "Click Me" },
+        { title: "Click Me" },
+        { title: "Click Me 2" },
+      ],
     };
   },
   methods: {
     fetchWordResult() {
       axios.get(`${SERVER_URL}/api/post/search/${this.keyword}`);
-    }
+    },
   },
   created() {
     console.log(this.keyword);
@@ -51,7 +57,7 @@ export default {
         iconUrl: "@/assets/tree.svg",
         name: "닉네임1",
         isLiked: true,
-        likeCnt: 10
+        likeCnt: 10,
       },
       {
         thumbUrl:
@@ -64,10 +70,10 @@ export default {
         iconUrl: "@/assets/tree.svg",
         name: "닉네임2",
         isLiked: false,
-        likeCnt: 9
-      }
+        likeCnt: 9,
+      },
     ];
-  }
+  },
 };
 </script>
 
