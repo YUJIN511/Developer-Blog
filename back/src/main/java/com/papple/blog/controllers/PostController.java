@@ -90,15 +90,17 @@ public class PostController {
 		}
 	}
 	
-	@GetMapping("writer/{writer}")
+	@GetMapping("writer/{email}")
 	@ApiOperation(value = "해당 이메일의 포스트 리스트 보기(나 혹은 다른 사람 블로그에서)")
-	public ResponseEntity<List<PostList>> searchByEmail(@PathVariable String writer) throws Exception {
+	public ResponseEntity<List<PostList>> searchByEmail(@PathVariable String email) throws Exception {
 		System.out.println("해당 이메일의 포스트 출력");
-		return new ResponseEntity<List<PostList>>(postListRepository.searchByEmail(writer), HttpStatus.OK);
+		List<PostList> list = postListRepository.searchByEmail(email);
+		for(int i=0;i<list.size();i++) if(storageRepository.isGood(email, list.get(i).getId()) > 0) list.get(i).setIsgood(true);
+		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}
 	 
 	@GetMapping("/postDetail")
-	@ApiOperation(value = "해당 POST ID의 포스트 보기 - 조회수++, history 추가")
+	@ApiOperation(value = "해당 POST ID의 포스트 보기 (email 값이 없으면 isgood은 false, 조회수 ++, email이 있으면 isgood 활성화, 조회수++, history 추가")
 	public ResponseEntity<PostDetail> searchByIdAndEmail(@RequestParam(required = true) Long id, 
 			@RequestParam(required = false) String email) throws Exception {
 		System.out.println("해당 id의 포스트 출력");
@@ -108,6 +110,9 @@ public class PostController {
 		List<String> tag = postListRepository.searchHashtag(id);
 		detail.setTag(tag);
 		
+		if(email != null && !email.equals("")) {	//email이 있을 때만
+			if(storageRepository.isGood(email, id) > 0) detail.setIsgood(true);
+		}
 		
 		Post temp = postService.findById(id).get();		//조회수, history
 			
@@ -116,7 +121,7 @@ public class PostController {
 			Post post = postService.save(temp);
 			
 			// history에 담기
-			if(email != null && !email.equals("")) {	//회원일 때만
+			if(email != null && !email.equals("")) {	//email이 있을 때만
 				History history = new History(new HistoryPK(email, id));
 				historyRepository.save(history);
 				if(storageRepository.isGood(email, id) > 0) detail.setIsgood(true);
