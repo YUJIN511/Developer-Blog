@@ -31,8 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 import io.swagger.annotations.ApiOperation;
 
 import com.papple.blog.models.Follow;
-import com.papple.blog.models.GoodList;
-import com.papple.blog.models.GoodListPK;
 import com.papple.blog.models.Hashtag;
 import com.papple.blog.models.HashtagPK;
 import com.papple.blog.models.History;
@@ -81,11 +79,11 @@ public class PostController {
 	public ResponseEntity<List<PostList>> searchAll(String email) throws Exception {
 		System.out.println("모든 포스트 출력");
 		List<PostList> list = postListRepository.searchAllPost();
-		if(email == null || email.equals("")) {
+		if(email == null || email.equals("")) {	//비회원
 			System.out.println("빈칸");
 			return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 		}
-		else {
+		else {	//회원
 			System.out.println("안빈칸");
 			for(int i=0;i<list.size();i++) if(storageRepository.isGood(email, list.get(i).getId()) > 0) list.get(i).setIsgood(true);
 			return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
@@ -102,32 +100,30 @@ public class PostController {
 	@GetMapping("/postDetail")
 	@ApiOperation(value = "해당 POST ID의 포스트 보기 - 조회수++, history 추가")
 	public ResponseEntity<PostDetail> searchByIdAndEmail(@RequestParam(required = true) Long id, 
-			@RequestParam(required = true) String email) throws Exception {
-		
+			@RequestParam(required = false) String email) throws Exception {
 		System.out.println("해당 id의 포스트 출력");
 		
-		Post temp = postService.findById(id).get();
-		
+		// detail + hashtag
 		PostDetail detail = postListRepository.searchPostDetail(id);
 		List<String> tag = postListRepository.searchHashtag(id);
-		
 		detail.setTag(tag);
 		
-		return new ResponseEntity<PostDetail>(detail, HttpStatus.OK);
 		
-//		if(!temp.getWriter().equals(email)){	// 포스트 작성자의 history, 조회수 반영 X
-//			temp.setViews(temp.getViews()+1);
-//			Post post = postService.save(temp);
-//
-//			// history에 담기
-//			History history = new History(new HistoryPK(email, id));
-//			historyRepository.save(history);
-//
-//			return new ResponseEntity<Post>(post, HttpStatus.OK);
-//		} 
-//		else{
-//			return new ResponseEntity<Post>(temp, HttpStatus.OK);
-//		}
+		Post temp = postService.findById(id).get();		//조회수, history
+			
+		if(!temp.getWriter().equals(email)){	// 포스트 작성자의 history, 조회수 반영 X
+			temp.setViews(temp.getViews()+1);
+			Post post = postService.save(temp);
+			
+			// history에 담기
+			if(email != null && !email.equals("")) {	//회원일 때만
+				History history = new History(new HistoryPK(email, id));
+				historyRepository.save(history);
+				if(storageRepository.isGood(email, id) > 0) detail.setIsgood(true);
+			}
+		}
+		
+		return new ResponseEntity<PostDetail>(detail, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
@@ -323,8 +319,8 @@ public class PostController {
 					}
 				}
 			});
-			GoodList goodlist = new GoodList(new GoodListPK(email, id));
-			postService.save(goodlist);	//goodList 테이블에 좋아요 기록
+			Storage storage = new Storage(new StoragePK(email, id));
+			storageRepository.save(storage);	//storage 테이블에 좋아요 기록
 
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
@@ -346,7 +342,6 @@ public class PostController {
 					storageRepository.deleteByEmailAndPostid(email, id);
 				}
 			});
-			postService.deleteGood(email, id);	//goodList 테이블에 좋아요 삭제
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
@@ -369,7 +364,6 @@ public class PostController {
 			storageRepository.deleteByPostId(id);
 			historyRepository.deleteByPostId(id);
 			hashtagService.deleteHashtagByPostId(id);
-			postService.deleteGoodByPostid(id);
 			
 			post.ifPresent(selectPost -> {
 				String path = selectPost.getPicture();
