@@ -30,10 +30,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.ApiOperation;
 
+import com.papple.blog.models.Follow;
 import com.papple.blog.models.GoodList;
 import com.papple.blog.models.GoodListPK;
 import com.papple.blog.models.Hashtag;
-import com.papple.blog.models.HashtagList;
 import com.papple.blog.models.HashtagPK;
 import com.papple.blog.models.History;
 import com.papple.blog.models.HistoryPK;
@@ -41,12 +41,15 @@ import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
 import com.papple.blog.models.Storage;
 import com.papple.blog.models.StoragePK;
+import com.papple.blog.payload.response.HashtagList;
+import com.papple.blog.payload.response.PostDetail;
 import com.papple.blog.payload.response.PostList;
+import com.papple.blog.repository.FollowRepository;
 import com.papple.blog.repository.HistoryRepository;
 import com.papple.blog.repository.PostListRepository;
-import com.papple.blog.repository.PostRepository;
 import com.papple.blog.repository.StorageRepository;
 import com.papple.blog.repository.UserRepository;
+import com.papple.blog.security.services.FollowService;
 import com.papple.blog.security.services.HashtagService;
 import com.papple.blog.security.services.NotificationService;
 import com.papple.blog.security.services.PostService;
@@ -70,12 +73,23 @@ public class PostController {
 	private NotificationService notificationService;
 	@Autowired
 	private PostListRepository postListRepository;
+	@Autowired
+	private FollowService followService;
 
 	@GetMapping("/all")
 	@ApiOperation(value = "모든 포스트 보기")
-	public ResponseEntity<List<PostList>> searchAll() throws Exception {
+	public ResponseEntity<List<PostList>> searchAll(String email) throws Exception {
 		System.out.println("모든 포스트 출력");
-		return new ResponseEntity<List<PostList>>(postListRepository.searchAllPost(), HttpStatus.OK);
+		List<PostList> list = postListRepository.searchAllPost();
+		if(email == null || email.equals("")) {
+			System.out.println("빈칸");
+			return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
+		}
+		else {
+			System.out.println("안빈칸");
+			for(int i=0;i<list.size();i++) if(storageRepository.isGood(email, list.get(i).getId()) > 0) list.get(i).setIsgood(true);
+			return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
+		}
 	}
 	
 	@GetMapping("writer/{writer}")
@@ -87,24 +101,30 @@ public class PostController {
 	 
 	@GetMapping("/postDetail")
 	@ApiOperation(value = "해당 POST ID의 포스트 보기 - 조회수++, history 추가")
-	public ResponseEntity<Post> searchByIdAndEmail(@RequestParam(required = true) Long id, 
-														@RequestParam(required = true) String email) throws Exception {
+	public ResponseEntity<PostDetail> searchByIdAndEmail(@RequestParam(required = true) Long id, 
+			@RequestParam(required = true) String email) throws Exception {
+		
 		System.out.println("해당 id의 포스트 출력");
+		
 		Post temp = postService.findById(id).get();
-
-		if(!temp.getWriter().equals(email)){	// 포스트 작성자의 history, 조회수 반영 X
-			temp.setViews(temp.getViews()+1);
-			Post post = postService.save(temp);
-
-			// history에 담기
-			History history = new History(new HistoryPK(email, id));
-			historyRepository.save(history);
-
-			return new ResponseEntity<Post>(post, HttpStatus.OK);
-		} 
-		else{
-			return new ResponseEntity<Post>(temp, HttpStatus.OK);
-		}
+		
+		
+		
+		return new ResponseEntity<PostDetail>(postListRepository.searchPostDetail(id), HttpStatus.OK);
+		
+//		if(!temp.getWriter().equals(email)){	// 포스트 작성자의 history, 조회수 반영 X
+//			temp.setViews(temp.getViews()+1);
+//			Post post = postService.save(temp);
+//
+//			// history에 담기
+//			History history = new History(new HistoryPK(email, id));
+//			historyRepository.save(history);
+//
+//			return new ResponseEntity<Post>(post, HttpStatus.OK);
+//		} 
+//		else{
+//			return new ResponseEntity<Post>(temp, HttpStatus.OK);
+//		}
 	}
 	
 	@GetMapping("/{id}")
@@ -173,16 +193,30 @@ public class PostController {
 	
 	@PostMapping
 	@ApiOperation(value = "새 글 게시 - 글 정보 + 파일의 접근경로 DB에 저장")
-	public ResponseEntity<String> insert(@RequestBody Post post, HashtagList hashtag) {
+	public ResponseEntity<String> insert(@RequestBody Post post, HashtagList tag) {
 		System.out.println("새 글 게시");  
 		
-		Post p = postService.save(post);
+		Post p = postService.save(post);	// 글 저장
 		
-		for(int i=0;i<hashtag.getHashtagList().size();i++) {
-			Hashtag ht = new Hashtag(new HashtagPK(p.getId(), hashtag.getHashtagList().get(i)));
+		for(int i=0;i<tag.getTag().size();i++) {
+			Hashtag ht = new Hashtag(new HashtagPK(p.getId(), tag.getTag().get(i)));
 			hashtagService.save(ht);
 		}
-		
+
+		// 알림 발생
+		List<Follow> followerList = followService.findByFollowed(post.getWriter());	
+		String actionName = userRepository.getUserByEmail(post.getWriter()).getNickname();
+		for(Follow f : followerList){
+			Notification notification = Notification.builder()
+				.message(actionName +"님의 블로그에 새로운 게시물이 등록되었습니다. 가장 먼저 방문해 게시물을 확인해보세요.")
+				.actionuser(post.getWriter())
+				.targetuser(f.getFollowPK().getFollower())
+				.notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+post.getId())
+				.build();
+			
+			notification.setPostidoffollowed(post.getId());
+			notificationService.save(notification);
+		}
 		if(p != null) return new ResponseEntity<>("success", HttpStatus.OK);
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}
@@ -233,7 +267,7 @@ public class PostController {
 	
 	@PutMapping
 	@ApiOperation(value = "포스트 수정 (+해시태그 수정 - 해당 글의 해시태그를 모두 지우고, 다시 생성하는 로직)")
-	public ResponseEntity<String> modify(@RequestBody Post post, HashtagList hashtag) {
+	public ResponseEntity<String> modify(@RequestBody Post post, HashtagList tag) {
 		System.out.println("글 수정");
 		Optional<Post> tem = postService.findById(post.getId());
 		if(tem != null) {
@@ -247,8 +281,8 @@ public class PostController {
 			});
 			
 			hashtagService.deleteHashtagByPostId(post.getId());	//해당 글의 해시태그 모두 삭제
-			for(int i=0;i<hashtag.getHashtagList().size();i++) {	//다시 생성
-				Hashtag ht = new Hashtag(new HashtagPK(post.getId(), hashtag.getHashtagList().get(i)));
+			for(int i=0;i<tag.getTag().size();i++) {	//다시 생성
+				Hashtag ht = new Hashtag(new HashtagPK(post.getId(), tag.getTag().get(i)));
 				hashtagService.save(ht);
 			}
 			
@@ -315,13 +349,13 @@ public class PostController {
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}
 	
-	@GetMapping("isgood")
-	@ApiOperation(value = "좋아요를 누른 게시물인지 true, false 문자열로 반환")
-	public ResponseEntity<String> isGood(@RequestParam(required = true) Long id, @RequestParam(required = true) String email) {
-		System.out.println("좋아요 확인");
-		if(postService.isGood(email, id) > 0) return new ResponseEntity<String>("true", HttpStatus.OK);
-		return new ResponseEntity<String>("false", HttpStatus.FORBIDDEN);
-	}
+//	@GetMapping("isgood")
+//	@ApiOperation(value = "좋아요를 누른 게시물인지 true, false 문자열로 반환")
+//	public ResponseEntity<String> isGood(@RequestParam(required = true) Long id, @RequestParam(required = true) String email) {
+//		System.out.println("좋아요 확인");
+//		if(postService.isGood(email, id) > 0) return new ResponseEntity<String>("true", HttpStatus.OK);
+//		return new ResponseEntity<String>("false", HttpStatus.FORBIDDEN);
+//	}
 	
 	@DeleteMapping
 	@ApiOperation(value = "포스트 삭제 - 보관함, 기록, 해시태그, 좋아요, 파일도 함께 삭제")

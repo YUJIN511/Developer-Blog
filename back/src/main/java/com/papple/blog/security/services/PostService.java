@@ -27,6 +27,5 @@ public interface PostService {
 	void deleteGood(String email, Long postid);
 	void deleteGoodByPostid(Long postid);
 	void deleteGoodByEmail(String email);
-	int isGood(String email, Long postid);
 	int cntCategory(String email, String hashtag);
 }

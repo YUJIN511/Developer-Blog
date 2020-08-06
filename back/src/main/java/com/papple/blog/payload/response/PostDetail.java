@@ -1,6 +1,7 @@
 package com.papple.blog.payload.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,13 +9,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class PostList {
-		
+public class PostDetail {
 	private String nickname;
 	private String profile;
 	private Long score;
 	private Long id;
 	private String title;
+	private String content;
 	private String summary;
 	private String picture;
 	private String writer;
@@ -23,8 +24,7 @@ public class PostList {
     private LocalDateTime createdate;
     //좋아요 여부 - 비로그인 시 기본 false
     private boolean isgood;
-	public PostList() {
+    public PostDetail() {
 		this.isgood = false;
 	}
-    
 }

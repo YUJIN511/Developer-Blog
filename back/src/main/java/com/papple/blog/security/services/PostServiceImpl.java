@@ -118,11 +118,6 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public int isGood(String email, Long postid) {
-		return goodRepository.isGood(email, postid);
-	}
-
-	@Override
 	public GoodList save(GoodList goodlist) {
 		return goodRepository.save(goodlist);
 	}

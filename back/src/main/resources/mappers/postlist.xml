@@ -6,7 +6,7 @@
 
 	<!-- 모든 post 조회 -->
 	<select id="searchAllPost" resultType="PostList">
-		select nickname, profile, score, id, title, content, summary, picture, writer, good, views, createdate
+		select nickname, profile, score, id, title, summary, picture, writer, good, views, createdate
 		from user join post on email = writer
 	</select>
 	
@@ -17,6 +17,17 @@
 		where writer = #{email}
 	</select>
 	
+	<!-- post id로 PostDetail 조회 -->
+	<select id="searchPostDetail" resultType="PostDetail">
+		select nickname, profile, score, id, title, content, summary, picture, writer, good, views, createdate
+		from user join post on email = writer
+		where id = #{postid}
+	</select>
 	
+	<!-- post id로 hashtag 조회 
+	<select id="searchHashtag" resultType="String">
+		select hashtag from post where postid = #{postid}
+	</select>
+	-->
 </mapper>
 
