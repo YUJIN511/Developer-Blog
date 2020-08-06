@@ -1,5 +1,5 @@
 <template>
-  <div class="container-profilepic ">
+  <div class="container-profilepic hide">
     <div class="background-profilepic" @click="closeModal"></div>
     <div class="modal-profilepic">
       <div class="modal-head">
