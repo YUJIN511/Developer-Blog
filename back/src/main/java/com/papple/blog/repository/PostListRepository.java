@@ -18,5 +18,5 @@ import com.papple.blog.payload.response.PostList;
 @Mapper
 public interface PostListRepository{
 	List<PostList> searchAllPost();
-	List<PostList> searchByEmail();
+	List<PostList> searchByEmail(String email);
 }
