@@ -3,6 +3,8 @@ package com.papple.blog.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 //import java.lang.StackWalker.Option;
 import java.util.HashSet;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -329,28 +332,34 @@ public class AuthController {
 	
 	
 	@PostMapping("/profile")
-	@ApiOperation(value = "서버에 파일 업로드 + 대표사진 업데이트 + 프로필 히스토리에 저장")
+	@ApiOperation(value = "path 변수가 비었을 때는 서버에 파일 저장 + 유저 대표사진 update + profile history 등록,  path가 있을 때는 대표사진만 update")
 	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam String email, 
-			@RequestParam String path, HttpServletRequest request) {
+			@RequestParam(required = false) String path, HttpServletRequest request) {
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-		Date nowdate = new Date();
-		String dateString = formatter.format(nowdate);	//현재시간 문자열
-		
-		String real_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile/" + 
-				dateString + "_" + mFile.getOriginalFilename();	//경로 + 날짜시간 + _ +파일이름으로 저장
-
-		String access_path = "http://i3a604.p.ssafy.io/images/profile/" + dateString + "_" + mFile.getOriginalFilename();
-
-		try {
-			mFile.transferTo(new File(real_path));					// 서버에 파일 저장
-			userRepository.updateProfile(access_path, email);		// 유저 대표사진 update
-			profileRepository.insertProfile(email, access_path);	// profile history 등록
-			return new ResponseEntity<String>(access_path, HttpStatus.OK);
-		} catch (IOException e) {
-			System.out.println("파일 업로드 실패");
-			return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
+		if(path == null || !path.equals("")) {	// path 변수가 안들어오면 (새 첨부 파일로 대표이미지를 등록하면)
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+			Date nowdate = new Date();
+			String dateString = formatter.format(nowdate);	//현재시간 문자열
+			
+			String real_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile/" + 
+					dateString + "_" + mFile.getOriginalFilename();	//경로 + 날짜시간 + _ +파일이름으로 저장
+			String access_path = "http://i3a604.p.ssafy.io/images/profile/" + dateString + "_" + mFile.getOriginalFilename();
+			
+			try {
+				mFile.transferTo(new File(real_path));					// 서버에 파일 저장
+				userRepository.updateProfile(access_path, email);		// 유저 대표사진 update
+				profileRepository.insertProfile(email, access_path);	// profile history 등록
+				return new ResponseEntity<String>(access_path, HttpStatus.OK);
+			} catch(Exception e) {
+				System.out.println("파일 업로드 실패");
+				return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
+			}
 		}
+		else {		//path 변수가 들어오면
+			userRepository.updateProfile(path, email);		// 유저 대표사진 update
+			return new ResponseEntity<String>(path, HttpStatus.OK);
+		}
+		
 		
 	}
 	
