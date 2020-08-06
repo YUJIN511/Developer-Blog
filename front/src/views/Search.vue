@@ -6,7 +6,7 @@
 </template>
 
 <script>
-/* 
+/*
 썸네일 URL
 글 제목
 내용
@@ -17,7 +17,10 @@
 좋아요 숫자
 */
 
+import axios from "axios";
 import FlexArticles from "@/components/common/FlexArticles.vue";
+
+const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 
 export default {
   components: {
@@ -25,10 +28,17 @@ export default {
   },
   data: function() {
     return {
-      articleData: []
+      articleData: [],
+      keyword: this.$route.params.keyword
     };
   },
+  methods: {
+    fetchWordResult() {
+      axios.get(`${SERVER_URL}/api/post/search/${this.keyword}`);
+    }
+  },
   created() {
+    console.log(this.keyword);
     this.articleData = [
       {
         thumbUrl:

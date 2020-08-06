@@ -9,12 +9,18 @@
               xmlns:xlink="http://www.w3.org/1999/xlink"
               viewBox="0 0 26 26"
             >
-              <path d="M1,17.8v2.4h24v-2.4H1z M1,11.8v2.4h24v-2.4H1z M1,5.8v2.4h24V5.8H1z" />
+              <path
+                d="M1,17.8v2.4h24v-2.4H1z M1,11.8v2.4h24v-2.4H1z M1,5.8v2.4h24V5.8H1z"
+              />
             </svg>
           </button>
         </div>
         <router-link to="/">
-          <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 154.66 51.58">
+          <svg
+            class="logo"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 154.66 51.58"
+          >
             <polygon
               points="81.22 48.29 66.59 48.29 66.59 3.29 70.66 3.29 70.66 44.76 81.22 44.76 81.22 48.29 81.22 48.29 81.22 48.29"
             />
@@ -50,7 +56,7 @@
 
       <div class="header-item header-center" v-if="$route.meta.header !== 0">
         <div class="container-main-search">
-          <input type="search" class="input-main-search" />
+          <input type="search" class="input-main-search" v-model="searchWord" />
           <button @click="search" class="btn-main-search desktop">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -79,8 +85,16 @@
             />
           </div>
         </button>
-        <button class="btn-login" @click="openLogin" v-if="!getIsLogin()">로그인</button>
-        <router-link tag="button" class="btn-login" to="/article" v-if="getIsLogin()">글쓰기</router-link>
+        <button class="btn-login" @click="openLogin" v-if="!getIsLogin()">
+          로그인
+        </button>
+        <router-link
+          tag="button"
+          class="btn-login"
+          to="/article"
+          v-if="getIsLogin()"
+          >글쓰기</router-link
+        >
         <router-link class="profile-icon" v-if="getIsLogin()" to="/setting">
           <img
             class="svg"
@@ -123,6 +137,11 @@ export default {
     EmailModal,
     UnregisterModal
   },
+  data() {
+    return {
+      searchWord: ""
+    };
+  },
   methods: {
     ...mapActions({
       Logout: "user/logout"
@@ -149,7 +168,10 @@ export default {
       console.log(this.getIsLogin());
     },
     search() {
-      this.$router.push("/search");
+      this.$router.push({
+        name: "Search",
+        params: { keyword: this.searchWord }
+      });
     }
   },
   computed: {}

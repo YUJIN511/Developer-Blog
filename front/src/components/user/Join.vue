@@ -80,6 +80,10 @@ export default {
       Join: "user/join"
     }),
     closeJoin() {
+      this.email = "";
+      this.password = "";
+      this.passwordConfirm = "";
+      this.isTerm = false;
       document.querySelector(".container-join").classList.add("hide");
     },
     moveToLogin() {
@@ -95,17 +99,21 @@ export default {
       return true;
     },
     async join() {
-      const result = await this.Join({
-        email: this.email,
-        password: this.password
-      });
+      if (this.isTerm) {
+        const result = await this.Join({
+          email: this.email,
+          password: this.password
+        });
 
-      if (result) {
-        this.closeJoin();
-        var modal = document.querySelector(".container-emailsent");
-        modal.classList.remove("hide");
+        if (result) {
+          this.closeJoin();
+          var modal = document.querySelector(".container-emailsent");
+          modal.classList.remove("hide");
+        } else {
+          alert("이미 사용중인 이메일 입니다.");
+        }
       } else {
-        alert("이미 사용중인 이메일 입니다.");
+        alert("약관에 동의하지 않으시면 서비스를 이용할 수 없습니다.");
       }
     },
     openEmailSent() {
