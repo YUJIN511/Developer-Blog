@@ -13,6 +13,7 @@ public interface NotificationService {
 
     // 부가기능
     Notification save(Notification notification);
-    Notification findByActionuserAndPostidoflike(String actionuser, Long postid);
-    Notification findByActionuserAndFollowed(String follower, String followed);
+    Notification findByActionuserAndPostidAndType(String actionuser, Long postid, Integer type);
+    Notification findByActionuserAndTargetuserAndType(String follower, String followed, Integer type);
+    void deleteByTargetuserAndType(String targetuser, Integer type);
 }

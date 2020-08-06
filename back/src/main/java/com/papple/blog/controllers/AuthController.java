@@ -133,11 +133,12 @@ public class AuthController {
 	@ApiOperation(value = "회원 가입")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
-		if (userRepository.existsById(signUpRequest.getEmail())) {
-			return ResponseEntity
-					.badRequest()
-					.body(new MessageResponse("Error: Email is already in use!"));
-		}
+		// 이메일 중복체크
+		// if (userRepository.existsById(signUpRequest.getEmail())) {
+		// 	return ResponseEntity
+		// 			.badRequest()
+		// 			.body(new MessageResponse("Error: Email is already in use!"));
+		// }
 		
 		// Create new user's account
 		User user = new User(signUpRequest.getEmail(), null,
@@ -181,6 +182,7 @@ public class AuthController {
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 
+	// 회원가입시 인증 이메일 보내기
 	@Async
 	public void sendMail(String email){
 		try{
@@ -384,6 +386,19 @@ public class AuthController {
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
+	
+
+	@GetMapping("/notificationSetting")
+	@ApiOperation(value = "알림설정")
+	public ResponseEntity<String> getMethodName(@RequestParam final String email, 
+															@RequestParam String notification) {
+
+		User user = userRepository.getUserByEmail(email);
+		user.setNotification(notification);	// 1111111  (1은 ON, 0은 OFF)
+		userRepository.save(user);
+
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
 	
 
 }
