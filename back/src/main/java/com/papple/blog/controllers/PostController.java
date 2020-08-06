@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.ApiOperation;
 
+import com.papple.blog.models.Follow;
 import com.papple.blog.models.GoodList;
 import com.papple.blog.models.GoodListPK;
 import com.papple.blog.models.Hashtag;
@@ -42,11 +43,13 @@ import com.papple.blog.models.Post;
 import com.papple.blog.models.Storage;
 import com.papple.blog.models.StoragePK;
 import com.papple.blog.payload.response.PostList;
+import com.papple.blog.repository.FollowRepository;
 import com.papple.blog.repository.HistoryRepository;
 import com.papple.blog.repository.PostListRepository;
 import com.papple.blog.repository.PostRepository;
 import com.papple.blog.repository.StorageRepository;
 import com.papple.blog.repository.UserRepository;
+import com.papple.blog.security.services.FollowService;
 import com.papple.blog.security.services.HashtagService;
 import com.papple.blog.security.services.NotificationService;
 import com.papple.blog.security.services.PostService;
@@ -70,6 +73,8 @@ public class PostController {
 	private NotificationService notificationService;
 	@Autowired
 	private PostListRepository postListRepository;
+	@Autowired
+	private FollowService followService;
 
 	@GetMapping("/all")
 	@ApiOperation(value = "모든 포스트 보기")
@@ -176,13 +181,27 @@ public class PostController {
 	public ResponseEntity<String> insert(@RequestBody Post post, HashtagList hashtag) {
 		System.out.println("새 글 게시");  
 		
-		Post p = postService.save(post);
+		Post p = postService.save(post);	// 글 저장
 		
-		for(int i=0;i<hashtag.getHashtagList().size();i++) {
+		for(int i=0;i<hashtag.getHashtagList().size();i++) {	// 해시태그 저장
 			Hashtag ht = new Hashtag(new HashtagPK(p.getId(), hashtag.getHashtagList().get(i)));
 			hashtagService.save(ht);
 		}
-		
+
+		// 알림 발생
+		List<Follow> followerList = followService.findByFollowed(post.getWriter());	
+		String actionName = userRepository.getUserByEmail(post.getWriter()).getNickname();
+		for(Follow f : followerList){
+			Notification notification = Notification.builder()
+				.message(actionName +"님의 블로그에 새로운 게시물이 등록되었습니다. 가장 먼저 방문해 게시물을 확인해보세요.")
+				.actionuser(post.getWriter())
+				.targetuser(f.getFollowPK().getFollower())
+				.notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+post.getId())
+				.build();
+			
+			notification.setPostidoffollowed(post.getId());
+			notificationService.save(notification);
+		}
 		if(p != null) return new ResponseEntity<>("success", HttpStatus.OK);
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}
