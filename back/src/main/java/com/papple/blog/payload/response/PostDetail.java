@@ -22,6 +22,7 @@ public class PostDetail {
 	private int good;
 	private int views;
     private LocalDateTime createdate;
+    private List<String> tag;
     //좋아요 여부 - 비로그인 시 기본 false
     private boolean isgood;
     public PostDetail() {

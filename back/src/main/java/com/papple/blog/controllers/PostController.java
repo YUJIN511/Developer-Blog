@@ -108,9 +108,12 @@ public class PostController {
 		
 		Post temp = postService.findById(id).get();
 		
+		PostDetail detail = postListRepository.searchPostDetail(id);
+		List<String> tag = postListRepository.searchHashtag(id);
 		
+		detail.setTag(tag);
 		
-		return new ResponseEntity<PostDetail>(postListRepository.searchPostDetail(id), HttpStatus.OK);
+		return new ResponseEntity<PostDetail>(detail, HttpStatus.OK);
 		
 //		if(!temp.getWriter().equals(email)){	// 포스트 작성자의 history, 조회수 반영 X
 //			temp.setViews(temp.getViews()+1);
