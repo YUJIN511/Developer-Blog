@@ -135,19 +135,19 @@ export default {
     Join,
     Repassword,
     EmailModal,
-    UnregisterModal,
+    UnregisterModal
   },
   data() {
     return {
-      searchWord: "",
+      searchWord: ""
     };
   },
   methods: {
     ...mapActions({
-      Logout: "user/logout",
+      Logout: "user/logout"
     }),
     ...mapGetters({
-      getIsLogin: "user/getIsLogin",
+      getIsLogin: "user/getIsLogin"
     }),
     showNavBar() {
       const navbar = document.querySelector(".navbar");
@@ -170,11 +170,11 @@ export default {
     search() {
       this.$router.push({
         name: "Search",
-        params: { keyword: this.searchWord },
+        params: { keyword: this.searchWord }
       });
-    },
+    }
   },
-  computed: {},
+  computed: {}
 };
 </script>
 

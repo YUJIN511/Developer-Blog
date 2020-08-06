@@ -2,7 +2,14 @@
   <div class="container-article-edit">
     <form action="javascript:void(0)">
       <input type="text" placeholder="글 제목" v-model="title" />
-      <textarea name id cols="60" rows="10" placeholder="글 내용" v-model="content"></textarea>
+      <textarea
+        name
+        id
+        cols="60"
+        rows="10"
+        placeholder="글 내용"
+        v-model="content"
+      ></textarea>
       <input type="text" placeholder="태그1, 태그2" v-model="tags" />
       <button @click="submit">확인</button>
     </form>

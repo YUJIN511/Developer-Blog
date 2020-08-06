@@ -40,7 +40,9 @@
         </div>
       </div>
       <div class="level-icon">
-        <span class="span-password" @click="enablePassword()">비밀번호 바꾸기</span>
+        <span class="span-password" @click="enablePassword()"
+          >비밀번호 바꾸기</span
+        >
         <div class="edit-password hide">
           <div class="background" @click="disablePassword()"></div>
           <div class="container-inputPassword">
@@ -67,7 +69,9 @@
         </div>
       </div>
       <div class="container-unregister">
-        <span class="span-unregister" @click="openUnregisterModal()">회원 탈퇴</span>
+        <span class="span-unregister" @click="openUnregisterModal()"
+          >회원 탈퇴</span
+        >
       </div>
     </main>
     <!-- 블러효과 용 -->

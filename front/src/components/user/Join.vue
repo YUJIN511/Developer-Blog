@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      Join: "user/join",
+      Join: "user/join"
     }),
     closeJoin() {
       this.email = "";
@@ -102,7 +102,7 @@ export default {
       if (this.isTerm) {
         const result = await this.Join({
           email: this.email,
-          password: this.password,
+          password: this.password
         });
 
         if (result) {
@@ -119,7 +119,7 @@ export default {
     openEmailSent() {
       this.closeJoin();
       document.querySelector(".container-emailsent").classList.remove("hide");
-    },
+    }
   },
   data: () => {
     return {
@@ -128,10 +128,10 @@ export default {
       passwordConfirm: "",
       isTerm: false,
       dom: {
-        passwordConfirmErrMsg: "",
-      },
+        passwordConfirmErrMsg: ""
+      }
     };
-  },
+  }
 };
 </script>
 

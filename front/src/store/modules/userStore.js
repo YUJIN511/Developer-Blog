@@ -8,11 +8,11 @@ export default {
   state: {
     userInfo: {
       email: "",
-      nickname: "",
+      nickname: ""
     },
 
     isLogin: false,
-    token: "",
+    token: ""
   },
 
   getters: {
@@ -22,8 +22,8 @@ export default {
     getAuthHeader(state) {
       const config = {
         headers: {
-          Authorization: "Bearer " + state.token,
-        },
+          Authorization: "Bearer " + state.token
+        }
       };
       return config;
     },
@@ -32,7 +32,7 @@ export default {
     },
     getEmail(state) {
       return state.userInfo.email;
-    },
+    }
   },
 
   mutations: {
@@ -55,7 +55,7 @@ export default {
     },
     setRole(state, role) {
       state.userInfo.role = role;
-    },
+    }
   },
 
   actions: {
@@ -94,15 +94,15 @@ export default {
       axios
         .get(`${SERVER_URL}/api/auth/userInfo`, {
           params: {
-            email: email,
-          },
+            email: email
+          }
         })
-        .then((res) => {
+        .then(res => {
           // console.log(res);
           context.commit("setNickname", res.data.nickname);
           context.commit("setRole", res.data.roles["name"]);
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     },
     updateNickname({ commit, getters }, userInfo) {
       axios
@@ -111,24 +111,24 @@ export default {
           userInfo,
           getters.getAuthHeader
         )
-        .then((res) => {
+        .then(res => {
           console.log(res);
           commit("setNickname", res.config.data.nickname);
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     },
     unregister(context, email) {
       axios
         .get(`${SERVER_URL}/api/auth/unregister`, {
           params: {
-            email: email,
-          },
+            email: email
+          }
         })
-        .then((res) => {
+        .then(res => {
           console.log(res);
           context.commit("setLogout", false);
         })
-        .catch((err) => console.log(err));
-    },
-  },
+        .catch(err => console.log(err));
+    }
+  }
 };
