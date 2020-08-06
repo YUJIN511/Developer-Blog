@@ -28,9 +28,9 @@ import { mapGetters } from "vuex";
 export default {
   methods: {
     ...mapGetters({
-      getUserInfo: "user/getUserInfo",
-    }),
-  },
+      getUserInfo: "user/getUserInfo"
+    })
+  }
 };
 </script>
 
