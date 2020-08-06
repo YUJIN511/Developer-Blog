@@ -53,6 +53,7 @@ import com.papple.blog.payload.response.JwtResponse;
 import com.papple.blog.payload.response.MessageResponse;
 import com.papple.blog.repository.AuthRepository;
 import com.papple.blog.repository.HistoryRepository;
+import com.papple.blog.repository.ProfileRepository;
 import com.papple.blog.repository.HashtagRepository;
 import com.papple.blog.repository.RoleRepository;
 import com.papple.blog.repository.StorageRepository;
@@ -85,6 +86,8 @@ public class AuthController {
 	FollowService followService;
 	@Autowired
 	HashtagRepository hashtagRepository;
+	@Autowired
+	ProfileRepository profileRepository;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -315,9 +318,18 @@ public class AuthController {
 		return ResponseEntity.ok(new MessageResponse("Password registered successfully!"));
 	}
 	
-	@PutMapping("/profile")
-	@ApiOperation(value = "프로필 사진 업로드 - Access Path return")
-	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam String email, HttpServletRequest request) {
+	// Profile 사진 업로드 관련
+	@GetMapping("/pflist")
+	@ApiOperation(value = "유저의 사진 히스토리 목록을 가져옴")
+	public ResponseEntity<List<String>> getProfileHistory(String email) {
+		return new ResponseEntity<List<String>>(profileRepository.searchByEmail(email), HttpStatus.OK);
+	}
+	
+	
+	@PostMapping("/profile")
+	@ApiOperation(value = "서버에 파일 업로드 + 대표사진 업데이트 + 프로필 히스토리에 저장")
+	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam String email, 
+			@RequestParam String path, HttpServletRequest request) {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date nowdate = new Date();
@@ -329,8 +341,9 @@ public class AuthController {
 		String access_path = "http://i3a604.p.ssafy.io/images/profile/" + dateString + "_" + mFile.getOriginalFilename();
 
 		try {
-			mFile.transferTo(new File(real_path));
-			userRepository.updateProfile(access_path, email);
+			mFile.transferTo(new File(real_path));					// 서버에 파일 저장
+			userRepository.updateProfile(access_path, email);		// 유저 대표사진 update
+			profileRepository.insertProfile(email, access_path);	// profile history 등록
 			return new ResponseEntity<String>(access_path, HttpStatus.OK);
 		} catch (IOException e) {
 			System.out.println("파일 업로드 실패");
@@ -339,21 +352,21 @@ public class AuthController {
 		
 	}
 	
-	@DeleteMapping("/delprofile")
-	@ApiOperation(value = "서버에 있는 프로필 사진 파일을 삭제")
-	public ResponseEntity<String> fileDelete(String filePath) {
-		String tem = filePath.replace("/profile", "+");
-		StringTokenizer st = new StringTokenizer(tem, "+");
-		
-		String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
-		String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
-		
-		String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile" + next;
-		
-		File delFile = new File(path);
-		if(delFile.exists()) delFile.delete();
-		return new ResponseEntity<String>("success", HttpStatus.OK);
-	}
+//	@DeleteMapping("/delprofile")
+//	@ApiOperation(value = "서버에 있는 프로필 사진 파일을 삭제")
+//	public ResponseEntity<String> fileDelete(String filePath) {
+//		String tem = filePath.replace("/profile", "+");
+//		StringTokenizer st = new StringTokenizer(tem, "+");
+//		
+//		String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
+//		String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
+//		
+//		String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile" + next;
+//		
+//		File delFile = new File(path);
+//		if(delFile.exists()) delFile.delete();
+//		return new ResponseEntity<String>("success", HttpStatus.OK);
+//	}
 	
 	@PutMapping("/unprofile")
 	@ApiOperation(value = "프로필 사진 삭제, (사용자의 profile 컬럼을 null로)")
@@ -361,6 +374,8 @@ public class AuthController {
 		userRepository.deleteProfile(email);
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
+	
+	
 
 }
 
