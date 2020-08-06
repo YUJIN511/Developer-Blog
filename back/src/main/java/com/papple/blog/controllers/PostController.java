@@ -82,7 +82,7 @@ public class PostController {
 	@ApiOperation(value = "해당 이메일의 포스트 리스트 보기(나 혹은 다른 사람 블로그에서)")
 	public ResponseEntity<List<PostList>> searchByEmail(@PathVariable String writer) throws Exception {
 		System.out.println("해당 이메일의 포스트 출력");
-		return new ResponseEntity<List<PostList>>(postListRepository.searchByEmail(), HttpStatus.OK);
+		return new ResponseEntity<List<PostList>>(postListRepository.searchByEmail(writer), HttpStatus.OK);
 	}
 	 
 	@GetMapping("/postDetail")

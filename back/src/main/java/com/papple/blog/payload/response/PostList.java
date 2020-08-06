@@ -22,4 +22,7 @@ public class PostList {
 	private int good;
 	private int views;
     private LocalDateTime createdate;
+    //좋아요 여부 - 비로그인 시 기본 false
+
+    
 }
