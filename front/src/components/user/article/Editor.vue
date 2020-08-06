@@ -1,7 +1,7 @@
 <template>
   <div class="editor">
     <ImageModal ref="ytmodal" @onConfirm="addCommand" />
-    <SummaryModal />
+    <SummaryModal ref="smodal" />
     <input type="text" v-model="title" class="title" placeholder="제목" />
     <div class="container-tags">
       <input
@@ -19,7 +19,7 @@
           :class="{ 'is-active': isActive.bold() }"
           @click="commands.bold"
         >
-          <img class="icon" src="@/assets/images/icons/bold.svg" alt="" />
+          <img class="icon" src="@/assets/images/icons/bold.svg" alt />
         </button>
 
         <button
@@ -27,7 +27,7 @@
           :class="{ 'is-active': isActive.italic() }"
           @click="commands.italic"
         >
-          <img class="icon" src="@/assets/images/icons/italic.svg" alt="" />
+          <img class="icon" src="@/assets/images/icons/italic.svg" alt />
         </button>
 
         <button
@@ -35,7 +35,7 @@
           :class="{ 'is-active': isActive.strike() }"
           @click="commands.strike"
         >
-          <img class="icon" src="@/assets/images/icons/strike.svg" alt="" />
+          <img class="icon" src="@/assets/images/icons/strike.svg" alt />
         </button>
 
         <button
@@ -43,7 +43,7 @@
           :class="{ 'is-active': isActive.underline() }"
           @click="commands.underline"
         >
-          <img class="icon" src="@/assets/images/icons/underline.svg" alt="" />
+          <img class="icon" src="@/assets/images/icons/underline.svg" alt />
         </button>
 
         <button
@@ -51,7 +51,7 @@
           :class="{ 'is-active': isActive.code() }"
           @click="commands.code"
         >
-          <img class="icon" src="@/assets/images/icons/code.svg" alt="" />
+          <img class="icon" src="@/assets/images/icons/code.svg" alt />
         </button>
 
         <button
@@ -59,39 +59,33 @@
           :class="{ 'is-active': isActive.paragraph() }"
           @click="commands.paragraph"
         >
-          <img class="icon" src="@/assets/images/icons/paragraph.svg" alt="" />
+          <img class="icon" src="@/assets/images/icons/paragraph.svg" alt />
         </button>
 
         <button
           class="menubar__button"
           :class="{ 'is-active': isActive.heading({ level: 1 }) }"
           @click="commands.heading({ level: 1 })"
-        >
-          H1
-        </button>
+        >H1</button>
 
         <button
           class="menubar__button"
           :class="{ 'is-active': isActive.heading({ level: 2 }) }"
           @click="commands.heading({ level: 2 })"
-        >
-          H2
-        </button>
+        >H2</button>
 
         <button
           class="menubar__button"
           :class="{ 'is-active': isActive.heading({ level: 3 }) }"
           @click="commands.heading({ level: 3 })"
-        >
-          H3
-        </button>
+        >H3</button>
 
         <button
           class="menubar__button"
           :class="{ 'is-active': isActive.bullet_list() }"
           @click="commands.bullet_list"
         >
-          <img class="icon" src="@/assets/images/icons/ul.svg" alt="" />
+          <img class="icon" src="@/assets/images/icons/ul.svg" alt />
         </button>
 
         <button
@@ -99,7 +93,7 @@
           :class="{ 'is-active': isActive.ordered_list() }"
           @click="commands.ordered_list"
         >
-          <img class="icon" src="@/assets/images/icons/ol.svg" alt="" />
+          <img class="icon" src="@/assets/images/icons/ol.svg" alt />
         </button>
 
         <button
@@ -107,7 +101,7 @@
           :class="{ 'is-active': isActive.blockquote() }"
           @click="commands.blockquote"
         >
-          <img class="icon" src="@/assets/images/icons/quote.svg" alt="" />
+          <img class="icon" src="@/assets/images/icons/quote.svg" alt />
         </button>
 
         <button
@@ -115,23 +109,23 @@
           :class="{ 'is-active': isActive.code_block() }"
           @click="commands.code_block"
         >
-          <img class="icon" src="@/assets/images/icons/code.svg" alt="" />
+          <img class="icon" src="@/assets/images/icons/code.svg" alt />
         </button>
 
         <button class="menubar__button" @click="commands.horizontal_rule">
-          <img class="icon" src="@/assets/images/icons/hr.svg" alt="" />
+          <img class="icon" src="@/assets/images/icons/hr.svg" alt />
         </button>
 
         <button class="menubar__button" @click="commands.undo">
-          <img class="icon" src="@/assets/images/icons/undo.svg" alt="" />
+          <img class="icon" src="@/assets/images/icons/undo.svg" alt />
         </button>
 
         <button class="menubar__button" @click="commands.redo">
-          <img class="icon" src="@/assets/images/icons/redo.svg" alt="" />
+          <img class="icon" src="@/assets/images/icons/redo.svg" alt />
         </button>
 
-        <button class="menubar__button" @click="openModal(commands.image)">
-          <img class="icon" src="@/assets/images/icons/image.svg" alt="" />
+        <button class="menubar__button" @click="openImgModal(commands.image)">
+          <img class="icon" src="@/assets/images/icons/image.svg" alt />
         </button>
       </div>
     </editor-menu-bar>
@@ -160,11 +154,7 @@
             ref="linkInput"
             @keydown.esc="hideLinkMenu"
           />
-          <button
-            class="menububble__button"
-            @click="setLinkUrl(commands.link, null)"
-            type="button"
-          >
+          <button class="menububble__button" @click="setLinkUrl(commands.link, null)" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <title>delete-2-alternate</title>
               <path
@@ -183,9 +173,11 @@
             @click="showLinkMenu(getMarkAttrs('link'))"
             :class="{ 'is-active': isActive.link() }"
           >
-            <span>{{
+            <span>
+              {{
               isActive.link() ? "링크 수정하기" : "링크 추가하기"
-            }}</span>
+              }}
+            </span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <title>hyperlink-2</title>
               <path
@@ -205,13 +197,12 @@
 
     <editor-content class="editor__content" :editor="editor" />
 
-    <button class="btn-submit" @click="submit">작성 완료</button>
+    <button class="btn-submit" @click="openSummaryModal">작성 완료</button>
   </div>
 </template>
 
 <script>
 import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from "tiptap";
-import axios from "axios";
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
 import ImageModal from "./ImageModal";
@@ -304,8 +295,12 @@ export default {
             <br />
             – mom
           </blockquote>
-        `
-      })
+        `,
+        onUpdate: ({ getHTML }) => {
+          this.html = getHTML();
+        }
+      }),
+      html: ""
     };
   },
   methods: {
@@ -344,11 +339,25 @@ export default {
         container.insertBefore(newTag, e.path[0]);
       }
     },
-    openModal(command) {
+    openImgModal(command) {
       this.$refs.ytmodal.showModal(command);
     },
+    openSummaryModal() {
+      let tagString = "";
+      this.tagList.forEach(elem => {
+        tagString += `hashtagList=${elem}&`;
+      });
+      const articleData = {
+        title: this.title,
+        tagString,
+        content: this.html,
+        writer: this.getUserInfo().email,
+        summary: "",
+        picture: ""
+      };
+      this.$refs.smodal.showModal(articleData);
+    },
     addCommand(data) {
-      console.dir(data);
       if (data.command !== null) {
         data.data.forEach(elem => {
           data.command(elem);
@@ -369,27 +378,6 @@ export default {
     setLinkUrl(command, url) {
       command({ href: url });
       this.hideLinkMenu();
-    },
-    submit() {
-      const title = this.title;
-      const content = document.querySelector(".editor__content").outerHTML;
-      let tagString = "";
-      this.tagList.forEach(elem => {
-        tagString += `hashtagList=${elem}&`;
-      });
-
-      axios
-        .post(`${this.$apiServer}/post?${tagString}`, {
-          title,
-          content,
-          writer: this.getUserInfo().email
-        })
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
-        });
     }
   },
   beforeDestroy() {

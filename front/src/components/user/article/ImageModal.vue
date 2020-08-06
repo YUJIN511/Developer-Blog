@@ -9,8 +9,7 @@
           id="dropzone"
           @vdropzone-success="vfileUploaded"
           :options="dropzoneOptions"
-        >
-        </vue-dropzone>
+        ></vue-dropzone>
       </div>
 
       <footer class="modal-footer">
@@ -19,9 +18,7 @@
           class="success"
           :title="validImage ? '' : 'Image URL needs to be valid'"
           :disabled="!validImage"
-        >
-          이미지 추가
-        </button>
+        >이미지 추가</button>
         <button @click="show = false" class="danger">창 닫기</button>
       </footer>
     </div>
@@ -63,17 +60,16 @@ export default {
   methods: {
     showModal(command) {
       // Add the sent command
+      console.dir(command);
       this.command = command;
       this.show = true;
     },
     async vfileUploaded(file) {
-      console.log("vfileUploaded: ");
-      console.dir(file);
       let formData = new FormData();
       formData.append("filename", file);
       try {
         const res = await axios.put(
-          "http://i3a604.p.ssafy.io:8081/api/post/upload",
+          `${this.$apiServer}/post/upload`,
           formData,
           {
             headers: {
@@ -82,9 +78,7 @@ export default {
           }
         );
 
-        console.dir(res);
         if (res.status === 200) {
-          alert("Your image has been uploaded to the server");
           this.imageSrc.push(res.data);
         }
       } catch (error) {

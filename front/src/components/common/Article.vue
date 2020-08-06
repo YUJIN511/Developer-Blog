@@ -2,11 +2,11 @@
   <div class="article">
     <button @click="readArticle" class="btn-read">
       <div class="header-article">
-        <img :src="data.thumbUrl" alt />
+        <img :src="data.picture" alt />
       </div>
       <div class="body-article">
         <h5>{{ data.title }}</h5>
-        <div class="description">{{ data.content }}</div>
+        <div class="description">{{ data.summary }}</div>
       </div>
     </button>
     <div class="footer-article">
@@ -21,7 +21,7 @@
           alt="level icon"
         />
       </div>
-      <div class="nickname">{{ data.name }}</div>
+      <div class="nickname">{{ data.nickname }}</div>
       <div class="like">
         <button class="btn-like" @click="clickLike">
           <svg
@@ -36,7 +36,7 @@
             />
           </svg>
         </button>
-        <span class="like-count">{{ data.likeCnt }}</span>
+        <span class="like-count">{{ data.good }}</span>
       </div>
     </div>
   </div>

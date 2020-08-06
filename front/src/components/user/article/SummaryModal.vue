@@ -1,8 +1,8 @@
 <template>
-  <div class="summary-modal">
+  <div class="summary-modal" v-if="show">
     <div class="overlay"></div>
     <div class="summary-content">
-      <h4>글 미리보기</h4>
+      <h5>글 미리보기</h5>
       <main>
         <button class="thumbnail">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -23,27 +23,43 @@
             <input type="file" ref="myFiles" @change="getThumbImage" />
           </button>
         </button>
-        <h5>제목</h5>
-        <div class="content-article">내용</div>
+        <h5>{{articleData.title}}</h5>
+        <textarea
+          :maxlength="maxSummary"
+          class="content-article"
+          v-model="articleData.summary"
+          placeholder="글 목록에 노출될 내용을 적어주세요."
+        >내용</textarea>
+        <span class="char-limit">{{articleData.summary.length}}/{{maxSummary}}</span>
       </main>
+      <footer>
+        <button class="btn btn-cancel" @click="closeModal">취소</button>
+        <button class="btn btn-complete" @click="submit">완료</button>
+      </footer>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data: function() {
     return {
-      thumbSrc: ""
+      show: false,
+      thumbSrc: "",
+      maxSummary: 100,
+      articleData: ""
     };
   },
-  watch: {
-    thumbImage: function(newData) {
-      this.thumbImage = newData;
-      console.log(this.thumbImage);
-    }
-  },
   methods: {
+    showModal(articleData) {
+      this.articleData = articleData;
+      console.log(this.articleData);
+      this.show = true;
+    },
+    closeModal() {
+      this.show = false;
+    },
     getThumbImage() {
       const file = this.$refs.myFiles.files;
       console.dir(file);
@@ -53,6 +69,56 @@ export default {
           document.querySelector(".thumb-img").src = fr.result;
         };
         fr.readAsDataURL(file[0]);
+      }
+    },
+    async submit() {
+      try {
+        const result = await this.sendImg();
+        if (result) {
+          console.dir(this.articleData);
+          axios
+            .post(`${this.$apiServer}/post?${this.articleData.tagString}`, {
+              content: this.articleData.content,
+              picture: this.articleData.picture,
+              summary: this.articleData.summary,
+              title: this.articleData.title,
+              writer: this.articleData.writer
+            })
+            .then(() => {
+              alert("글작성이 완료되었습니다.");
+              location.href = "/";
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async sendImg() {
+      const imgFile = this.$refs.myFiles.files[0];
+      let formData = new FormData();
+      formData.append("filename", imgFile);
+      try {
+        const res = await axios.put(
+          `${this.$apiServer}/post/upload`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          }
+        );
+
+        if (res.status === 200) {
+          this.articleData.picture = res.data;
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.log(error);
+        return false;
       }
     }
   }
@@ -85,7 +151,7 @@ export default {
   position: absolute;
   background-color: $bgColor;
   width: 350px;
-  height: 500px;
+  height: 530px;
   padding: 15px 25px;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   border-radius: 5px;
@@ -97,23 +163,18 @@ main {
   align-items: center;
 }
 
-h4 {
-  font-weight: 900;
-  margin-bottom: 15px;
-}
-
 .thumbnail {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 300px;
-  height: 180px;
+  height: 160px;
   margin-bottom: 30px;
   background-color: rgba(216, 216, 216, 0.7);
-
+  border-radius: 5px;
   svg {
-    display: none;
+    position: absolute;
     width: 120px;
     height: 120px;
     fill: rgb(247, 247, 247);
@@ -121,14 +182,15 @@ h4 {
 
   img {
     width: 300px;
-    height: 180px;
+    height: 160px;
+    border-radius: 5px;
   }
 }
 
 .btn-thumbnail {
   position: absolute;
   width: 300px;
-  height: 180px;
+  height: 160px;
   background-color: black;
   opacity: 0;
   color: white;
@@ -142,6 +204,7 @@ h4 {
     height: 100%;
     cursor: pointer;
     opacity: 0;
+    border-radius: 5px;
   }
 }
 h5 {
@@ -156,5 +219,44 @@ h5 {
   padding: 10px;
   text-align: left;
   background-color: white;
+  resize: none;
+  box-shadow: rgba(0, 0, 0, 0.03) 0px 0px 4px 0px;
+  line-height: 1.5;
+  font-size: 0.8rem;
+  border-width: initial;
+  border-style: none;
+  border-color: initial;
+  border-image: initial;
+  border-radius: 5px;
+  outline: none;
+  padding: 0.75rem 1rem;
+}
+.char-limit {
+  width: 100%;
+  text-align: right;
+  font-size: 0.7em;
+  color: rgb(172, 172, 172);
+}
+
+footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.btn {
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.btn-cancel {
+  background-color: rgb(172, 172, 172);
+  color: white;
+}
+.btn-complete {
+  background-color: cornflowerblue;
+  color: white;
+  margin-left: 10px;
 }
 </style>
