@@ -34,7 +34,7 @@
       </main>
       <footer>
         <button class="btn btn-cancel" @click="closeModal">취소</button>
-        <button class="btn btn-complete" @click="submit">완료</button>
+        <button class="btn btn-complete" @click="submit">진짜 완료</button>
       </footer>
     </div>
   </div>
@@ -226,7 +226,6 @@ h5 {
   border-width: initial;
   border-style: none;
   border-color: initial;
-  border-image: initial;
   border-radius: 5px;
   outline: none;
   padding: 0.75rem 1rem;
@@ -236,6 +235,7 @@ h5 {
   text-align: right;
   font-size: 0.7em;
   color: rgb(172, 172, 172);
+  margin-right: 10px;
 }
 
 footer {
@@ -245,6 +245,8 @@ footer {
 }
 
 .btn {
+  height: 40px;
+  padding: 5px 10px;
   &:hover {
     opacity: 0.7;
   }

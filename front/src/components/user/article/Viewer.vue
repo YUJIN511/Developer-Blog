@@ -1,14 +1,8 @@
 <template>
   <div class="editor">
-    <input
-      type="text"
-      v-model="title"
-      class="title"
-      placeholder="제목"
-      readonly
-    />
+    <input type="text" v-model="title" class="title" placeholder="제목" readonly />
     <div class="article-info">
-      <span class="create-date">{{ createDate }} </span>
+      <span class="create-date">{{ createDate }}</span>
     </div>
     <editor-content class="editor__content" :editor="editor" />
   </div>
@@ -78,17 +72,16 @@ export default {
 
         content: ""
       }),
-      articleId: 0,
       title: "",
       createDate: "",
+
       linkUrl: null,
       linkMenuIsActive: false
     };
   },
   methods: {
     async getArticleData() {
-      const articleId = this.$route.query.articleId;
-      console.log(articleId);
+      const articleId = this.$route.query.id;
       try {
         const res = await axios.get(`${this.$apiServer}/post/${articleId}`);
 
@@ -108,8 +101,7 @@ export default {
     this.editor.destroy();
   },
   created() {
-    this.articleData;
-    //this.getArticleData();
+    this.getArticleData();
   }
 };
 </script>

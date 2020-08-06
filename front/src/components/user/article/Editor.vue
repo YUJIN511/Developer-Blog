@@ -196,8 +196,6 @@
     </editor-menu-bubble>
 
     <editor-content class="editor__content" :editor="editor" />
-
-    <button class="btn-submit" @click="openSummaryModal">작성 완료</button>
   </div>
 </template>
 
@@ -417,7 +415,7 @@ input {
   border-bottom: 3px solid #f1f4f7;
   padding: 10px;
   padding-bottom: 20px;
-  margin-bottom: 60px;
+  margin-bottom: 10px;
 }
 
 .container-tags {
@@ -458,13 +456,6 @@ input {
   margin-bottom: 20px;
   border: none;
   background-color: $bgColor;
-}
-
-.btn-submit {
-  background: #6699cc;
-  width: 200px;
-  height: 50px;
-  border-radius: 5px;
 }
 
 // icon design

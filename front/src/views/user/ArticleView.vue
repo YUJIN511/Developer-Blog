@@ -1,6 +1,6 @@
 <template>
   <div class="container-article-view">
-    <viewer></viewer>
+    <viewer :articleData="articleData"></viewer>
   </div>
 </template>
 
@@ -9,6 +9,11 @@ import Viewer from "@/components/user/article/Viewer.vue";
 export default {
   components: {
     Viewer
+  },
+  props: {
+    articleData: {
+      type: Object
+    }
   }
 };
 </script>
