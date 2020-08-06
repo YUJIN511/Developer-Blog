@@ -27,6 +27,5 @@ public interface GoodRepository extends JpaRepository<GoodList, GoodListPK>{
 	@Query(value = "delete from goodlist where email = ?1", nativeQuery = true)
 	void deleteGoodByEmail(String email);
 	
-	@Query(value = "select count(*) from goodlist where email = ?1 and postid = ?2", nativeQuery = true)
-	int isGood(String email, Long postid);
+	
 }

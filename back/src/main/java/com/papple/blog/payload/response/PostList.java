@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class PostList {
+		
 	private String nickname;
 	private String profile;
 	private Long score;
@@ -23,6 +23,9 @@ public class PostList {
 	private int views;
     private LocalDateTime createdate;
     //좋아요 여부 - 비로그인 시 기본 false
-
+    private boolean isgood;
+	public PostList() {
+		this.isgood = false;
+	}
     
 }

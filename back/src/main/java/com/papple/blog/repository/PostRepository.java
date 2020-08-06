@@ -68,4 +68,5 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 	@Query(value = "select email, nickname, profile, score, id, title, content, summary, picture, writer, good, views, createdate"
 			+ " from user join post on email = writer", nativeQuery = true)
 	List<PostList> searchAllPost();
+
 }

@@ -30,21 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.ApiOperation;
 
-import com.papple.blog.models.GoodList;
-import com.papple.blog.models.GoodListPK;
-import com.papple.blog.models.Hashtag;
-import com.papple.blog.models.HashtagList;
-import com.papple.blog.models.HashtagPK;
-import com.papple.blog.models.History;
-import com.papple.blog.models.HistoryPK;
-import com.papple.blog.models.Notification;
-import com.papple.blog.models.Post;
-import com.papple.blog.models.Storage;
-import com.papple.blog.models.StoragePK;
-import com.papple.blog.repository.UserRepository;
-import com.papple.blog.security.services.HashtagService;
-import com.papple.blog.security.services.NotificationService;
-import com.papple.blog.security.services.PostService;
 
 // http://localhost:8081/swagger-ui.html
 @CrossOrigin(origins = "*", maxAge = 3600)

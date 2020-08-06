@@ -17,6 +17,14 @@
 		where writer = #{email}
 	</select>
 	
+	<!-- post id로 content 조회 -->
+	<select id="searchContent" resultType="String">
+		select content from post where id = #{postid}
+	</select>
 	
+	<!-- post id로 hashtag 조회 -->
+	<select id="searchHashtag" resultType="String">
+		select hashtag from post where postid = #{postid}
+	</select>
 </mapper>
 
