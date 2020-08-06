@@ -2,29 +2,9 @@
   <div class="container-account">
     <header>
       <div class="profile-image">
-        <!-- <input
-          type="file"
-          id="file"
-          style="display: none;"
-          @change="uploadFile"
-        /> -->
-        <button
-          class="banner-image-edit"
-          type="button"
-          id="dropdownMenuButton"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          @click="showMenu"
-        >
+        <button class="banner-image-edit" @click="openProfilePic">
           수정하기
         </button>
-        <!-- <div v-if="menu" class="dropdown-menu" @mouseleave="menu = false">
-          <a class="dropdown-item" @click="clickFileUpload">
-            프로필 사진 변경
-          </a>
-          <a class="dropdown-item" href="#">프로필 사진 삭제</a>
-        </div> -->
       </div>
     </header>
     <main>
@@ -112,9 +92,6 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import axios from "axios";
-
-const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 
 export default {
   data() {
@@ -189,27 +166,7 @@ export default {
     openUnregisterModal() {
       document.querySelector(".container-unregister").classList.remove("hide");
     },
-    clickFileUpload() {
-      document.querySelector("#file").click();
-    },
-    uploadFile(event) {
-      this.file = event.target.files[0];
-      let formData = new FormData();
-      formData.append("filename", this.file);
-      formData.append("email", this.email);
-
-      axios
-        .put(`${SERVER_URL}/api/auth/profile`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => console.log(err));
-    },
-    showMenu() {
+    openProfilePic() {
       document.querySelector(".container-profilepic").classList.remove("hide");
     },
   },

@@ -11,7 +11,7 @@
           style="display: none;"
           @change="uploadFile"
         />
-        <button>사진 업로드</button>
+        <button @click="clickInput">사진 업로드</button>
       </div>
       <!-- <button class="btn-close" @click="closeModal">✖</button> -->
     </div>
@@ -19,11 +19,35 @@
 </template>
 
 <script>
+import axios from "axios";
+
+const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
+
 export default {
   name: "ProfilePicModal",
   methods: {
     closeModal() {
       document.querySelector(".container-profilepic").classList.add("hide");
+    },
+    uploadFile(event) {
+      this.file = event.target.files[0];
+      let formData = new FormData();
+      formData.append("filename", this.file);
+      formData.append("email", this.email);
+
+      axios
+        .put(`${SERVER_URL}/api/auth/profile`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
+    },
+    clickInput() {
+      document.querySelector("#file").click();
     },
   },
 };
