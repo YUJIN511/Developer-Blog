@@ -24,10 +24,9 @@
 		where id = #{postid}
 	</select>
 	
-	<!-- post id로 hashtag 조회 
+	<!-- post id로 hashtag 조회 --> 
 	<select id="searchHashtag" resultType="String">
-		select hashtag from post where postid = #{postid}
+		select hashtag from hashtag where postid = #{postid}
 	</select>
-	-->
 </mapper>
 
