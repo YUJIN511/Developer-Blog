@@ -97,13 +97,15 @@ public class PostController {
 	@GetMapping("/postDetail")
 	@ApiOperation(value = "해당 POST ID의 포스트 보기 - 조회수++, history 추가")
 	public ResponseEntity<PostDetail> searchByIdAndEmail(@RequestParam(required = true) Long id, 
-														@RequestParam(required = true) String email) throws Exception {
+			@RequestParam(required = true) String email) throws Exception {
+		
 		System.out.println("해당 id의 포스트 출력");
+		
 		Post temp = postService.findById(id).get();
 		
-		String content = postListRepository.searchContent(id);
-		List<String> tag = postListRepository.searchHashtag(id);
-		return new ResponseEntity<PostDetail>(new PostDetail(content, tag), HttpStatus.OK);
+		
+		
+		return new ResponseEntity<PostDetail>(postListRepository.searchPostDetail(id), HttpStatus.OK);
 		
 //		if(!temp.getWriter().equals(email)){	// 포스트 작성자의 history, 조회수 반영 X
 //			temp.setViews(temp.getViews()+1);

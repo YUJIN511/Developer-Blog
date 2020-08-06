@@ -13,12 +13,12 @@ import org.springframework.stereotype.Repository;
 
 import com.papple.blog.models.Hashtag;
 import com.papple.blog.models.Post;
+import com.papple.blog.payload.response.PostDetail;
 import com.papple.blog.payload.response.PostList;
 
 @Mapper
 public interface PostListRepository{
 	List<PostList> searchAllPost();
 	List<PostList> searchByEmail(String email);
-	String searchContent(Long postid);
-	List<String> searchHashtag(Long postid);
+	PostDetail searchPostDetail(Long postid);
 }

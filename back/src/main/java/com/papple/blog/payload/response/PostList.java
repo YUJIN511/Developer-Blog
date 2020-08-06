@@ -15,7 +15,6 @@ public class PostList {
 	private Long score;
 	private Long id;
 	private String title;
-	private String content;
 	private String summary;
 	private String picture;
 	private String writer;
