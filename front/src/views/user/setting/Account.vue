@@ -72,7 +72,7 @@
               비밀번호가 일치하지 않습니다.
             </div>
           </div>
-          <button class="btn btn-pw" @click="updatePassword">변경하기</button>
+          <button class="btn btn-pw" @click="updatePassword()">변경하기</button>
         </div>
       </div>
       <div class="container-unregister">

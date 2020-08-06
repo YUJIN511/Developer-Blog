@@ -1,9 +1,8 @@
 <template>
-  <div class="container-profilepic hide">
+  <div class="container-profilepic ">
     <div class="background-profilepic" @click="closeModal"></div>
     <div class="modal-profilepic">
-      <!-- <h1>프로필 사진 수정</h1> -->
-      <div class="modal-body">
+      <div class="modal-head">
         <div class="profile-image"></div>
         <input
           type="file"
@@ -11,7 +10,13 @@
           style="display: none;"
           @change="uploadFile"
         />
-        <button @click="clickInput">사진 업로드</button>
+        <button @click="clickInput" class="btn btn-upload">
+          ...사진 업로드
+        </button>
+      </div>
+      <div class="modal-body">
+        <hr />
+        <div>이전 프로필 사진들</div>
       </div>
       <!-- <button class="btn-close" @click="closeModal">✖</button> -->
     </div>
@@ -87,6 +92,12 @@ export default {
   flex-direction: column;
 }
 
+.modal-head {
+  padding: 50px;
+  //   display: flex;
+  //   justify-content: flex-end;
+}
+
 .modal-body {
   padding: 50px;
 }
@@ -107,5 +118,12 @@ h1 {
 
 .hide {
   display: none;
+}
+
+.btn {
+  background-color: rgb(69, 181, 187);
+}
+.btn:hover {
+  background-color: cadetblue;
 }
 </style>
