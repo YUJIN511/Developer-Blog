@@ -9,7 +9,7 @@ public interface FollowService {
 	List<Follow> findByMyEmail(String follower);
 	int MyFollowerCnt(String followed);
 	int isFollow(String follower, String followed);
-	void addFollow(String follower, String followed);
 	void deleteFollow(String follower, String followed);
 	void deleteByEmail(String email);
+	Follow save(Follow follow);
 }

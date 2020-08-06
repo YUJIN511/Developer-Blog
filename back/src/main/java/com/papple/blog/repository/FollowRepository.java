@@ -26,11 +26,6 @@ public interface FollowRepository extends JpaRepository<Follow, FollowPK>{
 
 	@Modifying
 	@Transactional
-	@Query(value = "insert into follow(follower, followed) values(?1, ?2)", nativeQuery = true)
-	void addFollow(String follower, String followed);
-
-	@Modifying
-	@Transactional
 	@Query(value = "delete from follow where follower = ?1 and followed = ?2", nativeQuery = true)
 	void deleteFollow(String follower, String followed);
 

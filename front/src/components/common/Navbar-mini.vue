@@ -1,5 +1,5 @@
 <template>
-  <div class="container-navbar-mini">
+  <div class="container-navbar-mini" v-if="$route.meta.header !== 0">
     <div class="item-list">
       <div class="item">
         <router-link tag="button" class="btn-icon" to="/" id="btn-home">

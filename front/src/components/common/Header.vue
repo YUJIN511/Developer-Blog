@@ -2,25 +2,19 @@
   <div>
     <div class="header-container">
       <div class="header-item header-front">
-        <div class="btn-navbar-toggle">
+        <div class="btn-navbar-toggle" v-if="$route.meta.header !== 0">
           <button @click="showNavBar">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
               viewBox="0 0 26 26"
             >
-              <path
-                d="M1,17.8v2.4h24v-2.4H1z M1,11.8v2.4h24v-2.4H1z M1,5.8v2.4h24V5.8H1z"
-              />
+              <path d="M1,17.8v2.4h24v-2.4H1z M1,11.8v2.4h24v-2.4H1z M1,5.8v2.4h24V5.8H1z" />
             </svg>
           </button>
         </div>
         <router-link to="/">
-          <svg
-            class="logo"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 154.66 51.58"
-          >
+          <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 154.66 51.58">
             <polygon
               points="81.22 48.29 66.59 48.29 66.59 3.29 70.66 3.29 70.66 44.76 81.22 44.76 81.22 48.29 81.22 48.29 81.22 48.29"
             />
@@ -54,7 +48,7 @@
         </router-link>
       </div>
 
-      <div class="header-item header-center">
+      <div class="header-item header-center" v-if="$route.meta.header !== 0">
         <div class="container-main-search">
           <input type="search" class="input-main-search" />
           <button @click="search" class="btn-main-search desktop">
@@ -72,7 +66,7 @@
         </div>
       </div>
 
-      <div class="header-item header-end">
+      <div class="header-item header-end" v-if="$route.meta.header !== 0">
         <button class="btn-main-search mobile">
           <div class="icon-main-search">
             <svg
@@ -87,16 +81,8 @@
             </svg>
           </div>
         </button>
-        <button class="btn-login" @click="openLogin" v-if="!getIsLogin()">
-          로그인
-        </button>
-        <router-link
-          tag="button"
-          class="btn-login"
-          to="/article"
-          v-if="getIsLogin()"
-          >글쓰기</router-link
-        >
+        <button class="btn-login" @click="openLogin" v-if="!getIsLogin()">로그인</button>
+        <router-link tag="button" class="btn-login" to="/article" v-if="getIsLogin()">글쓰기</router-link>
         <router-link class="profile-icon" v-if="getIsLogin()" to="/setting">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -117,6 +103,7 @@
     <Join />
     <Repassword />
     <EmailModal />
+    <UnregisterModal />
   </div>
 </template>
 
@@ -125,9 +112,10 @@ import Navbar from "@/components/common/Navbar.vue";
 import Login from "@/components/user/Login.vue";
 import Join from "@/components/user/Join.vue";
 import Repassword from "@/components/user/Repassword.vue";
+import EmailModal from "@/components/user/EmailModal.vue";
+import UnregisterModal from "@/components/user/setting/UnregisterModal.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import EmailModal from "@/components/user/EmailModal.vue";
 // import NavbarMini from "@/components/common/Navbar-mini.vue";
 
 export default {
@@ -137,7 +125,8 @@ export default {
     Login,
     Join,
     Repassword,
-    EmailModal
+    EmailModal,
+    UnregisterModal
   },
   methods: {
     ...mapActions({

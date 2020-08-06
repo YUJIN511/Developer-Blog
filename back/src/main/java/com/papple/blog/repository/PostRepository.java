@@ -59,4 +59,7 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 	@Modifying
 	@Query(value = "update post set picture = null where id = ?1", nativeQuery = true)
 	void deletePicture(Long id);
+	
+	@Query(value = "select count(*) from post p where writer=?1 and exists(select * from hashtag h where h.postid = p.id and h.hashtag = ?2)", nativeQuery = true)
+	int cntCategory(String email, String hashtag);
 }
