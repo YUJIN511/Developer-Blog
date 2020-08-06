@@ -133,12 +133,7 @@ public class AuthController {
 	@ApiOperation(value = "회원 가입")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
-		// 이메일 중복체크
-		// if (userRepository.existsById(signUpRequest.getEmail())) {
-		// 	return ResponseEntity
-		// 			.badRequest()
-		// 			.body(new MessageResponse("Error: Email is already in use!"));
-		// }
+
 		
 		// Create new user's account
 		User user = new User(signUpRequest.getEmail(), null,
@@ -180,6 +175,17 @@ public class AuthController {
 		sendMail(signUpRequest.getEmail());
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+	}
+
+	@GetMapping("/checkEmailDuplication")
+	@ApiOperation(value = "이메일 중복 체크")
+	public ResponseEntity<?> checkEmailDuplication(@RequestParam(required = true) final String email){
+		 if (userRepository.existsById(email)) {
+		 	return ResponseEntity
+		 			.badRequest()
+		 			.body(new MessageResponse("Error: Email is already in use!"));
+		 }
+		 return ResponseEntity.ok().body(new MessageResponse("Success"));
 	}
 
 	// 회원가입시 인증 이메일 보내기
