@@ -390,8 +390,8 @@ public class AuthController {
 	@PutMapping("/unprofile")
 	@ApiOperation(value = "프로필 사진을 기본 사진으로 setting")
 	public ResponseEntity<String> fileUnUpload(String email) {
-//		userRepository.deleteProfile(email);
-		profileRepository.unProfile(email);
+		userRepository.deleteProfile(email);
+//		profileRepository.unProfile(email);
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
