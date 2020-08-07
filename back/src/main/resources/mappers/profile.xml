@@ -16,8 +16,5 @@
 	<delete id="deleteProfile">
 		delete from profile where email = #{email} and path = #{path}
 	</delete>
-	
-	<update id="unProfile">
-		update profile set path = 'http://i3a604.p.ssafy.io/images/profile/basic.png' where email = #{email}
-	</update>
+
 </mapper>
