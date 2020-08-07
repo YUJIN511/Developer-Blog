@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import axios from "axios";
 
 const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
@@ -31,6 +32,9 @@ const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 export default {
   name: "ProfilePicModal",
   methods: {
+    ...mapGetters({
+      getEmail: "user/getEmail",
+    }),
     closeModal() {
       document.querySelector(".container-profilepic").classList.add("hide");
     },
@@ -41,7 +45,7 @@ export default {
       formData.append("email", this.email);
 
       axios
-        .put(`${SERVER_URL}/api/auth/profile`, formData, {
+        .post(`${SERVER_URL}/api/auth/profile`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -54,6 +58,17 @@ export default {
     clickInput() {
       document.querySelector("#file").click();
     },
+    fetchPictures() {
+      axios
+        .get(`${SERVER_URL}/api/auth/pflist`, this.getEmail())
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
+    },
+  },
+  created() {
+    this.fetchPictures();
   },
 };
 </script>
