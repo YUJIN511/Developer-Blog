@@ -382,7 +382,7 @@ public class AuthController {
 		File delFile = new File(path);
 		if(delFile.exists()) delFile.delete();		//해당 path의 서버의 파일 삭제
 		
-		profileRepository.deleteProfile(email, path);	// 프로필 히스토리에서 삭제
+		System.out.println(profileRepository.deleteProfile(email, path));	// 프로필 히스토리에서 삭제
 		
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
