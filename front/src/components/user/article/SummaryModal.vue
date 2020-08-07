@@ -5,7 +5,11 @@
       <h5>글 미리보기</h5>
       <main>
         <button class="thumbnail">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <svg
+            class="svg-thumbnail"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
             <title>paginate-filter-picture-alternate</title>
             <circle cx="9.75" cy="6.247" r="2.25" />
             <path
@@ -73,6 +77,7 @@ export default {
         const fr = new FileReader();
         fr.onload = function() {
           document.querySelector(".thumb-img").src = fr.result;
+          document.querySelector(".svg-thumbnail").classList.add("hide");
         };
         fr.readAsDataURL(file);
       }
@@ -185,6 +190,10 @@ main {
     width: 120px;
     height: 120px;
     fill: rgb(247, 247, 247);
+  }
+
+  .hide {
+    display: none;
   }
 
   img {
