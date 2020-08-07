@@ -3,6 +3,8 @@ package com.papple.blog.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 //import java.lang.StackWalker.Option;
 import java.util.HashSet;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -130,12 +133,6 @@ public class AuthController {
 	@ApiOperation(value = "회원 가입")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
-		// 이메일 중복체크
-		// if (userRepository.existsById(signUpRequest.getEmail())) {
-		// 	return ResponseEntity
-		// 			.badRequest()
-		// 			.body(new MessageResponse("Error: Email is already in use!"));
-		// }
 		
 		// Create new user's account
 		User user = new User(signUpRequest.getEmail(), null,
@@ -179,6 +176,17 @@ public class AuthController {
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 
+	@GetMapping("/checkEmailDuplication")
+	@ApiOperation(value = "이메일 중복 체크")
+	public ResponseEntity<?> checkEmailDuplication(@RequestParam(required = true) final String email){
+		 if (userRepository.existsById(email)) {
+		 	return ResponseEntity
+		 			.badRequest()
+		 			.body(new MessageResponse("Error: Email is already in use!"));
+		 }
+		 return ResponseEntity.ok().body(new MessageResponse("Success"));
+	}
+
 	// 회원가입시 인증 이메일 보내기
 	@Async
 	public void sendMail(String email){
@@ -190,7 +198,7 @@ public class AuthController {
 			sendMail.setSubject("[홈페이지 이메일 인증]"); // 메일제목
 			sendMail.setText( // 메일내용
 					"<h1>메일인증</h1>" + "<a href='http://i3a604.p.ssafy.io:8081/api/auth/emailConfirm?email=" + email + 
-					"' target='_blenk'>이메일 인증 확인</a>");
+					"&key="+key+"' target='_blenk'>이메일 인증 확인</a>");
 			sendMail.setFrom("admin@gmail.com", "관리자"); // 보낸이
 			sendMail.setTo(email); // 받는이
 			sendMail.send();
@@ -201,11 +209,11 @@ public class AuthController {
 
 	@GetMapping("/emailConfirm")
 	@ApiOperation(value = "이메일 인증")
-	public RedirectView emailConfirm(@RequestParam(required = true) final String email){
+	public RedirectView emailConfirm(@RequestParam(required = true) final String email, final String key){
 		Optional<UserAuth> userauth = authRepository.findById(email);
 		if(userauth != null){
 			userRepository.updateAuth(1, email);
-			return new RedirectView("http://i3a604.p.ssafy.io/account/setNickname/"+email);
+			return new RedirectView("http://i3a604.p.ssafy.io/account/setNickname/"+email+"&"+key);
 		}
 		// 에러 페이지로 
 		return null;
@@ -329,28 +337,34 @@ public class AuthController {
 	
 	
 	@PostMapping("/profile")
-	@ApiOperation(value = "서버에 파일 업로드 + 대표사진 업데이트 + 프로필 히스토리에 저장")
+	@ApiOperation(value = "path 변수가 비었을 때는 서버에 파일 저장 + 유저 대표사진 update + profile history 등록,  path가 있을 때는 대표사진만 update")
 	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam String email, 
-			@RequestParam String path, HttpServletRequest request) {
+			@RequestParam(required = false) String path, HttpServletRequest request) {
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-		Date nowdate = new Date();
-		String dateString = formatter.format(nowdate);	//현재시간 문자열
-		
-		String real_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile/" + 
-				dateString + "_" + mFile.getOriginalFilename();	//경로 + 날짜시간 + _ +파일이름으로 저장
-
-		String access_path = "http://i3a604.p.ssafy.io/images/profile/" + dateString + "_" + mFile.getOriginalFilename();
-
-		try {
-			mFile.transferTo(new File(real_path));					// 서버에 파일 저장
-			userRepository.updateProfile(access_path, email);		// 유저 대표사진 update
-			profileRepository.insertProfile(email, access_path);	// profile history 등록
-			return new ResponseEntity<String>(access_path, HttpStatus.OK);
-		} catch (IOException e) {
-			System.out.println("파일 업로드 실패");
-			return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
+		if(path == null || path.equals("")) {	// path 변수가 안들어오면 (새 첨부 파일로 대표이미지를 등록하면)
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+			Date nowdate = new Date();
+			String dateString = formatter.format(nowdate);	//현재시간 문자열
+			
+			String real_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile/" + 
+					dateString + "_" + mFile.getOriginalFilename();	//경로 + 날짜시간 + _ +파일이름으로 저장
+			String access_path = "http://i3a604.p.ssafy.io/images/profile/" + dateString + "_" + mFile.getOriginalFilename();
+			
+			try {
+				mFile.transferTo(new File(real_path));					// 서버에 파일 저장
+				userRepository.updateProfile(access_path, email);		// 유저 대표사진 update
+				profileRepository.insertProfile(email, access_path);	// profile history 등록
+				return new ResponseEntity<String>(access_path, HttpStatus.OK);
+			} catch(Exception e) {
+				System.out.println("파일 업로드 실패");
+				return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
+			}
 		}
+		else {		//path 변수가 들어오면
+			userRepository.updateProfile(path, email);		// 유저 대표사진 update
+			return new ResponseEntity<String>(path, HttpStatus.OK);
+		}
+		
 		
 	}
 	
