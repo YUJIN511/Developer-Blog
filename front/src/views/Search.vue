@@ -1,6 +1,6 @@
 <template>
   <div class="container-base">
-    <span class="title">검색결과</span>
+    <span class="title">{{ keyword }}에 대한 검색결과</span>
     <FlexArticles :datas="articleData" />
   </div>
 </template>
@@ -30,21 +30,36 @@ export default {
     return {
       articleData: [],
       keyword: this.$route.params.keyword,
-      items: [
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me 2" },
-      ],
     };
   },
   methods: {
     fetchWordResult() {
-      axios.get(`${SERVER_URL}/api/post/search/${this.keyword}`);
+      axios
+        .get(`${SERVER_URL}/api/post/search/${this.keyword}`)
+        .then((res) => {
+          console.log(res);
+          this.articleData = res.data;
+          console.log(this.articleData);
+        })
+        .catch((err) => console.log(err));
+    },
+    fetchHashResult() {
+      axios
+        .get(`${SERVER_URL}/api/post/hashSearch/${this.keyword}`)
+        .then((res) => {
+          console.log(res);
+          this.articleData = res.data;
+        })
+        .catch((err) => console.log(err));
     },
   },
   created() {
     console.log(this.keyword);
+    // if (this.keyword.includes("#")) {
+    //   this.fetchHashResult();
+    // } else {
+    //   this.fetchWordResult();
+    // }
     this.articleData = [
       {
         thumbUrl:
