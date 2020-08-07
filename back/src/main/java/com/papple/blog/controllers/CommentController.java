@@ -1,7 +1,14 @@
 package com.papple.blog.controllers;
 
 import com.papple.blog.models.Comment;
+import com.papple.blog.models.Notification;
+import com.papple.blog.models.Post;
+import com.papple.blog.repository.UserRepository;
+import com.papple.blog.security.services.CommentService;
+import com.papple.blog.security.services.NotificationService;
+import com.papple.blog.security.services.PostService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,13 +24,38 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/api/comment")
 public class CommentController {
-//	@Autowired
-    
+
+	@Autowired
+    private CommentService commentService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private PostService postService;
+    @Autowired
+    private NotificationService notificationService;
 
     @PostMapping
     @ApiOperation(value = "새 댓글 쓰기")
-    public ResponseEntity<String> insert(@RequestBody Comment commemnt) {
+    public ResponseEntity<String> writeComment(@RequestBody Comment comment) {
+    
+        commentService.save(comment);     // 댓글 저장
+    
+        // 알림 발생(0000010)
+        Post post = postService.findById(comment.getPostid()).get();
 
+        String actionName = userRepository.getUserByEmail(comment.getEmail()).getNickname();
+
+        Notification notification = Notification.builder()
+            .message(actionName +"님이 회원님의 게시물에 댓글을 남겼습니다. "+comment.getContent())
+            .actionuser(comment.getEmail())
+            .targetuser(post.getWriter())
+            .notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+comment.getPostid())
+            .build();
+            
+        notification.setPostid(comment.getPostid());
+        notification.setType(1<<1);
+        notificationService.save(notification);
+        
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
         

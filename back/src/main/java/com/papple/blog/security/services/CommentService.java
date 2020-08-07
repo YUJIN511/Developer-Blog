@@ -1,5 +1,7 @@
 package com.papple.blog.security.services;
 
-public class CommentService {
-    
+import com.papple.blog.models.Comment;
+
+public interface CommentService {
+    Comment save(Comment comment);
 }
