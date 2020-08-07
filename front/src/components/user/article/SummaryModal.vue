@@ -29,9 +29,7 @@
           class="content-article"
           v-model="articleData.summary"
           placeholder="글 목록에 노출될 내용을 적어주세요."
-        >
-내용</textarea
-        >
+        ></textarea>
         <span class="char-limit"
           >{{ articleData.summary.length }}/{{ maxSummary }}</span
         >
@@ -65,14 +63,18 @@ export default {
       this.show = false;
     },
     getThumbImage() {
-      const file = this.$refs.myFiles.files;
-      console.dir(file);
-      if (FileReader && file && file.length) {
+      const file = this.$refs.myFiles.files[0];
+
+      if (file.size >= 307200) {
+        alert("300kb 미만의 사진을 사용해주세요.");
+        return;
+      }
+      if (FileReader && file) {
         const fr = new FileReader();
         fr.onload = function() {
           document.querySelector(".thumb-img").src = fr.result;
         };
-        fr.readAsDataURL(file[0]);
+        fr.readAsDataURL(file);
       }
     },
     async submit() {
