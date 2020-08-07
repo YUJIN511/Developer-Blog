@@ -9,6 +9,39 @@
     align-items: flex-start;
     text-align: left;
   }
+  .background {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 1000px;
+    height: 100vh;
+  }
+  .container-inputNickname {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    margin: 0;
+  }
+  .container-inputPassword {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .edit-nickname {
+    margin-bottom: 24px;
+  }
+  .edit-password {
+    margin-bottom: 24px;
+    display: flex;
+    // flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    margin: 0;
+    width: 500px;
+  }
+  .hide {
+    display: none;
+  }
 }
 
 header {
@@ -112,6 +145,78 @@ main {
   }
 }
 
-.blurred {
-  filter: blur(1rem);
+.nickname {
+  position: relative;
+}
+
+.background {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+}
+
+.input-nickname {
+  background-image: linear-gradient(lightgrey, lightgrey);
+  background-position: bottom 5px center;
+  background-size: calc(100% - 10px) 1px;
+  background-repeat: no-repeat;
+  width: 500px;
+  border: 0;
+  padding-bottom: 15px;
+  justify-self: center;
+  font-weight: 400;
+  font-size: 1.7em;
+  z-index: 1;
+}
+
+.input-password {
+  background-image: linear-gradient(lightgrey, lightgrey);
+  background-position: bottom 5px center;
+  background-size: calc(100% - 10px) 1px;
+  background-repeat: no-repeat;
+  width: 500px;
+  border: 0;
+  padding-bottom: 15px;
+  justify-self: center;
+  font-weight: 400;
+  font-size: 1.3rem;
+  z-index: 1;
+  margin-top: 5px;
+}
+
+input:focus {
+  outline: none;
+}
+
+.btn-edit {
+  color: rgb(53, 53, 240);
+  z-index: 1;
+  &:hover {
+    color: rgb(121, 121, 173);
+  }
+}
+
+.btn-pw {
+  color: rgb(53, 53, 240);
+  z-index: 1;
+  &:hover {
+    color: rgb(121, 121, 173);
+  }
+}
+
+.span-password {
+  &:hover {
+    color: rgb(121, 121, 173);
+  }
+}
+
+.container-unregister {
+  position: relative;
+  bottom: 0;
+  margin-top: 100px;
+}
+
+.span-unregister {
+  color: #9c9c9c;
+  font-weight: 200;
 }

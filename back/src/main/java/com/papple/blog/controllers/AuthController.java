@@ -133,12 +133,6 @@ public class AuthController {
 	@ApiOperation(value = "회원 가입")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
-		// 이메일 중복체크
-		// if (userRepository.existsById(signUpRequest.getEmail())) {
-		// 	return ResponseEntity
-		// 			.badRequest()
-		// 			.body(new MessageResponse("Error: Email is already in use!"));
-		// }
 		
 		// Create new user's account
 		User user = new User(signUpRequest.getEmail(), null,
@@ -182,6 +176,17 @@ public class AuthController {
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 
+	@GetMapping("/checkEmailDuplication")
+	@ApiOperation(value = "이메일 중복 체크")
+	public ResponseEntity<?> checkEmailDuplication(@RequestParam(required = true) final String email){
+		 if (userRepository.existsById(email)) {
+		 	return ResponseEntity
+		 			.badRequest()
+		 			.body(new MessageResponse("Error: Email is already in use!"));
+		 }
+		 return ResponseEntity.ok().body(new MessageResponse("Success"));
+	}
+
 	// 회원가입시 인증 이메일 보내기
 	@Async
 	public void sendMail(String email){
@@ -193,7 +198,7 @@ public class AuthController {
 			sendMail.setSubject("[홈페이지 이메일 인증]"); // 메일제목
 			sendMail.setText( // 메일내용
 					"<h1>메일인증</h1>" + "<a href='http://i3a604.p.ssafy.io:8081/api/auth/emailConfirm?email=" + email + 
-					"' target='_blenk'>이메일 인증 확인</a>");
+					"&key="+key+"' target='_blenk'>이메일 인증 확인</a>");
 			sendMail.setFrom("admin@gmail.com", "관리자"); // 보낸이
 			sendMail.setTo(email); // 받는이
 			sendMail.send();
@@ -204,11 +209,11 @@ public class AuthController {
 
 	@GetMapping("/emailConfirm")
 	@ApiOperation(value = "이메일 인증")
-	public RedirectView emailConfirm(@RequestParam(required = true) final String email){
+	public RedirectView emailConfirm(@RequestParam(required = true) final String email, final String key){
 		Optional<UserAuth> userauth = authRepository.findById(email);
 		if(userauth != null){
 			userRepository.updateAuth(1, email);
-			return new RedirectView("http://i3a604.p.ssafy.io/account/setNickname/"+email);
+			return new RedirectView("http://i3a604.p.ssafy.io/account/setNickname/"+email+"&"+key);
 		}
 		// 에러 페이지로 
 		return null;
