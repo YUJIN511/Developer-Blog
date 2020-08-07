@@ -13,5 +13,8 @@
 		insert into profile(email, path) values(#{email}, #{path})
 	</insert>
 
-</mapper>
+	<delete id="deleteProfile">
+		delete from profile where email = #{email} and path = #{path}
+	</delete>
 
+</mapper>
