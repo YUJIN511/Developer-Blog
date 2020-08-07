@@ -3,7 +3,11 @@
     <div class="container-nickname">
       <div></div>
       <div>
-        <input class="input-nickname" v-model="nickname" placeholder="닉네임 입력 (영문)" />
+        <input
+          class="input-nickname"
+          v-model="nickname"
+          placeholder="닉네임 입력 (영문)"
+        />
       </div>
       <div class="more-arrow" @click="setNickname()"></div>
     </div>

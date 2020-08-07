@@ -12,13 +12,13 @@
 import Editor from "@/components/user/article/Editor.vue";
 export default {
   components: {
-    Editor
+    Editor,
   },
   methods: {
     done() {
       this.$refs.editor.openSummaryModal();
-    }
-  }
+    },
+  },
 };
 </script>
 
