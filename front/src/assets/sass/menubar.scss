@@ -1,7 +1,9 @@
 .menubar {
+  display: flex;
+  align-items: center;
   position: static;
   transition: visibility 0.2s 0.4s, opacity 0.2s 0.4s;
-
+  height: 50px;
   &.is-hidden {
     visibility: hidden;
     opacity: 0;
@@ -13,17 +15,25 @@
     transition: visibility 0.2s, opacity 0.2s;
   }
 
+  .vertical-line {
+    height: 35%;
+    width: 1px;
+    margin: 0px 10px;
+    border-right: 2px solid #dadada;
+  }
+
   &__button {
     font-weight: bold;
     display: inline-flex;
     background: transparent;
     border: 0;
     color: $color-black;
-    padding: 0.2rem 0.5rem;
-    margin-right: 0.2rem;
+    padding: 0rem 0.3rem;
+    margin-right: 0.4rem;
     border-radius: 3px;
     cursor: pointer;
-
+    font-size: 0.8em;
+    color: #727272;
     &:hover {
       background-color: rgba($color-black, 0.05);
     }
@@ -31,10 +41,40 @@
     &.is-active {
       background-color: rgba($color-black, 0.1);
     }
+
+    svg {
+      width: 16px;
+      fill: #727272;
+    }
   }
 
   span#{&}__button {
     font-size: 13.3333px;
+  }
+
+  .btn-back {
+    display: flex;
+    align-items: center;
+    margin: 0px 10px;
+    fill: #c2c2c2;
+    &:hover {
+      animation-duration: 0.7s;
+      animation-name: moveback;
+      animation-iteration-count: infinite;
+    }
+  }
+}
+
+@keyframes moveback {
+  0% {
+  }
+
+  50% {
+    margin-left: 0px;
+    margin-right: 20px;
+  }
+
+  100% {
   }
 }
 

@@ -18,6 +18,10 @@ export default {
   mounted() {
     const header = document.querySelector(".header-container");
     header.setAttribute("style", "display: none;");
+  },
+  beforeDestroy() {
+    const header = document.querySelector(".header-container");
+    header.setAttribute("style", "display: flex;");
   }
 };
 </script>
