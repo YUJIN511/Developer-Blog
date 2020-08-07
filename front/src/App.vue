@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header />
+    <Header ref="header" />
     <router-view />
   </div>
 </template>
@@ -11,13 +11,14 @@ import Header from "@/components/common/Header.vue";
 export default {
   name: "App",
   components: {
-    Header,
-  },
+    Header
+  }
 };
 </script>
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap");
+@import "@/assets/_variables.scss";
 #app {
   font-family: "Noto Sans KR", Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -25,6 +26,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   overflow-x: hidden;
+  background-color: $bgColor;
 }
 
 button {
