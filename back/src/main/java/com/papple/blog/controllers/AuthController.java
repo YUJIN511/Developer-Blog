@@ -213,7 +213,7 @@ public class AuthController {
 		Optional<UserAuth> userauth = authRepository.findById(email);
 		if(userauth != null){
 			userRepository.updateAuth(1, email);
-			return new RedirectView("http://i3a604.p.ssafy.io/account/setNickname/"+email+"&"+key);
+			return new RedirectView("http://i3a604.p.ssafy.io/account/setNickname/"+email+"/"+key);
 		}
 		// 에러 페이지로 
 		return null;
