@@ -1,6 +1,6 @@
 export default [
   {
-    path: "setNickname/:email",
+    path: "setNickname/:email/:token",
     name: "setNickname",
     component: () => import("@/views/user/SetNickname.vue"),
     meta: {
