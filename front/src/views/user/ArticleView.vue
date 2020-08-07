@@ -25,6 +25,7 @@ export default {
   min-width: 100vw;
   min-height: 100vh;
   padding: 60px;
-  background-color: $bgColor;
+  padding-top: 180px;
+  background-color: white;
 }
 </style>

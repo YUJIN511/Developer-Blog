@@ -1,6 +1,13 @@
 <template>
   <div class="editor">
-    <input type="text" v-model="title" class="title" placeholder="제목" readonly />
+    <h1></h1>
+    <input
+      type="text"
+      v-model="title"
+      class="title"
+      placeholder="제목"
+      readonly
+    />
     <div class="article-info">
       <span class="create-date">{{ createDate }}</span>
     </div>

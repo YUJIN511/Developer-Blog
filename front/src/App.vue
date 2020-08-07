@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header />
+    <Header ref="header" />
     <router-view />
   </div>
 </template>
@@ -26,7 +26,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   overflow-x: hidden;
-  padding-bottom: 50px;
   background-color: $bgColor;
 }
 
