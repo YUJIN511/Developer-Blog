@@ -99,6 +99,8 @@ export default {
       Login: "user/login"
     }),
     closeLogin() {
+      this.email = "";
+      this.password = "";
       document.querySelector(".container-login").classList.add("hide");
     },
     moveToJoin() {

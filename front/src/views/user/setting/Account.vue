@@ -2,7 +2,9 @@
   <div class="container-account">
     <header>
       <div class="profile-image">
-        <button class="banner-image-edit">수정하기</button>
+        <button class="banner-image-edit" @click="openProfilePic">
+          수정하기
+        </button>
       </div>
     </header>
     <main>
@@ -40,34 +42,43 @@
         </div>
       </div>
       <div class="level-icon">
-        <span class="span-password" @click="enablePassword()">비밀번호 바꾸기</span>
+        <span class="span-password" @click="enablePassword()"
+          >비밀번호 바꾸기</span
+        >
         <div class="edit-password hide">
           <div class="background" @click="disablePassword()"></div>
           <div class="container-inputPassword">
             <input
               class="input-password"
-              v-model="currentPassword"
+              v-model="password"
               type="password"
               placeholder="현재 비밀번호"
             />
             <input
               class="input-password"
-              v-model="newPassword"
+              v-model="newpassword"
               type="password"
+              @keyup="passwordEqualCheck"
               placeholder="새 비밀번호"
             />
             <input
               class="input-password"
-              v-model="newPasswordConfirm"
+              v-model="newpasswordConfirm"
               type="password"
+              @keyup="passwordEqualCheck"
               placeholder="새 비밀번호 확인"
             />
+            <div class="msg msg-password-confirm hide">
+              비밀번호가 일치하지 않습니다.
+            </div>
           </div>
-          <button class="btn btn-pw" @click="updatePassword">변경하기</button>
+          <button class="btn btn-pw" @click="updatePassword()">변경하기</button>
         </div>
       </div>
       <div class="container-unregister">
-        <span class="span-unregister" @click="openUnregisterModal()">회원 탈퇴</span>
+        <span class="span-unregister" @click="openUnregisterModal()"
+          >회원 탈퇴</span
+        >
       </div>
     </main>
     <!-- 블러효과 용 -->
@@ -87,19 +98,29 @@ export default {
     return {
       email: this.getUserInfo().email,
       nickname: this.getUserInfo().nickname,
-      password: ""
+      password: "",
+      newpassword: "",
+      newpasswordConfirm: "",
+      dom: {
+        passwordConfirmErrMsg: "",
+      },
+      items: [{ title: "프로필 사진 변경" }, { title: "프로필 사진 삭제" }],
+      file: "",
+      menu: false,
     };
   },
   methods: {
     ...mapActions({
       fetchUserInfo: "user/fetchUserInfo",
       UpdateNickname: "user/updateNickname",
-      Unregister: "user/unregister"
+      UpdatePassword: "user/updatePassword",
+      Unregister: "user/unregister",
+      UploadFile: "user/uploadFile",
     }),
     ...mapGetters({
       getUserInfo: "user/getUserInfo",
       getEmail: "user/getEmail",
-      getIsLogin: "user/getIsLogin"
+      getIsLogin: "user/getIsLogin",
     }),
     enableNickname() {
       document.querySelector(".p-nickname").classList.add("hide");
@@ -113,24 +134,49 @@ export default {
     updateNickname() {
       this.UpdateNickname({ email: this.email, nickname: this.nickname })
         .then(() => {})
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
       this.$router.go();
     },
     enablePassword() {
       document.querySelector(".edit-password").classList.remove("hide");
     },
     disablePassword() {
-      console.log("background");
       document.querySelector(".edit-password").classList.add("hide");
+    },
+    updatePassword() {
+      this.UpdatePassword({
+        email: this.email,
+        password: this.password,
+        newpassword: this.newpassword,
+      })
+        .then(() => {
+          alert("비밀번호가 변경되었습니다.");
+          this.$router.go();
+        })
+        .catch((err) => console.log(err));
+    },
+    passwordEqualCheck() {
+      if (!(this.newpassword === this.newpasswordConfirm)) {
+        this.dom.passwordConfirmErrMsg.classList.remove("hide");
+        return false;
+      }
+      this.dom.passwordConfirmErrMsg.classList.add("hide");
+      return true;
     },
     openUnregisterModal() {
       document.querySelector(".container-unregister").classList.remove("hide");
-    }
+    },
+    openProfilePic() {
+      document.querySelector(".container-profilepic").classList.remove("hide");
+    },
   },
   mounted() {
-    this.fetchUserInfo(this.getEmail()).then(res => console.log(res));
+    this.fetchUserInfo(this.getEmail()).then((res) => console.log(res));
+    this.dom.passwordConfirmErrMsg = document.querySelector(
+      ".msg-password-confirm"
+    );
   },
-  updated() {}
+  updated() {},
 };
 </script>
 

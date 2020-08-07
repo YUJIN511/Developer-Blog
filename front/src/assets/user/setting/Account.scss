@@ -33,14 +33,19 @@
   .edit-password {
     margin-bottom: 24px;
     display: flex;
-    // flex-direction: row;
     justify-content: center;
     align-items: flex-end;
     margin: 0;
     width: 500px;
   }
+
+  /** input check */
+
   .hide {
     display: none;
+  }
+  .show {
+    display: block;
   }
 }
 
@@ -219,4 +224,13 @@ input:focus {
 .span-unregister {
   color: #9c9c9c;
   font-weight: 200;
+}
+
+.msg {
+  display: block;
+  text-align: left;
+  font-size: 0.9em;
+  margin-left: 5px;
+  margin-bottom: 0;
+  color: crimson;
 }

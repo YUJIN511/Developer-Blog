@@ -3,7 +3,11 @@
     <div class="background-unregister" @click="closeModal"></div>
     <div class="modal-unregister">
       <div class="modal-head">
-        <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 154.66 51.58">
+        <svg
+          class="logo"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 154.66 51.58"
+        >
           <polygon
             points="81.22 48.29 66.59 48.29 66.59 3.29 70.66 3.29 70.66 44.76 81.22 44.76 81.22 48.29 81.22 48.29 81.22 48.29"
           />
@@ -38,7 +42,10 @@
       <div class="modal-body">
         <hr />
         <h5>회원 탈퇴 하시겠습니까?</h5>
-        <p>회원 탈퇴를 하시면 모든 회원 정보와 게시물들은 삭제되며, 복구 할 수 없습니다.</p>
+        <p>
+          회원 탈퇴를 하시면 모든 회원 정보와 게시물들은 삭제되며, 복구 할 수
+          없습니다.
+        </p>
       </div>
       <div class="container-button">
         <button class="btn btn-primary" @click="unregister">탈퇴</button>
@@ -49,17 +56,24 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "UnregisterModal",
   methods: {
+    ...mapActions({
+      Unregister: "user/unregister"
+    }),
     closeModal() {
       document.querySelector(".container-unregister").classList.add("hide");
     },
     unregister() {
-      this.Unregister(this.email).then(() => {
-        alert("회원 탈퇴가 완료되었습니다.");
-        this.$router.push({ name: "Main" });
-      });
+      this.Unregister()
+        .then(() => {
+          this.closeModal();
+          this.$router.push({ name: "Main" });
+        })
+        .catch(err => console.log(err));
     }
   }
 };

@@ -36,18 +36,18 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   methods: {
     ...mapActions({
-      Logout: "user/logout",
+      Logout: "user/logout"
     }),
     ...mapGetters({
-      getUserInfo: "user/getUserInfo",
+      getUserInfo: "user/getUserInfo"
     }),
     logout() {
       this.Logout().then(() => {
         alert("로그아웃 되었습니다.");
         this.$router.push({ name: "Main" });
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
