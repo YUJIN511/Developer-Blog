@@ -47,7 +47,9 @@ export default {
     },
   },
   created() {
-    this.ReceiveToken({ token: this.token, email: this.email });
+    this.ReceiveToken({ token: this.token, email: this.email })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   },
 };
 </script>

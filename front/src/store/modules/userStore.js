@@ -103,6 +103,11 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+    receiveToken(context, { token, email }) {
+      context.commit("setToken", token);
+      context.commit("setLogin", true);
+      context.commit("setEmail", email);
+    },
     updateNickname({ commit, getters }, userInfo) {
       axios
         .post(
