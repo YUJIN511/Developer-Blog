@@ -66,19 +66,25 @@
           class="menubar__button"
           :class="{ 'is-active': isActive.heading({ level: 1 }) }"
           @click="commands.heading({ level: 1 })"
-        >H1</button>
+        >
+          H1
+        </button>
 
         <button
           class="menubar__button"
           :class="{ 'is-active': isActive.heading({ level: 2 }) }"
           @click="commands.heading({ level: 2 })"
-        >H2</button>
+        >
+          H2
+        </button>
 
         <button
           class="menubar__button"
           :class="{ 'is-active': isActive.heading({ level: 3 }) }"
           @click="commands.heading({ level: 3 })"
-        >H3</button>
+        >
+          H3
+        </button>
 
         <button
           class="menubar__button"
@@ -154,7 +160,11 @@
             ref="linkInput"
             @keydown.esc="hideLinkMenu"
           />
-          <button class="menububble__button" @click="setLinkUrl(commands.link, null)" type="button">
+          <button
+            class="menububble__button"
+            @click="setLinkUrl(commands.link, null)"
+            type="button"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <title>delete-2-alternate</title>
               <path
@@ -174,9 +184,7 @@
             :class="{ 'is-active': isActive.link() }"
           >
             <span>
-              {{
-              isActive.link() ? "링크 수정하기" : "링크 추가하기"
-              }}
+              {{ isActive.link() ? "링크 수정하기" : "링크 추가하기" }}
             </span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <title>hyperlink-2</title>
@@ -343,7 +351,7 @@ export default {
     openSummaryModal() {
       let tagString = "";
       this.tagList.forEach(elem => {
-        tagString += `hashtagList=${elem}&`;
+        tagString += `tag=${elem}&`;
       });
       const articleData = {
         title: this.title,
