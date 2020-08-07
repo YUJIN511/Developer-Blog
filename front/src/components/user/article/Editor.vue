@@ -2,7 +2,13 @@
   <div class="editor">
     <ImageModal ref="ytmodal" @onConfirm="addCommand" />
     <SummaryModal ref="smodal" />
-    <input type="text" v-model="title" class="title" placeholder="제목" />
+    <input
+      type="text"
+      :maxlength="20"
+      v-model="title"
+      class="title"
+      placeholder="제목"
+    />
     <div class="container-tags">
       <input
         type="text"

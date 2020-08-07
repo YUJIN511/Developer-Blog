@@ -8,6 +8,7 @@
           ref="myVueDropzone"
           id="dropzone"
           @vdropzone-success="vfileUploaded"
+          @vdropzone-file-added="vfileSizeCheck"
           :options="dropzoneOptions"
         ></vue-dropzone>
       </div>
@@ -18,7 +19,9 @@
           class="success"
           :title="validImage ? '' : 'Image URL needs to be valid'"
           :disabled="!validImage"
-        >이미지 추가</button>
+        >
+          이미지 추가
+        </button>
         <button @click="show = false" class="danger">창 닫기</button>
       </footer>
     </div>
@@ -43,6 +46,7 @@ export default {
       dropzoneOptions: {
         url: "https://httpbin.org/post",
         thumbnailWidth: 200,
+        maxFilesize: 2,
         dictDefaultMessage: "UPLOAD A FILE"
       }
     };
@@ -64,9 +68,15 @@ export default {
       this.command = command;
       this.show = true;
     },
+    vfileExceeded(file) {
+      if (file.size >= 2097152) {
+        alert("2mb 미만의 사진을 업로드해 주세요.");
+      }
+    },
     async vfileUploaded(file) {
       let formData = new FormData();
       formData.append("filename", file);
+
       try {
         const res = await axios.put(
           `${this.$apiServer}/post/upload`,
