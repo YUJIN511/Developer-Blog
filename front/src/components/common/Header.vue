@@ -143,19 +143,19 @@ export default {
     Repassword,
     EmailModal,
     UnregisterModal,
-    ProfilePicModal,
+    ProfilePicModal
   },
   data() {
     return {
-      searchWord: "",
+      searchWord: ""
     };
   },
   methods: {
     ...mapActions({
-      Logout: "user/logout",
+      Logout: "user/logout"
     }),
     ...mapGetters({
-      getIsLogin: "user/getIsLogin",
+      getIsLogin: "user/getIsLogin"
     }),
     showNavBar() {
       const navbar = document.querySelector(".navbar");
@@ -163,7 +163,8 @@ export default {
       const body = document.querySelector("body");
 
       body.classList.add("hide-scroll");
-      navbar.style.left = "0";
+      navbar.setAttribute("style", "left: 0px");
+      //navbar.style.left = "0px";
       background.classList.remove("hide");
     },
     openLogin() {
@@ -178,11 +179,11 @@ export default {
     search() {
       this.$router.push({
         name: "Search",
-        params: { keyword: this.searchWord },
+        params: { keyword: this.searchWord }
       });
-    },
+    }
   },
-  computed: {},
+  computed: {}
 };
 </script>
 
