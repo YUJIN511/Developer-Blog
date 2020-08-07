@@ -202,6 +202,7 @@ public class AuthController {
 			sendMail.setFrom("admin@gmail.com", "관리자"); // 보낸이
 			sendMail.setTo(email); // 받는이
 			sendMail.send();
+			// 글씨 크기 24,20,20,12
 		} catch(Exception e){
 			e.printStackTrace();
 		}

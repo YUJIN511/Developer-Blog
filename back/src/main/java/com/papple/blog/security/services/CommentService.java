@@ -7,4 +7,6 @@ import com.papple.blog.models.Comment;
 public interface CommentService {
     Comment save(Comment comment);
     Optional<Comment> findById(Long id);
+    void deleteById(Long id);
+    void deleteByReplyto(Long id);
 }

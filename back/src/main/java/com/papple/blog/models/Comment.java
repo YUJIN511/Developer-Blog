@@ -34,15 +34,15 @@ public class Comment {
     @Size(max = 10000)
     private String content;	// 내용
 
-    private Long reply_to;	// 대댓글일 경우, 부모 댓글의 id
+    private Long replyto;	// 대댓글일 경우, 부모 댓글의 id
 
     @CreationTimestamp
     private LocalDateTime createdate;
     
-    private boolean has_replies;	//자식댓글이 있는가 없는가
+    private boolean hasreplies;	//자식댓글이 있는가 없는가
 
     public Comment(){
-        has_replies = false;
+        hasreplies = false;
     }
     
 }
