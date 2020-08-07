@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
 
 const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
@@ -31,6 +31,9 @@ export default {
   methods: {
     ...mapActions({
       ReceiveToken: "user/receiveToken",
+    }),
+    ...mapGetters({
+      getIsLogin: "user/getIsLogin",
     }),
     setNickname() {
       axios
@@ -48,7 +51,7 @@ export default {
   },
   created() {
     this.ReceiveToken({ token: this.token, email: this.email })
-      .then((res) => console.log(res))
+      .then(() => console.log(this.getIsLogin()))
       .catch((err) => console.log(err));
   },
 };
