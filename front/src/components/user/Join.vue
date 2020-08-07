@@ -68,6 +68,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import axios from "axios";
 
 export default {
   mounted() {
@@ -100,16 +101,20 @@ export default {
     },
     async join() {
       if (this.isTerm) {
-        const result = await this.Join({
-          email: this.email,
-          password: this.password
-        });
-
-        if (result) {
-          this.closeJoin();
-          var modal = document.querySelector(".container-emailsent");
-          modal.classList.remove("hide");
-        } else {
+        try {
+          const result = await axios.get(
+            `${this.$apiServer}/auth/checkEmailDuplication?email=${this.email}`
+          );
+          if (result.status === 200) {
+            this.Join({
+              email: this.email,
+              password: this.password
+            });
+            this.closeJoin();
+            var modal = document.querySelector(".container-emailsent");
+            modal.classList.remove("hide");
+          }
+        } catch (error) {
           alert("이미 사용중인 이메일 입니다.");
         }
       } else {
