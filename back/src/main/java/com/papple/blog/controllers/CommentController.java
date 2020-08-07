@@ -7,6 +7,7 @@ import com.papple.blog.models.Comment;
 import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
 import com.papple.blog.payload.request.CommentRequest;
+import com.papple.blog.payload.response.MessageResponse;
 import com.papple.blog.repository.CommentReopository;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.CommentService;
@@ -70,7 +71,7 @@ public class CommentController {
 
         } else{ // 답댓글
             Comment comm = commentReopository.findById(comment.getReplyto()).get();
-            comm.setHasreplies(true);
+            comm.setReplycount(comm.getReplycount()+1);
             commentService.save(comment);   // 부모댓글 수정
 
             if(!comment.getEmail().equals(comm.getEmail())){ // 자신의 댓글에 답글 다는 경우는 X
@@ -103,20 +104,27 @@ public class CommentController {
 	}	
 
     @DeleteMapping
-	@ApiOperation(value = "댓글 삭제 - 답댓글 삭제")
-	public ResponseEntity<String> deleteComment(Long id) {
+	@ApiOperation(value = "댓글 삭제 - 답글 삭제")
+	public ResponseEntity<?> deleteComment(Long id) {
 
-        Optional<Comment> comment = commentService.findById(id);
-
-        if(comment!=null){  // 댓글 삭제
-            commentService.deleteById(id);      
-        }
-
-        if(comment.get().isHasreplies()){ // 답댓글 삭제
+        if(!commentService.findById(id).isPresent()) return ResponseEntity.badRequest()
+                                                                    .body(new MessageResponse("comment does not exist"));
+        
+        Comment comment = commentService.findById(id).get();
+        if(comment.getReplycount()>0){ // 답글있으면 삭제
             commentService.deleteByReplyto(id);
         }
 
-		return new ResponseEntity<String>("success", HttpStatus.OK);
+         // 댓글,답글 삭제
+        commentService.deleteById(id);   
+            
+        if(comment.getReplyto()!=null){ // 부모댓글이 있는 경우
+            Comment parentComment = commentService.findById(comment.getReplyto()).get();
+            parentComment.setReplycount(parentComment.getReplycount()-1);    // 답글수--
+            commentService.save(parentComment);
+        }
+
+		return ResponseEntity.ok().body(new MessageResponse("Success"));
 	
 	}
 }

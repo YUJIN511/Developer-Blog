@@ -39,10 +39,11 @@ public class Comment {
     @CreationTimestamp
     private LocalDateTime createdate;
     
-    private boolean hasreplies;	//자식댓글이 있는가 없는가
+    private int replycount;	//자식댓글이 있는가 없는가
 
     public Comment(){
-        hasreplies = false;
+        likes=0;
+        replycount=0;
     }
     
 }
