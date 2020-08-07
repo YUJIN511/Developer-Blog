@@ -23,14 +23,18 @@
             <input type="file" ref="myFiles" @change="getThumbImage" />
           </button>
         </button>
-        <h5>{{articleData.title}}</h5>
+        <h5>{{ articleData.title }}</h5>
         <textarea
           :maxlength="maxSummary"
           class="content-article"
           v-model="articleData.summary"
           placeholder="글 목록에 노출될 내용을 적어주세요."
-        >내용</textarea>
-        <span class="char-limit">{{articleData.summary.length}}/{{maxSummary}}</span>
+        >
+내용</textarea
+        >
+        <span class="char-limit"
+          >{{ articleData.summary.length }}/{{ maxSummary }}</span
+        >
       </main>
       <footer>
         <button class="btn btn-cancel" @click="closeModal">취소</button>
@@ -98,6 +102,7 @@ export default {
     },
     async sendImg() {
       const imgFile = this.$refs.myFiles.files[0];
+      if (imgFile === undefined) return true;
       let formData = new FormData();
       formData.append("filename", imgFile);
       try {
