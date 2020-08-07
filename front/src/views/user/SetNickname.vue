@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import axios from "axios";
 
 const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
@@ -23,27 +24,31 @@ export default {
   data() {
     return {
       email: this.$route.params.email,
-      nickname: ""
+      token: this.$route.params.token,
+      nickname: "",
     };
   },
   methods: {
+    ...mapActions({
+      ReceiveToken: "user/receiveToken",
+    }),
     setNickname() {
       axios
         .get(`${SERVER_URL}/api/auth/nicknameUpdate`, {
           params: {
             email: this.email,
-            nickname: this.nickname
-          }
+            nickname: this.nickname,
+          },
         })
-        .then(res => {
-          console.log(res);
-          this.$router.push({
-            name: "LoginPassword",
-            params: { email: this.email }
-          });
+        .then(() => {
+          alert("회원가입이 완료되었습니다.");
+          this.$router.push({ name: "Main" });
         });
-    }
-  }
+    },
+  },
+  created() {
+    this.ReceiveToken({ token: this.token, email: this.email });
+  },
 };
 </script>
 
