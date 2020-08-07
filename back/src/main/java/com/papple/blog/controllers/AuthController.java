@@ -368,26 +368,30 @@ public class AuthController {
 		
 	}
 	
-//	@DeleteMapping("/delprofile")
-//	@ApiOperation(value = "서버에 있는 프로필 사진 파일을 삭제")
-//	public ResponseEntity<String> fileDelete(String filePath) {
-//		String tem = filePath.replace("/profile", "+");
-//		StringTokenizer st = new StringTokenizer(tem, "+");
-//		
-//		String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
-//		String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
-//		
-//		String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile" + next;
-//		
-//		File delFile = new File(path);
-//		if(delFile.exists()) delFile.delete();
-//		return new ResponseEntity<String>("success", HttpStatus.OK);
-//	}
+	@DeleteMapping("/delprofile")
+	@ApiOperation(value = "서버에 있는 프로필 사진 파일을 삭제 + 프로필 히스토리에서 삭제")
+	public ResponseEntity<String> fileDelete(String filePath, String email) {
+		String tem = filePath.replace("/profile", "+");
+		StringTokenizer st = new StringTokenizer(tem, "+");
+		
+		String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
+		String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
+		
+		String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile" + next;
+		
+		File delFile = new File(path);
+		if(delFile.exists()) delFile.delete();		//해당 path의 서버의 파일 삭제
+		
+		profileRepository.deleteProfile(email, path);	// 프로필 히스토리에서 삭제
+		
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
 	
 	@PutMapping("/unprofile")
-	@ApiOperation(value = "프로필 사진 삭제, (사용자의 profile 컬럼을 null로)")
-	public ResponseEntity<String> fileUnUpload(@RequestParam String email) {
-		userRepository.deleteProfile(email);
+	@ApiOperation(value = "프로필 사진을 기본 사진으로 setting")
+	public ResponseEntity<String> fileUnUpload(String email) {
+//		userRepository.deleteProfile(email);
+		profileRepository.unProfile(email);
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
