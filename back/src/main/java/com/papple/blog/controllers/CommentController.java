@@ -1,8 +1,11 @@
 package com.papple.blog.controllers;
 
+import java.time.LocalDateTime;
+
 import com.papple.blog.models.Comment;
 import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
+import com.papple.blog.payload.request.CommentRequest;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.CommentService;
 import com.papple.blog.security.services.NotificationService;
@@ -13,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +38,7 @@ public class CommentController {
     @Autowired
     private NotificationService notificationService;
 
-    @PostMapping
+    @PostMapping("/writeComment")
     @ApiOperation(value = "새 댓글 쓰기")
     public ResponseEntity<String> writeComment(@RequestBody Comment comment) {
     
@@ -58,7 +62,18 @@ public class CommentController {
         
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
+    
+    @PutMapping("/modifyComment")
+	@ApiOperation(value = "댓글 수정 ")
+	public ResponseEntity<String> modifyComment(@RequestBody CommentRequest commentRequest) {
+
+        Comment comment = commentService.findById(commentRequest.getId()).get();
+        comment.setContent(commentRequest.getContent());
+        comment.setCreatedate(LocalDateTime.now());
+        commentService.save(comment);
         
+        return new ResponseEntity<>("success", HttpStatus.OK);
+	}	
 
 }
 
