@@ -5,7 +5,11 @@
       <h5>글 미리보기</h5>
       <main>
         <button class="thumbnail">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <svg
+            class="svg-thumbnail"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
             <title>paginate-filter-picture-alternate</title>
             <circle cx="9.75" cy="6.247" r="2.25" />
             <path
@@ -23,14 +27,16 @@
             <input type="file" ref="myFiles" @change="getThumbImage" />
           </button>
         </button>
-        <h5>{{articleData.title}}</h5>
+        <h5>{{ articleData.title }}</h5>
         <textarea
           :maxlength="maxSummary"
           class="content-article"
           v-model="articleData.summary"
           placeholder="글 목록에 노출될 내용을 적어주세요."
-        >내용</textarea>
-        <span class="char-limit">{{articleData.summary.length}}/{{maxSummary}}</span>
+        ></textarea>
+        <span class="char-limit"
+          >{{ articleData.summary.length }}/{{ maxSummary }}</span
+        >
       </main>
       <footer>
         <button class="btn btn-cancel" @click="closeModal">취소</button>
@@ -61,14 +67,19 @@ export default {
       this.show = false;
     },
     getThumbImage() {
-      const file = this.$refs.myFiles.files;
-      console.dir(file);
-      if (FileReader && file && file.length) {
+      const file = this.$refs.myFiles.files[0];
+
+      if (file.size >= 307200) {
+        alert("300kb 미만의 사진을 사용해주세요.");
+        return;
+      }
+      if (FileReader && file) {
         const fr = new FileReader();
         fr.onload = function() {
           document.querySelector(".thumb-img").src = fr.result;
+          document.querySelector(".svg-thumbnail").classList.add("hide");
         };
-        fr.readAsDataURL(file[0]);
+        fr.readAsDataURL(file);
       }
     },
     async submit() {
@@ -98,6 +109,7 @@ export default {
     },
     async sendImg() {
       const imgFile = this.$refs.myFiles.files[0];
+      if (imgFile === undefined) return true;
       let formData = new FormData();
       formData.append("filename", imgFile);
       try {
@@ -178,6 +190,10 @@ main {
     width: 120px;
     height: 120px;
     fill: rgb(247, 247, 247);
+  }
+
+  .hide {
+    display: none;
   }
 
   img {

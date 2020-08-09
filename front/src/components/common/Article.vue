@@ -1,11 +1,14 @@
 <template>
   <div class="article">
     <button @click="readArticle" class="btn-read">
-      <div class="header-article">
-        <img :src="data.picture" alt />
+      <div ref="headerArticle" class="header-article">
+        <img :src="data.picture" alt v-if="data.picture !== ''" />
+        <span :title="data.title" v-if="data.picture === ''">
+          {{ data.title }}
+        </span>
       </div>
       <div class="body-article">
-        <h5>{{ data.title }}</h5>
+        <h5 :title="data.title">{{ data.title }}</h5>
         <div class="description">{{ data.summary }}</div>
       </div>
     </button>
@@ -64,6 +67,16 @@ export default {
   mounted() {
     if (this.data.isLiked) {
       document.querySelector(".icon-like").classList.add("selected");
+    }
+    if (this.data.picture === "") {
+      const thumbnail = this.$refs.headerArticle;
+      const R = Math.random() * 155 + 100;
+      const G = Math.random() * 155 + 100;
+      const B = Math.random() * 155 + 100;
+      thumbnail.setAttribute(
+        "style",
+        `background-color: rgb(${R}, ${G}, ${B});`
+      );
     }
   },
   methods: {

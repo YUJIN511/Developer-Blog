@@ -337,8 +337,9 @@ export default {
       const navbar = document.querySelector(".navbar");
       const background = document.querySelector(".navbar-background");
       const body = document.querySelector("body");
-      navbar.style.left = "-100%";
+
       background.classList.add("hide");
+      navbar.setAttribute("style", "left: -256px");
       body.classList.remove("hide-scroll");
     },
     collapseFollowList() {

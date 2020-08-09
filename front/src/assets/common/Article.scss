@@ -11,8 +11,22 @@
 .btn-read {
   height: 85%;
   .header-article {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 55%;
+    font-size: 2em;
+    border-radius: 5px 5px 0% 0%;
+    span {
+      width: 100%;
+      max-height: 3.2em;
+      overflow: hidden;
+      color: white;
+      font-weight: 900;
+      padding: 0px 10px;
+    }
     img {
+      position: relative;
       width: 100%;
       height: 100%;
       display: block;
@@ -27,6 +41,15 @@
     overflow: hidden;
     background-color: white;
     border-bottom: 1px solid rgb(238, 238, 238);
+    h5 {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
     .description {
       word-break: break-word;
       overflow-wrap: break-word;
@@ -89,7 +112,6 @@
   }
   span {
     font-size: 0.7em;
-    margin-left: 7px;
   }
 }
 

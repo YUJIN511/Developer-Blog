@@ -175,6 +175,7 @@ export default {
   width: 100vw;
   height: 62px;
   background-color: white;
+  z-index: 1;
 }
 .item-list {
   display: flex;
