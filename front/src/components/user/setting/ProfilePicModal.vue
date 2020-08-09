@@ -15,7 +15,12 @@
       </div>
       <div class="modal-body">
         <hr />
-        <div>이전 프로필 사진들</div>
+        <div>
+          <div class="previous-image" v-for="image in images" :key="image" @click="deleteImage">
+            <img :src="image" />
+            <button class="banner-image-delete">✖</button>
+          </div>
+        </div>
         <button @click="saveChanges">저장</button>
       </div>
       <!-- <button class="btn-close" @click="closeModal">✖</button> -->
@@ -33,7 +38,8 @@ export default {
   name: "ProfilePicModal",
   data() {
     return {
-      url: null
+      url: null,
+      images: []
     };
   },
   methods: {
@@ -62,8 +68,8 @@ export default {
             "Content-Type": "multipart/form-data"
           }
         })
-        .then(res => {
-          console.log(res);
+        .then(() => {
+          // console.log(res);
         })
         .catch(err => console.log(err));
     },
@@ -72,11 +78,18 @@ export default {
     },
     fetchPictures() {
       axios
-        .get(`${SERVER_URL}/api/auth/pflist`, this.getEmail())
-        .then(() => {
-          // console.log(res);
+        .get(`${SERVER_URL}/api/auth/pflist?email=${this.getEmail()}`)
+        .then(res => {
+          this.images = res.data;
         })
         .catch(err => console.log(err));
+    },
+    deleteImage() {
+      console.log(event.target);
+      axios.delete(`${SERVER_URL}/api/auth/delprofile`, {
+        email: this.getEmail(),
+        filePath: event.target.image
+      });
     }
   },
   mounted() {
@@ -137,6 +150,36 @@ export default {
   width: 120px;
   height: 120px;
   border-radius: 50%;
+}
+
+.previous-image {
+  position: relative;
+  background-position: center;
+  background-size: 150%;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  img {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+  button {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    color: rgba(0, 0, 0, 0);
+    &:hover {
+      font-size: 2rem;
+      font-weight: 0;
+      color: rgba(255, 255, 255, 0.6);
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+  }
 }
 
 h1 {
