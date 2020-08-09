@@ -179,7 +179,7 @@
         </editor-menu-bar>
         <div class="end">
           <button class="btn">임시 저장</button>
-          <button class="btn">작성 완료</button>
+          <button class="btn" @click="openSummaryModal">작성 완료</button>
         </div>
       </header>
       <main>
