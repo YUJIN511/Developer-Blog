@@ -38,7 +38,8 @@ export default {
   },
   methods: {
     ...mapGetters({
-      getEmail: "user/getEmail"
+      getEmail: "user/getEmail",
+      getProfile: "user/getProfile"
     }),
     closeModal() {
       document.querySelector(".container-profilepic").classList.add("hide");
@@ -78,8 +79,11 @@ export default {
         .catch(err => console.log(err));
     }
   },
-  created() {
+  mounted() {
     this.fetchPictures();
+    this.$el.querySelector(
+      ".preview-image"
+    ).style.backgroundImage = `url('${this.getProfile()}')`;
   }
 };
 </script>
@@ -102,7 +106,6 @@ export default {
   position: fixed;
   width: 100vw;
   height: 100vh;
-  //   background-color: rgba(0, 0, 0, 0.4);
 }
 
 // modal
@@ -120,8 +123,6 @@ export default {
 
 .modal-head {
   padding: 50px;
-  //   display: flex;
-  //   justify-content: flex-end;
 }
 
 .modal-body {
