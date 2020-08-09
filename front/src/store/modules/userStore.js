@@ -33,6 +33,9 @@ export default {
     getEmail(state) {
       return state.userInfo.email;
     },
+    getProfile(state) {
+      return state.userInfo.profile;
+    },
   },
 
   mutations: {
@@ -55,6 +58,9 @@ export default {
     },
     setRole(state, role) {
       state.userInfo.role = role;
+    },
+    setProfile(state, profile) {
+      state.userInfo.profile = profile;
     },
   },
 
@@ -98,6 +104,7 @@ export default {
           // console.log(res);
           context.commit("setNickname", res.data.nickname);
           context.commit("setRole", res.data.roles["name"]);
+          context.commit("setProfile", res.data.profile);
         })
         .catch((err) => console.log(err));
     },

@@ -18,11 +18,18 @@ export default {
       fetchUserInfo: "user/fetchUserInfo"
     }),
     ...mapGetters({
-      getEmail: "user/getEmail"
+      getEmail: "user/getEmail",
+      getUserInfo: "user/getUserInfo"
     })
   },
   mounted() {
-    this.fetchUserInfo(this.getEmail()).then(res => console.log(res));
+    this.fetchUserInfo(this.getEmail());
+    var profileImages = document.querySelectorAll(".profile-image");
+    profileImages.forEach(profileImage => {
+      profileImage.style.backgroundImage = `url('${
+        this.getUserInfo().profile
+      }')`;
+    });
   }
 };
 </script>
