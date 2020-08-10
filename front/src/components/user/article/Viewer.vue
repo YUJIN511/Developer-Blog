@@ -11,7 +11,7 @@
         <div class="user-info">
           <img class="img-profile" :src="profile" v-if="profile !== ''" />
           <svg
-            v-if="profile === ''"
+            v-else
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
             viewBox="0 0 26 26"
@@ -38,7 +38,10 @@
         </div>
       </div>
       <div class="introduction">
-        <img :src="thumbnail" alt="" />
+        <img :src="thumbnail" alt="" v-if="thumbnail !== ''" />
+        <div ref="defaultThumbnail" class="default-thumbnail" v-else>
+          {{ title }}
+        </div>
       </div>
     </header>
     <editor-content class="editor__content" :editor="editor" />
@@ -197,12 +200,24 @@ export default {
       window.addEventListener("hashchange", function() {
         window.scrollTo(window.scrollX, window.scrollY - 100);
       });
+    },
+    setDefaultThumbnail() {
+      const thumbnail = this.$refs.defaultThumbnail;
+      const R = Math.random() * 155 + 100;
+      const G = Math.random() * 155 + 100;
+      const B = Math.random() * 155 + 100;
+      thumbnail.setAttribute(
+        "style",
+        `background-color: rgb(${R}, ${G}, ${B});`
+      );
     }
   },
   beforeDestroy() {
     this.editor.destroy();
   },
+
   mounted() {
+    this.setDefaultThumbnail();
     this.modifyAnchorDest();
     this.initNav();
   },
@@ -279,8 +294,24 @@ export default {
 }
 
 .introduction {
-  text-align: center;
+  display: flex;
+  justify-content: center;
   margin: 40px 0px;
+  img {
+    max-width: 600px;
+    max-height: 400px;
+  }
+  .default-thumbnail {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    font-size: 3em;
+    color: white;
+    width: 600px;
+    height: 400px;
+  }
 }
 
 .article-nav {
