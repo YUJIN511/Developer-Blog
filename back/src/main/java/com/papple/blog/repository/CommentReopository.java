@@ -22,4 +22,8 @@ public interface CommentReopository extends JpaRepository<Comment, Long> {
 	@Query(value = "delete from comment where replyto = ?1", nativeQuery = true)
     void deleteByReplyto(Long replyto);
     
+    @Modifying
+	@Transactional
+	@Query(value = "delete from comment where postid = ?1", nativeQuery = true)
+    void deleteByPostid(Long postid);
 }

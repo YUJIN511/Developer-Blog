@@ -28,13 +28,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteById(Long id) {
         commentRopository.deleteById(id);
-        return;
     }
 
     @Override
     public void deleteByReplyto(Long id) {
         commentRopository.deleteByReplyto(id);
-        return;
     }
 
     @Override
@@ -45,6 +43,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> findByPostidAndReplyto(Long postid, Long replyto) {
         return commentRopository.findByPostidAndReplyto(postid, replyto);
+    }
+
+    @Override
+    public void deleteByPostid(Long postid) {
+        commentRopository.deleteByPostid(postid);
     }
 
 }

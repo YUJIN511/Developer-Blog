@@ -12,4 +12,5 @@ public interface CommentService {
     List<Comment> findByPostidAndReplyto(Long postid, Long replyto);
     void deleteById(Long id);
     void deleteByReplyto(Long id);
+    void deleteByPostid(Long postid);
 }
