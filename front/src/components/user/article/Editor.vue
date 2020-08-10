@@ -395,10 +395,12 @@ export default {
       this.$refs.ytmodal.showModal(command);
     },
     openSummaryModal() {
+      this.addIdToHTag();
       let tagString = "";
       this.tagList.forEach(elem => {
         tagString += `tag=${elem}&`;
       });
+      console.log(this.html);
       const articleData = {
         title: this.title,
         tagString,
