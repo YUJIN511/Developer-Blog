@@ -415,7 +415,6 @@ public class PostController {
 	public ResponseEntity<List<PostList>> getPostScore(@RequestParam(required = false) String email) {
 		List<PopularScore> baseScore = algoRepository.getPopularScore();
 		List<PopularScore> commentScore = algoRepository.getCommentScore();
-		
 		PriorityQueue<PopularScore> pq = new PriorityQueue<>(new Comparator<PopularScore>() {
 			@Override
 			public int compare(PopularScore o1, PopularScore o2) {
@@ -423,23 +422,27 @@ public class PostController {
 			}
 		});
 		
+		/* 좋아요 + 조회수 점수 등록  */
 		Map<Long, Long> map = new HashMap<>();
-		for(PopularScore ps : baseScore) map.put(ps.getPostid(), ps.getScore());	// 좋아요, 조회 점수 등록
+		for(PopularScore ps : baseScore) map.put(ps.getPostid(), ps.getScore());
 		
-		for(PopularScore ps : commentScore) {	// 댓글 점수 추가(댓글은 2점)
+		/* 댓글 점수 추가(댓글은 2점) */
+		for(PopularScore ps : commentScore) {
 			if(map.containsKey(ps.getPostid())) map.put(ps.getPostid(), map.get(ps.getPostid()) + ps.getScore() * 2); //있던 Post면 점수 더해줌
 			else map.put(ps.getPostid(), ps.getScore() * 2);	//없던 Post면 새로 추가해줌
 		}
 		
+		/* 점수 순대로 정렬 */
 		for(Entry<Long, Long> cur : map.entrySet()) pq.add(new PopularScore(cur.getKey(), cur.getValue()));
-	
+		
 		List<PopularScore> scoreList = new ArrayList<>();
-		while(!pq.isEmpty()) scoreList.add(pq.poll());	//점수 순대로 정렬해줌
+		while(!pq.isEmpty()) scoreList.add(pq.poll());
 		
 		List<PostList> list = new ArrayList<>();	// 게시글 목록을 담을 List
-		
 		for(PopularScore ps : scoreList) list.add(postListRepository.searchPostById(ps.getPostid()));
 		
+		
+		/* 좋아요 유무 표시 */
 		if(email == null || email.equals("")) {	//비회원
 			System.out.println("빈칸");
 			return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
