@@ -110,6 +110,7 @@ public class PostController {
 		
 		// detail + hashtag
 		PostDetail detail = postListRepository.searchPostDetail(id);
+		System.out.println(detail);
 		List<String> tag = postListRepository.searchHashtag(id);
 		detail.setTag(tag);
 		
