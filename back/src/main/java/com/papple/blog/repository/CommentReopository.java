@@ -1,5 +1,7 @@
 package com.papple.blog.repository;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import com.papple.blog.models.Comment;
@@ -11,6 +13,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CommentReopository extends JpaRepository<Comment, Long> {
+    
+    List<Comment> findByPostidAndReplytoIsNull(Long postidLong);
+    List<Comment> findByPostidAndReplyto(Long postid, Long replyto);
 
     @Modifying
 	@Transactional

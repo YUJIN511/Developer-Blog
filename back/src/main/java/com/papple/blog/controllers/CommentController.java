@@ -1,15 +1,13 @@
 package com.papple.blog.controllers;
 
-import java.lang.StackWalker.Option;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 
 import com.papple.blog.models.Comment;
 import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
 import com.papple.blog.payload.request.CommentRequest;
 import com.papple.blog.payload.response.MessageResponse;
-import com.papple.blog.repository.CommentReopository;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.CommentService;
 import com.papple.blog.security.services.NotificationService;
@@ -20,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,8 +35,6 @@ import io.swagger.annotations.ApiOperation;
 public class CommentController {
 
 	@Autowired
-    private CommentReopository commentReopository;
-	@Autowired
     private CommentService commentService;
     @Autowired
     private UserRepository userRepository;
@@ -46,6 +43,22 @@ public class CommentController {
     @Autowired
     private NotificationService notificationService;
 
+    @GetMapping("/allComment")
+	@ApiOperation(value = "해당 포스트의 모든 댓글 보기")
+	public ResponseEntity<List<Comment>> allComment(@RequestParam(required = true) Long postid) throws Exception {
+        List<Comment> list = commentService.findByPostidAndReplytoIsNull(postid);
+
+        return new ResponseEntity<List<Comment>>(list, HttpStatus.OK);
+    }
+    
+    @GetMapping("/allReply")
+	@ApiOperation(value = "해당 댓글의 모든 답댓글 보기")
+	public ResponseEntity<List<Comment>> allReply(@RequestParam(required = true) Long postid, @RequestParam(required = true) Long id) throws Exception {
+		List<Comment> list = commentService.findByPostidAndReplyto(postid, id);
+        
+        return new ResponseEntity<List<Comment>>(list, HttpStatus.OK);
+	}   
+    
     @PostMapping("/write")
     @ApiOperation(value = "새 댓글 쓰기")
     public ResponseEntity<String> writeComment(@RequestBody Comment comment) {
@@ -72,7 +85,7 @@ public class CommentController {
             }
 
         } else{ // 답댓글
-            Comment comm = commentReopository.findById(comment.getReplyto()).get();
+            Comment comm = commentService.findById(comment.getReplyto()).get();
             comm.setReplycount(comm.getReplycount()+1);
             commentService.save(comment);   // 부모댓글 수정
 
