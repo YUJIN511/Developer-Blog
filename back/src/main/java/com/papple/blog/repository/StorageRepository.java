@@ -16,7 +16,7 @@ public interface StorageRepository  extends JpaRepository<Storage, FollowPK>{
 	@Transactional
 	@Modifying
 	@Query(value="DELETE FROM storage WHERE postid=?1", nativeQuery = true)
-	void deleteByPostId(Long id); 	// 글 삭제시 보관함 글 삭제
+	void deleteByPostid(Long id); 	// 글 삭제시 보관함 글 삭제
 
 	@Transactional
 	@Modifying

@@ -15,9 +15,13 @@ import org.springframework.data.jpa.repository.Query;
 public interface NotificationRepository extends JpaRepository<Notification, Long>{
 
 	List<Notification> findByTargetuserAndIsreadIsFalse(String email);				// 안읽은 알림
+
 	// 내 글 좋아요 (이전에 좋아요 눌렀었는지)
 	Notification findByActionuserAndPostidAndType(String actionuser, Long postid, Integer type);
-	Notification findByActionuserAndTargetuserAndType(String actionuser, String targetuser, Integer type);	// 팔로우 알림
+	// 내 댓글 좋아요 (이전에 좋아요 눌렀었는지)
+	Notification findByActionuserAndCommentidAndType(String actionuser, Long commentid, Integer type);
+	// 팔로우 알림
+	Notification findByActionuserAndTargetuserAndType(String actionuser, String targetuser, Integer type);
 
 	@Transactional
 	@Modifying

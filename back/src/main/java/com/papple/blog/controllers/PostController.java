@@ -47,6 +47,7 @@ import com.papple.blog.repository.HistoryRepository;
 import com.papple.blog.repository.PostListRepository;
 import com.papple.blog.repository.StorageRepository;
 import com.papple.blog.repository.UserRepository;
+import com.papple.blog.security.services.CommentService;
 import com.papple.blog.security.services.FollowService;
 import com.papple.blog.security.services.HashtagService;
 import com.papple.blog.security.services.NotificationService;
@@ -73,6 +74,8 @@ public class PostController {
 	private PostListRepository postListRepository;
 	@Autowired
 	private FollowService followService;
+	@Autowired
+	private CommentService commentService;
 
 	@GetMapping("/all")
 	@ApiOperation(value = "모든 포스트 보기")
@@ -284,7 +287,7 @@ public class PostController {
 				System.out.println(newPost);
 			});
 			
-			hashtagService.deleteHashtagByPostId(post.getId());	//해당 글의 해시태그 모두 삭제
+			hashtagService.deleteHashtagByPostid(post.getId());	//해당 글의 해시태그 모두 삭제
 			for(int i=0;i<tag.getTag().size();i++) {	//다시 생성
 				Hashtag ht = new Hashtag(new HashtagPK(post.getId(), tag.getTag().get(i)));
 				hashtagService.save(ht);
@@ -368,9 +371,10 @@ public class PostController {
 		System.out.println("글 삭제");
 		Optional<Post> post = postService.findById(id);
 		if(post != null) {
-			storageRepository.deleteByPostId(id);
-			historyRepository.deleteByPostId(id);
-			hashtagService.deleteHashtagByPostId(id);
+			storageRepository.deleteByPostid(id);
+			historyRepository.deleteByPostid(id);
+			hashtagService.deleteHashtagByPostid(id);
+			commentService.deleteByPostid(id);
 			
 			post.ifPresent(selectPost -> {
 				String path = selectPost.getPicture();

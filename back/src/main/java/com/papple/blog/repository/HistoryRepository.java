@@ -16,7 +16,7 @@ public interface HistoryRepository  extends JpaRepository<History, HistoryPK>{
     @Transactional
 	@Modifying
 	@Query(value="DELETE FROM history WHERE postid=?1", nativeQuery = true)
-    void deleteByPostId(Long id); 	// 글 삭제시 히스토리 글 삭제
+    void deleteByPostid(Long id); 	// 글 삭제시 히스토리 글 삭제
     
     @Transactional
 	@Modifying

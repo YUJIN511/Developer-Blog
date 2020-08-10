@@ -1,14 +1,13 @@
 package com.papple.blog.controllers;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 
 import com.papple.blog.models.Comment;
 import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
 import com.papple.blog.payload.request.CommentRequest;
 import com.papple.blog.payload.response.MessageResponse;
-import com.papple.blog.repository.CommentReopository;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.CommentService;
 import com.papple.blog.security.services.NotificationService;
@@ -19,10 +18,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiOperation;
@@ -34,8 +35,6 @@ import io.swagger.annotations.ApiOperation;
 public class CommentController {
 
 	@Autowired
-    private CommentReopository commentReopository;
-	@Autowired
     private CommentService commentService;
     @Autowired
     private UserRepository userRepository;
@@ -44,7 +43,23 @@ public class CommentController {
     @Autowired
     private NotificationService notificationService;
 
-    @PostMapping("/writeComment")
+    @GetMapping("/allComment")
+	@ApiOperation(value = "해당 포스트의 모든 댓글 보기")
+	public ResponseEntity<List<Comment>> allComment(@RequestParam(required = true) Long postid) throws Exception {
+        List<Comment> list = commentService.findByPostidAndReplytoIsNull(postid);
+
+        return new ResponseEntity<List<Comment>>(list, HttpStatus.OK);
+    }
+    
+    @GetMapping("/allReply")
+	@ApiOperation(value = "해당 댓글의 모든 답댓글 보기")
+	public ResponseEntity<List<Comment>> allReply(@RequestParam(required = true) Long postid, @RequestParam(required = true) Long id) throws Exception {
+		List<Comment> list = commentService.findByPostidAndReplyto(postid, id);
+        
+        return new ResponseEntity<List<Comment>>(list, HttpStatus.OK);
+	}   
+    
+    @PostMapping("/write")
     @ApiOperation(value = "새 댓글 쓰기")
     public ResponseEntity<String> writeComment(@RequestBody Comment comment) {
     
@@ -70,7 +85,7 @@ public class CommentController {
             }
 
         } else{ // 답댓글
-            Comment comm = commentReopository.findById(comment.getReplyto()).get();
+            Comment comm = commentService.findById(comment.getReplyto()).get();
             comm.setReplycount(comm.getReplycount()+1);
             commentService.save(comment);   // 부모댓글 수정
 
@@ -91,7 +106,7 @@ public class CommentController {
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
     
-    @PutMapping("/modifyComment")
+    @PutMapping("/modify")
 	@ApiOperation(value = "댓글 수정 ")
 	public ResponseEntity<String> modifyComment(@RequestBody CommentRequest commentRequest) {
 
@@ -126,6 +141,43 @@ public class CommentController {
 
 		return ResponseEntity.ok().body(new MessageResponse("Success"));
 	
+    }
+    
+    @PutMapping("/like")
+	@ApiOperation(value = "댓글 좋아요++")
+	public ResponseEntity<String> incGood(@RequestParam(required = true) Long id, @RequestParam(required = true) String email) {
+        Comment comment = commentService.findById(id).get();
+        comment.setLikes(comment.getLikes()+1);
+        commentService.save(comment);
+
+		// 알람 발생(0000100)
+		// 이전에 좋아요 눌렀었었는지 확인	>>>  notiurl 주소 front로 추후 변경
+		if(notificationService.findByActionuserAndCommentidAndType(email, id, 4) == null){
+            String actionName = userRepository.getUserByEmail(email).getNickname();
+
+			Notification notification = Notification.builder()
+				.message(actionName +"님이 회원님의 댓글을 좋아합니다.")
+				.actionuser(email)
+				.targetuser(comment.getEmail())
+				.notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+id)
+				.build();
+			notification.setCommentid(id);
+			notification.setType(1<<2);
+			notificationService.save(notification);
+		}
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+    }
+    
+    @PutMapping("/unlike")
+	@ApiOperation(value = "댓글 좋아요--")
+	public ResponseEntity<String> decGood(@RequestParam(required = true) Long id, @RequestParam(required = true) String email) {
+        Comment comment = commentService.findById(id).get();
+        comment.setLikes(comment.getLikes()-1);
+        commentService.save(comment);
+        
+        return new ResponseEntity<String>("success", HttpStatus.OK);
+		
 	}
+	
 }
 
