@@ -55,8 +55,9 @@
   .btn-back {
     display: flex;
     align-items: center;
-    margin: 0px 10px;
+    margin: 0px 0px;
     fill: #c2c2c2;
+    padding: 0px 10px;
     &:hover {
       animation-duration: 0.7s;
       animation-name: moveback;
@@ -70,8 +71,8 @@
   }
 
   50% {
-    margin-left: 0px;
-    margin-right: 20px;
+    padding-left: 0px;
+    padding-right: 20px;
   }
 
   100% {

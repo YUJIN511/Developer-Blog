@@ -179,7 +179,7 @@
         </editor-menu-bar>
         <div class="end">
           <button class="btn">임시 저장</button>
-          <button class="btn">작성 완료</button>
+          <button class="btn" @click="openSummaryModal">작성 완료</button>
         </div>
       </header>
       <main>
@@ -395,10 +395,12 @@ export default {
       this.$refs.ytmodal.showModal(command);
     },
     openSummaryModal() {
+      this.addIdToHTag();
       let tagString = "";
       this.tagList.forEach(elem => {
         tagString += `tag=${elem}&`;
       });
+      console.log(this.html);
       const articleData = {
         title: this.title,
         tagString,

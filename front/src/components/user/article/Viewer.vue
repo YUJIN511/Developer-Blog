@@ -1,22 +1,53 @@
 <template>
-  <div class="editor">
-    <h1></h1>
-    <input
-      type="text"
-      v-model="title"
-      class="title"
-      placeholder="제목"
-      readonly
-    />
-    <div class="article-info">
-      <span class="create-date">{{ createDate }}</span>
-    </div>
+  <div class="viewer">
+    <header>
+      <div class="title-line">
+        <h1 type="text" class="view-title" placeholder="제목" readonly>
+          {{ title }}
+        </h1>
+        <button class="btn-more">...</button>
+      </div>
+      <div class="article-info">
+        <div class="user-info">
+          <img class="img-profile" :src="profile" v-if="profile !== ''" />
+          <svg
+            v-if="profile === ''"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 26 26"
+          >
+            <path
+              d="M13,1C6.4,1,1,6.4,1,13s5.4,12,12,12s12-5.4,12-12S19.6,1,13,1z M13,4.6c2,0,3.6,1.6,3.6,3.6S15,11.8,13,11.8
+	s-3.6-1.6-3.6-3.6S11,4.6,13,4.6z M13,21.6c-3,0-5.7-1.5-7.2-3.9c0-2.4,4.8-3.7,7.2-3.7c2.4,0,7.2,1.3,7.2,3.7
+	C18.7,20.1,16,21.6,13,21.6z"
+            />
+          </svg>
+          <span>{{ nickname }}</span>
+        </div>
+        <span class="create-date"> · createData가 안 넘어옴</span>
+      </div>
+
+      <div class="viewer-tags">
+        <button class="btn-tag" :key="idx" v-for="(tag, idx) in tagList">
+          #{{ tag }}
+        </button>
+      </div>
+      <div class="article-nav">
+        <div ref="navContent" class="article-nav-content">
+          <span>책갈피</span>
+        </div>
+      </div>
+      <div class="introduction">
+        <img :src="thumbnail" alt="" />
+      </div>
+    </header>
     <editor-content class="editor__content" :editor="editor" />
   </div>
 </template>
 
 <script>
 import { Editor, EditorContent } from "tiptap";
+import { mapGetters } from "vuex";
 import axios from "axios";
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
@@ -77,35 +108,103 @@ export default {
           new Image()
         ],
 
-        content: ""
+        content: "",
+        onUpdate: ({ getHTML }) => {
+          this.html = getHTML();
+          console.log(this.html);
+        }
       }),
       title: "",
       createDate: "",
-
+      tagList: [],
+      profile: "",
+      nickname: "",
       linkUrl: null,
-      linkMenuIsActive: false
+      linkMenuIsActive: false,
+      thumbnail: "",
+      content: ""
     };
   },
   methods: {
+    ...mapGetters({
+      getUserInfo: "user/getUserInfo"
+    }),
     async getArticleData() {
       const articleId = this.$route.query.id;
+      const email = this.getUserInfo().email;
       try {
-        const res = await axios.get(`${this.$apiServer}/post/${articleId}`);
+        const res = await axios.get(
+          `${this.$apiServer}/post/postDetail?email=${email}&id=${articleId}`
+        );
 
         if (res.status === 200) {
           const articleData = res.data;
-          console.dir(articleData);
-          this.createDate = articleData.createdate.split("T")[0];
+          //this.createDate = articleData.createdate.split("T")[0];
           this.title = articleData.title;
-          this.editor.setContent(articleData.content);
+          this.content = articleData.content;
+          this.editor.setContent(this.content);
+          this.tagList = articleData.tag;
+          this.profile = articleData.profile;
+          this.nickname = articleData.nickname;
+          this.thumbnail = articleData.picture;
         }
       } catch (error) {
         console.log(error);
       }
+    },
+    initNav() {
+      const navContent = this.$refs.navContent;
+      document.addEventListener("scroll", function() {
+        const yOffset = window.pageYOffset;
+        if (yOffset > 0) {
+          navContent.setAttribute("style", "position: fixed; top: 340px;");
+        } else {
+          navContent.removeAttribute("style");
+        }
+      });
+      this.setNavContent();
+    },
+    setNavContent() {
+      let id = window.setInterval(() => {
+        // 컨텐츠 불러오는 속도를 기다려줘야 함
+        if (this.content !== "") {
+          window.clearInterval(id);
+          const hList = document.querySelectorAll(
+            ".editor__content h1, h2, h3"
+          );
+
+          hList.forEach(elem => {
+            console.log(elem);
+            elem.id = elem.innerText;
+          });
+
+          this.setNavAnchor(hList);
+        }
+      }, 300);
+    },
+    setNavAnchor(tagList) {
+      const navContent = this.$refs.navContent;
+      tagList.forEach(elem => {
+        const anchor = document.createElement("a");
+        console.log(elem.tagName);
+        anchor.classList.add(elem.tagName);
+        anchor.setAttribute("href", `#${elem.id}`);
+        anchor.innerText = elem.innerText;
+        navContent.appendChild(anchor);
+      });
+    },
+    modifyAnchorDest() {
+      window.addEventListener("hashchange", function() {
+        window.scrollTo(window.scrollX, window.scrollY - 100);
+      });
     }
   },
   beforeDestroy() {
     this.editor.destroy();
+  },
+  mounted() {
+    this.modifyAnchorDest();
+    this.initNav();
   },
   created() {
     this.getArticleData();
@@ -116,18 +215,104 @@ export default {
 <style lang="scss" scope>
 @import "@/assets/sass/main.scss";
 
-.editor {
-  text-align: left;
+.container-article-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.title {
+.viewer {
+  text-align: left;
+  width: 800px;
+}
+
+.title-line {
+  display: flex;
+  align-items: flex-start;
+  color: #999999;
+  justify-content: space-between;
+  .btn-more {
+    color: #999999;
+    font-weight: 900;
+  }
+}
+
+.view-title {
   width: 100%;
   border: none;
-  font-size: 2em;
   font-weight: 700;
-  border-bottom: 3px solid #f1f4f7;
-  padding: 10px;
-  padding-bottom: 20px;
+  background-color: white;
+}
+
+.article-info {
+  display: flex;
+  align-items: center;
+  color: #999999;
+  margin-bottom: 10px;
+  .user-info {
+    display: flex;
+    align-items: center;
+    margin-right: 0.3em;
+    .img-profile {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+    }
+    svg {
+      width: 20px;
+      height: 20px;
+      fill: #999999;
+    }
+    span {
+      margin-left: 10px;
+      color: black;
+    }
+  }
+}
+
+.viewer-tags {
+  margin-bottom: 20px;
+  .btn-tag {
+    color: dodgerblue;
+    margin-right: 20px;
+  }
+}
+
+.introduction {
+  text-align: center;
+  margin: 40px 0px;
+}
+
+.article-nav {
+  display: flex;
+  justify-content: flex-end;
+  width: 1100px;
+  height: 10px;
+  .article-nav-content {
+    display: flex;
+    flex-direction: column;
+    width: 100px;
+    height: 600px;
+    font-size: 0.9em;
+    span {
+      font-weight: 900;
+      margin-bottom: 20px;
+    }
+    a {
+      color: #999999;
+      font-weight: 100;
+      &:hover {
+        text-decoration: none;
+        color: black;
+      }
+    }
+    .H2 {
+      margin-left: 15px;
+    }
+    .H3 {
+      margin-left: 30px;
+    }
+  }
 }
 
 // svg sprite
