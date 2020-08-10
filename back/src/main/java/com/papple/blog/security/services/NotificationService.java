@@ -14,6 +14,7 @@ public interface NotificationService {
     // 부가기능
     Notification save(Notification notification);
     Notification findByActionuserAndPostidAndType(String actionuser, Long postid, Integer type);
+    Notification findByActionuserAndCommentidAndType(String actionuser, Long commentid, Integer type);
     Notification findByActionuserAndTargetuserAndType(String follower, String followed, Integer type);
     void deleteByTargetuserAndType(String targetuser, Integer type);
 }

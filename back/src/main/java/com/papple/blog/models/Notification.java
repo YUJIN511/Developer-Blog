@@ -35,6 +35,8 @@ public class Notification {
 
     private Long postid;                // post id
 
+    private Long commentid;             // comment id
+
     private Integer type;               // [1, 10, 100, 1000, 10000, 100000, 1000000]
 
     @CreationTimestamp
