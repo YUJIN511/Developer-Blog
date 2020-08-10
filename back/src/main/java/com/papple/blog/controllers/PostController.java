@@ -4,11 +4,18 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,10 +47,12 @@ import com.papple.blog.models.Post;
 import com.papple.blog.models.Storage;
 import com.papple.blog.models.StoragePK;
 import com.papple.blog.payload.response.HashtagList;
+import com.papple.blog.payload.response.PopularScore;
 import com.papple.blog.payload.response.PostDetail;
 import com.papple.blog.payload.response.PostList;
 import com.papple.blog.repository.FollowRepository;
 import com.papple.blog.repository.HistoryRepository;
+import com.papple.blog.repository.PostAlgorithmRepository;
 import com.papple.blog.repository.PostListRepository;
 import com.papple.blog.repository.StorageRepository;
 import com.papple.blog.repository.UserRepository;
@@ -76,6 +85,8 @@ public class PostController {
 	private FollowService followService;
 	@Autowired
 	private CommentService commentService;
+	@Autowired
+	private PostAlgorithmRepository algoRepository;
 
 	@GetMapping("/all")
 	@ApiOperation(value = "모든 포스트 보기")
@@ -398,5 +409,49 @@ public class PostController {
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}
-
+	
+	@GetMapping("popular")
+	@ApiOperation(value = "인기게시물 로직 : 좋아요(1) + 조회(1) + 댓글(2) + 공유(2)")
+	public ResponseEntity<List<PostList>> getPostScore(@RequestParam(required = false) String email) {
+		List<PopularScore> baseScore = algoRepository.getPopularScore();
+		List<PopularScore> commentScore = algoRepository.getCommentScore();
+		PriorityQueue<PopularScore> pq = new PriorityQueue<>(new Comparator<PopularScore>() {
+			@Override
+			public int compare(PopularScore o1, PopularScore o2) {
+				return Long.compare(o2.getScore(), o1.getScore());
+			}
+		});
+		
+		/* 좋아요 + 조회수 점수 등록  */
+		Map<Long, Long> map = new HashMap<>();
+		for(PopularScore ps : baseScore) map.put(ps.getPostid(), ps.getScore());
+		
+		/* 댓글 점수 추가(댓글은 2점) */
+		for(PopularScore ps : commentScore) {
+			if(map.containsKey(ps.getPostid())) map.put(ps.getPostid(), map.get(ps.getPostid()) + ps.getScore() * 2); //있던 Post면 점수 더해줌
+			else map.put(ps.getPostid(), ps.getScore() * 2);	//없던 Post면 새로 추가해줌
+		}
+		
+		/* 점수 순대로 정렬 */
+		for(Entry<Long, Long> cur : map.entrySet()) pq.add(new PopularScore(cur.getKey(), cur.getValue()));
+		
+		List<PopularScore> scoreList = new ArrayList<>();
+		while(!pq.isEmpty()) scoreList.add(pq.poll());
+		
+		List<PostList> list = new ArrayList<>();	// 게시글 목록을 담을 List
+		for(PopularScore ps : scoreList) list.add(postListRepository.searchPostById(ps.getPostid()));
+		
+		
+		/* 좋아요 유무 표시 */
+		if(email == null || email.equals("")) {	//비회원
+			System.out.println("빈칸");
+			return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
+		}
+		else {	//회원
+			System.out.println("안빈칸");
+			for(int i=0;i<list.size();i++) if(list.get(i) != null && storageRepository.isGood(email, list.get(i).getId()) > 0) list.get(i).setIsgood(true);
+			return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
+		}
+	}
+	
 }
