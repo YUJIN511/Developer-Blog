@@ -298,8 +298,8 @@ export default {
   justify-content: center;
   margin: 40px 0px;
   img {
-    width: 600px;
-    height: 400px;
+    max-width: 600px;
+    max-height: 400px;
   }
   .default-thumbnail {
     display: flex;
