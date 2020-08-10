@@ -16,7 +16,12 @@
       <div class="modal-body">
         <hr />
         <div>
-          <div class="previous-image" v-for="image in images" :key="image" @click="deleteImage">
+          <div
+            class="previous-image"
+            v-for="image in images"
+            :key="image"
+            @click="deleteImage(image)"
+          >
             <img :src="image" />
             <button class="banner-image-delete">✖</button>
           </div>
@@ -84,12 +89,17 @@ export default {
         })
         .catch(err => console.log(err));
     },
-    deleteImage() {
-      console.log(event.target);
-      axios.delete(`${SERVER_URL}/api/auth/delprofile`, {
-        email: this.getEmail(),
-        filePath: event.target.image
-      });
+    deleteImage(url) {
+      console.log(url);
+      axios
+        .delete(`${SERVER_URL}/api/auth/delprofile`, {
+          email: this.getEmail(),
+          filePath: url
+        })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => console.log(err));
     }
   },
   mounted() {
