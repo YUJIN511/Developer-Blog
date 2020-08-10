@@ -202,6 +202,7 @@ public class AuthController {
 			sendMail.setFrom("admin@gmail.com", "관리자"); // 보낸이
 			sendMail.setTo(email); // 받는이
 			sendMail.send();
+			// 글씨 크기 24,20,20,12
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -371,16 +372,21 @@ public class AuthController {
 	@DeleteMapping("/delprofile")
 	@ApiOperation(value = "서버에 있는 프로필 사진 파일을 삭제 + 프로필 히스토리에서 삭제")
 	public ResponseEntity<String> fileDelete(String filePath, String email) {
-		String tem = filePath.replace("/profile", "+");
-		StringTokenizer st = new StringTokenizer(tem, "+");
 		
-		String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
-		String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
+		User user = userRepository.getUserByEmail(email);
 		
-		String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile" + next;
-		
-		File delFile = new File(path);
-		if(delFile.exists()) delFile.delete();		//해당 path의 서버의 파일 삭제
+		if(!user.getProfile().equals(filePath)) {
+			String tem = filePath.replace("/profile", "+");
+			StringTokenizer st = new StringTokenizer(tem, "+");
+			
+			String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
+			String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
+			
+			String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile" + next;
+			
+			File delFile = new File(path);
+			if(delFile.exists()) delFile.delete();		//해당 path의 서버의 파일 삭제
+		}
 		
 		System.out.println(profileRepository.deleteProfile(email, filePath));	// 프로필 히스토리에서 삭제
 		
