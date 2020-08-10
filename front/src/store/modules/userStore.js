@@ -150,5 +150,16 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+    defaultProfile({ commit, getters }) {
+      axios
+        .put(`${SERVER_URL}/api/auth/unprofile`, getters.getEmail)
+        .then(() => {
+          commit(
+            "setProfile",
+            "http://i3a604.p.ssafy.io/images/profile/basic.png"
+          );
+        })
+        .catch((err) => console.log(err));
+    },
   },
 };

@@ -93,7 +93,7 @@ export default {
       },
       items: [{ title: "프로필 사진 변경" }, { title: "프로필 사진 삭제" }],
       file: "",
-      menu: false
+      profileURL: ""
     };
   },
   methods: {
@@ -166,11 +166,14 @@ export default {
         this.getUserInfo().profile
       }')`;
     });
-    this.$el.querySelector("header").style.backgroundImage = `url('${
-      this.getUserInfo().profile
-    }')`;
-  },
-  created() {}
+    this.profileURL = this.getUserInfo().profile;
+    console.log(this.profileURL);
+    if (this.profileURL) {
+      this.$el.querySelector("header").style.backgroundImage = `url('${
+        this.getUserInfo().profile
+      }')`;
+    }
+  }
 };
 </script>
 

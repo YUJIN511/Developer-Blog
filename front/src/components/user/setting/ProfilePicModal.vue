@@ -12,10 +12,11 @@
           @change="previewFile"
         />
         <button @click="clickInput" class="btn btn-upload">...사진 업로드</button>
+        <button @click="setDefaultImage" class="btn btn-setdefault">기본 프로필 이미지로 변경</button>
       </div>
       <div class="modal-body">
         <hr />
-        <div>
+        <div class="container-images">
           <div
             class="previous-image"
             v-for="image in images"
@@ -26,15 +27,17 @@
             <button class="banner-image-delete">✖</button>
           </div>
         </div>
-        <button @click="saveChanges">저장</button>
       </div>
-      <!-- <button class="btn-close" @click="closeModal">✖</button> -->
+      <div class="container-btns">
+        <button @click="saveChanges">저장</button>
+        <button class="btn-close" @click="closeModal">취소</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
 
 const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
@@ -43,11 +46,15 @@ export default {
   name: "ProfilePicModal",
   data() {
     return {
-      url: null,
-      images: []
+      url: this.getProfile(),
+      images: [],
+      file: ""
     };
   },
   methods: {
+    ...mapActions({
+      defaultProfile: "user/defaultProfile"
+    }),
     ...mapGetters({
       getEmail: "user/getEmail",
       getProfile: "user/getProfile"
@@ -65,18 +72,16 @@ export default {
     saveChanges() {
       let formData = new FormData();
       formData.append("filename", this.file);
-      formData.append("email", this.email);
-
+      formData.append("email", this.getEmail());
       axios
         .post(`${SERVER_URL}/api/auth/profile`, formData, {
           headers: {
             "Content-Type": "multipart/form-data"
           }
         })
-        .then(() => {
-          // console.log(res);
-        })
+        .then(() => {})
         .catch(err => console.log(err));
+      this.$router.go();
     },
     clickInput() {
       document.querySelector("#file").click();
@@ -89,15 +94,20 @@ export default {
         })
         .catch(err => console.log(err));
     },
+    setDefaultImage() {
+      let defaultImage = "http://i3a604.p.ssafy.io/images/profile/basic.png";
+      this.$el.querySelector(
+        ".preview-image"
+      ).style.backgroundImage = `url('${defaultImage}')`;
+      this.defaultProfile();
+    },
     deleteImage(url) {
-      console.log(url);
       axios
-        .delete(`${SERVER_URL}/api/auth/delprofile`, {
-          email: this.getEmail(),
-          filePath: url
-        })
-        .then(res => {
-          console.log(res);
+        .delete(
+          `${SERVER_URL}/api/auth/delprofile?email=${this.getEmail()}&filePath=${url}`
+        )
+        .then(() => {
+          this.fetchPictures();
         })
         .catch(err => console.log(err));
     }
@@ -146,10 +156,18 @@ export default {
 
 .modal-head {
   padding: 50px;
+  //   display: flex;
+  //   flex-direction: row;
 }
 
 .modal-body {
   padding: 50px;
+  position: relative;
+  display: block;
+  .button {
+    position: absolute;
+    bottom: 0;
+  }
 }
 
 .preview-image {
@@ -162,6 +180,12 @@ export default {
   border-radius: 50%;
 }
 
+.container-images {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
 .previous-image {
   position: relative;
   background-position: center;
@@ -169,6 +193,8 @@ export default {
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  margin: 10px;
+  display: inline-block;
   img {
     position: absolute;
     top: 0;
@@ -190,6 +216,12 @@ export default {
       background-color: rgba(0, 0, 0, 0.6);
     }
   }
+}
+
+.container-btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
 
 h1 {
