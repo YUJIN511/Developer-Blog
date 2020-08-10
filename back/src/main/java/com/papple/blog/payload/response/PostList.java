@@ -20,7 +20,7 @@ public class PostList {
 	private String writer;
 	private int good;
 	private int views;
-    private LocalDateTime createdate;
+    private String createdate;
     //좋아요 여부 - 비로그인 시 기본 false
     private boolean isgood;
 	public PostList() {
