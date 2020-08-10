@@ -230,9 +230,9 @@ public class AuthController {
 		
 		List<Post> postList= postService.findByWriter(email);
 		for(Post post : postList) {	//해당 사용자가 작성했던 글 관련 데이터 삭제
-			historyRepository.deleteByPostId(post.getId());
-			storageRepository.deleteByPostId(post.getId());
-			hashtagRepository.deleteHashtagByPostId(post.getId());
+			historyRepository.deleteByPostid(post.getId());
+			storageRepository.deleteByPostid(post.getId());
+			hashtagRepository.deleteHashtagByPostid(post.getId());
 		}
 		postService.deleteByWriter(email);				// 쓴 글 삭제
 		userRepository.deleteById(email);				// 회원 삭제
