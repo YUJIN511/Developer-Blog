@@ -148,9 +148,10 @@ public class PostController {
 		}
 		
 		//작성자의 blog 설정
-		BlogConfig bc = configRepository.findById(detail.getWriter()).get();
-		
-		if(bc != null) {
+		Optional<BlogConfig> bco = configRepository.findById(detail.getWriter());
+
+		if(bco.isPresent()) {
+			BlogConfig bc = bco.get();
 			detail.setBlogName(bc.getName());
 			detail.setBlogDescription(bc.getDescription());
 			detail.setBlogPicture(bc.getPicture());
