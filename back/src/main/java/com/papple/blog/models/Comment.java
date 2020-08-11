@@ -21,7 +21,7 @@ import lombok.Data;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;        // 댓글 고유번호
 
     @NotBlank
     private String email;   // 댓글 작성자 이메일

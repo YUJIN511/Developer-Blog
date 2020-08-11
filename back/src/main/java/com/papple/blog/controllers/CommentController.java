@@ -7,6 +7,7 @@ import com.papple.blog.models.Comment;
 import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
 import com.papple.blog.payload.request.CommentRequest;
+import com.papple.blog.payload.response.CommentResponse;
 import com.papple.blog.payload.response.MessageResponse;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.CommentService;
@@ -45,18 +46,18 @@ public class CommentController {
 
     @GetMapping("/allComment")
 	@ApiOperation(value = "해당 포스트의 모든 댓글 보기")
-	public ResponseEntity<List<Comment>> allComment(@RequestParam(required = true) Long postid) throws Exception {
-        List<Comment> list = commentService.findByPostidAndReplytoIsNull(postid);
+	public ResponseEntity<List<CommentResponse>> allComment(@RequestParam(required = true) Long postid) throws Exception {
+        List<CommentResponse> list = commentService.findByPostidAndReplytoIsNull(postid);
 
-        return new ResponseEntity<List<Comment>>(list, HttpStatus.OK);
+        return new ResponseEntity<List<CommentResponse>>(list, HttpStatus.OK);
     }
     
     @GetMapping("/allReply")
 	@ApiOperation(value = "해당 댓글의 모든 답댓글 보기")
-	public ResponseEntity<List<Comment>> allReply(@RequestParam(required = true) Long postid, @RequestParam(required = true) Long id) throws Exception {
-		List<Comment> list = commentService.findByPostidAndReplyto(postid, id);
+	public ResponseEntity<List<CommentResponse>> allReply(@RequestParam(required = true) Long postid, @RequestParam(required = true) Long id) throws Exception {
+		List<CommentResponse> list = commentService.findByPostidAndReplyto(postid, id);
         
-        return new ResponseEntity<List<Comment>>(list, HttpStatus.OK);
+        return new ResponseEntity<List<CommentResponse>>(list, HttpStatus.OK);
 	}   
     
     @PostMapping
