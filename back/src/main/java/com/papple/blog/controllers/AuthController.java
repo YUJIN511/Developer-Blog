@@ -195,48 +195,35 @@ public class AuthController {
 			UserAuth userauth = new UserAuth(email, key);
 			authRepository.save(userauth);	// 인증키 DB저장
 			MailHandler sendMail = new MailHandler(mailSender);
-			sendMail.setSubject("[홈페이지 이메일 인증]"); // 메일제목
+			sendMail.setSubject("[LOG DOT] 이메일 인증입니다."); // 메일제목
 			sendMail.setText( // 메일내용
-					"<style>
-					h1{
-						font-size: 24px;
-						color : #7f7f7f;
-						margin: 40px 0 30px 0;
-					}
-					p{
-						font-size: 16px;
-						font-weight: 500;
-						color : #838383;
-						margin: 30px 0 30px 0;
-					}
-					#btn {
-						border: 1px solid #6da7ff;
-						border-radius: 5px 5px 5px 5px;
-						background-color: #6da7ff; 
-						font-size: 20px; 
-						color: white;
-						padding:5px;
-						width: -webkit-fill-available;
-						margin: 0px 0 40px 0;
-					}
-					#btn:hover{
-						color:#6da7ff;
-						background-color: white; 
-					}
-					</style>"
-	// 				<body style="width: 520px; text-align: center;">
-    // <hr>
-    // <h1>LOGDOT에 가입해주셔서 감사합니다.</h1>
-    // <p>아래 버튼을 클릭하여 인증을 마치면 계정이 활성화 됩니다.</p>
-    //     <button id="btn"; type="button" onclick="location.href='http://i3a604.p.ssafy.io/'"
-    //     >메일 인증 완료</button>
-    //     <hr>
-    // <p style="font-size: 12px;">Copyright @ 2020 LOGDOT</p>
-    // </body>
-                    
-					"<h1>메일인증</h1>" + "<a href='http://i3a604.p.ssafy.io:8081/api/auth/emailConfirm?email=" + email + 
-					"&key="+key+"' target='_blenk'>이메일 인증 확인</a>");
-			sendMail.setFrom("admin@gmail.com", "관리자"); // 보낸이
+			"<div style='width:100%'>"+
+				"<div style='max-width:600px;margin:0 auto;padding:60px 0 30px 0;font-family:'Roboto',Arial,Helvetica,sans-serif;font-size:16px;line-height:1.5;border:1px solid #e2e2e2'>"+
+					"<div align='center' style='padding-right:0px;padding-left:0px' class='logo-area'>"+
+						"<a href='http://i3a604.p.ssafy.io' style='outline:none' target='_blank'>"+
+						"<img align='center' border='0' src='http://i3a604.p.ssafy.io/images/postRep/20200811065341_Main_Logo_temp.svg' alt='Logo' title='Logo' style='text-decoration-line: none; height: auto; border: none; width: 100%; max-width: 143px; display: block;' width='143'>"+
+						"</a>"+
+			  		"</div>"+
+			 		"<hr style='border:0;border-top:solid 1px #e2e2e2;width:90%;margin:30px auto' class='horizontal-line'>"+
+			  		"<div align='center' style='max-width:90%;margin-left:auto;margin-right:auto;margin-top:40px' class='nomal-paragraph'>"+
+						"<div style='font-size:20px; font-weight:bold; color:#7f7f7f; margin:40px 0 30px 0'>LOGDOT에 가입해주셔서 감사합니다.</div>"+
+			  		"</div>"+
+			  		"<div align='center' style='max-width:90%;margin-left:auto;margin-right:auto;margin-top:30px' class='nomal-paragraph'>"+
+						"<div style='font-size: 14px;font-weight:600; color:#838383; margin:30px 0 30px 0;'>아래 버튼을 클릭하여 인증을 마치면 계정이 활성화 됩니다.</div>"+
+			  		"</div>"+
+			  		"<div align='center' style='padding-top:10px;padding-right:10px;padding-bottom:20px;padding-left:10px'>"+
+						"<a href='http://i3a604.p.ssafy.io:8081/api/auth/emailConfirm?email=" + email + "&key=" + key + "' "+
+									"style='width: 300px; text-decoration-line: none; display: inline-block; color: rgb(255, 255, 255); background-color: #6da7ff; border-radius: 10px; border-width: 1px; border-style: solid; border-color: #6da7ff; padding: 10px 25px;' target='_blank'>"+
+							"메일 인증 완료"+
+						"</a>"+
+			  		"</div>"+
+			  		"<hr style='border:0;border-top:solid 1px #e2e2e2;width:90%;margin:30px auto' class='horizontal-line'>"+
+			  		"<div align='center' style='max-width:90%;margin-left:auto;margin-right:auto;margin-top:40px' class='nomal-paragraph'>"+
+						"<div style='font-size: 12px; color:#838383;'>Copyright @ 2020 LOGDOT</div>"+
+					"</div>"+
+				"</div>"+
+		  	"</div>");
+			sendMail.setFrom("LOGDOT@logdot.com", "LOGDOT"); // 보낸이
 			sendMail.setTo(email); // 받는이
 			sendMail.send();
 			// 글씨 크기 24,20,20,12
