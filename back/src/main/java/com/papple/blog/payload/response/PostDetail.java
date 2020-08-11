@@ -24,7 +24,17 @@ public class PostDetail {
     private List<String> tag;
     //좋아요 여부 - 비로그인 시 기본 false
     private boolean isgood;
+    
+    private String blogName;
+	private String blogDescription;
+	private String blogPicture;
+	private int followerNum;
+	private boolean isFollow;
+    
+    
     public PostDetail() {
 		this.isgood = false;
+		this.followerNum = 0;
+		this.isFollow = false;
 	}
 }

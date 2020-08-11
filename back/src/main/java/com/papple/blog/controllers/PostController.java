@@ -37,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.ApiOperation;
 
+import com.papple.blog.models.BlogConfig;
 import com.papple.blog.models.Follow;
 import com.papple.blog.models.Hashtag;
 import com.papple.blog.models.HashtagPK;
@@ -50,6 +51,7 @@ import com.papple.blog.payload.response.HashtagList;
 import com.papple.blog.payload.response.PopularScore;
 import com.papple.blog.payload.response.PostDetail;
 import com.papple.blog.payload.response.PostList;
+import com.papple.blog.repository.ConfigRepository;
 import com.papple.blog.repository.FollowRepository;
 import com.papple.blog.repository.HistoryRepository;
 import com.papple.blog.repository.PostAlgorithmRepository;
@@ -87,6 +89,8 @@ public class PostController {
 	private CommentService commentService;
 	@Autowired
 	private PostAlgorithmRepository algoRepository;
+	@Autowired
+    private ConfigRepository configRepository;
 
 	@GetMapping("/all")
 	@ApiOperation(value = "모든 포스트 보기")
@@ -130,7 +134,7 @@ public class PostController {
 		}
 		
 		Post temp = postService.findById(id).get();		//조회수, history
-			
+
 		if(!temp.getWriter().equals(email)){	// 포스트 작성자의 history, 조회수 반영 X
 			temp.setViews(temp.getViews()+1);
 			Post post = postService.save(temp);
@@ -141,6 +145,17 @@ public class PostController {
 				historyRepository.save(history);
 				if(storageRepository.isGood(email, id) > 0) detail.setIsgood(true);
 			}
+		}
+		
+		//작성자의 blog 설정
+		BlogConfig bc = configRepository.findById(detail.getWriter()).get();
+		
+		if(bc != null) {
+			detail.setBlogName(bc.getName());
+			detail.setBlogDescription(bc.getDescription());
+			detail.setBlogPicture(bc.getPicture());
+			detail.setFollowerNum(followService.MyFollowerCnt(detail.getWriter()));
+			detail.setFollow(followService.isFollow(email, detail.getWriter()) > 0 ? true : false);
 		}
 		
 		return new ResponseEntity<PostDetail>(detail, HttpStatus.OK);
