@@ -197,45 +197,7 @@ public class AuthController {
 			MailHandler sendMail = new MailHandler(mailSender);
 			sendMail.setSubject("[홈페이지 이메일 인증]"); // 메일제목
 			sendMail.setText( // 메일내용
-					"<style>
-					h1{
-						font-size: 24px;
-						color : #7f7f7f;
-						margin: 40px 0 30px 0;
-					}
-					p{
-						font-size: 16px;
-						font-weight: 500;
-						color : #838383;
-						margin: 30px 0 30px 0;
-					}
-					#btn {
-						border: 1px solid #6da7ff;
-						border-radius: 5px 5px 5px 5px;
-						background-color: #6da7ff; 
-						font-size: 20px; 
-						color: white;
-						padding:5px;
-						width: -webkit-fill-available;
-						margin: 0px 0 40px 0;
-					}
-					#btn:hover{
-						color:#6da7ff;
-						background-color: white; 
-					}
-					</style>"
-	// 				<body style="width: 520px; text-align: center;">
-    // <hr>
-    // <h1>LOGDOT에 가입해주셔서 감사합니다.</h1>
-    // <p>아래 버튼을 클릭하여 인증을 마치면 계정이 활성화 됩니다.</p>
-    //     <button id="btn"; type="button" onclick="location.href='http://i3a604.p.ssafy.io/'"
-    //     >메일 인증 완료</button>
-    //     <hr>
-    // <p style="font-size: 12px;">Copyright @ 2020 LOGDOT</p>
-    // </body>
-                    
-					"<h1>메일인증</h1>" + "<a href='http://i3a604.p.ssafy.io:8081/api/auth/emailConfirm?email=" + email + 
-					"&key="+key+"' target='_blenk'>이메일 인증 확인</a>");
+					"");
 			sendMail.setFrom("admin@gmail.com", "관리자"); // 보낸이
 			sendMail.setTo(email); // 받는이
 			sendMail.send();
