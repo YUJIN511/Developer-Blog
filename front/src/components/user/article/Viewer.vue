@@ -94,6 +94,7 @@
         </button>
       </div>
     </div>
+    <Comment :postId="postId" />
   </div>
 </template>
 
@@ -103,6 +104,7 @@ import { mapGetters } from "vuex";
 import axios from "axios";
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
+import Comment from "./CommentModule.vue";
 
 import {
   CodeBlockHighlight,
@@ -127,7 +129,8 @@ import {
 } from "tiptap-extensions";
 export default {
   components: {
-    EditorContent
+    EditorContent,
+    Comment
   },
   data() {
     return {
@@ -166,6 +169,7 @@ export default {
           console.log(this.html);
         }
       }),
+      postId: "",
       title: "",
       createDate: "",
       tagList: [],
@@ -184,7 +188,7 @@ export default {
       getUserInfo: "user/getUserInfo"
     }),
     async getArticleData() {
-      const articleId = this.$route.query.id;
+      const articleId = (this.postId = this.$route.query.id);
       const email = this.getUserInfo().email;
 
       try {
