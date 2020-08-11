@@ -320,11 +320,11 @@ public class PostController {
 				selectPost.setGood(tem.get().getGood()+1);
 				Post newPost = postService.save(selectPost);
 
+				// 보관함에 담기
+				Storage storage = new Storage(new StoragePK(email, id));
+				storageRepository.save(storage);
+				
 				if(!newPost.getWriter().equals(email)){	//자신의 글은 보관함, 알림 반영 X
-					// 보관함에 담기
-					Storage storage = new Storage(new StoragePK(email, id));
-					storageRepository.save(storage);
-
 					// 알람 발생(0000001)
 					// 이전에 좋아요 눌렀었었는지 확인	>>>  notiurl 주소 front로 추후 변경
 					if(notificationService.findByActionuserAndPostidAndType(email, id, 1) == null){
@@ -359,10 +359,13 @@ public class PostController {
 				selectPost.setGood(tem.get().getGood()-1);
 				Post newPost = postService.save(selectPost);
 
-				if(!newPost.getWriter().equals(email)){	// post 작성자의 글은 보관함 반영 X
-					// 보관함에서 지우기
-					storageRepository.deleteByEmailAndPostid(email, id);
-				}
+				// 보관함에서 지우기
+				storageRepository.deleteByEmailAndPostid(email, id);
+				
+//				if(!newPost.getWriter().equals(email)){	// post 작성자의 글은 보관함 반영 X
+//					
+//					
+//				}
 			});
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
@@ -412,7 +415,7 @@ public class PostController {
 	
 	@GetMapping("popular")
 	@ApiOperation(value = "인기게시물 로직 : 좋아요(1) + 조회(1) + 댓글(2) + 공유(2)")
-	public ResponseEntity<List<PostList>> getPostScore(@RequestParam(required = false) String email) {
+	public ResponseEntity<List<PostList>> getPoularPost(@RequestParam(required = false) String email) {
 		List<PopularScore> baseScore = algoRepository.getPopularScore();
 		List<PopularScore> commentScore = algoRepository.getCommentScore();
 		PriorityQueue<PopularScore> pq = new PriorityQueue<>(new Comparator<PopularScore>() {
@@ -454,4 +457,11 @@ public class PostController {
 		}
 	}
 	
+	@GetMapping("recommend")
+	@ApiOperation(value = "인기게시물 로직 : 좋아요(1) + 조회(1) + 댓글(2) + 공유(2)")
+	public ResponseEntity<List<PostList>> getRecommendPost(@RequestParam String email) {
+		List<PostList> list = new ArrayList<>();
+		
+		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK); 
+	}
 }
