@@ -188,4 +188,9 @@ public class NotificationServiceImpl implements NotificationService{
         return;
     }
 
+    @Override
+    public Notification findByActionuserAndCommentidAndType(String actionuser, Long commentid, Integer type) {
+        return notificationRepository.findByActionuserAndCommentidAndType(actionuser, commentid, type);
+    }
+
 }

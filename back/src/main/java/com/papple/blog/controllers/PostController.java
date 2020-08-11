@@ -4,11 +4,18 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,13 +47,16 @@ import com.papple.blog.models.Post;
 import com.papple.blog.models.Storage;
 import com.papple.blog.models.StoragePK;
 import com.papple.blog.payload.response.HashtagList;
+import com.papple.blog.payload.response.PopularScore;
 import com.papple.blog.payload.response.PostDetail;
 import com.papple.blog.payload.response.PostList;
 import com.papple.blog.repository.FollowRepository;
 import com.papple.blog.repository.HistoryRepository;
+import com.papple.blog.repository.PostAlgorithmRepository;
 import com.papple.blog.repository.PostListRepository;
 import com.papple.blog.repository.StorageRepository;
 import com.papple.blog.repository.UserRepository;
+import com.papple.blog.security.services.CommentService;
 import com.papple.blog.security.services.FollowService;
 import com.papple.blog.security.services.HashtagService;
 import com.papple.blog.security.services.NotificationService;
@@ -73,6 +83,10 @@ public class PostController {
 	private PostListRepository postListRepository;
 	@Autowired
 	private FollowService followService;
+	@Autowired
+	private CommentService commentService;
+	@Autowired
+	private PostAlgorithmRepository algoRepository;
 
 	@GetMapping("/all")
 	@ApiOperation(value = "모든 포스트 보기")
@@ -107,6 +121,7 @@ public class PostController {
 		
 		// detail + hashtag
 		PostDetail detail = postListRepository.searchPostDetail(id);
+		System.out.println(detail);
 		List<String> tag = postListRepository.searchHashtag(id);
 		detail.setTag(tag);
 		
@@ -284,7 +299,7 @@ public class PostController {
 				System.out.println(newPost);
 			});
 			
-			hashtagService.deleteHashtagByPostId(post.getId());	//해당 글의 해시태그 모두 삭제
+			hashtagService.deleteHashtagByPostid(post.getId());	//해당 글의 해시태그 모두 삭제
 			for(int i=0;i<tag.getTag().size();i++) {	//다시 생성
 				Hashtag ht = new Hashtag(new HashtagPK(post.getId(), tag.getTag().get(i)));
 				hashtagService.save(ht);
@@ -305,11 +320,11 @@ public class PostController {
 				selectPost.setGood(tem.get().getGood()+1);
 				Post newPost = postService.save(selectPost);
 
+				// 보관함에 담기
+				Storage storage = new Storage(new StoragePK(email, id));
+				storageRepository.save(storage);
+				
 				if(!newPost.getWriter().equals(email)){	//자신의 글은 보관함, 알림 반영 X
-					// 보관함에 담기
-					Storage storage = new Storage(new StoragePK(email, id));
-					storageRepository.save(storage);
-
 					// 알람 발생(0000001)
 					// 이전에 좋아요 눌렀었었는지 확인	>>>  notiurl 주소 front로 추후 변경
 					if(notificationService.findByActionuserAndPostidAndType(email, id, 1) == null){
@@ -344,10 +359,13 @@ public class PostController {
 				selectPost.setGood(tem.get().getGood()-1);
 				Post newPost = postService.save(selectPost);
 
-				if(!newPost.getWriter().equals(email)){	// post 작성자의 글은 보관함 반영 X
-					// 보관함에서 지우기
-					storageRepository.deleteByEmailAndPostid(email, id);
-				}
+				// 보관함에서 지우기
+				storageRepository.deleteByEmailAndPostid(email, id);
+				
+//				if(!newPost.getWriter().equals(email)){	// post 작성자의 글은 보관함 반영 X
+//					
+//					
+//				}
 			});
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
@@ -368,9 +386,10 @@ public class PostController {
 		System.out.println("글 삭제");
 		Optional<Post> post = postService.findById(id);
 		if(post != null) {
-			storageRepository.deleteByPostId(id);
-			historyRepository.deleteByPostId(id);
-			hashtagService.deleteHashtagByPostId(id);
+			storageRepository.deleteByPostid(id);
+			historyRepository.deleteByPostid(id);
+			hashtagService.deleteHashtagByPostid(id);
+			commentService.deleteByPostid(id);
 			
 			post.ifPresent(selectPost -> {
 				String path = selectPost.getPicture();
@@ -393,5 +412,56 @@ public class PostController {
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}
-
+	
+	@GetMapping("popular")
+	@ApiOperation(value = "인기게시물 로직 : 좋아요(1) + 조회(1) + 댓글(2) + 공유(2)")
+	public ResponseEntity<List<PostList>> getPoularPost(@RequestParam(required = false) String email) {
+		List<PopularScore> baseScore = algoRepository.getPopularScore();
+		List<PopularScore> commentScore = algoRepository.getCommentScore();
+		PriorityQueue<PopularScore> pq = new PriorityQueue<>(new Comparator<PopularScore>() {
+			@Override
+			public int compare(PopularScore o1, PopularScore o2) {
+				return Long.compare(o2.getScore(), o1.getScore());
+			}
+		});
+		
+		/* 좋아요 + 조회수 점수 등록  */
+		Map<Long, Long> map = new HashMap<>();
+		for(PopularScore ps : baseScore) map.put(ps.getPostid(), ps.getScore());
+		
+		/* 댓글 점수 추가(댓글은 2점) */
+		for(PopularScore ps : commentScore) {
+			if(map.containsKey(ps.getPostid())) map.put(ps.getPostid(), map.get(ps.getPostid()) + ps.getScore() * 2); //있던 Post면 점수 더해줌
+			else map.put(ps.getPostid(), ps.getScore() * 2);	//없던 Post면 새로 추가해줌
+		}
+		
+		/* 점수 순대로 정렬 */
+		for(Entry<Long, Long> cur : map.entrySet()) pq.add(new PopularScore(cur.getKey(), cur.getValue()));
+		
+		List<PopularScore> scoreList = new ArrayList<>();
+		while(!pq.isEmpty()) scoreList.add(pq.poll());
+		
+		List<PostList> list = new ArrayList<>();	// 게시글 목록을 담을 List
+		for(PopularScore ps : scoreList) list.add(postListRepository.searchPostById(ps.getPostid()));
+		
+		
+		/* 좋아요 유무 표시 */
+		if(email == null || email.equals("")) {	//비회원
+			System.out.println("빈칸");
+			return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
+		}
+		else {	//회원
+			System.out.println("안빈칸");
+			for(int i=0;i<list.size();i++) if(list.get(i) != null && storageRepository.isGood(email, list.get(i).getId()) > 0) list.get(i).setIsgood(true);
+			return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
+		}
+	}
+	
+	@GetMapping("recommend")
+	@ApiOperation(value = "인기게시물 로직 : 좋아요(1) + 조회(1) + 댓글(2) + 공유(2)")
+	public ResponseEntity<List<PostList>> getRecommendPost(@RequestParam String email) {
+		List<PostList> list = new ArrayList<>();
+		
+		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK); 
+	}
 }

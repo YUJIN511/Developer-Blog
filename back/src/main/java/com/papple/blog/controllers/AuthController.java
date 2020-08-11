@@ -197,11 +197,49 @@ public class AuthController {
 			MailHandler sendMail = new MailHandler(mailSender);
 			sendMail.setSubject("[홈페이지 이메일 인증]"); // 메일제목
 			sendMail.setText( // 메일내용
+					"<style>
+					h1{
+						font-size: 24px;
+						color : #7f7f7f;
+						margin: 40px 0 30px 0;
+					}
+					p{
+						font-size: 16px;
+						font-weight: 500;
+						color : #838383;
+						margin: 30px 0 30px 0;
+					}
+					#btn {
+						border: 1px solid #6da7ff;
+						border-radius: 5px 5px 5px 5px;
+						background-color: #6da7ff; 
+						font-size: 20px; 
+						color: white;
+						padding:5px;
+						width: -webkit-fill-available;
+						margin: 0px 0 40px 0;
+					}
+					#btn:hover{
+						color:#6da7ff;
+						background-color: white; 
+					}
+					</style>"
+	// 				<body style="width: 520px; text-align: center;">
+    // <hr>
+    // <h1>LOGDOT에 가입해주셔서 감사합니다.</h1>
+    // <p>아래 버튼을 클릭하여 인증을 마치면 계정이 활성화 됩니다.</p>
+    //     <button id="btn"; type="button" onclick="location.href='http://i3a604.p.ssafy.io/'"
+    //     >메일 인증 완료</button>
+    //     <hr>
+    // <p style="font-size: 12px;">Copyright @ 2020 LOGDOT</p>
+    // </body>
+                    
 					"<h1>메일인증</h1>" + "<a href='http://i3a604.p.ssafy.io:8081/api/auth/emailConfirm?email=" + email + 
 					"&key="+key+"' target='_blenk'>이메일 인증 확인</a>");
 			sendMail.setFrom("admin@gmail.com", "관리자"); // 보낸이
 			sendMail.setTo(email); // 받는이
 			sendMail.send();
+			// 글씨 크기 24,20,20,12
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -229,9 +267,9 @@ public class AuthController {
 		
 		List<Post> postList= postService.findByWriter(email);
 		for(Post post : postList) {	//해당 사용자가 작성했던 글 관련 데이터 삭제
-			historyRepository.deleteByPostId(post.getId());
-			storageRepository.deleteByPostId(post.getId());
-			hashtagRepository.deleteHashtagByPostId(post.getId());
+			historyRepository.deleteByPostid(post.getId());
+			storageRepository.deleteByPostid(post.getId());
+			hashtagRepository.deleteHashtagByPostid(post.getId());
 		}
 		postService.deleteByWriter(email);				// 쓴 글 삭제
 		userRepository.deleteById(email);				// 회원 삭제
@@ -371,18 +409,23 @@ public class AuthController {
 	@DeleteMapping("/delprofile")
 	@ApiOperation(value = "서버에 있는 프로필 사진 파일을 삭제 + 프로필 히스토리에서 삭제")
 	public ResponseEntity<String> fileDelete(String filePath, String email) {
-		String tem = filePath.replace("/profile", "+");
-		StringTokenizer st = new StringTokenizer(tem, "+");
 		
-		String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
-		String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
+		User user = userRepository.getUserByEmail(email);
 		
-		String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile" + next;
+		if(!user.getProfile().equals(filePath)) {
+			String tem = filePath.replace("/profile", "+");
+			StringTokenizer st = new StringTokenizer(tem, "+");
+			
+			String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
+			String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
+			
+			String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile" + next;
+			
+			File delFile = new File(path);
+			if(delFile.exists()) delFile.delete();		//해당 path의 서버의 파일 삭제
+		}
 		
-		File delFile = new File(path);
-		if(delFile.exists()) delFile.delete();		//해당 path의 서버의 파일 삭제
-		
-		profileRepository.deleteProfile(email, path);	// 프로필 히스토리에서 삭제
+		System.out.println(profileRepository.deleteProfile(email, filePath));	// 프로필 히스토리에서 삭제
 		
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
