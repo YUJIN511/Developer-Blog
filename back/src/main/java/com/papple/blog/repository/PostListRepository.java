@@ -20,6 +20,8 @@ import com.papple.blog.payload.response.PostList;
 public interface PostListRepository{
 	List<PostList> searchAllPost();
 	List<PostList> searchByEmail(String email);
+	PostList searchPostById(Long postid);
+	
 	PostDetail searchPostDetail(Long postid);
 	List<String> searchHashtag(Long postid);
 }
