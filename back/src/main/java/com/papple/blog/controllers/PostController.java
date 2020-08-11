@@ -155,9 +155,9 @@ public class PostController {
 			detail.setBlogName(bc.getName());
 			detail.setBlogDescription(bc.getDescription());
 			detail.setBlogPicture(bc.getPicture());
-			detail.setFollowerNum(followService.MyFollowerCnt(detail.getWriter()));
-			detail.setFollow(followService.isFollow(email, detail.getWriter()) > 0 ? true : false);
 		}
+		detail.setFollowerNum(followService.MyFollowerCnt(detail.getWriter()));
+		detail.setFollow(followService.isFollow(email, detail.getWriter()) > 0 ? true : false);
 		
 		return new ResponseEntity<PostDetail>(detail, HttpStatus.OK);
 	}
