@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.papple.blog.models.Comment;
+import com.papple.blog.payload.response.CommentResponse;
+import com.papple.blog.repository.CommentListRepository;
 import com.papple.blog.repository.CommentReopository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private CommentReopository commentRopository;
+    @Autowired
+    private CommentListRepository commentListRopository;
 
     @Override
     public Comment save(Comment comment) {
@@ -36,13 +40,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> findByPostidAndReplytoIsNull(Long postid) {
-        return commentRopository.findByPostidAndReplytoIsNull(postid);
+    public List<CommentResponse> findByPostidAndReplytoIsNull(Long postid) {
+        return commentListRopository.findByPostidAndReplytoIsNull(postid);
     }
 
     @Override
-    public List<Comment> findByPostidAndReplyto(Long postid, Long replyto) {
-        return commentRopository.findByPostidAndReplyto(postid, replyto);
+    public List<CommentResponse> findByPostidAndReplyto(Long postid, Long replyto) {
+        return commentListRopository.findByPostidAndReplyto(postid, replyto);
     }
 
     @Override
