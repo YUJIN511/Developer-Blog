@@ -1,19 +1,19 @@
 <template>
-  <div class="container-comment">
+  <div class="container-comment-reply">
     <header>
       <div>
-        <img :src="commentData.profile" alt="" />
+        <img :src="replyData.profile" alt="" />
       </div>
       <div class="info">
         <div class="user-info">
-          <span>😀</span><span>{{ commentData.nickname }}</span>
+          <span>😀</span><span>{{ replyData.nickname }}</span>
           <button class="btn-more">⫶</button>
         </div>
-        <!-- <span class="date">{{ commentData.createdate.split("T")[0] }}</span> -->
+        <!-- <span class="date">{{ replyData.createdate.split("T")[0] }}</span> -->
       </div>
     </header>
     <main>
-      {{ commentData.content }}
+      {{ replyData.content }}
     </main>
     <footer>
       <button class="btn-like">
@@ -27,59 +27,20 @@
           />
         </svg>
       </button>
-      <span class="like-count">{{ commentData.likes }}</span>
+      <span class="like-count">{{ replyData.likes }}</span>
       <button class="btn-reply">답글</button>
     </footer>
-    <button
-      class="btn-reply-toggle"
-      v-if="commentData.replycount !== 0"
-      @click="toggleReply"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="6"
-        height="6"
-        viewBox="0 0 24 24"
-      >
-        <path d="M24 22h-24l12-20z" /></svg
-      >답글 {{ commentData.replycount }}개 보기
-    </button>
-    <ReplyList
-      ref="replyList"
-      :commentId="commentData.id"
-      v-show="isReplyShow"
-    />
   </div>
 </template>
 
 <script>
-import ReplyList from "./CommentReplyList.vue";
-
 export default {
-  props: ["commentData"],
-  components: {
-    ReplyList
-  },
-  data: function() {
-    return {
-      isReplyShow: false,
-      isReplyCalled: false
-    };
-  },
-  methods: {
-    toggleReply() {
-      this.isReplyShow = !this.isReplyShow;
-      if (!this.isReplyCalled) {
-        this.isReplyCalled = true;
-        this.$refs.replyList.getData();
-      }
-    }
-  }
+  props: ["replyData"]
 };
 </script>
 
 <style lang="scss" scoped>
-.container-comment {
+.container-comment-reply {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -140,22 +101,6 @@ export default {
       color: gray;
       &:hover {
         color: black;
-      }
-    }
-  }
-  .btn-reply-toggle {
-    display: flex;
-    align-items: center;
-    color: dodgerblue;
-    &:hover {
-      opacity: 0.7;
-    }
-    svg {
-      transform: rotate(180deg);
-      fill: dodgerblue;
-      margin-right: 10px;
-      &.upper {
-        transform: rotate(0deg);
       }
     }
   }
