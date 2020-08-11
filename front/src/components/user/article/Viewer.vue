@@ -24,7 +24,7 @@
           </svg>
           <span>{{ nickname }}</span>
         </div>
-        <span class="create-date"> · createData가 안 넘어옴</span>
+        <span class="create-date"> · {{ createDate }}</span>
       </div>
 
       <div class="viewer-tags">
@@ -45,6 +45,55 @@
       </div>
     </header>
     <editor-content class="editor__content" :editor="editor" />
+    <div class="container-small-buttons">
+      <div class="small-buttons">
+        <button class="btn-like" @click="toggleLikeBtn">
+          <svg
+            class="icon-like"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 4.248c-3.148-5.402-12-3.825-12 2.944 0 4.661 5.571 9.427 12 15.808 6.43-6.381 12-11.147 12-15.808 0-6.792-8.875-8.306-12-2.944z"
+            />
+          </svg>
+          <span>{{ like }}</span>
+        </button>
+        <button class="btn-library">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 26 26"
+          >
+            <g>
+              <g>
+                <path
+                  d="M10.3,3.2v1.7c-1-0.4-2.1-0.6-3.2-0.6C4.9,4.3,2.7,5.1,1,6.8l4.1,4.1h1.4v1.4c1.1,1.1,2.4,1.6,3.8,1.7v2.8H6.6v3.7
+			c0,1.4,1.1,2.5,2.5,2.5h12.3c2,0,3.7-1.6,3.7-3.7v-16H10.3z M8.9,11V8.4H6.1L4.8,7.1c0.7-0.3,1.5-0.4,2.2-0.4
+			c1.6,0,3.2,0.6,4.3,1.8l1.7,1.7l-0.2,0.2c-0.6,0.6-1.5,1-2.4,1C10,11.5,9.4,11.3,8.9,11z M22.5,19.1c0,0.7-0.6,1.2-1.2,1.2
+			c-0.7,0-1.2-0.6-1.2-1.2v-2.5h-7.4v-3.2c0.7-0.3,1.4-0.7,1.9-1.3l0.2-0.2l3.5,3.5h1.7v-1.7l-7.4-7.3V5.6h9.8
+			C22.5,5.6,22.5,19.1,22.5,19.1z"
+                />
+              </g>
+            </g>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="container-blog-info">
+      <div class="blog-image"></div>
+      <div class="main-info">
+        <img src="" alt="" />
+        <div class="blog-title"></div>
+        <div class="blog-description"></div>
+        <div class="follower-number"></div>
+      </div>
+      <div class="container-btn-follow">
+        <button class="btn-follow">
+          팔로우
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -125,7 +174,9 @@ export default {
       linkUrl: null,
       linkMenuIsActive: false,
       thumbnail: "",
-      content: ""
+      content: "",
+      like: 0,
+      isLike: false
     };
   },
   methods: {
@@ -135,6 +186,7 @@ export default {
     async getArticleData() {
       const articleId = this.$route.query.id;
       const email = this.getUserInfo().email;
+
       try {
         const res = await axios.get(
           `${this.$apiServer}/post/postDetail?email=${email}&id=${articleId}`
@@ -142,7 +194,7 @@ export default {
 
         if (res.status === 200) {
           const articleData = res.data;
-          //this.createDate = articleData.createdate.split("T")[0];
+          this.createDate = articleData.createdate.split(" ")[0];
           this.title = articleData.title;
           this.content = articleData.content;
           this.editor.setContent(this.content);
@@ -150,6 +202,10 @@ export default {
           this.profile = articleData.profile;
           this.nickname = articleData.nickname;
           this.thumbnail = articleData.picture;
+          this.like = articleData.good;
+          this.isLike = articleData.isgood;
+          console.log(articleData.isgood);
+          this.setLikeBtn();
         }
       } catch (error) {
         console.log(error);
@@ -177,7 +233,6 @@ export default {
           );
 
           hList.forEach(elem => {
-            console.log(elem);
             elem.id = elem.innerText;
           });
 
@@ -189,7 +244,6 @@ export default {
       const navContent = this.$refs.navContent;
       tagList.forEach(elem => {
         const anchor = document.createElement("a");
-        console.log(elem.tagName);
         anchor.classList.add(elem.tagName);
         anchor.setAttribute("href", `#${elem.id}`);
         anchor.innerText = elem.innerText;
@@ -197,7 +251,9 @@ export default {
       });
     },
     modifyAnchorDest() {
-      window.addEventListener("hashchange", function() {
+      window.addEventListener("hashchange", function(e) {
+        console.log(e.oldURL);
+        console.log(e.newURL);
         window.scrollTo(window.scrollX, window.scrollY - 100);
       });
     },
@@ -210,6 +266,35 @@ export default {
         "style",
         `background-color: rgb(${R}, ${G}, ${B});`
       );
+    },
+    setLikeBtn() {
+      const likeIcon = document.querySelector(".icon-like");
+      if (this.isLike) {
+        likeIcon.classList.add("fill-blue");
+      } else {
+        likeIcon.classList.remove("fill-blue");
+      }
+    },
+    toggleLikeBtn() {
+      // isGood이 갱신이 안 되는거 같음
+      this.isLike = !this.isLike;
+      if (this.isLike) {
+        axios.put(
+          `${this.$apiServer}/post/good?email=${this.getUserInfo().email}&id=${
+            this.$route.query.id
+          }`,
+          {}
+        );
+        this.like++;
+      } else {
+        axios.put(
+          `${this.$apiServer}/post/ungood?email=${
+            this.getUserInfo().email
+          }&id=${this.$route.query.id}`
+        );
+        this.like--;
+      }
+      this.setLikeBtn();
     }
   },
   beforeDestroy() {
@@ -229,203 +314,5 @@ export default {
 
 <style lang="scss" scope>
 @import "@/assets/sass/main.scss";
-
-.container-article-view {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.viewer {
-  text-align: left;
-  width: 800px;
-}
-
-.title-line {
-  display: flex;
-  align-items: flex-start;
-  color: #999999;
-  justify-content: space-between;
-  .btn-more {
-    color: #999999;
-    font-weight: 900;
-  }
-}
-
-.view-title {
-  width: 100%;
-  border: none;
-  font-weight: 700;
-  background-color: white;
-}
-
-.article-info {
-  display: flex;
-  align-items: center;
-  color: #999999;
-  margin-bottom: 10px;
-  .user-info {
-    display: flex;
-    align-items: center;
-    margin-right: 0.3em;
-    .img-profile {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-    }
-    svg {
-      width: 20px;
-      height: 20px;
-      fill: #999999;
-    }
-    span {
-      margin-left: 10px;
-      color: black;
-    }
-  }
-}
-
-.viewer-tags {
-  margin-bottom: 20px;
-  .btn-tag {
-    color: dodgerblue;
-    margin-right: 20px;
-  }
-}
-
-.introduction {
-  display: flex;
-  justify-content: center;
-  margin: 40px 0px;
-  img {
-    max-width: 600px;
-    max-height: 400px;
-  }
-  .default-thumbnail {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    overflow: hidden;
-    font-size: 3em;
-    color: white;
-    width: 600px;
-    height: 400px;
-  }
-}
-
-.article-nav {
-  display: flex;
-  justify-content: flex-end;
-  width: 1100px;
-  height: 10px;
-  .article-nav-content {
-    display: flex;
-    flex-direction: column;
-    width: 100px;
-    height: 600px;
-    font-size: 0.9em;
-    span {
-      font-weight: 900;
-      margin-bottom: 20px;
-    }
-    a {
-      color: #999999;
-      font-weight: 100;
-      &:hover {
-        text-decoration: none;
-        color: black;
-      }
-    }
-    .H2 {
-      margin-left: 15px;
-    }
-    .H3 {
-      margin-left: 30px;
-    }
-  }
-}
-
-// svg sprite
-body > svg,
-.icon use > svg,
-symbol {
-  path,
-  rect,
-  circle,
-  g {
-    fill: currentColor;
-    stroke: none;
-  }
-
-  *[d="M0 0h24v24H0z"] {
-    display: none;
-  }
-}
-
-// code highlight
-pre {
-  &::before {
-    content: attr(data-language);
-    text-transform: uppercase;
-    display: block;
-    text-align: right;
-    font-weight: bold;
-    font-size: 0.6rem;
-  }
-
-  code {
-    .hljs-comment,
-    .hljs-quote {
-      color: #999999;
-    }
-
-    .hljs-variable,
-    .hljs-template-variable,
-    .hljs-attribute,
-    .hljs-tag,
-    .hljs-name,
-    .hljs-regexp,
-    .hljs-link,
-    .hljs-name,
-    .hljs-selector-id,
-    .hljs-selector-class {
-      color: #f2777a;
-    }
-
-    .hljs-number,
-    .hljs-meta,
-    .hljs-built_in,
-    .hljs-builtin-name,
-    .hljs-literal,
-    .hljs-type,
-    .hljs-params {
-      color: #f99157;
-    }
-
-    .hljs-string,
-    .hljs-symbol,
-    .hljs-bullet {
-      color: #99cc99;
-    }
-
-    .hljs-title,
-    .hljs-section {
-      color: #ffcc66;
-    }
-
-    .hljs-keyword,
-    .hljs-selector-tag {
-      color: #6699cc;
-    }
-
-    .hljs-emphasis {
-      font-style: italic;
-    }
-
-    .hljs-strong {
-      font-weight: 700;
-    }
-  }
-}
+@import "@/assets/sass/viewer.scss";
 </style>
