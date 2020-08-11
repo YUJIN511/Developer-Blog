@@ -8,15 +8,15 @@
     >
     </textarea>
     <div class="flex-end">
-      <button>댓글 작성</button>
+      <button @click="submitComment">댓글 작성</button>
     </div>
-    <Comment />
+    <CommentList :commentList="commentList" />
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import Comment from "./Comment.vue";
+import CommentList from "./CommentList.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -24,22 +24,41 @@ export default {
   data: function() {
     return {
       commentCnt: 0,
-      commentContent: ""
+      commentContent: "",
+      commentList: ""
     };
   },
   components: {
-    Comment
+    CommentList
   },
-  method: {
+  methods: {
     ...mapGetters({
       getUserInfo: "user/getUserInfo"
     }),
     submitComment() {
-      axios.post(`${this.$apiServer}/comment/write`, {
-        content: this.commentContent,
-        email: this.getUserInfo,
-        postid: this.postId
-      });
+      axios
+        .post(`${this.$apiServer}/comment`, {
+          content: this.commentContent,
+          email: this.getUserInfo().email,
+          postid: this.postId
+        })
+        .then(() => {
+          alert("댓글이 등록됐습니다.");
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  },
+  async created() {
+    try {
+      const res = await axios.get(
+        `${this.$apiServer}/comment/allComment?postid=${this.postId}`
+      );
+      this.commentCnt = res.data.length;
+      this.commentList = res.data;
+    } catch (error) {
+      console.log(error);
     }
   }
 };
@@ -66,6 +85,7 @@ export default {
   display: flex;
   justify-content: flex-end;
   width: 100%;
+  margin-bottom: 40px;
   button {
     color: dodgerblue;
     margin-right: 10px;
