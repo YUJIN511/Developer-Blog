@@ -59,7 +59,7 @@ public class CommentController {
         return new ResponseEntity<List<Comment>>(list, HttpStatus.OK);
 	}   
     
-    @PostMapping("/write")
+    @PostMapping
     @ApiOperation(value = "새 댓글 쓰기")
     public ResponseEntity<String> writeComment(@RequestBody Comment comment) {
     
@@ -106,7 +106,7 @@ public class CommentController {
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
     
-    @PutMapping("/modify")
+    @PutMapping
 	@ApiOperation(value = "댓글 수정 ")
 	public ResponseEntity<String> modifyComment(@RequestBody CommentRequest commentRequest) {
 
