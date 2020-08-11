@@ -77,8 +77,6 @@ export default {
       try {
         const res = await axios.post(`${SERVER_URL}/api/auth/signup`, userInfo);
         if (res.status === 200) {
-          // context.commit("setIsLogin", true);
-          // context.commit("setToken", res.data.accessToken);
           return true;
         }
       } catch (error) {
@@ -102,6 +100,11 @@ export default {
           context.commit("setRole", res.data.roles["name"]);
         })
         .catch((err) => console.log(err));
+    },
+    receiveToken(context, { token, email }) {
+      context.commit("setToken", token);
+      context.commit("setIsLogin", true);
+      context.commit("setEmail", email);
     },
     updateNickname({ commit, getters }, userInfo) {
       axios
