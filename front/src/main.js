@@ -13,5 +13,5 @@ Vue.prototype.$apiServer = "http://i3a604.p.ssafy.io:8081/api";
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount("#app");

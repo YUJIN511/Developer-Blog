@@ -94,7 +94,7 @@
         </button>
       </div>
     </div>
-    <Comment :postId="postId" />
+    <Comment @reRender="reRender" :key="commentModuleKey" :postId="postId" />
   </div>
 </template>
 
@@ -180,13 +180,17 @@ export default {
       thumbnail: "",
       content: "",
       like: 0,
-      isLike: false
+      isLike: false,
+      commentModuleKey: 0
     };
   },
   methods: {
     ...mapGetters({
       getUserInfo: "user/getUserInfo"
     }),
+    reRender() {
+      this.commentModuleKey++;
+    },
     async getArticleData() {
       const articleId = (this.postId = this.$route.query.id);
       const email = this.getUserInfo().email;
@@ -274,13 +278,12 @@ export default {
     setLikeBtn() {
       const likeIcon = document.querySelector(".icon-like");
       if (this.isLike) {
-        likeIcon.classList.add("fill-blue");
+        likeIcon.classList.add("fill-lightred");
       } else {
-        likeIcon.classList.remove("fill-blue");
+        likeIcon.classList.remove("fill-lightred");
       }
     },
     toggleLikeBtn() {
-      // isGood이 갱신이 안 되는거 같음
       this.isLike = !this.isLike;
       if (this.isLike) {
         axios.put(

@@ -1,7 +1,8 @@
 <template>
   <div class="container-setting">
-    <Navbar />
-    <router-view></router-view>
+    <Navbar v-if="getIsLogin()" />
+    <router-view v-if="getIsLogin()"></router-view>
+    <LimitedAccess v-if="!getIsLogin()" />
   </div>
 </template>
 
@@ -9,21 +10,36 @@
 import { mapActions, mapGetters } from "vuex";
 
 import Navbar from "@/components/user/setting/Navbar.vue";
+import LimitedAccess from "@/components/user/LimitedAccess.vue";
 export default {
   components: {
-    Navbar
+    Navbar,
+    LimitedAccess,
   },
   methods: {
     ...mapActions({
-      fetchUserInfo: "user/fetchUserInfo"
+      fetchUserInfo: "user/fetchUserInfo",
     }),
     ...mapGetters({
-      getEmail: "user/getEmail"
-    })
+      getEmail: "user/getEmail",
+      getUserInfo: "user/getUserInfo",
+      getIsLogin: "user/getIsLogin",
+    }),
+  },
+  created() {
+    if (!this.getIsLogin()) {
+      document.querySelector(".container-requirelogin").remove("hide");
+    }
   },
   mounted() {
-    this.fetchUserInfo(this.getEmail()).then(res => console.log(res));
-  }
+    this.fetchUserInfo(this.getEmail());
+    var profileImages = document.querySelectorAll(".profile-image");
+    profileImages.forEach((profileImage) => {
+      profileImage.style.backgroundImage = `url('${
+        this.getUserInfo().profile
+      }')`;
+    });
+  },
 };
 </script>
 

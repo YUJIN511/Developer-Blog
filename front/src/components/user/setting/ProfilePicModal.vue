@@ -3,58 +3,121 @@
     <div class="background-profilepic" @click="closeModal"></div>
     <div class="modal-profilepic">
       <div class="modal-head">
-        <div class="profile-image"></div>
+        <div class="preview-image"></div>
         <input
           type="file"
           id="file"
           style="display: none;"
-          @change="uploadFile"
+          accept="image/png, image/jpeg"
+          @change="previewFile"
         />
-        <button @click="clickInput" class="btn btn-upload">
-          ...사진 업로드
-        </button>
+        <button @click="clickInput" class="btn btn-upload">...사진 업로드</button>
+        <button @click="setDefaultImage" class="btn btn-setdefault">기본 프로필 이미지로 변경</button>
       </div>
       <div class="modal-body">
         <hr />
-        <div>이전 프로필 사진들</div>
+        <div class="container-images">
+          <div
+            class="previous-image"
+            v-for="image in images"
+            :key="image"
+            @click="deleteImage(image)"
+          >
+            <img :src="image" />
+            <button class="banner-image-delete">✖</button>
+          </div>
+        </div>
       </div>
-      <!-- <button class="btn-close" @click="closeModal">✖</button> -->
+      <div class="container-btns">
+        <button @click="saveChanges">저장</button>
+        <button class="btn-close" @click="closeModal">취소</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
 
 const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 
 export default {
   name: "ProfilePicModal",
+  data() {
+    return {
+      url: this.getProfile(),
+      images: [],
+      file: ""
+    };
+  },
   methods: {
+    ...mapActions({
+      defaultProfile: "user/defaultProfile"
+    }),
+    ...mapGetters({
+      getEmail: "user/getEmail",
+      getProfile: "user/getProfile"
+    }),
     closeModal() {
       document.querySelector(".container-profilepic").classList.add("hide");
     },
-    uploadFile(event) {
+    previewFile(event) {
       this.file = event.target.files[0];
+      this.url = URL.createObjectURL(this.file);
+      document.querySelector(
+        ".preview-image"
+      ).style.backgroundImage = `url('${this.url}')`;
+    },
+    saveChanges() {
       let formData = new FormData();
       formData.append("filename", this.file);
-      formData.append("email", this.email);
-
+      formData.append("email", this.getEmail());
       axios
-        .put(`${SERVER_URL}/api/auth/profile`, formData, {
+        .post(`${SERVER_URL}/api/auth/profile`, formData, {
           headers: {
-            "Content-Type": "multipart/form-data",
-          },
+            "Content-Type": "multipart/form-data"
+          }
         })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => console.log(err));
+        .then(() => {})
+        .catch(err => console.log(err));
+      this.$router.go();
     },
     clickInput() {
       document.querySelector("#file").click();
     },
+    fetchPictures() {
+      axios
+        .get(`${SERVER_URL}/api/auth/pflist?email=${this.getEmail()}`)
+        .then(res => {
+          this.images = res.data;
+        })
+        .catch(err => console.log(err));
+    },
+    setDefaultImage() {
+      let defaultImage = "http://i3a604.p.ssafy.io/images/profile/basic.png";
+      this.$el.querySelector(
+        ".preview-image"
+      ).style.backgroundImage = `url('${defaultImage}')`;
+      this.defaultProfile();
+    },
+    deleteImage(url) {
+      axios
+        .delete(
+          `${SERVER_URL}/api/auth/delprofile?email=${this.getEmail()}&filePath=${url}`
+        )
+        .then(() => {
+          this.fetchPictures();
+        })
+        .catch(err => console.log(err));
+    }
   },
+  mounted() {
+    this.fetchPictures();
+    this.$el.querySelector(
+      ".preview-image"
+    ).style.backgroundImage = `url('${this.getProfile()}')`;
+  }
 };
 </script>
 
@@ -76,7 +139,6 @@ export default {
   position: fixed;
   width: 100vw;
   height: 100vh;
-  //   background-color: rgba(0, 0, 0, 0.4);
 }
 
 // modal
@@ -95,14 +157,20 @@ export default {
 .modal-head {
   padding: 50px;
   //   display: flex;
-  //   justify-content: flex-end;
+  //   flex-direction: row;
 }
 
 .modal-body {
   padding: 50px;
+  position: relative;
+  display: block;
+  .button {
+    position: absolute;
+    bottom: 0;
+  }
 }
 
-.profile-image {
+.preview-image {
   position: absolute;
   background-image: url(https://images.unsplash.com/photo-1517832207067-4db24a2ae47c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60);
   background-position: center;
@@ -110,6 +178,50 @@ export default {
   width: 120px;
   height: 120px;
   border-radius: 50%;
+}
+
+.container-images {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.previous-image {
+  position: relative;
+  background-position: center;
+  background-size: 150%;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 10px;
+  display: inline-block;
+  img {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+  button {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    color: rgba(0, 0, 0, 0);
+    &:hover {
+      font-size: 2rem;
+      font-weight: 0;
+      color: rgba(255, 255, 255, 0.6);
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+  }
+}
+
+.container-btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
 
 h1 {

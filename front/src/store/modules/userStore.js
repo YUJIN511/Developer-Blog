@@ -33,6 +33,9 @@ export default {
     getEmail(state) {
       return state.userInfo.email;
     },
+    getProfile(state) {
+      return state.userInfo.profile;
+    },
   },
 
   mutations: {
@@ -55,6 +58,9 @@ export default {
     },
     setRole(state, role) {
       state.userInfo.role = role;
+    },
+    setProfile(state, profile) {
+      state.userInfo.profile = profile;
     },
   },
 
@@ -98,6 +104,7 @@ export default {
           // console.log(res);
           context.commit("setNickname", res.data.nickname);
           context.commit("setRole", res.data.roles["name"]);
+          context.commit("setProfile", res.data.profile);
         })
         .catch((err) => console.log(err));
     },
@@ -140,6 +147,17 @@ export default {
           console.log(res);
           alert("회원 탈퇴가 완료되었습니다.");
           commit("setLogout", false);
+        })
+        .catch((err) => console.log(err));
+    },
+    defaultProfile({ commit, getters }) {
+      axios
+        .put(`${SERVER_URL}/api/auth/unprofile`, getters.getEmail)
+        .then(() => {
+          commit(
+            "setProfile",
+            "http://i3a604.p.ssafy.io/images/profile/basic.png"
+          );
         })
         .catch((err) => console.log(err));
     },
