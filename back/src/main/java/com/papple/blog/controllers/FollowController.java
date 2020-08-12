@@ -72,6 +72,7 @@ public class FollowController {
 		Follow follow = new Follow(new FollowPK(follower, followed));
 		followService.save(follow);
 
+		// 알림발생(0010000)
 		// >>> notiurl 주소 front로 추후 변경
 		String actionName = userRepository.getUserByEmail(follower).getNickname();
 		Notification notification = Notification.builder()
@@ -81,7 +82,7 @@ public class FollowController {
 			.notiurl("http://i3a604.p.ssafy.io/"+follower)
 			.build();
 
-			notification.setFollowed(followed);
+			notification.setType(1<<4);
 			notificationService.save(notification);
 		
 		return new ResponseEntity<String>("success", HttpStatus.OK);
@@ -94,7 +95,7 @@ public class FollowController {
 		followService.deleteFollow(follower, followed);
 
 		// 팔로우 알림 삭제
-		Notification notification = NotificationRepository.findByActionuserAndFollowed(follower, followed);
+		Notification notification = NotificationRepository.findByActionuserAndTargetuserAndType(follower, followed, 10000);
 		NotificationRepository.deleteById(notification.getId());
 
 		return new ResponseEntity<String>("success", HttpStatus.OK);

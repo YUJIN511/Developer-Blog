@@ -26,8 +26,12 @@ public class User {
 
 	private String profile;
 	
+	private Long score;
+	
 	private Integer usercertification;
 
+	private String notification;
+	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(	name = "user_roles", 
 				joinColumns = @JoinColumn(name = "user_id"), 
@@ -37,12 +41,14 @@ public class User {
 	public User() {
 	}
 
-	public User(String email, String nickname, String password, Integer usercertification) {
+	public User(String email, String nickname, String password, Integer usercertification, Long score) {
 		super();
 		this.email = email;
 		this.nickname = nickname;
 		this.password = password;
+		this.score = score;
 		this.usercertification = usercertification;
+		this.notification = "1111111";
 	}
 
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="container-account">
+  <div style="background:white" class="container-account">
     <header>
       <div class="profile-image">
         <button class="banner-image-edit" @click="openProfilePic">수정하기</button>
@@ -19,17 +19,19 @@
         </div>
       </div>
       <div class="level-icon">
-        <span>레벨티콘 설정</span>
-        <button class="btn-circle btn-level-icon">
+        <span>레벨 / 경험치</span>
+
+          <button class="btn-circle btn-level-icon">
           <img
             class="level-icon"
-            width="16px"
-            height="16px"
-            viewBox="0 0 18 18"
+            width="20px"
+            height="20px"
+            viewBox="0 0 24 24"
             src="@/assets/tree.svg"
             alt="level icon"
           />
-        </button>
+          </button>
+        
       </div>
       <div class="level-icon">
         <span>연동된 SNS계정</span>

@@ -31,5 +31,5 @@ public interface HashtagRepository extends JpaRepository<Hashtag, Long>{
 	@Transactional
 	@Modifying
 	@Query(value = "delete from hashtag where postid = ?1", nativeQuery = true)
-	void deleteHashtagByPostId(Long postid);
+	void deleteHashtagByPostid(Long postid);
 }

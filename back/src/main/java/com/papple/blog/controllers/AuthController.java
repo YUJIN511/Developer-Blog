@@ -3,6 +3,8 @@ package com.papple.blog.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 //import java.lang.StackWalker.Option;
 import java.util.HashSet;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -53,6 +56,7 @@ import com.papple.blog.payload.response.JwtResponse;
 import com.papple.blog.payload.response.MessageResponse;
 import com.papple.blog.repository.AuthRepository;
 import com.papple.blog.repository.HistoryRepository;
+import com.papple.blog.repository.ProfileRepository;
 import com.papple.blog.repository.HashtagRepository;
 import com.papple.blog.repository.RoleRepository;
 import com.papple.blog.repository.StorageRepository;
@@ -85,6 +89,8 @@ public class AuthController {
 	FollowService followService;
 	@Autowired
 	HashtagRepository hashtagRepository;
+	@Autowired
+	ProfileRepository profileRepository;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -127,15 +133,10 @@ public class AuthController {
 	@ApiOperation(value = "회원 가입")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
-		if (userRepository.existsById(signUpRequest.getEmail())) {
-			return ResponseEntity
-					.badRequest()
-					.body(new MessageResponse("Error: Email is already in use!"));
-		}
 		
 		// Create new user's account
 		User user = new User(signUpRequest.getEmail(), null,
-							encoder.encode(signUpRequest.getPassword()),0);
+							encoder.encode(signUpRequest.getPassword()),0, 0l);
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
@@ -175,6 +176,18 @@ public class AuthController {
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 
+	@GetMapping("/checkEmailDuplication")
+	@ApiOperation(value = "이메일 중복 체크")
+	public ResponseEntity<?> checkEmailDuplication(@RequestParam(required = true) final String email){
+		 if (userRepository.existsById(email)) {
+		 	return ResponseEntity
+		 			.badRequest()
+		 			.body(new MessageResponse("Error: Email is already in use!"));
+		 }
+		 return ResponseEntity.ok().body(new MessageResponse("Success"));
+	}
+
+	// 회원가입시 인증 이메일 보내기
 	@Async
 	public void sendMail(String email){
 		try{
@@ -182,13 +195,38 @@ public class AuthController {
 			UserAuth userauth = new UserAuth(email, key);
 			authRepository.save(userauth);	// 인증키 DB저장
 			MailHandler sendMail = new MailHandler(mailSender);
-			sendMail.setSubject("[홈페이지 이메일 인증]"); // 메일제목
+			sendMail.setSubject("[LOG DOT] 이메일 인증입니다."); // 메일제목
 			sendMail.setText( // 메일내용
-					"<h1>메일인증</h1>" + "<a href='http://i3a604.p.ssafy.io:8081/api/auth/emailConfirm?email=" + email + 
-					"' target='_blenk'>이메일 인증 확인</a>");
-			sendMail.setFrom("admin@gmail.com", "관리자"); // 보낸이
+			"<div style='width:100%'>"+
+				"<div style='max-width:600px;margin:0 auto;padding:60px 0 30px 0;font-family:'Roboto',Arial,Helvetica,sans-serif;font-size:16px;line-height:1.5;border:1px solid #e2e2e2'>"+
+					"<div align='center' style='padding-right:0px;padding-left:0px' class='logo-area'>"+
+						"<a href='http://i3a604.p.ssafy.io' style='outline:none' target='_blank'>"+
+						"<img align='center' border='0' src='http://i3a604.p.ssafy.io/images/postRep/20200811065341_Main_Logo_temp.svg' alt='Logo' title='Logo' style='text-decoration-line: none; height: auto; border: none; width: 100%; max-width: 143px; display: block;' width='143'>"+
+						"</a>"+
+			  		"</div>"+
+			 		"<hr style='border:0;border-top:solid 1px #e2e2e2;width:90%;margin:30px auto' class='horizontal-line'>"+
+			  		"<div align='center' style='max-width:90%;margin-left:auto;margin-right:auto;margin-top:40px' class='nomal-paragraph'>"+
+						"<div style='font-size:20px; font-weight:bold; color:#777777; margin:40px 0 30px 0'>LOGDOT에 가입해주셔서 감사합니다.</div>"+
+			  		"</div>"+
+			  		"<div align='center' style='max-width:90%;margin-left:auto;margin-right:auto;margin-top:30px' class='nomal-paragraph'>"+
+						"<div style='font-size: 14px;font-weight:600; color:#838383; margin:30px 0 30px 0;'>아래 버튼을 클릭하여 인증을 마치면 계정이 활성화 됩니다.</div>"+
+			  		"</div>"+
+			  		"<div align='center' style='padding-top:10px;padding-right:10px;padding-bottom:20px;padding-left:10px'>"+
+						"<a href='http://i3a604.p.ssafy.io:8081/api/auth/emailConfirm?email=" + email + "&key=" + key + "' "+
+									"style='width: 300px; text-decoration-line: none; display: inline-block; color: rgb(255, 255, 255); background-color: #6da7ff; border-radius: 10px; border-width: 1px; border-style: solid; border-color: #6da7ff; padding: 10px 25px;' target='_blank'>"+
+							"메일 인증 완료"+
+						"</a>"+
+			  		"</div>"+
+			  		"<hr style='border:0;border-top:solid 1px #e2e2e2;width:90%;margin:30px auto' class='horizontal-line'>"+
+			  		"<div align='center' style='max-width:90%;margin-left:auto;margin-right:auto;margin-top:40px' class='nomal-paragraph'>"+
+						"<div style='font-size: 12px; color:#838383;'>Copyright @ 2020 LOGDOT</div>"+
+					"</div>"+
+				"</div>"+
+		  	"</div>");
+			sendMail.setFrom("LOGDOT@logdot.com", "LOGDOT"); // 보낸이
 			sendMail.setTo(email); // 받는이
 			sendMail.send();
+			// 글씨 크기 24,20,20,12
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -196,11 +234,11 @@ public class AuthController {
 
 	@GetMapping("/emailConfirm")
 	@ApiOperation(value = "이메일 인증")
-	public RedirectView emailConfirm(@RequestParam(required = true) final String email){
+	public RedirectView emailConfirm(@RequestParam(required = true) final String email, final String key){
 		Optional<UserAuth> userauth = authRepository.findById(email);
 		if(userauth != null){
 			userRepository.updateAuth(1, email);
-			return new RedirectView("http://i3a604.p.ssafy.io/account/setNickname/"+email);
+			return new RedirectView("http://i3a604.p.ssafy.io/account/setNickname/"+email+"/"+key);
 		}
 		// 에러 페이지로 
 		return null;
@@ -213,14 +251,12 @@ public class AuthController {
 		storageRepository.deleteByEmail(email);			// 보관함 삭제
 		followService.deleteByEmail(email);				// 팔로우 삭제
 		hashtagRepository.deleteHashtagByEmail(email);	// Hashtag 삭제
-		postService.deleteGoodByEmail(email);			// 좋아요 삭제
 		
 		List<Post> postList= postService.findByWriter(email);
 		for(Post post : postList) {	//해당 사용자가 작성했던 글 관련 데이터 삭제
-			historyRepository.deleteByPostId(post.getId());
-			storageRepository.deleteByPostId(post.getId());
-			hashtagRepository.deleteHashtagByPostId(post.getId());
-			postService.deleteGoodByPostid(post.getId());
+			historyRepository.deleteByPostid(post.getId());
+			storageRepository.deleteByPostid(post.getId());
+			hashtagRepository.deleteHashtagByPostid(post.getId());
 		}
 		postService.deleteByWriter(email);				// 쓴 글 삭제
 		userRepository.deleteById(email);				// 회원 삭제
@@ -290,13 +326,36 @@ public class AuthController {
 		if(user != null){
 			try{
 				MailHandler sendMail = new MailHandler(mailSender);
-				sendMail.setSubject("[비밀번호 재설정 이메일]"); // 메일제목
+				sendMail.setSubject("[LOG DOT] 비밀번호를 재설정 해주세요."); // 메일제목
 
-				sendMail.setText( // 메일내용
-						"<h1>비밀번호 재설정</h1>" + 
-						"<a href='http://i3a604.p.ssafy.io/account/resetpassword/" + email + "' target='_blenk'> 비밀번호 재설정 링크</a>");
-
-						sendMail.setFrom("admin@gmail.com", "관리자"); // 보낸이
+				sendMail.setText( 
+					"<div style='width:100%'>"+
+						"<div style='max-width:600px;margin:0 auto;padding:60px 0 30px 0;font-family:'Roboto',Arial,Helvetica,sans-serif;font-size:16px;line-height:1.5;border:1px solid #e2e2e2'>"+
+							"<div align='center' style='padding-right:0px;padding-left:0px' class='logo-area'>"+
+								"<a href='http://i3a604.p.ssafy.io' style='outline:none' target='_blank'>"+
+								"<img align='center' border='0' src='http://i3a604.p.ssafy.io/images/postRep/20200811065341_Main_Logo_temp.svg' alt='Logo' title='Logo' style='text-decoration-line: none; height: auto; border: none; width: 100%; max-width: 143px; display: block;' width='143'>"+
+								"</a>"+
+							"</div>"+
+							"<hr style='border:0;border-top:solid 1px #e2e2e2;width:90%;margin:30px auto' class='horizontal-line'>"+
+							"<div align='center' style='max-width:90%;margin-left:auto;margin-right:auto;margin-top:40px' class='nomal-paragraph'>"+
+								"<div style='font-size:20px; font-weight:bold; color:#777777; margin:40px 0 30px 0'>LOGDOT 비밀번호 재설정 이메일입니다.</div>"+
+							"</div>"+
+							"<div align='center' style='max-width:90%;margin-left:auto;margin-right:auto;margin-top:30px' class='nomal-paragraph'>"+
+								"<div style='font-size: 14px;font-weight:600; color:#838383; margin:30px 0 30px 0;'>아래 버튼을 클릭하면 비밀번호를 재설정 할 수 있습니다.</div>"+
+							"</div>"+
+							"<div align='center' style='padding-top:10px;padding-right:10px;padding-bottom:20px;padding-left:10px'>"+
+								"<a href='http://i3a604.p.ssafy.io/account/resetpassword/" + email + "' "+
+											"style='width: 300px; text-decoration-line: none; display: inline-block; color: rgb(255, 255, 255); background-color: #6da7ff; border-radius: 10px; border-width: 1px; border-style: solid; border-color: #6da7ff; padding: 10px 25px;' target='_blank'>"+
+									"비밀번호 재설정"+
+								"</a>"+
+							"</div>"+
+							"<hr style='border:0;border-top:solid 1px #e2e2e2;width:90%;margin:30px auto' class='horizontal-line'>"+
+							"<div align='center' style='max-width:90%;margin-left:auto;margin-right:auto;margin-top:40px' class='nomal-paragraph'>"+
+								"<div style='font-size: 12px; color:#838383;'>Copyright @ 2020 LOGDOT</div>"+
+							"</div>"+
+						"</div>"+
+					"</div>");
+				sendMail.setFrom("LOGDOT@logdot.com", "LOGDOT"); // 보낸이
 				sendMail.setTo(email); // 받는이
 				sendMail.send();
 			} catch(Exception e){
@@ -317,52 +376,92 @@ public class AuthController {
 		return ResponseEntity.ok(new MessageResponse("Password registered successfully!"));
 	}
 	
-	@PutMapping("/profile")
-	@ApiOperation(value = "프로필 사진 업로드 - Access Path return")
-	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam String email, HttpServletRequest request) {
+	// Profile 사진 업로드 관련
+	@GetMapping("/pflist")
+	@ApiOperation(value = "유저의 사진 히스토리 목록을 가져옴")
+	public ResponseEntity<List<String>> getProfileHistory(String email) {
+		return new ResponseEntity<List<String>>(profileRepository.searchByEmail(email), HttpStatus.OK);
+	}
+	
+	
+	@PostMapping("/profile")
+	@ApiOperation(value = "path 변수가 비었을 때는 서버에 파일 저장 + 유저 대표사진 update + profile history 등록,  path가 있을 때는 대표사진만 update")
+	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam String email, 
+			@RequestParam(required = false) String path, HttpServletRequest request) {
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-		Date nowdate = new Date();
-		String dateString = formatter.format(nowdate);	//현재시간 문자열
-		
-		String real_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile/" + 
-				dateString + "_" + mFile.getOriginalFilename();	//경로 + 날짜시간 + _ +파일이름으로 저장
-
-		String access_path = "http://i3a604.p.ssafy.io/images/profile/" + dateString + "_" + mFile.getOriginalFilename();
-
-		try {
-			mFile.transferTo(new File(real_path));
-			userRepository.updateProfile(access_path, email);
-			return new ResponseEntity<String>(access_path, HttpStatus.OK);
-		} catch (IOException e) {
-			System.out.println("파일 업로드 실패");
-			return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
+		if(path == null || path.equals("")) {	// path 변수가 안들어오면 (새 첨부 파일로 대표이미지를 등록하면)
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+			Date nowdate = new Date();
+			String dateString = formatter.format(nowdate);	//현재시간 문자열
+			
+			String real_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile/" + 
+					dateString + "_" + mFile.getOriginalFilename();	//경로 + 날짜시간 + _ +파일이름으로 저장
+			String access_path = "http://i3a604.p.ssafy.io/images/profile/" + dateString + "_" + mFile.getOriginalFilename();
+			
+			try {
+				mFile.transferTo(new File(real_path));					// 서버에 파일 저장
+				userRepository.updateProfile(access_path, email);		// 유저 대표사진 update
+				profileRepository.insertProfile(email, access_path);	// profile history 등록
+				return new ResponseEntity<String>(access_path, HttpStatus.OK);
+			} catch(Exception e) {
+				System.out.println("파일 업로드 실패");
+				return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
+			}
 		}
+		else {		//path 변수가 들어오면
+			userRepository.updateProfile(path, email);		// 유저 대표사진 update
+			return new ResponseEntity<String>(path, HttpStatus.OK);
+		}
+		
 		
 	}
 	
 	@DeleteMapping("/delprofile")
-	@ApiOperation(value = "서버에 있는 프로필 사진 파일을 삭제")
-	public ResponseEntity<String> fileDelete(String filePath) {
-		String tem = filePath.replace("/profile", "+");
-		StringTokenizer st = new StringTokenizer(tem, "+");
+	@ApiOperation(value = "서버에 있는 프로필 사진 파일을 삭제 + 프로필 히스토리에서 삭제")
+	public ResponseEntity<String> fileDelete(String filePath, String email) {
 		
-		String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
-		String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
+		User user = userRepository.getUserByEmail(email);
 		
-		String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile" + next;
+		if(!user.getProfile().equals(filePath)) {
+			String tem = filePath.replace("/profile", "+");
+			StringTokenizer st = new StringTokenizer(tem, "+");
+			
+			String prev = st.nextToken();	//http://i3a604.p.ssafy.io/images
+			String next = st.nextToken();	///"/" + dateString + "_" + mFile.getOriginalFilename();
+			
+			String path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile" + next;
+			
+			File delFile = new File(path);
+			if(delFile.exists()) delFile.delete();		//해당 path의 서버의 파일 삭제
+		}
 		
-		File delFile = new File(path);
-		if(delFile.exists()) delFile.delete();
+		System.out.println(profileRepository.deleteProfile(email, filePath));	// 프로필 히스토리에서 삭제
+		
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
 	@PutMapping("/unprofile")
-	@ApiOperation(value = "프로필 사진 삭제, (사용자의 profile 컬럼을 null로)")
-	public ResponseEntity<String> fileUnUpload(@RequestParam String email) {
+	@ApiOperation(value = "프로필 사진을 기본 사진으로 setting")
+	public ResponseEntity<String> fileUnUpload(String email) {
 		userRepository.deleteProfile(email);
+//		profileRepository.unProfile(email);
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
+	
+	
+
+	@GetMapping("/notificationSetting")
+	@ApiOperation(value = "알림설정")
+	public ResponseEntity<String> getMethodName(@RequestParam final String email, 
+															@RequestParam String notification) {
+
+		User user = userRepository.getUserByEmail(email);
+		user.setNotification(notification);	// 1111111  (1은 ON, 0은 OFF)
+		userRepository.save(user);
+
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
+	
 
 }
 

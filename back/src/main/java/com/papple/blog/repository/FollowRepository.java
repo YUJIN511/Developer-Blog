@@ -15,6 +15,9 @@ import com.papple.blog.models.FollowPK;
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, FollowPK>{
 	
+	@Query(value = "SELECT * FROM follow where followed = ?1", nativeQuery = true)
+	List<Follow> findByFollowed(String followed); 
+
 	@Query(value = "SELECT * FROM follow where follower = ?1", nativeQuery = true)
 	List<Follow> findByMyEmail(String follower);
 	
