@@ -1,7 +1,10 @@
 <template>
-  <div class="container-base">
-    <span class="title">방문 기록</span>
-    <FlexArticles :datas="articleData" />
+  <div>
+    <LimitedAccess v-if="!getIsLogin()" />
+    <div class="container-base" v-if="getIsLogin()">
+      <span class="title">방문 기록</span>
+      <FlexArticles :datas="articleData" />
+    </div>
   </div>
 </template>
 
@@ -18,21 +21,27 @@
 */
 
 import FlexArticles from "@/components/common/FlexArticles.vue";
-import { mapMutations } from "vuex";
+import LimitedAccess from "@/components/user/LimitedAccess.vue";
+
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   components: {
-    FlexArticles
+    FlexArticles,
+    LimitedAccess,
   },
   data: function() {
     return {
-      articleData: []
+      articleData: [],
     };
   },
   methods: {
     ...mapMutations({
-      paintBtn: "navbarMini/paintBtn"
-    })
+      paintBtn: "navbarMini/paintBtn",
+    }),
+    ...mapGetters({
+      getIsLogin: "user/getIsLogin",
+    }),
   },
   created() {
     this.articleData = [
@@ -47,7 +56,7 @@ export default {
         iconUrl: "@/assets/tree.svg",
         name: "닉네임1",
         isLiked: true,
-        likeCnt: 10
+        likeCnt: 10,
       },
       {
         thumbUrl:
@@ -60,13 +69,13 @@ export default {
         iconUrl: "@/assets/tree.svg",
         name: "닉네임2",
         isLiked: false,
-        likeCnt: 9
-      }
+        likeCnt: 9,
+      },
     ];
   },
   mounted() {
     this.paintBtn(document.querySelector("#btn-history"));
-  }
+  },
 };
 </script>
 

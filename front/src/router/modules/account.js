@@ -23,9 +23,4 @@ export default [
       header: 0,
     },
   },
-  {
-    path: "limitedAccess",
-    name: "LimitedAccess",
-    component: () => import("@/views/user/LimitedAccess.vue"),
-  },
 ];

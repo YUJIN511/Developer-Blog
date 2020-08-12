@@ -115,7 +115,8 @@ export default {
       const result = await this.Login(this.userInfo);
 
       if (result) {
-        location.href = "/";
+        // location.href = "/";
+        this.$router.go();
       } else {
         alert("아이디 혹은 비밀번호가 틀립니다.");
       }
