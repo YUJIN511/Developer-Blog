@@ -55,6 +55,7 @@ export default {
   align-items: center;
   width: 100vw;
   height: 100vh;
+  z-index: 10;
 }
 .background {
   position: fixed;
