@@ -88,28 +88,45 @@
           </div>
         </button>
         <button class="btn-login" @click="openLogin" v-if="!getIsLogin()">
-          로그인
+          LOG . IN
         </button>
         <router-link
           tag="button"
-          class="btn-login"
+          class="btn-newpost"
           to="/article"
           v-if="getIsLogin()"
-          >글쓰기</router-link
+          >새 글쓰기</router-link
         >
-        <router-link class="profile-icon" v-if="getIsLogin()" to="/setting">
+        <div class="notification-icon" v-if="getIsLogin()">
           <svg
+            id="notification-icon"
+            data-name="notification-icon"
             xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 0 26 26"
+            viewBox="0 0 21.34 24"
           >
             <path
-              d="M13,1C6.4,1,1,6.4,1,13s5.4,12,12,12s12-5.4,12-12S19.6,1,13,1z M13,4.6c2,0,3.6,1.6,3.6,3.6S15,11.8,13,11.8
-	s-3.6-1.6-3.6-3.6S11,4.6,13,4.6z M13,21.6c-3,0-5.7-1.5-7.2-3.9c0-2.4,4.8-3.7,7.2-3.7c2.4,0,7.2,1.3,7.2,3.7
-	C18.7,20.1,16,21.6,13,21.6z"
+              d="M6.15,23.69a2.46,2.46,0,0,1-.57.13,2.4,2.4,0,0,0,.91-.23l5.33-2Z"
+              transform="translate(-2.33 -1)"
+            />
+            <path
+              d="M17.76,22.2a2.9,2.9,0,0,1-2.15,2.66,2.83,2.83,0,0,1-3.12-.94c-.2-.27-.23-.44.14-.57l4.58-1.76C17.65,21.43,17.79,21.59,17.76,22.2Z"
+              transform="translate(-2.33 -1)"
+            />
+            <path
+              d="M22.65,17.42c-2.19.85-4.39,1.68-6.59,2.52l-3.31,1.27,9.58-3.63a2.43,2.43,0,0,0,.81-.43A1.93,1.93,0,0,1,22.65,17.42Z"
+              transform="translate(-2.33 -1)"
+            />
+            <path
+              d="M22.59,14.43A5.48,5.48,0,0,1,20,11.61a1.89,1.89,0,0,1-.11-.25c-.4-1-.76-2-1.14-3a8.29,8.29,0,0,0-7.38-5.79c-.32,0-.65-.05-1-.05h-.08c-.22,0-.35-.11-.49-.34A2.31,2.31,0,0,0,8.43,1.07L8.16,1a1.51,1.51,0,0,0-.3,0L7.57,1l-.32.07a2.19,2.19,0,0,0-.33.12l-.32.17a1.24,1.24,0,0,0-.23.17l-.18.17A2.34,2.34,0,0,0,5.6,3.8c.05.24.05.41-.11.54,0,0,0,0,0,0l-.06.06c-.24.22-.47.44-.68.66A8.29,8.29,0,0,0,3,14.34c.38,1,.77,2,1.14,3a2.76,2.76,0,0,1,.08.27,5.52,5.52,0,0,1,0,3.8,1.65,1.65,0,0,0,1.25,2.4h.12a2.46,2.46,0,0,0,.57-.13l5.67-2.13.93-.35,3.31-1.27c2.2-.84,4.4-1.67,6.59-2.52a1.93,1.93,0,0,0,.49-.27l.13-.12A1.65,1.65,0,0,0,22.59,14.43ZM5.17,12.85c-.2,0-.27-.11-.32-.26a2.71,2.71,0,0,1-.09-.77c0-.21-.14-.58.23-.63s.29.36.34.59.06.46.08.69S5.38,12.82,5.17,12.85ZM7.83,6.26A6.45,6.45,0,0,0,6.62,7.5a6.2,6.2,0,0,0-1,1.91,2.67,2.67,0,0,1-.09.26.29.29,0,0,1-.35.22C5,9.85,5,9.7,5,9.5l.08-.28A7.6,7.6,0,0,1,6.21,7,6.18,6.18,0,0,1,7.43,5.81c.2-.15.42-.38.64-.09S8,6.12,7.83,6.26Z"
+              transform="translate(-2.33 -1)"
             />
           </svg>
-        </router-link>
+        </div>
+        <!-- <router-link class="profile-icon" v-if="getIsLogin()" to="/setting"> -->
+        <div class="profile-image" v-if="getIsLogin()">
+          <button class="banner-image-edit" @click="moveToProfile"></button>
+        </div>
+        <!-- </router-link> -->
       </div>
     </div>
     <Navbar />
@@ -153,9 +170,12 @@ export default {
   methods: {
     ...mapActions({
       Logout: "user/logout",
+      fetchUserInfo: "user/fetchUserInfo",
     }),
     ...mapGetters({
       getIsLogin: "user/getIsLogin",
+      getUserInfo: "user/getUserInfo",
+      getEmail: "user/getEmail",
     }),
     showNavBar() {
       const navbar = document.querySelector(".navbar");
@@ -182,8 +202,22 @@ export default {
         params: { keyword: this.searchWord },
       });
     },
+    moveToProfile() {
+      this.$router.push({ name: "Setting" });
+    },
   },
-  computed: {},
+  created() {
+    this.fetchUserInfo(this.getEmail());
+  },
+  mounted() {
+    var profileImages = document.querySelectorAll(".profile-image");
+    profileImages.forEach((profileImage) => {
+      profileImage.style.backgroundImage = `url('${
+        this.getUserInfo().profile
+      }')`;
+      console.log(this.getUserInfo());
+    });
+  },
 };
 </script>
 
@@ -226,18 +260,19 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  width: 200px;
+  width: auto;
   margin-left: auto;
+  margin-right: 30px;
   svg {
     width: 24px;
   }
 }
 
 .btn-login {
-  padding: 4px 16px;
-  border: 1px solid dodgerblue;
+  // padding: 4px 16px;
+  border: none;
   border-radius: 5%;
-  color: dodgerblue;
+  color: #1a7cff;
   font-weight: 600;
   margin: 0 10px;
 }
@@ -347,6 +382,41 @@ export default {
     &:focus {
       outline: none !important;
       box-shadow: 0 0 4px rgb(137, 197, 199);
+    }
+  }
+}
+.btn-newpost {
+  border-radius: 25px;
+  color: #727272;
+  border: 2px solid #727272;
+  padding: 0px 20px;
+  margin-right: 24px;
+}
+
+.notification-icon {
+  margin-right: 24px;
+  #notification-icon {
+    fill: #727272;
+  }
+}
+
+.profile-image {
+  background-position: center;
+  background-image: url(https://images.unsplash.com/photo-1517832207067-4db24a2ae47c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60);
+  background-size: 150%;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  button {
+    width: 100%;
+    height: 100%;
+    font-size: 1.4rem;
+    color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 50%;
+    &:hover {
+      color: rgba(255, 255, 255, 0.8);
+      background-color: rgba(0, 0, 0, 0.6);
     }
   }
 }
