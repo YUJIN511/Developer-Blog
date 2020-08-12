@@ -204,7 +204,7 @@ export default {
   }
   div {
     margin-top: 5px;
-    font-size: 0.8em;
+    font-size: 0.8rem;
     color: rgb(129, 129, 129);
   }
   &:hover {
