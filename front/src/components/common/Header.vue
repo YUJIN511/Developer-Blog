@@ -180,22 +180,22 @@ export default {
     Repassword,
     EmailModal,
     UnregisterModal,
-    ProfilePicModal,
+    ProfilePicModal
   },
   data() {
     return {
-      searchWord: "",
+      searchWord: ""
     };
   },
   methods: {
     ...mapActions({
       Logout: "user/logout",
-      fetchUserInfo: "user/fetchUserInfo",
+      fetchUserInfo: "user/fetchUserInfo"
     }),
     ...mapGetters({
       getIsLogin: "user/getIsLogin",
       getUserInfo: "user/getUserInfo",
-      getEmail: "user/getEmail",
+      getEmail: "user/getEmail"
     }),
     showNavBar() {
       const navbar = document.querySelector(".navbar");
@@ -219,25 +219,25 @@ export default {
     search() {
       this.$router.push({
         name: "Search",
-        params: { keyword: this.searchWord },
+        params: { keyword: this.searchWord }
       });
     },
     moveToProfile() {
       this.$router.push({ name: "Setting" });
-    },
+    }
   },
   created() {
     this.fetchUserInfo(this.getEmail());
   },
   mounted() {
+    console.log(this.getUserInfo().profile);
     var profileImages = document.querySelectorAll(".profile-image");
-    profileImages.forEach((profileImage) => {
+    profileImages.forEach(profileImage => {
       profileImage.style.backgroundImage = `url('${
         this.getUserInfo().profile
       }')`;
-      console.log(this.getUserInfo());
     });
-  },
+  }
 };
 </script>
 
@@ -431,11 +431,13 @@ export default {
 
 .profile-image {
   background-position: center;
-  background-image: url(https://images.unsplash.com/photo-1517832207067-4db24a2ae47c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60);
   background-size: 150%;
   width: 36px;
   height: 36px;
   border-radius: 50%;
+  &:hover {
+    opacity: 0.7;
+  }
   button {
     width: 100%;
     height: 100%;
@@ -443,10 +445,6 @@ export default {
     color: rgba(0, 0, 0, 0);
     background-color: rgba(0, 0, 0, 0);
     border-radius: 50%;
-    &:hover {
-      color: rgba(255, 255, 255, 0.8);
-      background-color: rgba(0, 0, 0, 0.6);
-    }
   }
 }
 </style>
