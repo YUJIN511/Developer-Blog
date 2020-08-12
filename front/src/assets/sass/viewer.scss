@@ -1,3 +1,4 @@
+@import "@/assets/_variables.scss";
 @import "./codeHighlighting.scss";
 .container-article-view {
   display: flex;
@@ -140,8 +141,8 @@
         height: 24px;
         fill: #999999;
       }
-      .fill-blue {
-        fill: #90c8ff;
+      .fill-lightred {
+        fill: $lightRed;
       }
       .icon-like {
         width: 20px;
