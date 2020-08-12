@@ -54,4 +54,19 @@ public class CommentServiceImpl implements CommentService {
         commentRopository.deleteByPostid(postid);
     }
 
+    @Override
+    public void likeComment(String email, Long commentid) {
+        commentListRopository.likeComment(email, commentid);
+    }
+
+    @Override
+    public void unlikeComment(String email, Long commentid) {
+        commentListRopository.unlikeComment(email, commentid);
+    }
+
+    @Override
+    public int findByEmailAndCommentid(String email, Long commentid) {
+        return commentListRopository.findByEmailAndCommentid(email, commentid);
+    }
+
 }
