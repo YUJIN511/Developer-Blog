@@ -80,20 +80,7 @@
         </button>
       </div>
     </div>
-    <div class="container-blog-info">
-      <div class="blog-image"></div>
-      <div class="main-info">
-        <img src="" alt="" />
-        <div class="blog-title"></div>
-        <div class="blog-description"></div>
-        <div class="follower-number"></div>
-      </div>
-      <div class="container-btn-follow">
-        <button class="btn-follow">
-          팔로우
-        </button>
-      </div>
-    </div>
+    <BlogInfo />
     <Comment @reRender="reRender" :key="commentModuleKey" :postId="postId" />
   </div>
 </template>
@@ -105,6 +92,7 @@ import axios from "axios";
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
 import Comment from "./CommentModule.vue";
+import BlogInfo from "./BlogInfo.vue";
 
 import {
   CodeBlockHighlight,
@@ -130,7 +118,8 @@ import {
 export default {
   components: {
     EditorContent,
-    Comment
+    Comment,
+    BlogInfo
   },
   data() {
     return {
