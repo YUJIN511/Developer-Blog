@@ -9,11 +9,11 @@ export default {
     userInfo: {
       email: "",
       nickname: "",
-      notification:""
+      notification: ""
     },
 
     isLogin: false,
-    token: "",
+    token: ""
   },
 
   getters: {
@@ -23,8 +23,8 @@ export default {
     getAuthHeader(state) {
       const config = {
         headers: {
-          Authorization: "Bearer " + state.token,
-        },
+          Authorization: "Bearer " + state.token
+        }
       };
       return config;
     },
@@ -36,7 +36,7 @@ export default {
     },
     getProfile(state) {
       return state.userInfo.profile;
-    },
+    }
   },
 
   mutations: {
@@ -63,7 +63,7 @@ export default {
     setProfile(state, profile) {
       state.userInfo.profile = profile;
     },
-    setNotification(state, notification){
+    setNotification(state, notification) {
       state.userInfo.notification = notification;
     }
   },
@@ -97,20 +97,20 @@ export default {
     logout(context) {
       context.commit("setLogout");
     },
-    fetchUserInfo(context, email) {
-      axios
-        .get(`${SERVER_URL}/api/auth/userInfo`, {
+    async fetchUserInfo(context, email) {
+      try {
+        const res = await axios.get(`${SERVER_URL}/api/auth/userInfo`, {
           params: {
-            email: email,
-          },
-        })
-        .then((res) => {
-          context.commit("setNickname", res.data.nickname);
-          context.commit("setRole", res.data.roles["name"]);
-          context.commit("setProfile", res.data.profile);
-          context.commit("setNotification", res.data.notification);
-        })
-        .catch((err) => console.log(err));
+            email: email
+          }
+        });
+        context.commit("setNickname", res.data.nickname);
+        context.commit("setRole", res.data.roles["name"]);
+        context.commit("setProfile", res.data.profile);
+        context.commit("setNotification", res.data.notification);
+      } catch (error) {
+        console.log(error);
+      }
     },
     receiveToken(context, { token, email }) {
       context.commit("setToken", token);
@@ -124,11 +124,11 @@ export default {
           userInfo,
           getters.getAuthHeader
         )
-        .then((res) => {
+        .then(res => {
           console.log(res);
           commit("setNickname", res.config.data.nickname);
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     },
     updatePassword(getters, userInfo) {
       axios
@@ -137,22 +137,22 @@ export default {
           userInfo,
           getters.getAuthHeader
         )
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
+        .then(res => console.log(res))
+        .catch(err => console.log(err));
     },
     unregister({ commit, getters }) {
       axios
         .get(`${SERVER_URL}/api/auth/unregister`, {
           params: {
-            email: getters.getEmail,
-          },
+            email: getters.getEmail
+          }
         })
-        .then((res) => {
+        .then(res => {
           console.log(res);
           alert("회원 탈퇴가 완료되었습니다.");
           commit("setLogout", false);
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     },
     defaultProfile({ commit, getters }) {
       axios
@@ -163,7 +163,7 @@ export default {
             "http://i3a604.p.ssafy.io/images/profile/basic.png"
           );
         })
-        .catch((err) => console.log(err));
-    },
-  },
+        .catch(err => console.log(err));
+    }
+  }
 };

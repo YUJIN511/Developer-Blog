@@ -87,19 +87,19 @@ export default {
     return {
       userInfo: {
         email: "",
-        password: "",
-      },
+        password: ""
+      }
     };
   },
   methods: {
     ...mapGetters({
       getIsLogin: "user/getIsLogin",
       getEmail: "user/getEmail",
-      getProfile: "user/getProfile",
+      getProfile: "user/getProfile"
     }),
     ...mapActions({
       Login: "user/login",
-      fetchUserInfo: "user/fetchUserInfo",
+      fetchUserInfo: "user/fetchUserInfo"
     }),
     closeLogin() {
       this.email = "";
@@ -118,14 +118,13 @@ export default {
       const result = await this.Login(this.userInfo);
 
       if (result) {
-        // location.href = "/";
-        this.fetchUserInfo(this.getEmail());
+        await this.fetchUserInfo(this.getEmail());
         this.$router.go();
       } else {
         alert("아이디 혹은 비밀번호가 틀립니다.");
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
