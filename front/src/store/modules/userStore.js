@@ -9,6 +9,7 @@ export default {
     userInfo: {
       email: "",
       nickname: "",
+      notification:""
     },
 
     isLogin: false,
@@ -62,6 +63,9 @@ export default {
     setProfile(state, profile) {
       state.userInfo.profile = profile;
     },
+    setNotification(state, notification){
+      state.userInfo.notification = notification;
+    }
   },
 
   actions: {
@@ -104,6 +108,7 @@ export default {
           context.commit("setNickname", res.data.nickname);
           context.commit("setRole", res.data.roles["name"]);
           context.commit("setProfile", res.data.profile);
+          context.commit("setNotification", res.data.notification);
         })
         .catch((err) => console.log(err));
     },
