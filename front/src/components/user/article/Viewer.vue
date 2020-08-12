@@ -80,21 +80,8 @@
         </button>
       </div>
     </div>
-    <div class="container-blog-info">
-      <div class="blog-image"></div>
-      <div class="main-info">
-        <img src="" alt="" />
-        <div class="blog-title"></div>
-        <div class="blog-description"></div>
-        <div class="follower-number"></div>
-      </div>
-      <div class="container-btn-follow">
-        <button class="btn-follow">
-          팔로우
-        </button>
-      </div>
-    </div>
-    <Comment :postId="postId" />
+    <BlogInfo />
+    <Comment @reRender="reRender" :key="commentModuleKey" :postId="postId" />
   </div>
 </template>
 
@@ -105,6 +92,7 @@ import axios from "axios";
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
 import Comment from "./CommentModule.vue";
+import BlogInfo from "./BlogInfo.vue";
 
 import {
   CodeBlockHighlight,
@@ -130,7 +118,8 @@ import {
 export default {
   components: {
     EditorContent,
-    Comment
+    Comment,
+    BlogInfo
   },
   data() {
     return {
@@ -180,13 +169,17 @@ export default {
       thumbnail: "",
       content: "",
       like: 0,
-      isLike: false
+      isLike: false,
+      commentModuleKey: 0
     };
   },
   methods: {
     ...mapGetters({
       getUserInfo: "user/getUserInfo"
     }),
+    reRender() {
+      this.commentModuleKey++;
+    },
     async getArticleData() {
       const articleId = (this.postId = this.$route.query.id);
       const email = this.getUserInfo().email;
@@ -274,13 +267,12 @@ export default {
     setLikeBtn() {
       const likeIcon = document.querySelector(".icon-like");
       if (this.isLike) {
-        likeIcon.classList.add("fill-blue");
+        likeIcon.classList.add("fill-lightred");
       } else {
-        likeIcon.classList.remove("fill-blue");
+        likeIcon.classList.remove("fill-lightred");
       }
     },
     toggleLikeBtn() {
-      // isGood이 갱신이 안 되는거 같음
       this.isLike = !this.isLike;
       if (this.isLike) {
         axios.put(

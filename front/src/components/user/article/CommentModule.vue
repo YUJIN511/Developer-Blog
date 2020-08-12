@@ -4,11 +4,14 @@
     <textarea
       class="input-comment"
       v-model="commentContent"
+      maxlength="100"
       placeholder="댓글 입력하기"
     >
     </textarea>
     <div class="flex-end">
-      <button @click="submitComment">댓글 작성</button>
+      <button @click="submitComment" :disabled="commentContent === ''">
+        댓글 작성
+      </button>
     </div>
     <CommentList :commentList="commentList" />
   </div>
@@ -44,6 +47,7 @@ export default {
         })
         .then(() => {
           alert("댓글이 등록됐습니다.");
+          this.$emit("reRender");
         })
         .catch(error => {
           console.log(error);
@@ -53,7 +57,9 @@ export default {
   async created() {
     try {
       const res = await axios.get(
-        `${this.$apiServer}/comment/allComment?postid=${this.postId}`
+        `${this.$apiServer}/comment/allComment?email=${
+          this.getUserInfo().email
+        }&postid=${this.postId}`
       );
       this.commentCnt = res.data.length;
       this.commentList = res.data;
@@ -89,6 +95,9 @@ export default {
   button {
     color: dodgerblue;
     margin-right: 10px;
+    &:disabled {
+      color: rgb(216, 216, 216);
+    }
   }
 }
 </style>

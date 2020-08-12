@@ -1,7 +1,7 @@
 <template>
   <div class="container-comment-list">
     <template v-for="(data, idx) in commentList">
-      <Comment :commentData="data" :key="idx" />
+      <Comment :isReply="false" :commentData="data" :key="idx" />
     </template>
   </div>
 </template>
