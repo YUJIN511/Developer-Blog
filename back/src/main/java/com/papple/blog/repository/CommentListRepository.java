@@ -5,6 +5,7 @@ import java.util.List;
 import com.papple.blog.payload.response.CommentResponse;
 
 import org.apache.ibatis.annotations.Mapper;
+
 @Mapper
 public interface CommentListRepository {
     List<CommentResponse> findByPostidAndReplytoIsNull(Long postid);

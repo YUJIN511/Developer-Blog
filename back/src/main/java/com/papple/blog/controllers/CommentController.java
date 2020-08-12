@@ -48,7 +48,7 @@ public class CommentController {
 	@ApiOperation(value = "해당 포스트의 모든 댓글 보기")
 	public ResponseEntity<List<CommentResponse>> allComment(@RequestParam(required = true) Long postid) throws Exception {
         List<CommentResponse> list = commentService.findByPostidAndReplytoIsNull(postid);
-
+        System.out.println(list.get(0).getCreatedate());
         return new ResponseEntity<List<CommentResponse>>(list, HttpStatus.OK);
     }
     
