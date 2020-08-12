@@ -101,7 +101,6 @@ export default {
           },
         })
         .then((res) => {
-          // console.log(res);
           context.commit("setNickname", res.data.nickname);
           context.commit("setRole", res.data.roles["name"]);
           context.commit("setProfile", res.data.profile);

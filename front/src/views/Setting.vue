@@ -32,14 +32,13 @@ export default {
     }
   },
   mounted() {
-    this.fetchUserInfo(this.getEmail());
-    var profileImages = document.querySelectorAll(".profile-image");
-    profileImages.forEach(profileImage => {
-      profileImage.style.backgroundImage = `url('${
+    this.profileURL = this.getUserInfo().profile;
+    if (this.profileURL) {
+      this.$el.querySelector(".profile-image").style.backgroundImage = `url('${
         this.getUserInfo().profile
       }')`;
-    });
-  }
+    }
+  },
 };
 </script>
 
