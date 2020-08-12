@@ -8,7 +8,8 @@ export default {
   state: {
     userInfo: {
       email: "",
-      nickname: ""
+      nickname: "",
+      notification:""
     },
 
     isLogin: false,
@@ -50,6 +51,9 @@ export default {
     },
     setRole(state, role) {
       state.userInfo.role = role;
+    },
+    setNotification(state, notification){
+      state.userInfo.notification = notification;
     }
   },
 
@@ -96,6 +100,7 @@ export default {
           console.log(res);
           context.commit("setNickname", res.data.nickname);
           context.commit("setRole", res.data.roles["name"]);
+          context.commit("setNotification", res.data.notification);
         })
         .catch(err => console.log(err));
     }

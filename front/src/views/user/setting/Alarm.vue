@@ -4,117 +4,153 @@
       <span class="title">내 글 좋아요</span>
       <form action="">
         <div class="container-radio">
-          <input id="none" type="radio" name="article-like" /><label for="none"
+          <input id="none" type="radio" name="article-like" value="0" v-model="selected[0]" /><label for="none"
             >해제</label
           >
         </div>
         <div class="container-radio">
-          <input id="follow-only" type="radio" name="article-like" /><label
-            for="follow-only"
-            >내가 팔로우 하는 사람</label
-          >
-        </div>
-        <div class="container-radio">
-          <input id="all" type="radio" name="article-like" /><label for="all"
-            >모든 사람</label
+          <input id="all" type="radio" name="article-like" value="1" v-model="selected[0]" /><label for="all"
+            >설정</label
           >
         </div>
       </form>
-      <span class="example">" "님이 회원님의 게시글을 좋아합니다.</span>
+      <span class="example">" "님이 회원님의 게시물을 좋아합니다.</span>
     </div>
     <div class="item">
-      <span class="title">내 글 좋아요</span>
+      <span class="title">새로운 댓글</span>
       <form action="">
         <div class="container-radio">
-          <input id="none" type="radio" name="article-like" /><label for="none"
+          <input id="none" type="radio" name="article-like" value="0" v-model="selected[1]"/><label for="none"
             >해제</label
           >
         </div>
         <div class="container-radio">
-          <input id="follow-only" type="radio" name="article-like" /><label
-            for="follow-only"
-            >내가 팔로우 하는 사람</label
-          >
-        </div>
-        <div class="container-radio">
-          <input id="all" type="radio" name="article-like" /><label for="all"
-            >모든 사람</label
+          <input id="all" type="radio" name="article-like" value="1" v-model="selected[1]"/><label for="all"
+            >설정</label
           >
         </div>
       </form>
-      <span class="example">" "님이 회원님의 게시글을 좋아합니다.</span>
+      <span class="example">" "님이 회원님의 게시물에 댓글을 남겼습니다.</span>
     </div>
     <div class="item">
-      <span class="title">내 글 좋아요</span>
+      <span class="title">내 댓글 좋아요</span>
       <form action="">
         <div class="container-radio">
-          <input id="none" type="radio" name="article-like" /><label for="none"
+          <input id="none" type="radio" name="article-like" value="0" v-model="selected[2]"/><label for="none"
             >해제</label
           >
         </div>
         <div class="container-radio">
-          <input id="follow-only" type="radio" name="article-like" /><label
-            for="follow-only"
-            >내가 팔로우 하는 사람</label
-          >
-        </div>
-        <div class="container-radio">
-          <input id="all" type="radio" name="article-like" /><label for="all"
-            >모든 사람</label
+          <input id="all" type="radio" name="article-like" value="1" v-model="selected[2]"/><label for="all"
+            >설정</label
           >
         </div>
       </form>
-      <span class="example">" "님이 회원님의 게시글을 좋아합니다.</span>
+      <span class="example">" "님이 회원님의 댓글을 좋아합니다.</span>
     </div>
     <div class="item">
-      <span class="title">내 글 좋아요</span>
+      <span class="title">팔로우 알림</span>
       <form action="">
         <div class="container-radio">
-          <input id="none" type="radio" name="article-like" /><label for="none"
+          <input id="none" type="radio" name="article-like" value="0" v-model="selected[4]"/><label for="none"
             >해제</label
           >
         </div>
         <div class="container-radio">
-          <input id="follow-only" type="radio" name="article-like" /><label
-            for="follow-only"
-            >내가 팔로우 하는 사람</label
-          >
-        </div>
-        <div class="container-radio">
-          <input id="all" type="radio" name="article-like" /><label for="all"
-            >모든 사람</label
+          <input id="all" type="radio" name="article-like" value="1" v-model="selected[4]"/><label for="all"
+            >설정</label
           >
         </div>
       </form>
-      <span class="example">" "님이 회원님의 게시글을 좋아합니다.</span>
+      <span class="example">" "님이 회원님을 팔로우합니다.</span>
     </div>
     <div class="item">
-      <span class="title">내 글 좋아요</span>
+      <span class="title">팔로워의 새 글 알림</span>
       <form action="">
         <div class="container-radio">
-          <input id="none" type="radio" name="article-like" /><label for="none"
+          <input id="none" type="radio" name="article-like" value="0" v-model="selected[5]"/><label for="none"
             >해제</label
           >
         </div>
         <div class="container-radio">
-          <input id="follow-only" type="radio" name="article-like" /><label
-            for="follow-only"
-            >내가 팔로우 하는 사람</label
-          >
-        </div>
-        <div class="container-radio">
-          <input id="all" type="radio" name="article-like" /><label for="all"
-            >모든 사람</label
+          <input id="all" type="radio" name="article-like" value="1" v-model="selected[5]"/><label for="all"
+            >설정</label
           >
         </div>
       </form>
-      <span class="example">" "님이 회원님의 게시글을 좋아합니다.</span>
+      <span class="example">" "님의 블로그에 새로운 게시물이 등록되었습니다.</span>
+    </div>
+    <div class="item">
+      <span class="title">언급</span>
+      <form action="">
+        <div class="container-radio">
+          <input id="none" type="radio" name="article-like" value="0" v-model="selected[3]"/><label for="none"
+            >해제</label
+          >
+        </div>
+        <div class="container-radio">
+          <input id="all" type="radio" name="article-like" value="1" v-model="selected[3]"/><label for="all"
+            >설정</label
+          >
+        </div>
+      </form>
+      <span class="example">" "님이 댓글에서 회원님을 언급했습니다.</span>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapActions, mapGetters } from "vuex";
+import axios from "axios";
+
+const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
+
+export default {
+  data: function() {
+    return {
+      selected:[]
+    };
+  },
+  methods :{
+    ...mapActions({
+      fetchUserInfo: "user/fetchUserInfo",
+    }),
+    ...mapGetters({
+        getUserInfo: "user/getUserInfo",
+        getEmail: "user/getEmail",
+    }),
+    setting() {
+      var notification = this.getUserInfo().notification;
+
+      this.selected[0] = notification.charAt(5);
+      this.selected[1] = notification.charAt(4);
+      this.selected[2] = notification.charAt(3);
+      this.selected[3] = notification.charAt(2);
+      this.selected[4] = notification.charAt(1);
+      this.selected[5] = notification.charAt(0);
+    },
+  },
+  created() {
+    this.fetchUserInfo(this.getEmail()).then((res) => console.log(res));
+    this.setting();
+  },
+  watch :{
+    selected : function(){
+        var notification = this.selected[5]+this.selected[4]+this.selected[3]+this.selected[2]+this.selected[1]+this.selected[0];
+        console.log(notification);
+
+        axios
+        .get(`${SERVER_URL}/api/auth/notificationSetting`, {
+          params: {
+            email: this.getEmail(),
+            notification : notification
+          }
+        }).then(res => {
+          console.log(res);
+        });
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
