@@ -10,4 +10,9 @@ import org.apache.ibatis.annotations.Mapper;
 public interface CommentListRepository {
     List<CommentResponse> findByPostidAndReplytoIsNull(Long postid);
     List<CommentResponse> findByPostidAndReplyto(Long postid, Long replyto);
+
+    void likeComment(String email, Long commentid);
+    void unlikeComment(String email, Long commentid);
+
+    int findByEmailAndCommentid(String email, Long commentid);
 }

@@ -19,4 +19,18 @@
         JOIN user as u ON c.email=u.email 
         WHERE postid=#{postid} AND replyto=#{replyto}
     </select>
+
+    <!-- 해당 댓글 좋아요 -->
+    <insert id="likeComment">
+		insert into likecomment(email, commentid) values(#{email}, #{commentid})
+	</insert>
+
+    <!-- 해당 댓글 좋아요 취소 -->
+    <delete id="unlikeComment">
+		delete from likecomment where email = #{email} and commentid = #{commentid}
+	</delete>
+
+    <select id="findByEmailAndCommentid" resultType="Integer">
+        SELECT EXISTS(SELECT * from likecomment WHERE email = #{email} and commentid = #{commentid})
+    </select>
 </mapper>
