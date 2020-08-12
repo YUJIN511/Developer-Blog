@@ -143,7 +143,7 @@ public class NotificationServiceImpl implements NotificationService{
         return alertList;
     }
     /**
-     * - 전송된 알림에 대해서 IS_READ 값을 'Y' 로 변경
+     * - 전송된 알림에 대해서 IS_Alert 값을 'true' 로 변경
      *
      * @param alertIds 전송된 알림 ID 목록
      */
@@ -173,13 +173,24 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public Notification findByActionuserAndPostidoflike(String actionuser, Long postid) {
-        return notificationRepository.findByActionuserAndPostidoflike(actionuser, postid);
+    public Notification findByActionuserAndPostidAndType(String actionuser, Long postid, Integer type) {
+        return notificationRepository.findByActionuserAndPostidAndType(actionuser, postid, type);
     }
 
     @Override
-    public Notification findByActionuserAndFollowed(String follower, String followed) {
-        return notificationRepository.findByActionuserAndFollowed(follower, followed);
+    public Notification findByActionuserAndTargetuserAndType(String follower, String followed, Integer type) {
+        return notificationRepository.findByActionuserAndTargetuserAndType(follower, followed, type);
+    }
+
+    @Override
+    public void deleteByTargetuserAndType(String targetuser, Integer type) {
+        notificationRepository.deleteByTargetuserAndType(targetuser, type);
+        return;
+    }
+
+    @Override
+    public Notification findByActionuserAndCommentidAndType(String actionuser, Long commentid, Integer type) {
+        return notificationRepository.findByActionuserAndCommentidAndType(actionuser, commentid, type);
     }
 
 }

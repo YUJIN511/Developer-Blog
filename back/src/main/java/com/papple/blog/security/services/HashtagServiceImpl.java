@@ -36,8 +36,8 @@ public class HashtagServiceImpl implements HashtagService {
 	}
 
 	@Override
-	public void deleteHashtagByPostId(Long postid) {
-		hashtagRepository.deleteHashtagByPostId(postid);
+	public void deleteHashtagByPostid(Long postid) {
+		hashtagRepository.deleteHashtagByPostid(postid);
 	}
 
 }

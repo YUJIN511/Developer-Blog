@@ -1,5 +1,6 @@
 package com.papple.blog.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.papple.blog.models.Hashtag;
 import com.papple.blog.models.Post;
+import com.papple.blog.payload.response.PostList;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long>{
@@ -62,4 +64,9 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 	
 	@Query(value = "select count(*) from post p where writer=?1 and exists(select * from hashtag h where h.postid = p.id and h.hashtag = ?2)", nativeQuery = true)
 	int cntCategory(String email, String hashtag);
+	
+	@Query(value = "select email, nickname, profile, score, id, title, content, summary, picture, writer, good, views, createdate"
+			+ " from user join post on email = writer", nativeQuery = true)
+	List<PostList> searchAllPost();
+
 }
