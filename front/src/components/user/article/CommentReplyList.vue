@@ -1,17 +1,18 @@
 <template>
   <div class="container-comment-reply-list">
     <template v-for="(data, idx) in replyList">
-      <Reply :replyData="data" :key="idx" />
+      <Comment :isReply="true" :commentData="data" :key="idx" />
     </template>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import Reply from "./CommentReply.vue";
+import { mapGetters } from "vuex";
+
 export default {
   components: {
-    Reply
+    Comment: () => import("./Comment.vue")
   },
   props: ["commentId"],
   data: function() {
@@ -20,10 +21,15 @@ export default {
     };
   },
   methods: {
+    ...mapGetters({
+      getUserInfo: "user/getUserInfo"
+    }),
     async getData() {
       try {
         const res = await axios.get(
-          `${this.$apiServer}/comment/allReply/?id=${this.commentId}&postid=${this.$route.query.id}`
+          `${this.$apiServer}/comment/allReply/?email=${
+            this.getUserInfo().email
+          }&id=${this.commentId}&postid=${this.$route.query.id}`
         );
         this.replyList = res.data;
         console.dir(this.replyList);
@@ -36,7 +42,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/_variables.scss";
 .container-comment-reply-list {
-  background-color: aliceblue;
+  width: 100%;
+  margin-bottom: 20px;
+  background-color: $lightgray;
 }
 </style>
