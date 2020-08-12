@@ -14,17 +14,17 @@ import LimitedAccess from "@/components/user/LimitedAccess.vue";
 export default {
   components: {
     Navbar,
-    LimitedAccess,
+    LimitedAccess
   },
   methods: {
     ...mapActions({
-      fetchUserInfo: "user/fetchUserInfo",
+      fetchUserInfo: "user/fetchUserInfo"
     }),
     ...mapGetters({
       getEmail: "user/getEmail",
       getUserInfo: "user/getUserInfo",
-      getIsLogin: "user/getIsLogin",
-    }),
+      getIsLogin: "user/getIsLogin"
+    })
   },
   created() {
     if (!this.getIsLogin()) {
@@ -34,19 +34,19 @@ export default {
   mounted() {
     this.fetchUserInfo(this.getEmail());
     var profileImages = document.querySelectorAll(".profile-image");
-    profileImages.forEach((profileImage) => {
+    profileImages.forEach(profileImage => {
       profileImage.style.backgroundImage = `url('${
         this.getUserInfo().profile
       }')`;
     });
-  },
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .container-setting {
   min-height: 100vh;
-  padding-top: 60px;
+  padding-top: 56px;
   display: flex;
 }
 </style>
