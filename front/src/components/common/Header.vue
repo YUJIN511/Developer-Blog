@@ -272,7 +272,7 @@ export default {
   // padding: 4px 16px;
   border: none;
   border-radius: 5%;
-  color: #1a7cff;
+  color: #65b1fb;
   font-weight: 600;
   margin: 0 10px;
 }
@@ -376,6 +376,7 @@ export default {
   .input-main-search {
     flex: 1 1 0;
     background: white;
+    width: 640px;
     height: 30px;
     border: none;
     border-bottom: 2px solid #bbbbbb;

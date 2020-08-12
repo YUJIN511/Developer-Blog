@@ -131,7 +131,7 @@ export default {
   data: function() {
     return {
       menuIcons: "",
-      menuTexts: ""
+      menuTexts: "",
     };
   },
   mounted() {
@@ -150,17 +150,17 @@ export default {
     changeColor(e) {
       const curSvg = e.currentTarget.querySelector("svg");
       const curText = e.currentTarget.querySelector("div");
-      this.menuIcons.forEach(icon => {
+      this.menuIcons.forEach((icon) => {
         icon.classList.remove("btn-selected");
       });
-      this.menuTexts.forEach(text => {
+      this.menuTexts.forEach((text) => {
         text.classList.remove("btn-selected");
       });
 
       curSvg.classList.add("btn-selected");
       curText.classList.add("btn-selected");
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -196,8 +196,8 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 62px;
-  margin: 10px 0px;
+  height: 74px;
+  margin: 4px 0px;
   .btn-icon {
     width: 100%;
     height: 100%;
