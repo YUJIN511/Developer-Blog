@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -494,7 +495,18 @@ public class PostController {
 				else HashScore.put(hashtag, score.get(postid));
 			}
 		}
-		System.out.println(HashScore);
+		PriorityQueue<Object[]> pq = new PriorityQueue<>(new Comparator<Object[]>() {
+			@Override
+			public int compare(Object[] o1, Object[] o2) {
+				return Long.compare((Long)o2[1], (Long)o1[1]);
+			}
+			
+		});
+		for(String hashtag : HashScore.keySet()) pq.add(new Object[] {hashtag, HashScore.get(hashtag)});
+		
+		while(!pq.isEmpty()) {
+			System.out.println(Arrays.toString(pq.poll()));
+		}
 		
 		
 		System.out.println(algoRepository.getHashtagByPostid(28l));
