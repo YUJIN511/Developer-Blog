@@ -1,14 +1,17 @@
 @import "@/assets/_variables.scss";
 .container-base {
-  background-color: $bgColor;
+  background-color: #fafafa;
   min-width: 100vw;
   min-height: 100vh;
   text-align: left;
-  padding: 20px;
-  padding-top: 86px;
+  padding-right: 32px;
+  padding-top: 88px;
 }
 .title {
   font-size: 1rem;
+  padding-left: 16px;
+  background-color: transparent;
+  border: none;
 }
 
 @media (min-width: $twoArticles) {
@@ -18,6 +21,7 @@
 }
 @media (min-width: $threeArticles) {
   .container-base {
-    padding: 86px;
+    padding-left: 88px;
+    padding-top: 80px;
   }
 }

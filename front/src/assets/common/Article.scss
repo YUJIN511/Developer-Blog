@@ -5,8 +5,8 @@
   display: flex;
   flex-direction: column;
   border-radius: 2%;
-  height: 350px;
-  padding: 10px 10px;
+  height: 370px;
+  padding: 16px 16px;
 }
 .btn-read {
   height: 85%;
@@ -14,7 +14,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 55%;
+    height: 60%;
     font-size: 2em;
     border-radius: 5px 5px 0% 0%;
     span {
@@ -35,8 +35,8 @@
     }
   }
   .body-article {
-    height: 45%;
-    padding: 10px;
+    height: 40%;
+    padding: 16px;
     text-align: left;
     overflow: hidden;
     background-color: white;
@@ -70,16 +70,17 @@
 .footer-article {
   display: flex;
   height: 15%;
-  padding-left: 10px;
+  padding-left: 16px;
+  padding-right: 16px;
   align-items: center;
   background-color: white;
   border-radius: 0 0 5px 5px;
   svg,
   .img-profile {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 12px;
     fill: gray;
   }
   .level-icon {
@@ -90,18 +91,18 @@
 }
 
 .nickname {
-  font-size: 0.8em;
-  margin-left: 3px;
+  font-size: 1em;
+  margin-left: 8px;
   max-height: 25px;
   overflow: hidden;
 }
 
 .like {
   margin-left: auto;
-  margin-right: 10px;
   svg {
     width: 1em;
     height: 1em;
+    margin-right: 16px;
     fill: rgb(228, 228, 228);
     :hover {
       cursor: pointer;
@@ -111,7 +112,7 @@
     fill: crimson;
   }
   span {
-    font-size: 0.7em;
+    font-size: 0.9em;
   }
 }
 
@@ -133,16 +134,16 @@
 }
 @media (min-width: $fiveArticles) {
   .article {
-    width: 20%;
+    width: 25%;
   }
 }
 @media (min-width: $sixArticles) {
   .article {
-    width: 16.6%;
+    width: 25%;
   }
 }
 @media (min-width: $sevenArticles) {
   .article {
-    width: 14.28%;
+    width: 25%;
   }
 }
