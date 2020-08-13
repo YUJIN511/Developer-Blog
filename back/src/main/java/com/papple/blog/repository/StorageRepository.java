@@ -1,10 +1,11 @@
 package com.papple.blog.repository;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
-import com.papple.blog.models.FollowPK;
+import com.papple.blog.models.PKSet;
 import com.papple.blog.models.Storage;
-import com.papple.blog.models.StoragePK;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,7 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StorageRepository  extends JpaRepository<Storage, StoragePK>{
+public interface StorageRepository  extends JpaRepository<Storage, PKSet>{
     
 	@Transactional
 	@Modifying
@@ -29,6 +30,6 @@ public interface StorageRepository  extends JpaRepository<Storage, StoragePK>{
 	@Query(value="DELETE FROM storage WHERE email=?1 and postid = ?2", nativeQuery = true)
     void deleteByEmailAndPostid(String email, Long postid);
 	
-	@Query(value = "select count(*) from storage where email = ?1 and postid = ?2", nativeQuery = true)
-	int isGood(String email, Long postid);
+	@Query(value = "select * from storage where email = ?1", nativeQuery = true)
+	List<Storage> searchStorageByEmail(String email);
 }

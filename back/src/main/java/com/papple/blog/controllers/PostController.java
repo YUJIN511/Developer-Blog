@@ -43,11 +43,10 @@ import com.papple.blog.models.Good;
 import com.papple.blog.models.Hashtag;
 import com.papple.blog.models.HashtagPK;
 import com.papple.blog.models.History;
-import com.papple.blog.models.HistoryPK;
+import com.papple.blog.models.PKSet;
 import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
 import com.papple.blog.models.Storage;
-import com.papple.blog.models.StoragePK;
 import com.papple.blog.payload.response.HashtagList;
 import com.papple.blog.payload.response.PopularScore;
 import com.papple.blog.payload.response.PostDetail;
@@ -150,7 +149,7 @@ public class PostController {
 			
 			// history에 담기
 			if(email != null && !email.equals("")) {	//email이 있을 때만
-				History history = new History(new HistoryPK(email, id));
+				History history = new History(new PKSet(email, id));
 				historyRepository.save(history);
 				if(goodRepository.isGood(email, id) > 0) detail.setIsgood(true);
 			}
@@ -201,21 +200,22 @@ public class PostController {
 	}	
 	
 	@GetMapping("mycategory/{email}")
-	@ApiOperation(value = "내가 쓴 글들의 HashTag 리스트 출력(Category) - 정렬됨")
-	public ResponseEntity<List<String>> searchMyHashCategory(@PathVariable String email) throws Exception {
+	@ApiOperation(value = "내가 쓴 글들의 해시태그 리스트와 글 개수 리턴 - 정렬됨")
+	public ResponseEntity<List<Object[]>> searchMyHashCategory(@PathVariable String email) throws Exception {
 		System.out.println("내 Category 출력(정렬됨)");
 		List<Hashtag> hashlist = hashtagService.myHashCategory(email);
 		Set<String> s = new TreeSet();
 		for(int i=0;i<hashlist.size();i++) s.add(hashlist.get(i).getHashtagPK().getHashtag());
-		List<String> res = new ArrayList<String>();
-		for(String hash : s) res.add(hash);
-		return new ResponseEntity<List<String>>(res, HttpStatus.OK);
-	}
+		List<Object[]> res = new ArrayList<Object[]>();
+		for(String hash : s) res.add(new Object[] {hash, 0});	// 해시태그 이름, 글 개수 0
+		for(Object[] cur : res) cur[1] = postService.cntCategory(email, (String)cur[0]);	//태그 이름마다 글 개수 넣어줌
+		return new ResponseEntity<List<Object[]>>(res, HttpStatus.OK);
+	}	
 	
-	@GetMapping("mycategory/cnt")
-	@ApiOperation(value = "나의 해시태그 카테고리의 글 개수 리턴")
-	public ResponseEntity<Integer> searchMyHashCategoryCnt(String email, String hashtag) {
-		return new ResponseEntity<Integer>(postService.cntCategory(email, hashtag), HttpStatus.OK);
+	@GetMapping("mycategory/totcnt")
+	@ApiOperation(value = "내가 쓴 전체 게시물 개수")
+	public ResponseEntity<Integer> getMyPostCnt(String email) {
+		return new ResponseEntity<Integer>(postService.cntMyPost(email), HttpStatus.OK);
 	}
 	
 	@GetMapping("search/{word}")
@@ -346,7 +346,7 @@ public class PostController {
 				Post newPost = postService.save(selectPost);
 
 				// 좋아요 리스트에 담기
-				Good good = new Good(new StoragePK(email, id));
+				Good good = new Good(new PKSet(email, id));
 				goodRepository.save(good);
 				
 				if(!newPost.getWriter().equals(email)){	//자신의 글은 보관함, 알림 반영 X
@@ -408,7 +408,7 @@ public class PostController {
 	@PostMapping("storage")
 	@ApiOperation(value = "보관함에 저장")
 	public ResponseEntity<String> insertStorage(String email, Long postid) {
-		Storage storage = new Storage(new StoragePK(email, postid));
+		Storage storage = new Storage(new PKSet(email, postid));
 		storageRepository.save(storage);
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
@@ -416,12 +416,17 @@ public class PostController {
 	@DeleteMapping("storage")
 	@ApiOperation(value = "보관함에서 삭제")
 	public ResponseEntity<String> deleteStorage(String email, Long postid) {
-		StoragePK pk = new StoragePK(email, postid);
+		PKSet pk = new PKSet(email, postid);
 		storageRepository.deleteById(pk);
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
-	
+	@GetMapping("storage")
+	@ApiOperation(value = "보관함 조회")
+	public ResponseEntity<List<Storage>> searchStorage(String email) {
+		System.out.println(storageRepository.searchStorageByEmail(email));
+		return new ResponseEntity<List<Storage>>(storageRepository.searchStorageByEmail(email), HttpStatus.OK);
+	}
 	
 	@DeleteMapping
 	@ApiOperation(value = "포스트 삭제 - 보관함, 기록, 해시태그, 좋아요, 파일도 함께 삭제")

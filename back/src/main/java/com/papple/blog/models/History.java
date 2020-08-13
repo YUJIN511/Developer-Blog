@@ -24,12 +24,12 @@ import lombok.NoArgsConstructor;
 public class History {
    
     @EmbeddedId
-    private HistoryPK historyPK;
+    private PKSet historyPK;
 
     @CreationTimestamp
     private LocalDateTime createdate;
 
-    public History(HistoryPK historyPK){
+    public History(PKSet historyPK){
         this.historyPK = historyPK;
     }
     

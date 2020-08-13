@@ -16,5 +16,5 @@ import lombok.NoArgsConstructor;
 public class Storage {
    
     @EmbeddedId
-    private StoragePK storagePK;
+    private PKSet storagePK;
 }

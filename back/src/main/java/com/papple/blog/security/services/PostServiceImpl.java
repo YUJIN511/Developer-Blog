@@ -95,4 +95,9 @@ public class PostServiceImpl implements PostService {
 	public int cntCategory(String email, String hashtag) {
 		return postRepository.cntCategory(email, hashtag);
 	}
+
+	@Override
+	public int cntMyPost(String email) {
+		return postRepository.cntMyPost(email);
+	}
 }

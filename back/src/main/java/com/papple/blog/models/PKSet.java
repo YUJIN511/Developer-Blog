@@ -9,15 +9,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Embeddable
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LookUpPK implements Serializable {
+public class PKSet implements Serializable{
+    @NotBlank
+    private String email;
 
-	@NotBlank
-	private String email;
-	
-	@NotBlank
-	private Long postid;
+    @NotBlank
+    private Long postid;
 }
