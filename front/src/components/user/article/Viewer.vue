@@ -49,8 +49,9 @@
           </svg>
           <span>{{ like }}</span>
         </button>
-        <button class="btn-library">
+        <button class="btn-library" @click="toggleLibraryBtn">
           <svg
+            class="icon-library"
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
             viewBox="0 0 26 26"
@@ -161,7 +162,8 @@ export default {
       like: 0,
       isLike: false,
       commentModuleKey: 0,
-      articleData: {}
+      articleData: {},
+      isStored: false
     };
   },
   methods: {
@@ -193,7 +195,9 @@ export default {
           this.thumbnail = articleData.picture;
           this.like = articleData.good;
           this.isLike = articleData.isgood;
+          this.isStored = articleData.isstore;
           this.setLikeBtn();
+          this.setLibraryBtn();
         }
       } catch (error) {
         console.log(error);
@@ -272,14 +276,50 @@ export default {
         );
         this.like++;
       } else {
-        axios.put(
-          `${this.$apiServer}/post/ungood?email=${
-            this.getUserInfo().email
-          }&id=${this.$route.query.id}`
-        );
+        axios
+          .put(
+            `${this.$apiServer}/post/ungood?email=${
+              this.getUserInfo().email
+            }&id=${this.$route.query.id}`
+          )
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => console.log(err));
         this.like--;
       }
       this.setLikeBtn();
+    },
+    setLibraryBtn() {
+      const libraryIcon = document.querySelector(".icon-library");
+      if (this.isStored) {
+        libraryIcon.classList.add("fill-blue");
+      } else {
+        libraryIcon.classList.remove("fill-blue");
+      }
+    },
+    toggleLibraryBtn() {
+      this.isStored = !this.isStored;
+      if (this.isStored) {
+        axios
+          .post(
+            `${this.$apiServer}/post/storage?email=${
+              this.getUserInfo().email
+            }&postid=${this.$route.query.id}`
+          )
+          .then(res => console.log(res))
+          .catch(err => console.log(err));
+      } else {
+        axios
+          .delete(
+            `${this.$apiServer}/post/storage?email=${
+              this.getUserInfo().email
+            }&postid=${this.$route.query.id}`
+          )
+          .then(res => console.log(res))
+          .catch(err => console.log(err));
+      }
+      this.setLibraryBtn();
     }
   },
   beforeDestroy() {

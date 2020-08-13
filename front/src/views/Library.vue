@@ -55,8 +55,9 @@ export default {
   },
   created() {
     axios
-      .get(`${SERVER_URL}/api//post/storage?email=${this.getEmail()}`)
+      .get(`${SERVER_URL}/api/post/storage?email=${this.getEmail()}`)
       .then(res => {
+        console.log(res.data);
         this.articleData = res.data;
       })
       .catch(err => console.log(err));
