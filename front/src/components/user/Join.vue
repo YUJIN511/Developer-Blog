@@ -1,5 +1,5 @@
 <template>
-  <div class="container-join hide">
+  <div class="container-join" v-if="isShow">
     <div class="background" @click="closeJoin"></div>
     <div class="modal-join">
       <button class="btn-close" @click="closeJoin">✖</button>
@@ -17,7 +17,7 @@
           type="email"
         />
 
-        <label for="password">비밀번호 (영문, 숫자 8~20자) </label>
+        <label for="password">비밀번호 (영문, 숫자 8~20자)</label>
         <input
           v-model="password"
           required
@@ -42,24 +42,21 @@
           @keyup="passwordEqualCheck"
           placeholder="비밀번호를 한번 더 입력해주세요"
         />
-        <div class="msg msg-password-confirm">
-          비밀번호가 일치하지 않습니다.
-        </div>
+        <div class="msg msg-password-confirm">비밀번호가 일치하지 않습니다.</div>
 
         <div class="container-term">
           <input v-model="isTerm" type="checkbox" id="term" />
           <span class="term">
-            <a href="">약관</a> 및 <a href="">개인정보</a>처리 방침에
+            <a href>약관</a> 및
+            <a href>개인정보</a>처리 방침에
             동의합니다.
           </span>
         </div>
 
-        <button class="btn btn-join" type="submit">
-          가입하기
-        </button>
+        <button class="btn btn-join" type="submit">가입하기</button>
         <div class="login-link">
-          <span>계정이 있으신가요? </span
-          ><a href="javascript:void(0)" @click="moveToLogin">로그인 하기 </a>
+          <span>계정이 있으신가요?</span>
+          <a href="javascript:void(0)" @click="moveToLogin">로그인 하기</a>
         </div>
       </form>
     </div>
@@ -80,16 +77,20 @@ export default {
     ...mapActions({
       Join: "user/join"
     }),
+    showModal(loginModal) {
+      this.isShow = true;
+      this.loginModal = loginModal;
+    },
     closeJoin() {
       this.email = "";
       this.password = "";
       this.passwordConfirm = "";
       this.isTerm = false;
-      document.querySelector(".container-join").classList.add("hide");
+      this.isShow = false;
     },
     moveToLogin() {
+      this.loginModal.showModal(this);
       this.closeJoin();
-      document.querySelector(".container-login").classList.remove("hide");
     },
     passwordEqualCheck() {
       if (!(this.password === this.passwordConfirm)) {
@@ -134,7 +135,9 @@ export default {
       isTerm: false,
       dom: {
         passwordConfirmErrMsg: ""
-      }
+      },
+      loginModal: "",
+      isShow: false
     };
   }
 };

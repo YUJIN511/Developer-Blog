@@ -35,6 +35,11 @@ export default [
     component: () => import("@/views/Library.vue")
   },
   {
+    path: "likelist",
+    name: "LikeList",
+    component: () => import("@/views/LikeList.vue")
+  },
+  {
     path: "search/:keyword",
     name: "Search",
     component: () => import("@/views/Search.vue")
