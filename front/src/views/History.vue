@@ -9,73 +9,46 @@
 </template>
 
 <script>
-/*
-썸네일 URL
-글 제목
-내용
-프로필사진
-레벨아이콘
-블로그 or 유저 이름
-좋아요 눌렀었는지 여부
-좋아요 숫자
-*/
-
 import FlexArticles from "@/components/common/FlexArticles.vue";
 import LimitedAccess from "@/components/user/LimitedAccess.vue";
+import axios from "axios";
 
 import { mapMutations, mapGetters } from "vuex";
 
 export default {
   components: {
     FlexArticles,
-    LimitedAccess,
+    LimitedAccess
   },
   data: function() {
     return {
-      articleData: [],
+      articleData: []
     };
   },
   methods: {
     ...mapMutations({
-      paintBtn: "navbarMini/paintBtn",
+      paintBtn: "navbarMini/paintBtn"
     }),
     ...mapGetters({
       getIsLogin: "user/getIsLogin",
-    }),
+      getUserInfo: "user/getUserInfo"
+    })
   },
-  created() {
-    this.articleData = [
-      {
-        thumbUrl:
-          "https://images.unsplash.com/photo-1519052537078-e6302a4968d4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-        title: "글 제목1",
-        desc:
-          "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea voluptates eos laboriosam quo eaque earum laudantium modi natus, mollitia animi tempore, sint iste velit voluptatum. Est possimus rem, nostrum numquam totam natus eaque, enim sit nisi earum accusantium aliquid tenetur?",
-        profileUrl:
-          "https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-        iconUrl: "@/assets/tree.svg",
-        name: "닉네임1",
-        isLiked: true,
-        likeCnt: 10,
-      },
-      {
-        thumbUrl:
-          "https://images.unsplash.com/photo-1519052537078-e6302a4968d4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-        title: "글 제목2",
-        desc:
-          "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea voluptates eos laboriosam quo eaque earum laudantium modi natus, mollitia animi tempore, sint iste velit voluptatum. Est possimus rem, nostrum numquam totam natus eaque, enim sit nisi earum accusantium aliquid tenetur?",
-        profileUrl:
-          "https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-        iconUrl: "@/assets/tree.svg",
-        name: "닉네임2",
-        isLiked: false,
-        likeCnt: 9,
-      },
-    ];
+  async created() {
+    try {
+      const res = await axios.get(
+        `${this.$apiServer}/main/historyList?email=${this.getUserInfo().email}`
+      );
+      this.articleData = res.data;
+    } catch (error) {
+      console.log(error);
+    }
+
+    console.dir(this.articleData);
   },
   mounted() {
     this.paintBtn(document.querySelector("#btn-history"));
-  },
+  }
 };
 </script>
 
