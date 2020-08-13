@@ -8,7 +8,7 @@
       </div>
       <div class="blog-title">{{articleData.blogName}}</div>
       <div class="blog-description">{{articleData.blogDescription}}</div>
-      <div class="follower-number">{{articleData.followerNum}}</div>
+      <div class="follower-number">팔로우 {{articleData.followerNum}}명</div>
     </div>
     <button class="btn-follow">팔로우</button>
   </div>
@@ -22,14 +22,15 @@ export default {
     articleData: {
       type: Object
     }
-  },
-  mounted() {
-    console.dir(this.articleData);
   }
 };
 </script>
 
 <style lang="scss" scoped>
+button:hover {
+  opacity: 0.7;
+}
+
 .container-blog-info {
   display: flex;
   align-items: center;

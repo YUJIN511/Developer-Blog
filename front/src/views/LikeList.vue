@@ -2,7 +2,7 @@
   <div>
     <LimitedAccess v-if="!getIsLogin()" />
     <div class="container-base" v-if="getIsLogin()">
-      <span class="title">방문 기록</span>
+      <span class="title">내가 좋아하는 글</span>
       <FlexArticles :datas="articleData" />
     </div>
   </div>
@@ -37,12 +37,14 @@ export default {
   async created() {
     try {
       const res = await axios.get(
-        `${this.$apiServer}/main/historyList?email=${this.getUserInfo().email}`
+        `${this.$apiServer}/main/goodList?email=${this.getUserInfo().email}`
       );
       this.articleData = res.data;
     } catch (error) {
       console.log(error);
     }
+
+    console.dir(this.articleData);
   },
   mounted() {
     this.paintBtn(document.querySelector("#btn-history"));

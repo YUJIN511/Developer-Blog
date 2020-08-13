@@ -7,15 +7,8 @@
         <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
           <div class="menubar">
             <button class="btn-back" @click="goBack">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z" />
               </svg>
             </button>
 
@@ -23,24 +16,18 @@
               class="menubar__button"
               :class="{ 'is-active': isActive.heading({ level: 1 }) }"
               @click="commands.heading({ level: 1 })"
-            >
-              H1
-            </button>
+            >H1</button>
             <button
               class="menubar__button"
               :class="{ 'is-active': isActive.heading({ level: 2 }) }"
               @click="commands.heading({ level: 2 })"
-            >
-              H2
-            </button>
+            >H2</button>
 
             <button
               class="menubar__button"
               :class="{ 'is-active': isActive.heading({ level: 3 }) }"
               @click="commands.heading({ level: 3 })"
-            >
-              H3
-            </button>
+            >H3</button>
             <div class="vertical-line"></div>
 
             <button
@@ -89,9 +76,7 @@
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>밑줄</title>
-                <path
-                  d="M22.5,21.248H1.5a1.25,1.25,0,0,0,0,2.5h21a1.25,1.25,0,0,0,0-2.5Z"
-                />
+                <path d="M22.5,21.248H1.5a1.25,1.25,0,0,0,0,2.5h21a1.25,1.25,0,0,0,0-2.5Z" />
                 <path
                   d="M1.978,2.748H3.341a.25.25,0,0,1,.25.25v8.523a8.409,8.409,0,0,0,16.818,0V3a.25.25,0,0,1,.25-.25h1.363a1.25,1.25,0,0,0,0-2.5H16.3a1.25,1.25,0,0,0,0,2.5h1.363a.25.25,0,0,1,.25.25v8.523a5.909,5.909,0,0,1-11.818,0V3a.25.25,0,0,1,.25-.25H7.7a1.25,1.25,0,1,0,0-2.5H1.978a1.25,1.25,0,0,0,0,2.5Z"
                 />
@@ -145,22 +130,14 @@
             </button>
 
             <button class="menubar__button" @click="commands.horizontal_rule">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path
                   d="M5,13 C4.44771525,13 4,12.5522847 4,12 C4,11.4477153 4.44771525,11 5,11 L19,11 C19.5522847,11 20,11.4477153 20,12 C20,12.5522847 19.5522847,13 19,13 L5,13 Z"
                 />
               </svg>
             </button>
 
-            <button
-              class="menubar__button"
-              @click="openImgModal(commands.image)"
-            >
+            <button class="menubar__button" @click="openImgModal(commands.image)">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>이미지 첨부</title>
                 <circle cx="9.75" cy="6.247" r="2.25" />
@@ -183,13 +160,7 @@
         </div>
       </header>
       <main>
-        <input
-          type="text"
-          :maxlength="20"
-          v-model="title"
-          class="title"
-          placeholder="제목을 입력하세요"
-        />
+        <input type="text" :maxlength="20" v-model="title" class="title" placeholder="제목을 입력하세요" />
         <div class="container-tags">
           <input
             type="text"
@@ -247,9 +218,7 @@
                 @click="showLinkMenu(getMarkAttrs('link'))"
                 :class="{ 'is-active': isActive.link() }"
               >
-                <span>
-                  {{ isActive.link() ? "링크 수정하기" : "링크 추가하기" }}
-                </span>
+                <span>{{ isActive.link() ? "링크 수정하기" : "링크 추가하기" }}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <title>hyperlink-2</title>
                   <path
@@ -395,12 +364,10 @@ export default {
       this.$refs.ytmodal.showModal(command);
     },
     openSummaryModal() {
-      this.addIdToHTag();
       let tagString = "";
       this.tagList.forEach(elem => {
         tagString += `tag=${elem}&`;
       });
-      console.log(this.html);
       const articleData = {
         title: this.title,
         tagString,
