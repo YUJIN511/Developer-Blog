@@ -36,11 +36,6 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<Post> searchByWord(String word) {
-		return postRepository.searchByWord(word);
-	}
-
-	@Override
 	public void deleteById(Long id) {
 		postRepository.deleteById(id);
 		return;
@@ -54,10 +49,6 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<Post> findFollowLatestByUser(String email) {
 		return postRepository.findFollowLatestByUser(email);
-	}
-
-	public List<Post> searchByHashtag(String word) {
-		return postRepository.searchByHashtag(word);
 	}
 
 	@Override
