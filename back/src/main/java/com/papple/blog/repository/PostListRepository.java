@@ -15,5 +15,5 @@ public interface PostListRepository{
 	
 	PostDetail searchPostDetail(Long postid);
 	List<String> searchHashtag(Long postid);
-	List<PostList> findHistoryByUser(String email);	// 해당 사용자의 방문 기록 검색
+	List<Long> findHistoryByUser(String email);	// 해당 사용자의 방문 기록 검색
 }

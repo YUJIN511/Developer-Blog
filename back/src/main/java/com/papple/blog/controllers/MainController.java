@@ -1,5 +1,6 @@
 package com.papple.blog.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.papple.blog.models.Post;
@@ -38,15 +39,18 @@ public class MainController {
     @GetMapping("/historyList")
 	@ApiOperation(value = "History 글 리스트")
 	public ResponseEntity<List<PostList>> historyList(@RequestParam(required = true) final String email) throws Exception {
-		List<PostList> list = postListRepository.findHistoryByUser(email);
-		for(PostList post : list){
+		List<Long> idList = postListRepository.findHistoryByUser(email);
+		List<PostList> list = new ArrayList<>();
+		for(Long postid : idList){
+			PostList post = postListRepository.searchPostById(postid);
 			User user = userRepository.getUserByEmail(email);
 			post.setNickname(user.getNickname());
 			post.setProfile(user.getProfile());
 			post.setScore(user.getScore());
-			// 좋아요 유무 추가
 			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
-		}
+			list.add(post);
+		} 
+		System.out.println(list);
 		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}
 
