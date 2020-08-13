@@ -200,21 +200,22 @@ public class PostController {
 	}	
 	
 	@GetMapping("mycategory/{email}")
-	@ApiOperation(value = "내가 쓴 글들의 HashTag 리스트 출력(Category) - 정렬됨")
-	public ResponseEntity<List<String>> searchMyHashCategory(@PathVariable String email) throws Exception {
+	@ApiOperation(value = "내가 쓴 글들의 해시태그 리스트와 글 개수 리턴 - 정렬됨")
+	public ResponseEntity<List<Object[]>> searchMyHashCategory(@PathVariable String email) throws Exception {
 		System.out.println("내 Category 출력(정렬됨)");
 		List<Hashtag> hashlist = hashtagService.myHashCategory(email);
 		Set<String> s = new TreeSet();
 		for(int i=0;i<hashlist.size();i++) s.add(hashlist.get(i).getHashtagPK().getHashtag());
-		List<String> res = new ArrayList<String>();
-		for(String hash : s) res.add(hash);
-		return new ResponseEntity<List<String>>(res, HttpStatus.OK);
-	}
+		List<Object[]> res = new ArrayList<Object[]>();
+		for(String hash : s) res.add(new Object[] {hash, 0});	// 해시태그 이름, 글 개수 0
+		for(Object[] cur : res) cur[1] = postService.cntCategory(email, (String)cur[0]);	//태그 이름마다 글 개수 넣어줌
+		return new ResponseEntity<List<Object[]>>(res, HttpStatus.OK);
+	}	
 	
-	@GetMapping("mycategory/cnt")
-	@ApiOperation(value = "나의 해시태그 카테고리의 글 개수 리턴")
-	public ResponseEntity<Integer> searchMyHashCategoryCnt(String email, String hashtag) {
-		return new ResponseEntity<Integer>(postService.cntCategory(email, hashtag), HttpStatus.OK);
+	@GetMapping("mycategory/totcnt")
+	@ApiOperation(value = "내가 쓴 전체 게시물 개수")
+	public ResponseEntity<Integer> getMyPostCnt(String email) {
+		return new ResponseEntity<Integer>(postService.cntMyPost(email), HttpStatus.OK);
 	}
 	
 	@GetMapping("search/{word}")

@@ -22,4 +22,5 @@ public interface PostService {
 	void updatePicture(String picture, Long id);
 	void deletePicture(Long id);
 	int cntCategory(String email, String hashtag);
+	int cntMyPost(String email);
 }

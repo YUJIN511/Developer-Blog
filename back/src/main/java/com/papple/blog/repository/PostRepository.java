@@ -62,8 +62,7 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 	@Query(value = "select count(*) from post p where writer=?1 and exists(select * from hashtag h where h.postid = p.id and h.hashtag = ?2)", nativeQuery = true)
 	int cntCategory(String email, String hashtag);
 	
-	@Query(value = "select email, nickname, profile, score, id, title, content, summary, picture, writer, good, views, createdate"
-			+ " from user join post on email = writer", nativeQuery = true)
-	List<PostList> searchAllPost();
+	@Query(value = "select count(*) from post where writer = ?1", nativeQuery = true)
+	int cntMyPost(String email);
 
 }

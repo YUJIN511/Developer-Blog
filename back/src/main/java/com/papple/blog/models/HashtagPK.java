@@ -15,18 +15,4 @@ import lombok.NoArgsConstructor;
 public class HashtagPK implements Serializable {
 	private Long postid;
 	private String hashtag;
-	public Long getPostid() {
-		return postid;
-	}
-	public void setPostid(Long postid) {
-		this.postid = postid;
-	}
-	public String getHashtag() {
-		return hashtag;
-	}
-	public void setHashtag(String hashtag) {
-		this.hashtag = hashtag;
-	}
-	
-	
 }
