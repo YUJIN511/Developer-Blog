@@ -147,7 +147,7 @@ public class PostController {
 		if(email != null && !email.equals("")) {	//email이 있을 때만
 			if(historyRepository.isHistory(email, id) > 0) historyRepository.deleteByEmailAndPostid(email, id);
 			History history = new History(new PKSet(email, id));
-			historyRepository.save(history);	
+			historyRepository.save(history);
 		}
 		
 		//작성자의 blog 설정
