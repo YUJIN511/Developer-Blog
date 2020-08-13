@@ -6,15 +6,18 @@ import javax.persistence.Embeddable;
 import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
-public class HistoryPK implements Serializable{
-    @NotBlank
-    private String email;
+public class LookUpPK implements Serializable {
 
-    @NotBlank
-    private Long postid;
+	@NotBlank
+	private String email;
+	
+	@NotBlank
+	private Long postid;
 }
