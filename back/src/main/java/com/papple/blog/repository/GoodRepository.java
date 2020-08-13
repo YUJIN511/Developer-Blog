@@ -1,5 +1,7 @@
 package com.papple.blog.repository;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import com.papple.blog.models.Good;
@@ -30,4 +32,6 @@ public interface GoodRepository  extends JpaRepository<Good, PKSet>{
 	
 	@Query(value = "select count(*) from good where email = ?1 and postid = ?2", nativeQuery = true)
 	int isGood(String email, Long postid);
+	
+	
 }

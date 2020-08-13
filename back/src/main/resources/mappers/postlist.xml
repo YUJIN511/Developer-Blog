@@ -40,5 +40,15 @@
 	<select id ="findHistoryByUser" resultType="Long">
 		SELECT postid from history where email=#{email} order by createdate desc
 	</select>
+	
+	<!-- 해당 사용자의 좋아요 리스트 -->
+	<select id="findGoodListByEmail" resultType="PostList">
+		select * from post where exists(select * from good where id = postid and email = #{email})
+	</select>
+	
+	<!-- 해당 사용자의 보관함 리스트 -->
+	<select id="findStorageListByEmail" resultType="PostList">
+		select * from post where exists(select * from storage where id = postid and email = #{email})
+	</select>
 </mapper>
 
