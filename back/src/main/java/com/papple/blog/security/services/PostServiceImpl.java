@@ -52,11 +52,6 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<Post> findStorageByUser(String email) {
-		return postRepository.findStorageByUser(email);
-	}
-
-	@Override
 	public List<Post> findFollowLatestByUser(String email) {
 		return postRepository.findFollowLatestByUser(email);
 	}

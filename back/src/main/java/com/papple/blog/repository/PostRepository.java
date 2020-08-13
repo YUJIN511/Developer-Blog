@@ -37,8 +37,7 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 	@Query(value = "select * from post p where exists(select * from hashtag h where h.postid = p.id and h.hashtag=?1) and p.writer = ?2", nativeQuery = true)
 	List<Post> findMyHashPost(String hashtag, String email);	// 내가 쓴 특정 해시태그의 글들을 출력(HashTag Category 안 게시물들) 
 	
-	@Query(value = "SELECT * FROM post WHERE post.id IN (SELECT postid FROM storage where email=?1)", nativeQuery = true)
-	List<Post> findStorageByUser(String email);	// 해당 사용자의 보관함 검색(좋아요 한 게시글)
+	
 
 	@Query(value = "SELECT * FROM post WHERE post.writer IN (SELECT followed FROM follow WHERE follower = ?1) ORDER BY post.createdate"	, nativeQuery = true)
 	List<Post> findFollowLatestByUser(String email);	// 팔로우한 사용자들의 최신 글 검색
