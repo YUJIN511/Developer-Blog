@@ -489,11 +489,12 @@ public class PostController {
 	}
 	
 	@GetMapping("recommend")
-	@ApiOperation(value = "인기게시물 로직 : 좋아요(1) + 조회(1) + 댓글(2) + 공유(2)")
+	@ApiOperation(value = "추천게시물 리스트")
 	public ResponseEntity<List<PostList>> getRecommendPost(@RequestParam String email) {
 		List<Long> postList = algoRepository.getLookUp(email);	// 해당 user가 조회했던 게시물 목록
 		Map<Long, Long> score = new HashMap<>();
-		for(Long postid : postList) score.put(postid, algoRepository.getPopularScoreByPostid(postid));	//좋아요, 조회수 점수 등록
+		for(Long postid : postList) if(postService.findById(postid) != null)
+			score.put(postid, algoRepository.getPopularScoreByPostid(postid));	//좋아요, 조회수 점수 등록
 		for(Long postid : score.keySet()) score.put(postid, score.get(postid) + algoRepository.getCommentScoreByPostid(postid)); //댓글 점수 추가
 		
 		Map<String, Long> HashScore = new HashMap<>();
