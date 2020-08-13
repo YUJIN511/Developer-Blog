@@ -5,6 +5,7 @@ import java.util.List;
 import com.papple.blog.models.Post;
 import com.papple.blog.models.User;
 import com.papple.blog.payload.response.PostList;
+import com.papple.blog.repository.GoodRepository;
 import com.papple.blog.repository.PostListRepository;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.PostService;
@@ -31,6 +32,8 @@ public class MainController {
 	private PostListRepository postListRepository;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private GoodRepository goodRepository;
 
     @GetMapping("/historyList")
 	@ApiOperation(value = "History 글 리스트")
@@ -42,6 +45,7 @@ public class MainController {
 			post.setProfile(user.getProfile());
 			post.setScore(user.getScore());
 			// 좋아요 유무 추가
+			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
 		}
 		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}
