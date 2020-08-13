@@ -18,10 +18,14 @@ import axios from "axios";
 export default {
   props: ["articleId"],
   methods: {
-    deletePost() {
+    async deletePost() {
       alert("정말 삭제 하시겠습니까?");
-      axios.delete(`${this.$apiServer}/post?id=${this.articleId}`);
-      location.href = "/";
+      try {
+        await axios.delete(`${this.$apiServer}/post?id=${this.articleId}`);
+        location.href = "/";
+      } catch (error) {
+        console.log(error);
+      }
     },
     updatePost() {
       this.$router.push({

@@ -5,7 +5,11 @@
       <h5>글 미리보기</h5>
       <main>
         <button class="thumbnail">
-          <svg class="svg-thumbnail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <svg
+            class="svg-thumbnail"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
             <title>paginate-filter-picture-alternate</title>
             <circle cx="9.75" cy="6.247" r="2.25" />
             <path
@@ -18,7 +22,7 @@
               d="M19.5,22H2.5a.5.5,0,0,1-.5-.5V4.5a1,1,0,0,0-2,0V22a2,2,0,0,0,2,2H19.5a1,1,0,0,0,0-2Z"
             />
           </svg>
-          <img :src="thumbSrc" alt class="thumb-img" />
+          <img ref="thumbImg" :src="thumbSrc" alt class="thumb-img" />
           <button class="btn-thumbnail">
             <input type="file" ref="myFiles" @change="getThumbImage" />
           </button>
@@ -30,7 +34,9 @@
           v-model="articleData.summary"
           placeholder="글 목록에 노출될 내용을 적어주세요."
         ></textarea>
-        <span class="char-limit">{{ articleData.summary.length }}/{{ maxSummary }}</span>
+        <span class="char-limit"
+          >{{ articleData.summary.length }}/{{ maxSummary }}</span
+        >
       </main>
       <footer>
         <button class="btn btn-cancel" @click="closeModal">취소</button>
@@ -55,8 +61,10 @@ export default {
   methods: {
     showModal(articleData) {
       this.articleData = articleData;
-      console.log(this.articleData);
       this.show = true;
+      if (this.isEdit && articleData.picture !== "") {
+        this.thumbSrc = articleData.picture;
+      }
     },
     closeModal() {
       this.show = false;
@@ -72,7 +80,6 @@ export default {
         const fr = new FileReader();
         fr.onload = function() {
           document.querySelector(".thumb-img").src = fr.result;
-          document.querySelector(".svg-thumbnail").classList.add("hide");
         };
         fr.readAsDataURL(file);
       }
@@ -81,7 +88,6 @@ export default {
       try {
         const result = await this.sendImg();
         if (result) {
-          console.dir(this.articleData);
           axios
             .post(`${this.$apiServer}/post?${this.articleData.tagString}`, {
               content: this.articleData.content,
@@ -103,19 +109,19 @@ export default {
       }
     },
     async updatePost() {
-      console.dir(this.articleData);
-
       try {
         const result = await this.sendImg();
         if (result) {
-          console.dir(this.articleData);
           axios
             .put(`${this.$apiServer}/post?${this.articleData.tagString}`, {
               content: this.articleData.content,
               picture: this.articleData.picture,
               summary: this.articleData.summary,
               title: this.articleData.title,
-              writer: this.articleData.writer
+              writer: this.articleData.writer,
+              id: this.articleData.id,
+              good: this.articleData.good,
+              views: this.articleData.views
             })
             .then(() => {
               alert("글수정이 완료되었습니다.");
@@ -229,6 +235,7 @@ main {
     width: 300px;
     height: 160px;
     border-radius: 5px;
+    z-index: 1;
   }
 }
 
@@ -241,6 +248,7 @@ main {
   color: white;
   font-size: 2em;
   font-weight: 900;
+  z-index: 2;
   &:hover {
     opacity: 0.5;
   }
