@@ -43,8 +43,6 @@ export default {
     } catch (error) {
       console.log(error);
     }
-
-    console.dir(this.articleData);
   },
   mounted() {
     this.paintBtn(document.querySelector("#btn-history"));
