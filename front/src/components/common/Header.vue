@@ -209,7 +209,7 @@ export default {
       });
     },
     moveToProfile() {
-      this.$router.push({ name: "Blog" });
+      this.$router.push({ name: "Blog", params: { email: this.getEmail() } });
     }
   },
   created() {

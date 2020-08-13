@@ -8,17 +8,17 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 
-import Navbar from "@/components/blog/Navbar.vue";
+import Navbar from "@/components/common/Navbar-mini.vue";
 import UserBlog from "@/views/blog/UserBlog.vue";
 export default {
   components: {
     Navbar,
-    UserBlog,
+    UserBlog
   },
   methods: {
     ...mapActions({}),
-    ...mapGetters({}),
-  },
+    ...mapGetters({})
+  }
 };
 </script>
 
