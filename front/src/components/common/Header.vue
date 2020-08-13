@@ -209,7 +209,7 @@ export default {
       });
     },
     moveToProfile() {
-      this.$router.push({ name: "Setting" });
+      this.$router.push({ name: "Blog" });
     }
   },
   created() {
