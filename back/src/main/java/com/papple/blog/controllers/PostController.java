@@ -485,7 +485,8 @@ public class PostController {
 		Map<Long, Long> score = new HashMap<>();
 		for(Long postid : postList) score.put(postid, algoRepository.getPopularScoreByPostid(postid));	//좋아요, 조회수 점수 등록
 		for(Long postid : score.keySet()) score.put(postid, score.get(postid) + algoRepository.getCommentScoreByPostid(postid)); //댓글 점수 추가
-		
+		//29 : dd, ff, 28 : aa, bb, dd
+		System.out.println(algoRepository.getHashtagByPostid(28l));
 		return new ResponseEntity<String>("success", HttpStatus.OK); 
 	}
 }

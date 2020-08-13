@@ -39,5 +39,10 @@
 		select count(*) * 2 from comment where postid = #{postid}
 	</select>
 	
+	<!-- 해당 post의 해시태그 리스트 -->
+	<select id="getHashtagByPostid" resultType="String">
+		select hashtag from hashtag where postid = #{postid}
+	</select>
+	
 	
 </mapper>
