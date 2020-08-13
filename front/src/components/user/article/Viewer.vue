@@ -2,9 +2,7 @@
   <div class="viewer">
     <header>
       <div class="title-line">
-        <h1 type="text" class="view-title" placeholder="제목" readonly>
-          {{ title }}
-        </h1>
+        <h1 type="text" class="view-title" placeholder="제목" readonly>{{ title }}</h1>
         <button class="btn-more">...</button>
       </div>
       <div class="article-info">
@@ -24,13 +22,11 @@
           </svg>
           <span>{{ nickname }}</span>
         </div>
-        <span class="create-date"> · {{ createDate }}</span>
+        <span class="create-date">· {{ createDate }}</span>
       </div>
 
       <div class="viewer-tags">
-        <button class="btn-tag" :key="idx" v-for="(tag, idx) in tagList">
-          #{{ tag }}
-        </button>
+        <button class="btn-tag" :key="idx" v-for="(tag, idx) in tagList">#{{ tag }}</button>
       </div>
       <div class="article-nav">
         <div ref="navContent" class="article-nav-content">
@@ -38,21 +34,15 @@
         </div>
       </div>
       <div class="introduction">
-        <img :src="thumbnail" alt="" v-if="thumbnail !== ''" />
-        <div ref="defaultThumbnail" class="default-thumbnail" v-else>
-          {{ title }}
-        </div>
+        <img :src="thumbnail" alt v-if="thumbnail !== ''" />
+        <div ref="defaultThumbnail" class="default-thumbnail" v-else>{{ title }}</div>
       </div>
     </header>
     <editor-content class="editor__content" :editor="editor" />
     <div class="container-small-buttons">
       <div class="small-buttons">
         <button class="btn-like" @click="toggleLikeBtn">
-          <svg
-            class="icon-like"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
+          <svg class="icon-like" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path
               d="M12 4.248c-3.148-5.402-12-3.825-12 2.944 0 4.661 5.571 9.427 12 15.808 6.43-6.381 12-11.147 12-15.808 0-6.792-8.875-8.306-12-2.944z"
             />
@@ -80,7 +70,7 @@
         </button>
       </div>
     </div>
-    <BlogInfo />
+    <BlogInfo :articleData="articleData" />
     <Comment @reRender="reRender" :key="commentModuleKey" :postId="postId" />
   </div>
 </template>
@@ -170,7 +160,8 @@ export default {
       content: "",
       like: 0,
       isLike: false,
-      commentModuleKey: 0
+      commentModuleKey: 0,
+      articleData: {}
     };
   },
   methods: {
@@ -191,6 +182,7 @@ export default {
 
         if (res.status === 200) {
           const articleData = res.data;
+          this.articleData = articleData;
           this.createDate = articleData.createdate.split(" ")[0];
           this.title = articleData.title;
           this.content = articleData.content;
@@ -201,7 +193,6 @@ export default {
           this.thumbnail = articleData.picture;
           this.like = articleData.good;
           this.isLike = articleData.isgood;
-          console.log(articleData.isgood);
           this.setLikeBtn();
         }
       } catch (error) {
@@ -248,9 +239,7 @@ export default {
       });
     },
     modifyAnchorDest() {
-      window.addEventListener("hashchange", function(e) {
-        console.log(e.oldURL);
-        console.log(e.newURL);
+      window.addEventListener("hashchange", function() {
         window.scrollTo(window.scrollX, window.scrollY - 100);
       });
     },
@@ -302,8 +291,8 @@ export default {
     this.modifyAnchorDest();
     this.initNav();
   },
-  created() {
-    this.getArticleData();
+  async created() {
+    await this.getArticleData();
   }
 };
 </script>
