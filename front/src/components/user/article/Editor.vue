@@ -327,6 +327,7 @@ export default {
       html: "",
       isUpdated: false,
       picture: "",
+      summary: "",
       editor: new Editor({
         autoFocus: true,
         extensions: [
@@ -448,7 +449,7 @@ export default {
         tagString,
         content: this.html,
         writer: this.getUserInfo().email,
-        summary: "",
+        summary: this.summary,
         picture: this.picture,
         id: this.$route.params.targetId,
         good: this.like,
@@ -500,6 +501,7 @@ export default {
           this.picture = articleData.picture;
           this.like = articleData.good;
           this.views = articleData.views;
+          this.summary = articleData.summary;
         }
       } catch (error) {
         console.log(error);
@@ -555,8 +557,8 @@ input {
     align-items: center;
     height: 1.8em;
     background-color: rgba(0, 0, 0, 0);
-    border: 2px solid #1A7CFF  ;
-    color: #1A7CFF;
+    border: 2px solid #1a7cff;
+    color: #1a7cff;
     border-radius: 15px;
     padding: 0px 10px;
     padding-bottom: 2px;
@@ -573,7 +575,7 @@ input {
     svg {
       width: 16px;
       height: 16px;
-      fill: #C1D8FF;
+      fill: #c1d8ff;
     }
   }
 }
@@ -586,7 +588,7 @@ input {
   border: none;
   background-color: transparent;
   font-size: 1.2em;
-  color: #1A7CFF;
+  color: #1a7cff;
   &::placeholder {
     color: #c4c4c4;
   }

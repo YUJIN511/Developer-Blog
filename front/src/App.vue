@@ -17,6 +17,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/assets/default.scss";
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap");
 @import "@/assets/_variables.scss";
 #app {
