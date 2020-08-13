@@ -1,35 +1,39 @@
 <template>
   <div class="container-blog-info">
-    <img
-      src="https://images.unsplash.com/photo-1586453728189-97b6a0e35c98?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
-      alt=""
-    />
+    <img :src="articleData.blogPicture" alt />
     <div class="main-info">
       <div class="user-info">
-        <span class="user-icon">😉</span
-        ><span class="user-nickname">닉네임</span>
+        <span class="user-icon">😉</span>
+        <span class="user-nickname">{{articleData.nickname}}</span>
       </div>
-      <div class="blog-title">블로그 제목</div>
-      <div class="blog-description">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quaerat
-        asperiores corrupti pariatur animi sit porro ut, ratione officia
-        molestiae sequi harum veritatis iusto distinctio velit, quae tenetur
-        possimus suscipit cumque nemo. Inventore, deserunt? Sequi, laudantium
-        iste labore sunt quas laborum!
-      </div>
-      <div class="follower-number">팔로워 숫자</div>
+      <div class="blog-title">{{articleData.blogName}}</div>
+      <div class="blog-description">{{articleData.blogDescription}}</div>
+      <div class="follower-number">팔로우 {{articleData.followerNum}}명</div>
     </div>
-    <button class="btn-follow">
-      팔로우
-    </button>
+    <button class="btn-follow">팔로우</button>
   </div>
 </template>
 
 <script>
-export default {};
+// import axios from "axios";
+
+export default {
+  props: {
+    articleData: {
+      type: Object
+    }
+  },
+  mounted() {
+    console.dir(this.articleData);
+  }
+};
 </script>
 
 <style lang="scss" scoped>
+button:hover {
+  opacity: 0.7;
+}
+
 .container-blog-info {
   display: flex;
   align-items: center;

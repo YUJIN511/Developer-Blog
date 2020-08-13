@@ -2,19 +2,18 @@
   <div class="container-comment">
     <header>
       <div>
-        <img :src="commentData.profile" alt="" />
+        <img :src="commentData.profile" alt />
       </div>
       <div class="info">
         <div class="user-info">
-          <span>😀</span><span>{{ commentData.nickname }}</span>
+          <span>😀</span>
+          <span>{{ commentData.nickname }}</span>
           <button class="btn-more">⫶</button>
         </div>
         <span class="date">{{ commentData.createdate.split("T")[0] }}</span>
       </div>
     </header>
-    <main>
-      {{ commentData.content }}
-    </main>
+    <main>{{ commentData.content }}</main>
     <footer>
       <button class="btn-like" @click="toggleLikeButton">
         <svg
@@ -29,44 +28,19 @@
         </svg>
       </button>
       <span class="like-count">{{ commentData.likes }}</span>
-      <button
-        class="btn-reply-write"
-        @click="isReplyWriteShow = !isReplyWriteShow"
-      >
-        답글
-      </button>
+      <button class="btn-reply-write" @click="isReplyWriteShow = !isReplyWriteShow">답글</button>
       <div class="container-reply-toggle" v-if="isReplyWriteShow">
-        <textarea
-          maxlength="100"
-          placeholder="답글을 입력하세요"
-          v-model="replyContent"
-        ></textarea>
-        <button class="btn-cancel" @click="isReplyWriteShow = false">
-          취소
-        </button>
-        <button
-          class="btn-submit-reply"
-          @click="submitReply"
-          :disabled="replyContent === ''"
-        >
-          답글작성
-        </button>
+        <textarea maxlength="100" placeholder="답글을 입력하세요" v-model="replyContent"></textarea>
+        <button class="btn-cancel" @click="isReplyWriteShow = false">취소</button>
+        <button class="btn-submit-reply" @click="submitReply" :disabled="replyContent === ''">답글작성</button>
       </div>
     </footer>
     <template v-if="!isReply">
-      <button
-        class="btn-reply-toggle"
-        v-if="commentData.replycount !== 0"
-        @click="toggleReply"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="6"
-          height="6"
-          viewBox="0 0 24 24"
-        >
-          <path d="M24 22h-24l12-20z" /></svg
-        >답글 {{ commentData.replycount }}개 보기
+      <button class="btn-reply-toggle" v-if="commentData.replycount !== 0" @click="toggleReply">
+        <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 24 24">
+          <path d="M24 22h-24l12-20z" />
+        </svg>
+        답글 {{ commentData.replycount }}개 보기
       </button>
       <ReplyList
         ref="replyList"
@@ -110,9 +84,7 @@ export default {
     },
     setLikeBtn() {
       const likeIcon = this.$refs.likeIcon;
-      console.log(this.isLike);
       if (this.isLike) {
-        console.log(likeIcon);
         likeIcon.classList.add("fill-lightred");
       } else {
         likeIcon.classList.remove("fill-lightred");
@@ -160,7 +132,6 @@ export default {
   },
   mounted() {
     this.isLike = this.commentData.islike;
-    console.log("mounted: ", this.commentData.id);
     this.setLikeBtn();
   }
 };
