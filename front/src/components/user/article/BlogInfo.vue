@@ -22,9 +22,6 @@ export default {
     articleData: {
       type: Object
     }
-  },
-  mounted() {
-    console.dir(this.articleData);
   }
 };
 </script>

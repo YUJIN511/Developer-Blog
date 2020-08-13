@@ -205,7 +205,7 @@ export default {
       });
     },
     moveToProfile() {
-      this.$router.push({ name: "Setting" });
+      this.$router.push({ name: "Blog", params: { email: this.getEmail() } });
     }
   },
   created() {
