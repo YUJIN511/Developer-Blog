@@ -44,5 +44,10 @@
 		select hashtag from hashtag where postid = #{postid}
 	</select>
 	
+	<!-- 태그로 post id들 찾기 -->
+	<select id="getPostidByTag" resultType="Long">
+		select postid from hashtag where hashtag = #{hashtag}
+	</select>
+	
 	
 </mapper>

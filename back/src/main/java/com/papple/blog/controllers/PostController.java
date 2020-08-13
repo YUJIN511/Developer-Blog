@@ -481,12 +481,12 @@ public class PostController {
 	
 	@GetMapping("recommend")
 	@ApiOperation(value = "인기게시물 로직 : 좋아요(1) + 조회(1) + 댓글(2) + 공유(2)")
-	public ResponseEntity<String> getRecommendPost(@RequestParam String email) {
+	public ResponseEntity<List<PostList>> getRecommendPost(@RequestParam String email) {
 		List<Long> postList = algoRepository.getLookUp(email);	// 해당 user가 조회했던 게시물 목록
 		Map<Long, Long> score = new HashMap<>();
 		for(Long postid : postList) score.put(postid, algoRepository.getPopularScoreByPostid(postid));	//좋아요, 조회수 점수 등록
 		for(Long postid : score.keySet()) score.put(postid, score.get(postid) + algoRepository.getCommentScoreByPostid(postid)); //댓글 점수 추가
-		//29 : dd, ff, 28 : aa, bb, dd
+		
 		Map<String, Long> HashScore = new HashMap<>();
 		for(Long postid : score.keySet()) {
 			List<String> hashtagList = algoRepository.getHashtagByPostid(postid);	
@@ -502,14 +502,26 @@ public class PostController {
 			}
 			
 		});
-		for(String hashtag : HashScore.keySet()) pq.add(new Object[] {hashtag, HashScore.get(hashtag)});
+		for(String hashtag : HashScore.keySet()) pq.add(new Object[] {hashtag, HashScore.get(hashtag)});	// 정렬
 		
-		while(!pq.isEmpty()) {
-			System.out.println(Arrays.toString(pq.poll()));
+		//29 : dd, ff, 28 : aa, bb, dd
+		Map<Long, Boolean> check = new HashMap<>();	 // postid 중복 체크
+		List<PostList> resultList = new ArrayList<>();
+		for(int i=0;i<5;i++) {
+			if(pq.isEmpty()) break;
+			List<Long> list = algoRepository.getPostidByTag((String)pq.poll()[0]);	//태그를 가진 postid list
+			for(Long postid : list) {
+				if(!check.containsKey(postid)) {
+					check.put(postid, true);
+					resultList.add(postListRepository.searchPostById(postid));
+				}
+			}
 		}
 		
+//		for(int i=0;i<list.size();i++) if(storageRepository.isGood(email, list.get(i).getId()) > 0) list.get(i).setIsgood(true);
 		
-		System.out.println(algoRepository.getHashtagByPostid(28l));
-		return new ResponseEntity<String>("success", HttpStatus.OK); 
+		
+		
+		return new ResponseEntity<List<PostList>>(resultList, HttpStatus.OK); 
 	}
 }
