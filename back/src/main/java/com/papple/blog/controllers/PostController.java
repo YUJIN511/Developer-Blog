@@ -530,7 +530,7 @@ public class PostController {
 		}
 		//좋아요 여부 체크
 		for(int i=0;i<resultList.size();i++)
-			if(resultList.get(i).getId() != null && goodRepository.isGood(email, resultList.get(i).getId()) > 0)
+			if(resultList.get(i).getId() != null && algoRepository.getPopularScoreByPostid(resultList.get(i).getId()) != null && goodRepository.isGood(email, resultList.get(i).getId()) > 0) // 여기서 null
 				resultList.get(i).setIsgood(true);
 		return new ResponseEntity<List<PostList>>(resultList, HttpStatus.OK); 
 	}
