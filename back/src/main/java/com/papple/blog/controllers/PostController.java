@@ -504,7 +504,6 @@ public class PostController {
 		});
 		for(String hashtag : HashScore.keySet()) pq.add(new Object[] {hashtag, HashScore.get(hashtag)});	// 정렬
 		
-		//29 : dd, ff, 28 : aa, bb, dd
 		Map<Long, Boolean> check = new HashMap<>();	 // postid 중복 체크
 		List<PostList> resultList = new ArrayList<>();
 		for(int i=0;i<5;i++) {
@@ -517,11 +516,8 @@ public class PostController {
 				}
 			}
 		}
-		
-//		for(int i=0;i<list.size();i++) if(storageRepository.isGood(email, list.get(i).getId()) > 0) list.get(i).setIsgood(true);
-		
-		
-		
+		//좋아요 여부 체크
+		for(int i=0;i<resultList.size();i++) if(storageRepository.isGood(email, resultList.get(i).getId()) > 0) resultList.get(i).setIsgood(true);
 		return new ResponseEntity<List<PostList>>(resultList, HttpStatus.OK); 
 	}
 }
