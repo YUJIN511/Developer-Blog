@@ -5,15 +5,21 @@
       <TagList :email="userEmail" @select-tag="onSelectTag" @select-all="onSelectAll" />
       <div class="content">
         <div class="content-header">
-          <div class="profile-image"></div>
-          <div class="profile">
-            <div class="name">
-              <span class="level">LV.1</span>
-              <span>{{ getUserInfo().nickname }}</span>
+          <div class="container-profile">
+            <div class="profile-image"></div>
+            <div class="profile">
+              <div class="name">
+                <span class="level">LV.1</span>
+                <span>{{ getUserInfo().nickname }}</span>
+              </div>
+              <p class="blog-name">{{ getUserInfo().nickname }}님의 블로그</p>
+              <p class="blog-ex">극한의 코딩충</p>
+              <p class="blog-follower">팔로워 {{ followersCnt }}명</p>
             </div>
-            <p class="blog-name">{{ getUserInfo().nickname }}님의 블로그</p>
-            <p class="blog-ex">극한의 코딩충</p>
-            <p class="blog-follower">팔로워 {{ followersCnt }}명</p>
+          </div>
+          <div class="container-btn-follow" v-if="showFollowBtn">
+            <button class="btn-follow">팔로우</button>
+            <button class="btn-follow">팔로우 끊기</button>
           </div>
         </div>
         <div class="container-tabs">
@@ -45,6 +51,7 @@ export default {
   data() {
     return {
       userEmail: this.$route.params.email,
+      userInfo: [],
       articleData: [],
       followersCnt: null,
       showArticle: true,
@@ -140,15 +147,23 @@ main {
   padding: 30px 70px;
   display: flex;
   .content {
-    // position: relative;
+    position: relative;
+    width: 100%;
     margin: 40px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     .content-header {
+      position: relative;
+      min-width: 100%;
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
       margin: 24px;
+      .container-profile {
+        display: flex;
+        flex-direction: row;
+      }
       .profile {
         display: flex;
         flex-direction: column;
@@ -175,6 +190,11 @@ main {
         .blog-follower {
           font-weight: 600;
         }
+      }
+      .btn-follow {
+        color: #1a7cff;
+        font-weight: 700;
+        font-size: 1.5em;
       }
     }
     .container-tabs {
