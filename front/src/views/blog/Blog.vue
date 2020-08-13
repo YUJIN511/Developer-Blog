@@ -18,6 +18,11 @@ export default {
   methods: {
     ...mapActions({}),
     ...mapGetters({})
+  },
+  watch: {
+    "$route.params.email": function() {
+      this.$router.go();
+    }
   }
 };
 </script>

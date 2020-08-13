@@ -5,15 +5,21 @@
       <TagList :email="userEmail" @select-tag="onSelectTag" @select-all="onSelectAll" />
       <div class="content">
         <div class="content-header">
-          <div class="profile-image"></div>
-          <div class="profile">
-            <div class="name">
-              <span class="level">LV.1</span>
-              <span>{{ getUserInfo().nickname }}</span>
+          <div class="container-profile">
+            <div class="blog-profile-image"></div>
+            <div class="profile">
+              <div class="name">
+                <span class="level">LV.1</span>
+                <span>{{ userInfo.nickname }}</span>
+              </div>
+              <p class="blog-name">{{ userInfo.nickname }}님의 블로그</p>
+              <p class="blog-ex">극한의 코딩충</p>
+              <p class="blog-follower">팔로워 {{ followersCnt }}명</p>
             </div>
-            <p class="blog-name">{{ getUserInfo().nickname }}님의 블로그</p>
-            <p class="blog-ex">극한의 코딩충</p>
-            <p class="blog-follower">팔로워 {{ followersCnt }}명</p>
+          </div>
+          <div class="container-btn-follow" v-if="showFollowBtn">
+            <button class="btn-follow" @click="follow">{{ follow_text[isFollowing] }}</button>
+            <!-- <button class="btn-follow" @click="unfollow" v-if="isFollowing">팔로우 끊기</button> -->
           </div>
         </div>
         <div class="container-tabs">
@@ -45,10 +51,14 @@ export default {
   data() {
     return {
       userEmail: this.$route.params.email,
+      userInfo: [],
       articleData: [],
       followersCnt: null,
       showArticle: true,
-      showInfo: false
+      showInfo: false,
+      showFollowBtn: null,
+      isFollowing: 0,
+      follow_text: ["팔로우", "팔로우 끊기"]
     };
   },
   methods: {
@@ -56,6 +66,18 @@ export default {
       getEmail: "user/getEmail",
       getUserInfo: "user/getUserInfo"
     }),
+    async fetchUserInfo() {
+      await axios
+        .get(`${SERVER_URL}/api/auth/userInfo?email=${this.userEmail}`)
+        .then(res => {
+          this.userInfo = res.data;
+        })
+        .catch(err => console.log(err));
+      var profileImages = document.querySelectorAll(".blog-profile-image");
+      profileImages.forEach(profileImage => {
+        profileImage.style.backgroundImage = `url('${this.userInfo.profile}')`;
+      });
+    },
     clickArticle(event) {
       this.showArticle = true;
       this.showInfo = false;
@@ -95,9 +117,53 @@ export default {
     },
     onSelectAll() {
       this.fetchArticles();
+    },
+    async follow() {
+      if (this.isFollowing === 0) {
+        await axios
+          .post(
+            `${SERVER_URL}/api/follow/add?followed=${
+              this.userEmail
+            }&follower=${this.getEmail()}`
+          )
+          .then(() => {
+            this.fetchFollowersCnt();
+            this.checkFollowing();
+          })
+          .catch(err => console.log(err));
+      } else {
+        this.unfollow();
+      }
+    },
+    async unfollow() {
+      await axios
+        .delete(
+          `${SERVER_URL}/api/follow/del?followed=${
+            this.userEmail
+          }&follower=${this.getEmail()}`
+        )
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => console.log(err));
+      this.fetchFollowersCnt();
+      this.checkFollowing();
+    },
+    checkFollowing() {
+      axios
+        .get(
+          `${SERVER_URL}/api/follow/isfollow?followed=${
+            this.userEmail
+          }&follower=${this.getEmail()}`
+        )
+        .then(res => {
+          this.isFollowing = res.data;
+        })
+        .catch(err => console.log(err));
     }
   },
   created() {
+    this.fetchUserInfo();
     this.fetchArticles();
     this.fetchFollowersCnt();
   },
@@ -107,13 +173,7 @@ export default {
     } else {
       this.showFollowBtn = true;
     }
-
-    var profileImages = document.querySelectorAll(".profile-image");
-    profileImages.forEach(profileImage => {
-      profileImage.style.backgroundImage = `url('${
-        this.getUserInfo().profile
-      }')`;
-    });
+    this.checkFollowing();
   }
 };
 </script>
@@ -140,15 +200,23 @@ main {
   padding: 30px 70px;
   display: flex;
   .content {
-    // position: relative;
+    position: relative;
+    width: 100%;
     margin: 40px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     .content-header {
+      position: relative;
+      min-width: 100%;
       display: flex;
       flex-direction: row;
-      margin: 24px;
+      justify-content: space-between;
+      padding: 24px;
+      .container-profile {
+        display: flex;
+        flex-direction: row;
+      }
       .profile {
         display: flex;
         flex-direction: column;
@@ -176,6 +244,11 @@ main {
           font-weight: 600;
         }
       }
+      .btn-follow {
+        color: #1a7cff;
+        font-weight: 700;
+        font-size: 1.5em;
+      }
     }
     .container-tabs {
       margin: 12px;
@@ -195,7 +268,7 @@ main {
   }
 }
 
-.profile-image {
+.blog-profile-image {
   position: relative;
   background-image: url(https://images.unsplash.com/photo-1517832207067-4db24a2ae47c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60);
   background-position: center;
