@@ -136,8 +136,8 @@
       </div>
     </div>
     <Navbar />
-    <Login />
-    <Join />
+    <Login ref="loginModal" />
+    <Join ref="joinModal" />
     <Repassword />
     <EmailModal />
     <UnregisterModal />
@@ -189,17 +189,14 @@ export default {
 
       body.classList.add("hide-scroll");
       navbar.setAttribute("style", "left: 0px");
-      //navbar.style.left = "0px";
       background.classList.remove("hide");
     },
     openLogin() {
-      document.querySelector(".container-login").classList.remove("hide");
+      this.$refs.loginModal.showModal(this.$refs.joinModal);
     },
 
     logout() {
       this.Logout();
-      // this.$router.go();
-      console.log(this.getIsLogin());
     },
     search() {
       this.$router.push({
@@ -227,6 +224,10 @@ export default {
 
 <style scoped lang="scss">
 @import "@/assets/_variables.scss";
+
+button:hover {
+  opacity: 0.7;
+}
 
 .header-container {
   position: fixed;
@@ -417,7 +418,8 @@ export default {
 
 .profile-image {
   background-position: center;
-  background-size: 150%;
+  background-size: cover;
+  background-repeat: no-repeat;
   width: 36px;
   height: 36px;
   border-radius: 50%;

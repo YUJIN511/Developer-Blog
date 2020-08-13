@@ -1,5 +1,5 @@
 <template>
-  <div class="container-login hide">
+  <div class="container-login" v-if="isShow">
     <div class="background-login" @click="closeLogin"></div>
     <div class="modal-login">
       <button class="btn-close" @click="closeLogin">✖</button>
@@ -16,9 +16,7 @@
         <div class="password-label">
           <label for="password">비밀번호</label>
           <div class="repassword">
-            <a href="javascript:void(0)" @click="moveToRepassword"
-              >비밀번호 재설정</a
-            >
+            <a href="javascript:void(0)" @click="moveToRepassword">비밀번호 재설정</a>
           </div>
         </div>
         <input
@@ -29,12 +27,10 @@
           placeholder="비밀번호를 입력해 주세요"
           v-model="userInfo.password"
         />
-        <button class="btn btn-login" type="submit">
-          로그인
-        </button>
+        <button class="btn btn-login" type="submit">로그인</button>
         <div class="join-link">
-          <span>아직 계정이 없으신가요? </span
-          ><a href="javascript:void(0)" @click="moveToJoin">계정 만들기 </a>
+          <span>아직 계정이 없으신가요?</span>
+          <a href="javascript:void(0)" @click="moveToJoin">계정 만들기</a>
         </div>
         <hr width="100%" />
         <div class="social-login">
@@ -85,6 +81,8 @@ export default {
   name: "Login",
   data() {
     return {
+      isShow: false,
+      joinModal: "",
       userInfo: {
         email: "",
         password: ""
@@ -104,15 +102,19 @@ export default {
     closeLogin() {
       this.email = "";
       this.password = "";
-      document.querySelector(".container-login").classList.add("hide");
+      this.isShow = false;
     },
     moveToJoin() {
+      this.joinModal.showModal(this);
       this.closeLogin();
-      document.querySelector(".container-join").classList.remove("hide");
     },
     moveToRepassword() {
       this.closeLogin();
       document.querySelector(".container-repassword").classList.remove("hide");
+    },
+    showModal(joinModal) {
+      this.isShow = true;
+      this.joinModal = joinModal;
     },
     async login() {
       const result = await this.Login(this.userInfo);
