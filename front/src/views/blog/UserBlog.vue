@@ -2,7 +2,7 @@
   <div class="container-blog">
     <header></header>
     <main>
-      <TagList :email="userEmail" />
+      <TagList :email="userEmail" @select-tag="onSelectTag" @select-all="onSelectAll" />
       <div class="content">
         <div class="content-header">
           <div class="profile-image"></div>
@@ -20,9 +20,9 @@
           <button class="btn btn-article" @click="clickArticle">내 게시물</button>
           <button class="btn btn-Info" @click="clickInfo">정보</button>
         </div>
+        <div class="content-body"></div>
         <FlexArticles :datas="articleData" v-if="showArticle" />
         <!-- <Info /> -->
-        <div class="content-body"></div>
       </div>
     </main>
   </div>
@@ -84,6 +84,17 @@ export default {
           this.followersCnt = res.data;
         })
         .catch(err => console.log(err));
+    },
+    onSelectTag(tag) {
+      axios
+        .get(`${SERVER_URL}/api/post/my/${this.userEmail}/${tag}`)
+        .then(res => {
+          this.articleData = res.data;
+        })
+        .catch(err => console.log(err));
+    },
+    onSelectAll() {
+      this.fetchArticles();
     }
   },
   created() {
@@ -127,7 +138,6 @@ export default {
 
 main {
   padding: 30px 70px;
-  // padding-right: 100px;
   display: flex;
   .content {
     // position: relative;
@@ -176,6 +186,11 @@ main {
           box-shadow: none;
         }
       }
+      .btn-article {
+        border-bottom: 3px solid #727272;
+      }
+    }
+    .content-body {
     }
   }
 }

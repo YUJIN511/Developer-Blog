@@ -4,10 +4,10 @@
     <hr />
     <div class="list-items">
       <p class="list-item">
-        <span>전체보기</span>
+        <span @click="selectAll()">전체보기</span>
         <span>({{ totalcnt }})</span>
       </p>
-      <p class="list-item" v-for="tag in tagData" :key="tag.id">
+      <p class="list-item" v-for="tag in tagData" :key="tag.id" @click="selectTag(tag[0])">
         <span>{{ tag[0] }}</span>
         <span>({{ tag[1] }})</span>
       </p>
@@ -47,6 +47,12 @@ export default {
           this.totalcnt = res.data;
         })
         .catch(err => console.log(err));
+    },
+    selectTag(tag) {
+      this.$emit("select-tag", tag);
+    },
+    selectAll() {
+      this.$emit("select-all");
     }
   },
   created() {
