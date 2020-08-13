@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.papple.blog.models.Post;
+import com.papple.blog.payload.response.PostList;
 import com.papple.blog.repository.PostRepository;
 
 @Service
@@ -43,11 +44,6 @@ public class PostServiceImpl implements PostService {
 	public void deleteById(Long id) {
 		postRepository.deleteById(id);
 		return;
-	}
-
-	@Override
-	public List<Post> findHistoryByUser(String email) {
-		return postRepository.findHistoryByUser(email);
 	}
 
 	@Override
