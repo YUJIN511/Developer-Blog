@@ -529,7 +529,7 @@ public class PostController {
 			}
 		}
 		//좋아요 여부 체크
-		for(int i=0;i<resultList.size();i++) if(goodRepository.isGood(email, resultList.get(i).getId()) > 0) resultList.get(i).setIsgood(true);
+		for(int i=0;i<resultList.size();i++) if(algoRepository.getPopularScoreByPostid(resultList.get(i).getId()) != null && goodRepository.isGood(email, resultList.get(i).getId()) > 0) resultList.get(i).setIsgood(true);
 		return new ResponseEntity<List<PostList>>(resultList, HttpStatus.OK); 
 	}
 }
