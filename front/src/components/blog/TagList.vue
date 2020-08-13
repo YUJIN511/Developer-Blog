@@ -55,7 +55,7 @@ export default {
       this.$emit("select-all");
     }
   },
-  created() {
+  mounted() {
     this.fetchTags();
     this.fetchTotalCnt();
   }
