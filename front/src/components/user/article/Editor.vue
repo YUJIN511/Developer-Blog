@@ -1,7 +1,7 @@
 <template>
   <div class="editor">
     <ImageModal ref="ytmodal" @onConfirm="addCommand" />
-    <SummaryModal ref="smodal" />
+    <SummaryModal ref="smodal" :isEdit="isEdit" />
     <div class="container-editor">
       <header>
         <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
@@ -156,7 +156,10 @@
         </editor-menu-bar>
         <div class="end">
           <button class="btn">임시 저장</button>
-          <button class="btn" @click="openSummaryModal">작성 완료</button>
+          <button class="btn" @click="openSummaryModal">
+            <span v-if="!isEdit">작성</span>
+            <span v-else>수정</span> 완료
+          </button>
         </div>
       </header>
       <main>
@@ -249,6 +252,7 @@ import css from "highlight.js/lib/languages/css";
 import ImageModal from "./ImageModal";
 import SummaryModal from "./SummaryModal";
 import { mapGetters } from "vuex";
+import axios from "axios";
 
 import {
   CodeBlockHighlight,
@@ -279,6 +283,7 @@ export default {
   },
   data() {
     return {
+      isEdit: false,
       title: "",
       tagName: "",
       tagList: [],
@@ -360,6 +365,32 @@ export default {
         container.insertBefore(newTag, e.path[0]);
       }
     },
+    tagSetting(tagList) {
+      tagList.forEach(elem => {
+        const removeBtn = document.createElement("button");
+        removeBtn.addEventListener("click", e => {
+          const selectedTag = e.currentTarget.parentElement;
+          const tagName = selectedTag.querySelector("span").innerText;
+          const idx = this.tagList.indexOf(tagName);
+          this.tagList.splice(idx, 1);
+          console.dir(this.tagList);
+          selectedTag.remove();
+        });
+        removeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>delete-2-alternate</title><path d="M20.485,3.511A12.01,12.01,0,1,0,24,12,12.009,12.009,0,0,0,20.485,3.511Zm-1.767,15.21A9.51,9.51,0,1,1,21.5,12,9.508,9.508,0,0,1,18.718,18.721Z"/><path d="M16.987,7.01a1.275,1.275,0,0,0-1.8,0l-3.177,3.177L8.829,7.01A1.277,1.277,0,0,0,7.024,8.816L10.2,11.993,7.024,15.171a1.277,1.277,0,0,0,1.805,1.806L12.005,13.8l3.177,3.178a1.277,1.277,0,0,0,1.8-1.806l-3.176-3.178,3.176-3.177A1.278,1.278,0,0,0,16.987,7.01Z"/></svg>
+`;
+        const span = document.createElement("span");
+        span.innerText = elem;
+        this.tagList.push(elem);
+
+        const newTag = document.createElement("div");
+        newTag.appendChild(span);
+        newTag.appendChild(removeBtn);
+
+        const container = document.querySelector(".container-tags");
+        const inputTags = document.querySelector(".input-tags");
+        container.insertBefore(newTag, inputTags);
+      });
+    },
     openImgModal(command) {
       this.$refs.ytmodal.showModal(command);
     },
@@ -402,10 +433,46 @@ export default {
     },
     goBack() {
       this.$router.go(-1);
+    },
+    async getEditData() {
+      const email = this.getUserInfo().email;
+
+      try {
+        const res = await axios.get(
+          `${this.$apiServer}/post/postDetail?email=${email}&id=${this.$route.params.targetId}`
+        );
+
+        if (res.status === 200) {
+          const articleData = res.data;
+          this.articleData = articleData;
+          this.createDate = articleData.createdate.split(" ")[0];
+          this.title = articleData.title;
+          this.content = articleData.content;
+          this.editor.setContent(this.content);
+          this.tagList = articleData.tag;
+          this.tagSetting(this.tagList);
+          this.profile = articleData.profile;
+          this.nickname = articleData.nickname;
+          this.thumbnail = articleData.picture;
+          this.like = articleData.good;
+          this.isLike = articleData.isgood;
+          this.setLikeBtn();
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
   beforeDestroy() {
     this.editor.destroy();
+  },
+  created() {
+    if (Object.keys(this.$route.params).length === 1) {
+      this.isEdit = true;
+      this.getEditData();
+    } else {
+      this.isEdit = false;
+    }
   }
 };
 </script>

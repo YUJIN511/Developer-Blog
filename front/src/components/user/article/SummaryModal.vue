@@ -5,11 +5,7 @@
       <h5>글 미리보기</h5>
       <main>
         <button class="thumbnail">
-          <svg
-            class="svg-thumbnail"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
+          <svg class="svg-thumbnail" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <title>paginate-filter-picture-alternate</title>
             <circle cx="9.75" cy="6.247" r="2.25" />
             <path
@@ -34,9 +30,7 @@
           v-model="articleData.summary"
           placeholder="글 목록에 노출될 내용을 적어주세요."
         ></textarea>
-        <span class="char-limit"
-          >{{ articleData.summary.length }}/{{ maxSummary }}</span
-        >
+        <span class="char-limit">{{ articleData.summary.length }}/{{ maxSummary }}</span>
       </main>
       <footer>
         <button class="btn btn-cancel" @click="closeModal">취소</button>
@@ -49,6 +43,7 @@
 <script>
 import axios from "axios";
 export default {
+  props: ["isEdit"],
   data: function() {
     return {
       show: false,
@@ -82,7 +77,7 @@ export default {
         fr.readAsDataURL(file);
       }
     },
-    async submit() {
+    async createPost() {
       try {
         const result = await this.sendImg();
         if (result) {
@@ -105,6 +100,40 @@ export default {
         }
       } catch (error) {
         console.log(error);
+      }
+    },
+    async updatePost() {
+      console.dir(this.articleData);
+
+      try {
+        const result = await this.sendImg();
+        if (result) {
+          console.dir(this.articleData);
+          axios
+            .put(`${this.$apiServer}/post?${this.articleData.tagString}`, {
+              content: this.articleData.content,
+              picture: this.articleData.picture,
+              summary: this.articleData.summary,
+              title: this.articleData.title,
+              writer: this.articleData.writer
+            })
+            .then(() => {
+              alert("글수정이 완료되었습니다.");
+              location.href = "/";
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async submit() {
+      if (this.isEdit) {
+        this.updatePost();
+      } else {
+        this.createPost();
       }
     },
     async sendImg() {
