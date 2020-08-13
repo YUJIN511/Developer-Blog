@@ -14,4 +14,19 @@
 		select postid, count(*) score from comment group by postid
 	</select>
 	
+	<!-- 게시물을 읽었는지 확인 -->
+	<select id="isRead" resultType="Integer">
+		select count(*) from lookup where postid=#{postid} and email = #{email}
+	</select>
+	
+	<!-- 조회 insert -->
+	<insert id="insertRead">
+		insert into lookup(email, postid) values(#{email}, #{postid})
+	</insert>
+	
+	<!-- 해당 user가 조회한 모든 게시물 -->
+	<select id="getLookUp" resultType="String">
+		select postid from lookup where email = #{email}
+	</select>
+	
 </mapper>

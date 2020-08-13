@@ -131,6 +131,11 @@ public class PostController {
 		
 		if(email != null && !email.equals("")) {	//email이 있을 때만
 			if(storageRepository.isGood(email, id) > 0) detail.setIsgood(true);
+			// 조회 테이블에 추가(추천 게시물 관련)
+			if(algoRepository.isRead(email, id) < 1) {	//이미 조회한 게시물이 아니라면, 조회 게시물에 insert
+				algoRepository.insertRead(email, id);
+			}
+			
 		}
 		
 		Post temp = postService.findById(id).get();		//조회수, history
@@ -475,9 +480,10 @@ public class PostController {
 	
 	@GetMapping("recommend")
 	@ApiOperation(value = "인기게시물 로직 : 좋아요(1) + 조회(1) + 댓글(2) + 공유(2)")
-	public ResponseEntity<List<PostList>> getRecommendPost(@RequestParam String email) {
-		List<PostList> list = new ArrayList<>();
+	public ResponseEntity<String> getRecommendPost(@RequestParam String email) {
+		System.out.println(algoRepository.getLookUp(email));
 		
-		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK); 
+		
+		return new ResponseEntity<String>("success", HttpStatus.OK); 
 	}
 }

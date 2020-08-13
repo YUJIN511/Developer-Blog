@@ -17,5 +17,4 @@ public class HistoryPK implements Serializable{
 
     @NotBlank
     private Long postid;
-    
 }
