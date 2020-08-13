@@ -3,6 +3,10 @@ package com.papple.blog.controllers;
 import java.util.List;
 
 import com.papple.blog.models.Post;
+import com.papple.blog.models.User;
+import com.papple.blog.payload.response.PostList;
+import com.papple.blog.repository.PostListRepository;
+import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.PostService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +27,23 @@ public class MainController {
 
     @Autowired
 	private PostService postService;
+	@Autowired
+	private PostListRepository postListRepository;
+	@Autowired
+	private UserRepository userRepository;
 
     @GetMapping("/historyList")
 	@ApiOperation(value = "History 글 리스트")
-	public ResponseEntity<List<Post>> historyList(@RequestParam(required = true) final String email) throws Exception {
-
-		return new ResponseEntity<List<Post>>(postService.findHistoryByUser(email), HttpStatus.OK);
+	public ResponseEntity<List<PostList>> historyList(@RequestParam(required = true) final String email) throws Exception {
+		List<PostList> list = postListRepository.findHistoryByUser(email);
+		for(PostList post : list){
+			User user = userRepository.getUserByEmail(email);
+			post.setNickname(user.getNickname());
+			post.setProfile(user.getProfile());
+			post.setScore(user.getScore());
+			// 좋아요 유무 추가
+		}
+		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}
 
 	@GetMapping("/goodList")
