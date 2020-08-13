@@ -34,5 +34,10 @@
 		select good+views score from post where id = #{postid}
 	</select>
 	
+	<!-- 해당 post의 댓글 점수 - 댓글 * 2 -->
+	<select id="getCommentScoreByPostid" resultType="Long">
+		select count(*) * 2 from comment where postid = #{postid}
+	</select>
+	
 	
 </mapper>
