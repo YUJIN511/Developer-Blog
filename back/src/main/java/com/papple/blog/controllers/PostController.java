@@ -493,9 +493,8 @@ public class PostController {
 	public ResponseEntity<List<PostList>> getRecommendPost(@RequestParam String email) {
 		List<Long> postList = algoRepository.getLookUp(email);	// 해당 user가 조회했던 게시물 목록
 		Map<Long, Long> score = new HashMap<>();
-		for(Long postid : postList) if(postService.findById(postid) != null) {
+		for(Long postid : postList) if(algoRepository.getPopularScoreByPostid(postid) != null) {
 			score.put(postid, algoRepository.getPopularScoreByPostid(postid));	//좋아요, 조회수 점수 등록
-			System.out.println(algoRepository.getPopularScoreByPostid(postid));
 		}
 			
 		for(Long postid : score.keySet()) score.put(postid, score.get(postid) + algoRepository.getCommentScoreByPostid(postid)); //댓글 점수 추가
