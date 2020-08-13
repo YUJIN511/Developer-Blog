@@ -138,7 +138,6 @@ export default {
 
 main {
   padding: 30px 70px;
-  // padding-right: 100px;
   display: flex;
   .content {
     // position: relative;
