@@ -2,7 +2,7 @@ aside {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  width: 350px;
+  width: 240px;
   min-height: 100%;
   border: 1px solid rgb(218, 218, 218);
   background-color: white;
@@ -13,11 +13,11 @@ header {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 350px;
+  height: 300px;
   margin-bottom: 20px;
   .profile-image {
-    width: 200px;
-    height: 200px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     background-repeat: no-repeat;
     background-position: center;
@@ -29,7 +29,7 @@ header {
     display: flex;
     align-items: center;
     font-weight: 900;
-    font-size: 1.3em;
+    font-size: 1.4em;
     margin-top: 10px;
     img {
       margin-right: 5px;
@@ -37,7 +37,7 @@ header {
   }
   .email {
     margin-top: 5px;
-    font-size: 0.9em;
+    font-size: 1rem;
   }
 }
 
@@ -49,9 +49,14 @@ main {
 .btn-navitem {
   text-align: left;
   padding: 10px 20px;
-  font-size: 1.6em;
+  font-size: 1.2rem;
   color: rgb(90, 90, 90);
   &:hover {
     background-color: lavender;
   }
+}
+
+.icon-logo {
+  width: 22px;
+  height: 22px;
 }

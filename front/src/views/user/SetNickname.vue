@@ -3,7 +3,11 @@
     <div class="container-nickname">
       <div></div>
       <div>
-        <input class="input-nickname" v-model="nickname" placeholder="닉네임 입력 (영문)" />
+        <input
+          class="input-nickname"
+          v-model="nickname"
+          placeholder="닉네임 입력 (영문)"
+        />
       </div>
       <div class="more-arrow" @click="setNickname()"></div>
     </div>
@@ -11,6 +15,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
 
 const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
@@ -19,27 +24,36 @@ export default {
   data() {
     return {
       email: this.$route.params.email,
-      nickname: ""
+      token: this.$route.params.token,
+      nickname: "",
     };
   },
   methods: {
+    ...mapActions({
+      ReceiveToken: "user/receiveToken",
+    }),
+    ...mapGetters({
+      getIsLogin: "user/getIsLogin",
+    }),
     setNickname() {
       axios
         .get(`${SERVER_URL}/api/auth/nicknameUpdate`, {
           params: {
             email: this.email,
-            nickname: this.nickname
-          }
+            nickname: this.nickname,
+          },
         })
-        .then(res => {
-          console.log(res);
-          this.$router.push({
-            name: "LoginPassword",
-            params: { email: this.email }
-          });
+        .then(() => {
+          alert("회원가입이 완료되었습니다.");
+          this.$router.push({ name: "Main" });
         });
-    }
-  }
+    },
+  },
+  created() {
+    this.ReceiveToken({ token: this.token, email: this.email })
+      .then(() => console.log(this.getIsLogin()))
+      .catch((err) => console.log(err));
+  },
 };
 </script>
 

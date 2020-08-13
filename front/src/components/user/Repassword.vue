@@ -25,7 +25,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      email: "",
+      email: ""
     };
   },
   methods: {
@@ -37,13 +37,13 @@ export default {
         .get(
           `http://i3a604.p.ssafy.io:8081/api/auth/passwordEmail?email=${this.email}`
         )
-        .then((res) => {
+        .then(res => {
           console.log(res);
           alert("메일 발송 완료");
         })
-        .catch((err) => console.log(err));
-    },
-  },
+        .catch(err => console.log(err));
+    }
+  }
 };
 </script>
 
@@ -55,6 +55,7 @@ export default {
   align-items: center;
   width: 100vw;
   height: 100vh;
+  z-index: 10;
 }
 .background {
   position: fixed;

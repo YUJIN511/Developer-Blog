@@ -4,8 +4,7 @@ import mainPageRouter from "@/router/modules/main.js";
 import settingPageRouter from "@/router/modules/setting.js";
 import accountPageRouter from "@/router/modules/account.js";
 import articlePageRouter from "@/router/modules/article.js";
-import notification from '@/components/notification/notification.vue'
-// import userRouter from "@/router/modules/userRouter.js";
+import notification from "@/components/notification/notification.vue";
 
 Vue.use(VueRouter);
 
@@ -14,42 +13,47 @@ const router = new VueRouter({
   routes: [
     {
       path: "/",
-      redirect: "/main"
+      redirect: "/main",
     },
     {
       path: "/main",
       redirect: "/main/home",
       name: "Main",
       component: () => import("@/views/Main.vue"),
-      children: mainPageRouter
+      children: mainPageRouter,
     },
     {
       path: "/setting",
       redirect: "/setting/blog",
       name: "Setting",
       component: () => import("@/views/Setting.vue"),
-      children: settingPageRouter
+      children: settingPageRouter,
     },
     {
       path: "/account",
       redirect: "/main/home",
       name: "Account",
       component: () => import("@/views/Main.vue"),
-      children: accountPageRouter
+      children: accountPageRouter,
     },
     {
       path: "/article",
       redirect: "/article/edit",
       name: "Article",
       component: () => import("@/views/Article.vue"),
-      children: articlePageRouter
+      children: articlePageRouter,
     },
     {
-      path: '/notification',
-      name: 'notification',
-      component: notification
-    }
-  ]
+      path: "/notification",
+      name: "notification",
+      component: notification,
+    },
+    {
+      path: "/:email",
+      name: "UserPage",
+      component: () => import("@/views/blog/UserPage.vue"),
+    },
+  ],
 });
 
 export default router;

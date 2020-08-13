@@ -1,12 +1,12 @@
 <template>
   <div class="container-base">
-    <span class="title">검색결과</span>
+    <span class="title">{{ keyword }}에 대한 검색결과</span>
     <FlexArticles :datas="articleData" />
   </div>
 </template>
 
 <script>
-/* 
+/*
 썸네일 URL
 글 제목
 내용
@@ -17,18 +17,49 @@
 좋아요 숫자
 */
 
+import axios from "axios";
 import FlexArticles from "@/components/common/FlexArticles.vue";
+
+const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 
 export default {
   components: {
-    FlexArticles
+    FlexArticles,
   },
   data: function() {
     return {
-      articleData: []
+      articleData: [],
+      keyword: this.$route.params.keyword,
     };
   },
+  methods: {
+    fetchWordResult() {
+      axios
+        .get(`${SERVER_URL}/api/post/search/${this.keyword}`)
+        .then((res) => {
+          console.log(res);
+          this.articleData = res.data;
+          console.log(this.articleData);
+        })
+        .catch((err) => console.log(err));
+    },
+    fetchHashResult() {
+      axios
+        .get(`${SERVER_URL}/api/post/hashSearch/${this.keyword}`)
+        .then((res) => {
+          console.log(res);
+          this.articleData = res.data;
+        })
+        .catch((err) => console.log(err));
+    },
+  },
   created() {
+    console.log(this.keyword);
+    // if (this.keyword.includes("#")) {
+    //   this.fetchHashResult();
+    // } else {
+    //   this.fetchWordResult();
+    // }
     this.articleData = [
       {
         thumbUrl:
@@ -41,7 +72,7 @@ export default {
         iconUrl: "@/assets/tree.svg",
         name: "닉네임1",
         isLiked: true,
-        likeCnt: 10
+        likeCnt: 10,
       },
       {
         thumbUrl:
@@ -54,10 +85,10 @@ export default {
         iconUrl: "@/assets/tree.svg",
         name: "닉네임2",
         isLiked: false,
-        likeCnt: 9
-      }
+        likeCnt: 9,
+      },
     ];
-  }
+  },
 };
 </script>
 

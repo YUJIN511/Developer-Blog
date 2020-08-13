@@ -87,18 +87,23 @@ export default {
     return {
       userInfo: {
         email: "",
-        password: ""
-      }
+        password: "",
+      },
     };
   },
   methods: {
     ...mapGetters({
-      getIsLogin: "user/getIsLogin"
+      getIsLogin: "user/getIsLogin",
+      getEmail: "user/getEmail",
+      getProfile: "user/getProfile",
     }),
     ...mapActions({
-      Login: "user/login"
+      Login: "user/login",
+      fetchUserInfo: "user/fetchUserInfo",
     }),
     closeLogin() {
+      this.email = "";
+      this.password = "";
       document.querySelector(".container-login").classList.add("hide");
     },
     moveToJoin() {
@@ -113,12 +118,14 @@ export default {
       const result = await this.Login(this.userInfo);
 
       if (result) {
-        location.href = "/";
+        // location.href = "/";
+        this.fetchUserInfo(this.getEmail());
+        this.$router.go();
       } else {
         alert("아이디 혹은 비밀번호가 틀립니다.");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

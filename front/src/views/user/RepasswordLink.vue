@@ -50,12 +50,12 @@ export default {
     return {
       userInfo: {
         email: this.$route.params.email,
-        password: "",
+        password: ""
       },
       passwordConfirm: "",
       dom: {
-        passwordConfirmErrMsg: "",
-      },
+        passwordConfirmErrMsg: ""
+      }
     };
   },
   methods: {
@@ -70,19 +70,19 @@ export default {
     reset() {
       axios
         .post(`${SERVER_URL}/api/auth/resetPassword`, this.userInfo)
-        .then((res) => {
+        .then(res => {
           console.log(res);
           alert("비밀번호가 변경되었습니다.");
           this.$router.push({ name: "Home" });
         })
-        .catch((err) => console.log(err));
-    },
+        .catch(err => console.log(err));
+    }
   },
   mounted() {
     this.dom.passwordConfirmErrMsg = document.querySelector(
       ".msg-password-confirm"
     );
-  },
+  }
 };
 </script>
 

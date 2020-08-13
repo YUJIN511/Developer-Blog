@@ -6,7 +6,7 @@
   top: 0;
   bottom: 0;
   left: -256px;
-  transition: left 200ms cubic-bezier(0.51, 0.93, 0.58, 1);
+  transition: all 400ms cubic-bezier(0.51, 0.93, 0.58, 1);
   z-index: 1000;
 }
 .navbar-container {
@@ -55,14 +55,22 @@
   height: 60px;
   padding-left: 16px;
   .icon-toggle {
-    width: 26px;
-    height: 26px;
+    width: 22px;
+    height: 22px;
     fill: #555555;
   }
-  .icon-logo {
-    width: 77px;
-    height: 25.5px;
-    margin-left: 10px;
+  .logo {
+    margin: 0px 24px;
+    display: flex;
+    #logo-img {
+      fill: #65b1fb;
+      height: 24px;
+    }
+
+    #logo-text {
+      width: 72px;
+      height: 24px;
+    }
   }
 }
 

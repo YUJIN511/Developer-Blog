@@ -1,24 +1,29 @@
 <template>
-  <div class="container-base">
-    <div class="container-title">
-      <span class="title">내가 팔로우 하는 사람들</span>
-      <router-link tag="a" to="/main/followadditional">더보기</router-link>
+  <div>
+    <LimitedAccess v-if="!getIsLogin()" />
+    <div class="container-base" v-if="getIsLogin()">
+      <div class="container-title">
+        <span class="title">내가 팔로우 하는 사람들</span>
+        <router-link tag="a" to="/main/followadditional">더보기</router-link>
+      </div>
+      <FlexFollow :isWarp="false" :datas="data" />
+      <span class="title">팔로우 한 사람들의 최신 게시물</span>
+      <FlexArticles :datas="articleData" />
     </div>
-    <FlexFollow :isWarp="false" :datas="data" />
-    <span class="title">팔로우 한 사람들의 최신 게시물</span>
-    <FlexArticles :datas="articleData" />
   </div>
 </template>
 
 <script>
 import FlexFollow from "@/components/common/FlexFollow.vue";
 import FlexArticles from "@/components/common/FlexArticles.vue";
-import { mapMutations } from "vuex";
+import LimitedAccess from "@/components/user/LimitedAccess.vue";
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   components: {
     FlexFollow,
-    FlexArticles
+    FlexArticles,
+    LimitedAccess,
   },
   data: function() {
     return {
@@ -27,26 +32,26 @@ export default {
           profileUrl:
             "https://images.unsplash.com/photo-1577703451648-77e854069658?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
           userName: "사용자 이름1",
-          blogName: "블로그 이름1"
+          blogName: "블로그 이름1",
         },
         {
           profileUrl:
             "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
           userName: "사용자 이름2",
-          blogName: "블로그 이름12"
+          blogName: "블로그 이름12",
         },
         {
           profileUrl:
             "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
           userName: "사용자 이름2",
-          blogName: "블로그 이름12"
+          blogName: "블로그 이름12",
         },
         {
           profileUrl:
             "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
           userName: "사용자 이름2",
-          blogName: "블로그 이름12"
-        }
+          blogName: "블로그 이름12",
+        },
       ],
       articleData: [
         {
@@ -60,7 +65,7 @@ export default {
           iconUrl: "@/assets/tree.svg",
           name: "닉네임1",
           isLiked: true,
-          likeCnt: 10
+          likeCnt: 10,
         },
         {
           thumbUrl:
@@ -73,14 +78,17 @@ export default {
           iconUrl: "@/assets/tree.svg",
           name: "닉네임2",
           isLiked: false,
-          likeCnt: 9
-        }
-      ]
+          likeCnt: 9,
+        },
+      ],
     };
   },
   methods: {
     ...mapMutations({
-      paintBtn: "navbarMini/paintBtn"
+      paintBtn: "navbarMini/paintBtn",
+    }),
+    ...mapGetters({
+      getIsLogin: "user/getIsLogin",
     }),
     clickLike(e) {
       const likeIcon = e.currentTarget.querySelector("svg");
@@ -89,11 +97,11 @@ export default {
       } else {
         likeIcon.classList.add("selected");
       }
-    }
+    },
   },
   mounted() {
     this.paintBtn(document.querySelector("#btn-follow"));
-  }
+  },
 };
 </script>
 

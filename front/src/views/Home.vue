@@ -21,7 +21,8 @@ export default {
     axios
       .get(`${SERVER_URL}/api/post/all`)
       .then(res => {
-        this.setArticleData(res.data);
+        this.articleData = res.data;
+        // console.dir(this.articleData);
       })
       .catch(err => {
         console.log(err);
@@ -33,102 +34,7 @@ export default {
   methods: {
     ...mapMutations({
       paintBtn: "navbarMini/paintBtn"
-    }),
-    setArticleData(datas) {
-      datas.forEach(data => {
-        const input = {
-          thumbUrl:
-            "https://images.unsplash.com/photo-1519052537078-e6302a4968d4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-          title: data.title,
-          desc: data.content,
-          profileUrl:
-            "https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-          iconUrl: "@/assets/tree.svg",
-          name: "닉네임1",
-          isLiked: true,
-          likeCnt: 10
-        };
-        this.articleData.push(input);
-      });
-
-      this.articleData.push({
-        thumbUrl:
-          "https://images.unsplash.com/photo-1524503033411-c9566986fc8f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-        title: "제목",
-        desc: "본문",
-        profileUrl:
-          "https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-        iconUrl: "@/assets/tree.svg",
-        name: "닉네임1",
-        isLiked: false,
-        likeCnt: 10
-      });
-
-      this.articleData.push({
-        thumbUrl:
-          "https://images.unsplash.com/photo-1505377059067-e285a7bac49b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-        title: "제목",
-        desc: "본문",
-        profileUrl:
-          "https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-        iconUrl: "@/assets/tree.svg",
-        name: "닉네임1",
-        isLiked: false,
-        likeCnt: 10
-      });
-
-      this.articleData.push({
-        thumbUrl:
-          "https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-        title: "제목",
-        desc: "본문",
-        profileUrl:
-          "https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-        iconUrl: "@/assets/tree.svg",
-        name: "닉네임1",
-        isLiked: false,
-        likeCnt: 10
-      });
-
-      this.articleData.push({
-        thumbUrl:
-          "https://images.unsplash.com/photo-1472491235688-bdc81a63246e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-        title: "제목",
-        desc: "본문",
-        profileUrl:
-          "https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-        iconUrl: "@/assets/tree.svg",
-        name: "닉네임1",
-        isLiked: false,
-        likeCnt: 10
-      });
-
-      this.articleData.push({
-        thumbUrl:
-          "https://images.unsplash.com/photo-1562165742-5fb25d795480?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-        title: "제목",
-        desc: "본문",
-        profileUrl:
-          "https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-        iconUrl: "@/assets/tree.svg",
-        name: "닉네임1",
-        isLiked: false,
-        likeCnt: 10
-      });
-
-      this.articleData.push({
-        thumbUrl:
-          "https://images.unsplash.com/photo-1516590914727-51e55df118d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-        title: "제목",
-        desc: "본문",
-        profileUrl:
-          "https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-        iconUrl: "@/assets/tree.svg",
-        name: "닉네임1",
-        isLiked: false,
-        likeCnt: 10
-      });
-    }
+    })
   },
   data: function() {
     return {

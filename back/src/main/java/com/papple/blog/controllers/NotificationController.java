@@ -1,5 +1,8 @@
 package com.papple.blog.controllers;
 
+import java.util.List;
+
+import com.papple.blog.models.Notification;
 import com.papple.blog.models.User;
 import com.papple.blog.payload.response.StreamDataSet;
 import com.papple.blog.repository.UserRepository;
@@ -15,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-@CrossOrigin(origins = "*", maxAge = 3600)
+
+// @CrossOrigin(origins = "http://i3a604.p.ssafy.io", allowedHeaders = "*",allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*",allowCredentials = "true")
 @RestController
 @RequestMapping("/api/notification")
 public class NotificationController {
@@ -32,6 +37,15 @@ public class NotificationController {
         if(user == null){   // 식별되지 않은 사용자인 경우
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+
+        // 알림 설정 [OFF] 삭제
+        int setting = Integer.parseInt(user.getNotification(),2);
+  
+		for(int i=0; i<7; i++){
+			if((setting & (1<<i)) == 0){
+                notificationService.deleteByTargetuserAndType(email, 1<<i);
+			}
+		}
 
         final SseEmitter emitter = new SseEmitter();
         final StreamDataSet DATA_SET = new StreamDataSet(user, emitter);

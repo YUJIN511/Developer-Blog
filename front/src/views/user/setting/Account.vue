@@ -1,23 +1,34 @@
 <template>
-  <div class="container-account">
+  <div style="background:white" class="container-account">
     <header>
       <div class="profile-image">
-        <button class="banner-image-edit">수정하기</button>
+        <button class="banner-image-edit" @click="openProfilePic">
+          수정하기
+        </button>
       </div>
     </header>
     <main>
-      <div class="nickname">
+      <div class="p-nickname" @click="enableNickname()">
         <span>닉네임</span>
         <p class="nickname">{{ getUserInfo().nickname }}</p>
       </div>
+      <div class="edit-nickname hide">
+        <div class="background" @click="disableNickname()"></div>
+        <span>닉네임</span>
+        <div class="container-inputNickname">
+          <input class="input-nickname" v-model="nickname" placeholder="영문" />
+          <button class="btn btn-edit" @click="updateNickname">수정하기</button>
+        </div>
+      </div>
       <div class="level-icon">
-        <span>레벨티콘 설정</span>
+        <span>레벨 / 경험치</span>
+
         <button class="btn-circle btn-level-icon">
           <img
             class="level-icon"
-            width="16px"
-            height="16px"
-            viewBox="0 0 18 18"
+            width="20px"
+            height="20px"
+            viewBox="0 0 24 24"
             src="@/assets/tree.svg"
             alt="level icon"
           />
@@ -26,13 +37,49 @@
       <div class="level-icon">
         <span>연동된 SNS계정</span>
         <div class="container-btn-social">
-          <button class="btn-circle btn-google"></button
-          ><button class="btn-circle btn-facebook"></button
-          ><button class="btn-circle btn-github"></button>
+          <button class="btn-circle btn-google"></button>
+          <button class="btn-circle btn-facebook"></button>
+          <button class="btn-circle btn-github"></button>
         </div>
       </div>
       <div class="level-icon">
-        <span>비밀번호 바꾸기</span>
+        <span class="span-password" @click="enablePassword()"
+          >비밀번호 바꾸기</span
+        >
+        <div class="edit-password hide">
+          <div class="background" @click="disablePassword()"></div>
+          <div class="container-inputPassword">
+            <input
+              class="input-password"
+              v-model="password"
+              type="password"
+              placeholder="현재 비밀번호"
+            />
+            <input
+              class="input-password"
+              v-model="newpassword"
+              type="password"
+              @keyup="passwordEqualCheck"
+              placeholder="새 비밀번호"
+            />
+            <input
+              class="input-password"
+              v-model="newpasswordConfirm"
+              type="password"
+              @keyup="passwordEqualCheck"
+              placeholder="새 비밀번호 확인"
+            />
+            <div class="msg msg-password-confirm hide">
+              비밀번호가 일치하지 않습니다.
+            </div>
+          </div>
+          <button class="btn btn-pw" @click="updatePassword()">변경하기</button>
+        </div>
+      </div>
+      <div class="container-unregister">
+        <span class="span-unregister" @click="openUnregisterModal()"
+          >회원 탈퇴</span
+        >
       </div>
     </main>
     <!-- 블러효과 용 -->
@@ -48,24 +95,99 @@
 import { mapActions, mapGetters } from "vuex";
 
 export default {
+  data() {
+    return {
+      email: this.getUserInfo().email,
+      nickname: this.getUserInfo().nickname,
+      password: "",
+      newpassword: "",
+      newpasswordConfirm: "",
+      dom: {
+        passwordConfirmErrMsg: "",
+      },
+      file: "",
+      profileURL: "",
+    };
+  },
   methods: {
     ...mapActions({
       fetchUserInfo: "user/fetchUserInfo",
+      UpdateNickname: "user/updateNickname",
+      UpdatePassword: "user/updatePassword",
+      Unregister: "user/unregister",
+      UploadFile: "user/uploadFile",
     }),
     ...mapGetters({
       getUserInfo: "user/getUserInfo",
       getEmail: "user/getEmail",
       getIsLogin: "user/getIsLogin",
     }),
-    guestBlur() {
-      if (!this.getIsLogin()) {
-        document.querySelector(".container-account").classList.add("blurred");
+    enableNickname() {
+      document.querySelector(".p-nickname").classList.add("hide");
+      document.querySelector(".edit-nickname").classList.remove("hide");
+      this.nickname = this.getUserInfo().nickname;
+    },
+    disableNickname() {
+      document.querySelector(".p-nickname").classList.remove("hide");
+      document.querySelector(".edit-nickname").classList.add("hide");
+    },
+    updateNickname() {
+      this.UpdateNickname({ email: this.email, nickname: this.nickname });
+      this.$router.go();
+    },
+    enablePassword() {
+      document.querySelector(".edit-password").classList.remove("hide");
+    },
+    disablePassword() {
+      document.querySelector(".edit-password").classList.add("hide");
+    },
+    updatePassword() {
+      this.UpdatePassword({
+        email: this.email,
+        password: this.password,
+        newpassword: this.newpassword,
+      })
+        .then(() => {
+          alert("비밀번호가 변경되었습니다.");
+          this.$router.go();
+        })
+        .catch((err) => console.log(err));
+    },
+    passwordEqualCheck() {
+      if (!(this.newpassword === this.newpasswordConfirm)) {
+        this.dom.passwordConfirmErrMsg.classList.remove("hide");
+        return false;
       }
+      this.dom.passwordConfirmErrMsg.classList.add("hide");
+      return true;
+    },
+    openUnregisterModal() {
+      document.querySelector(".container-unregister").classList.remove("hide");
+    },
+    openProfilePic() {
+      document.querySelector(".container-profilepic").classList.remove("hide");
     },
   },
   mounted() {
-    this.fetchUserInfo(this.getEmail()).then((res) => console.log(res));
-    this.guestBlur();
+    this.dom.passwordConfirmErrMsg = document.querySelector(
+      ".msg-password-confirm"
+    );
+    // this.fetchUserInfo(this.getEmail());
+    // var profileImages = document.querySelectorAll(".profile-image");
+    // profileImages.forEach((profileImage) => {
+    //   profileImage.style.backgroundImage = `url('${
+    //     this.getUserInfo().profile
+    //   }')`;
+    // });
+    this.profileURL = this.getUserInfo().profile;
+    if (this.profileURL) {
+      this.$el.querySelector("header").style.backgroundImage = `url('${
+        this.getUserInfo().profile
+      }')`;
+      this.$el.querySelector(".profile-image").style.backgroundImage = `url('${
+        this.getUserInfo().profile
+      }')`;
+    }
   },
 };
 </script>
