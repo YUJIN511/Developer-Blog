@@ -34,6 +34,11 @@
 		select * from post where exists(select * from hashtag where postid = id and hashtag = #{hashtag})
 	</select>
 	
+	<!-- 내 해시태그 카테고리 내 게시물 리스트 검색 -->
+	<select id="searchPostByMyTag" resultType="PostList">
+		select * from post where exists(select * from hashtag where postid = id and hashtag = #{hashtag}) and writer = #{email}
+	</select>
+	
 	<!-- post id로 PostDetail 조회 -->
 	<select id="searchPostDetail" resultType="PostDetail">
 		select nickname, profile, score, id, title, content, summary, picture, writer, good, views, createdate
