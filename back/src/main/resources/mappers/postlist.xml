@@ -37,10 +37,8 @@
 	</select>
 
 	<!-- 해당 사용자의 방문 기록 검색 -->
-	<select id ="findHistoryByUser" resultType="PostList">
-		SELECT *
-		from post
-		WHERE id IN (SELECT postid from history where email=#{email} order by createdate)
+	<select id ="findHistoryByUser" resultType="Long">
+		SELECT postid from history where email=#{email} order by createdate desc
 	</select>
 </mapper>
 

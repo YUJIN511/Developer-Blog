@@ -135,24 +135,18 @@ public class PostController {
 		if(email != null && !email.equals("")) {	//email이 있을 때만
 			if(goodRepository.isGood(email, id) > 0) detail.setIsgood(true);
 			// 조회 테이블에 추가(추천 게시물 관련)
-			if(algoRepository.isRead(email, id) < 1) {	//이미 조회한 게시물이 아니라면, 조회 게시물에 insert
-				algoRepository.insertRead(email, id);
-			}
-			
+			if(algoRepository.isRead(email, id) < 1) algoRepository.insertRead(email, id);	//이미 조회한 게시물이 아니라면, 조회 게시물에 insert
 		}
 		
 		Post temp = postService.findById(id).get();		//조회수, history
-
-		if(!temp.getWriter().equals(email)){	// 포스트 작성자의 history, 조회수 반영 X
-			temp.setViews(temp.getViews()+1);
-			Post post = postService.save(temp);
-			
-			// history에 담기
-			if(email != null && !email.equals("")) {	//email이 있을 때만
-				History history = new History(new PKSet(email, id));
-				historyRepository.save(history);
-				if(goodRepository.isGood(email, id) > 0) detail.setIsgood(true);
-			}
+		temp.setViews(temp.getViews()+1);
+		Post post = postService.save(temp);
+		
+		// history에 담기
+		if(email != null && !email.equals("")) {	//email이 있을 때만
+			if(historyRepository.isHistory(email, id) > 0) historyRepository.deleteByEmailAndPostid(email, id);
+			History history = new History(new PKSet(email, id));
+			historyRepository.save(history);	
 		}
 		
 		//작성자의 blog 설정
@@ -386,24 +380,20 @@ public class PostController {
 
 				// 보관함에서 지우기
 				goodRepository.deleteByEmailAndPostid(email, id);
-				
-//				if(!newPost.getWriter().equals(email)){	// post 작성자의 글은 보관함 반영 X
-//					
-//					
-//				}
+
 			});
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}
 	
-//	@GetMapping("isgood")
-//	@ApiOperation(value = "좋아요를 누른 게시물인지 true, false 문자열로 반환")
-//	public ResponseEntity<String> isGood(@RequestParam(required = true) Long id, @RequestParam(required = true) String email) {
-//		System.out.println("좋아요 확인");
-//		if(postService.isGood(email, id) > 0) return new ResponseEntity<String>("true", HttpStatus.OK);
-//		return new ResponseEntity<String>("false", HttpStatus.FORBIDDEN);
-//	}
+	@GetMapping("goodList")
+	@ApiOperation(value = "나의 좋아요 게시물 목록")
+	public ResponseEntity<String> getGoodList(String email) {
+		
+		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
+	}
+
 	
 	@PostMapping("storage")
 	@ApiOperation(value = "보관함에 저장")

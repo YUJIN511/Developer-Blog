@@ -22,5 +22,13 @@ public interface HistoryRepository  extends JpaRepository<History, PKSet>{
 	@Modifying
 	@Query(value="DELETE FROM history WHERE email=?1", nativeQuery = true)
     void deleteByEmail(String email); 	// 회원 탈퇴시 히스토리 글 삭제
+    
+    @Transactional
+	@Modifying
+	@Query(value="DELETE FROM history WHERE email=?1 and postid = ?2", nativeQuery = true)
+    void deleteByEmailAndPostid(String email, Long postid); 	// 한 히스토리 지우기(덧씌울 때)
+    
+    @Query(value = "select count(*) from history where email = ?1 and postid = ?2", nativeQuery = true)
+    int isHistory(String email, Long postid);
 
 }
