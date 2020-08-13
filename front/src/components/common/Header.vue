@@ -409,7 +409,7 @@ export default {
     width: 640px;
     height: 30px;
     border: none;
-    border-bottom: 2px solid #bbbbbb;
+    border-bottom: 1px solid #dddddd;
     &:focus {
       outline: none !important;
       box-shadow: 0 0 4px rgb(137, 197, 199);
