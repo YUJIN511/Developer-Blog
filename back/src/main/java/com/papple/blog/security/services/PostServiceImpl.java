@@ -36,11 +36,6 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<Post> searchByWord(String word) {
-		return postRepository.searchByWord(word);
-	}
-
-	@Override
 	public void deleteById(Long id) {
 		postRepository.deleteById(id);
 		return;

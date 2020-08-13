@@ -12,7 +12,6 @@ public interface PostService {
 	Optional<Post> findById(Long id);
 	void deleteById(Long id);
 	void deleteByWriter(String email);
-	List<Post> searchByWord(String word);
 	List<Post> findMyHashPost(String hashtag, String email);
 	List<Post> findFollowLatestByUser(String email);
 	List<Post> searchByHashtag(String word);

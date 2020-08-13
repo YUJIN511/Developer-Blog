@@ -24,6 +24,11 @@
 		where id = #{postid}
 	</select>
 	
+	<!-- 일반 검색 -->
+	<select id="searchByWord" resultType="PostList">
+		select * from post where title like CONCAT('%', #{word}, '%') or content like CONCAT('%', #{word}, '%')
+	</select>
+	
 	<!-- post id로 PostDetail 조회 -->
 	<select id="searchPostDetail" resultType="PostDetail">
 		select nickname, profile, score, id, title, content, summary, picture, writer, good, views, createdate

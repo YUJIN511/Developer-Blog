@@ -28,16 +28,14 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 	@Query("DELETE FROM Post WHERE writer = ?1")
 	void deleteByWriter(String email);
 
-	@Query(value = "SELECT * FROM post where title like %?1% or content like %?1%", nativeQuery = true)
-	List<Post> searchByWord(String word);
+//	@Query(value = "SELECT * FROM post where title like %?1% or content like %?1%", nativeQuery = true)
+//	List<Post> searchByWord(String word);
 	
 	@Query(value = "select * from post p where exists(select * from hashtag h where h.postid = p.id and h.hashtag = ?1)", nativeQuery = true)	//해시태그 검색
 	List<Post> searchByHashtag(String word);
 
 	@Query(value = "select * from post p where exists(select * from hashtag h where h.postid = p.id and h.hashtag=?1) and p.writer = ?2", nativeQuery = true)
 	List<Post> findMyHashPost(String hashtag, String email);	// 내가 쓴 특정 해시태그의 글들을 출력(HashTag Category 안 게시물들) 
-	
-	
 
 	@Query(value = "SELECT * FROM post WHERE post.writer IN (SELECT followed FROM follow WHERE follower = ?1) ORDER BY post.createdate"	, nativeQuery = true)
 	List<Post> findFollowLatestByUser(String email);	// 팔로우한 사용자들의 최신 글 검색
