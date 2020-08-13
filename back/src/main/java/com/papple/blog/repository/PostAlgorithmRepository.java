@@ -12,5 +12,6 @@ public interface PostAlgorithmRepository {
 	List<PopularScore> getCommentScore();
 	int insertRead(String email, Long postid);
 	int isRead(String email, Long postid);
-	List<String> getLookUp(String email);
+	List<Long> getLookUp(String email);
+	Long getPopularScoreByPostid(Long postid);
 }

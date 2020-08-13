@@ -25,8 +25,14 @@
 	</insert>
 	
 	<!-- 해당 user가 조회한 모든 게시물 -->
-	<select id="getLookUp" resultType="String">
+	<select id="getLookUp" resultType="Long">
 		select postid from lookup where email = #{email}
 	</select>
+	
+	<!-- 해당 post의 게시물 점수 - 좋아요*1 + 조회수*1 -->
+	<select id="getPopularScoreByPostid" resultType="Long">
+		select good+views score from post where id = #{postid}
+	</select>
+	
 	
 </mapper>

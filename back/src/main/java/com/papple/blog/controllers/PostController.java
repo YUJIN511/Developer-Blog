@@ -481,8 +481,11 @@ public class PostController {
 	@GetMapping("recommend")
 	@ApiOperation(value = "인기게시물 로직 : 좋아요(1) + 조회(1) + 댓글(2) + 공유(2)")
 	public ResponseEntity<String> getRecommendPost(@RequestParam String email) {
-		System.out.println(algoRepository.getLookUp(email));
+		List<Long> postList = algoRepository.getLookUp(email);
+		Map<Long, Long> score = new HashMap<>();
+		for(Long postid : postList) score.put(postid, algoRepository.getPopularScoreByPostid(postid));
 		
+		System.out.println(score);
 		
 		return new ResponseEntity<String>("success", HttpStatus.OK); 
 	}
