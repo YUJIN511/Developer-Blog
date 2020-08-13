@@ -1,5 +1,5 @@
 <template>
-  <div class="container-login" v-if="isShow">
+  <div class="container-login hide">
     <div class="background-login" @click="closeLogin"></div>
     <div class="modal-login">
       <button class="btn-close" @click="closeLogin">✖</button>
@@ -81,7 +81,6 @@ export default {
   name: "Login",
   data() {
     return {
-      isShow: false,
       joinModal: "",
       userInfo: {
         email: "",
@@ -102,7 +101,7 @@ export default {
     closeLogin() {
       this.email = "";
       this.password = "";
-      this.isShow = false;
+      document.querySelector(".container-login").classList.add("hide");
     },
     moveToJoin() {
       this.joinModal.showModal(this);
@@ -113,7 +112,7 @@ export default {
       document.querySelector(".container-repassword").classList.remove("hide");
     },
     showModal(joinModal) {
-      this.isShow = true;
+      document.querySelector(".container-login").classList.remove("hide");
       this.joinModal = joinModal;
     },
     async login() {
