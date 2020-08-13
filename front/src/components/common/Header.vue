@@ -155,7 +155,6 @@ import UnregisterModal from "@/components/user/setting/UnregisterModal.vue";
 import ProfilePicModal from "@/components/user/setting/ProfilePicModal.vue";
 
 import { mapActions, mapGetters } from "vuex";
-// import NavbarMini from "@/components/common/Navbar-mini.vue";
 
 export default {
   name: "Header",
@@ -241,6 +240,7 @@ export default {
 .header-front,
 .header-end {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   margin: 0px 20px;
 }
@@ -350,11 +350,12 @@ export default {
   .header-center {
     display: flex;
     margin: 0px 20px;
-    flex: 1 1 0;
-    max-width: 600px;
+    flex: 0 1 30%;
+    width: 300px;
   }
   .container-main-search {
     display: flex;
+    flex: 1 1 auto;
     align-items: baseline;
     width: 100%;
     color: rgb(162, 163, 163);
@@ -389,7 +390,7 @@ export default {
     display: none;
   }
   .input-main-search {
-    flex: 1 1 0;
+    flex: 1 1 20%;
     background: white;
     width: 640px;
     height: 30px;
