@@ -22,7 +22,7 @@ export default {
       .get(`${SERVER_URL}/api/post/all`)
       .then(res => {
         this.articleData = res.data;
-        // console.dir(this.articleData);
+        console.dir(this.articleData);
       })
       .catch(err => {
         console.log(err);

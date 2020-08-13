@@ -22,8 +22,11 @@
                 </div>
             </div>
             <hr>
-            <div class="notification-list">
 
+            <div class="notification-list">
+                <template v-for="(data, id) in notifications">
+                    <SubNotification :key="id" v-bind:data="data" />
+                </template>
             </div>
 
             <hr>
@@ -35,9 +38,28 @@
 </template>
 
 <script>
+import SubNotification from "@/components/notification/SubNotification.vue"
+import { mapGetters } from "vuex";
 
 export default {
+    components:{SubNotification},
+    data() {
+        return {
+            eventSource: null,
+            notificationData:[],
+            notifications:[],
+        };
+    },
+    mounted(){
+       this.setupStream();
+    },
+    beforeDestroy() {
+        this.unSetupStream();
+    },
     methods: {
+         ...mapGetters({
+            getEmail: "user/getEmail",
+        }),
         closeNotification(){
             document.querySelector(".container-notification").classList.add("hide");
         },
@@ -48,8 +70,40 @@ export default {
         moveNotificationDetail(){
             this.$router.push({ name: "Notification" });
             this.closeNotification();
+        },
+        async setupStream() {
+            console.log("==> 이벤트 소스 수행");
+            this.eventSource =  await new EventSource(
+                "http://i3a604.p.ssafy.io:8081/api/notification/user/push?email="+this.getEmail(),
+                { withCredentials: true }
+            );
+            this.eventSource.onopen =  function(e) {
+                console.log("이벤트 소스 오픈");
+                console.log(e);
+            };
+            var instance = this;
+            this.eventSource.onmessage =  function(e) {
+                console.log(this);
+                console.log("이벤트 소스 메시지 도착");
+                instance.notificationData = JSON.parse(e.data);
+                console.log( instance.notificationData);
+                instance.notifications =  instance.notificationData.notifications;
+                console.log( instance.notifications);
+                 
+            };
+             this.eventSource.onerror = function(e) {
+                console.log("이벤트 소스 에러");
+                console.log(e);
+            };
+        },
+        unSetupStream() {
+            if (this.eventSource === null) {
+                return;
+            }
+            console.log("==> 이벤트 소스 종료");
+            this.eventSource.close();
         }
-    }
+    },    
 }
 </script>
 
