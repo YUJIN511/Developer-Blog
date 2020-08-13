@@ -49,5 +49,16 @@
 		select postid from hashtag where hashtag = #{hashtag}
 	</select>
 	
+	<!-- ##############################인기 태그######################### -->
+	
+	<!-- 태그점수 테이블의 태그 등록 여부 -->
+	<select id="isTag" resultType="Integer">
+		select count(*) from tagscore where tagname = #{hashtag}
+	</select>
+	
+	<!-- 태그점수 테이블에 태그 등록 -->
+	<insert id="insertTag">
+		insert into tagscore(tagname, score) values(#{hashtag}, 0)
+	</insert>
 	
 </mapper>

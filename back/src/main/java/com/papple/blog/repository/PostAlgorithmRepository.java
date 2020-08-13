@@ -17,4 +17,6 @@ public interface PostAlgorithmRepository {
 	Long getCommentScoreByPostid(Long postid);
 	List<String> getHashtagByPostid(Long postid);
 	List<Long> getPostidByTag(String hashtag);
+	int isTag(String hashtag);
+	int insertTag(String hashtag);
 }

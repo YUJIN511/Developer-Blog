@@ -3,6 +3,7 @@ package com.papple.blog.security.services;
 import java.util.List;
 import java.util.Optional;
 import com.papple.blog.models.Post;
+import com.papple.blog.payload.response.PostList;
 
 public interface PostService {
 	List<Post> findAll();
@@ -12,7 +13,6 @@ public interface PostService {
 	void deleteById(Long id);
 	void deleteByWriter(String email);
 	List<Post> searchByWord(String word);
-	List<Post> findHistoryByUser(String email);
 	List<Post> findMyHashPost(String hashtag, String email);
 	List<Post> findStorageByUser(String email);
 	List<Post> findFollowLatestByUser(String email);

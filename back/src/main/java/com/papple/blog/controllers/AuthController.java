@@ -55,6 +55,7 @@ import com.papple.blog.payload.request.UpdateRequest;
 import com.papple.blog.payload.response.JwtResponse;
 import com.papple.blog.payload.response.MessageResponse;
 import com.papple.blog.repository.AuthRepository;
+import com.papple.blog.repository.GoodRepository;
 import com.papple.blog.repository.HistoryRepository;
 import com.papple.blog.repository.ProfileRepository;
 import com.papple.blog.repository.HashtagRepository;
@@ -91,6 +92,8 @@ public class AuthController {
 	HashtagRepository hashtagRepository;
 	@Autowired
 	ProfileRepository profileRepository;
+	@Autowired
+	private GoodRepository goodRepository;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -248,6 +251,7 @@ public class AuthController {
 	@ApiOperation(value = "회원탈퇴")
 	public ResponseEntity<?> unregister(@RequestParam(required = true) final String email) {     
 		historyRepository.deleteByEmail(email);			// 히스토리 삭제
+		goodRepository.deleteByEmail(email);			// 좋아요 삭제
 		storageRepository.deleteByEmail(email);			// 보관함 삭제
 		followService.deleteByEmail(email);				// 팔로우 삭제
 		hashtagRepository.deleteHashtagByEmail(email);	// Hashtag 삭제
