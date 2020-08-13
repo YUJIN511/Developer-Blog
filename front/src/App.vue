@@ -33,6 +33,9 @@ button {
   border: none;
   background-color: rgba(0, 0, 0, 0);
   padding: 0px;
+  &:hover {
+    cursor: pointer;
+  }
 }
 button:focus {
   outline: none;
