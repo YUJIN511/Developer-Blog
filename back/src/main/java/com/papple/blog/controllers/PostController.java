@@ -486,6 +486,17 @@ public class PostController {
 		for(Long postid : postList) score.put(postid, algoRepository.getPopularScoreByPostid(postid));	//좋아요, 조회수 점수 등록
 		for(Long postid : score.keySet()) score.put(postid, score.get(postid) + algoRepository.getCommentScoreByPostid(postid)); //댓글 점수 추가
 		//29 : dd, ff, 28 : aa, bb, dd
+		Map<String, Long> HashScore = new HashMap<>();
+		for(Long postid : score.keySet()) {
+			List<String> hashtagList = algoRepository.getHashtagByPostid(postid);	
+			for(String hashtag : hashtagList) {	//게시물에 포함된 태그마다
+				if(HashScore.containsKey(hashtag)) HashScore.put(hashtag, HashScore.get(hashtag) + score.get(postid));
+				else HashScore.put(hashtag, score.get(postid));
+			}
+		}
+		System.out.println(HashScore);
+		
+		
 		System.out.println(algoRepository.getHashtagByPostid(28l));
 		return new ResponseEntity<String>("success", HttpStatus.OK); 
 	}
