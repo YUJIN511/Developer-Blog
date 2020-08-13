@@ -42,11 +42,6 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<Post> findMyHashPost(String hashtag, String email) {
-		return postRepository.findMyHashPost(hashtag, email);
-	}
-
-	@Override
 	public List<Post> findFollowLatestByUser(String email) {
 		return postRepository.findFollowLatestByUser(email);
 	}

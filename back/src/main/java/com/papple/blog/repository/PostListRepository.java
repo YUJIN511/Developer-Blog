@@ -17,6 +17,8 @@ public interface PostListRepository{
 	List<PostList> searchByWord(String word);		// 단어 검색(title, content)
 	List<PostList> searchByTag(String hashtag);		// 태그 검색
 	
+	List<PostList> searchPostByMyTag(String email, String hashtag);
+	
 	PostDetail searchPostDetail(Long postid);		// Post Detail 조회
 	List<String> searchHashtag(Long postid);
 	List<Long> findHistoryByUser(String email);				// 해당 사용자의 방문 기록 검색

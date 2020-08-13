@@ -165,39 +165,32 @@ public class PostController {
 		return new ResponseEntity<PostDetail>(detail, HttpStatus.OK);
 	}
 	
-//	@GetMapping("/{id}")
-//	@ApiOperation(value = "id로 해당 포스트 조회")
-//	public ResponseEntity<Post> searchById(@PathVariable Long id) {
-//		System.out.println("해당 id의 포스트 출력");
-//		Post post = postService.findById(id).get();
-//		return new ResponseEntity<Post>(post, HttpStatus.OK);
-//	}
-	
-	@GetMapping("postTag/{postid}")
+	@GetMapping("mycategory/{postid}")
 	@ApiOperation(value = "해당 게시물의 해시태그 목록 출력")
 	public ResponseEntity<List<String>> searchHashTag(@PathVariable Long postid) throws Exception {
-		System.out.println("해당 게시물의 해시태그 목록 출력");
 		List<Hashtag> hashList = hashtagService.findByPostid(postid);
 		List<String> list = new ArrayList<>();
-		for(int i=0;i<hashList.size();i++) {
-			list.add(hashList.get(i).getHashtagPK().getHashtag());
-		}
+		for(int i=0;i<hashList.size();i++) list.add(hashList.get(i).getHashtagPK().getHashtag());
 		return new ResponseEntity<List<String>>(list, HttpStatus.OK);
 	}
 	
-	@GetMapping("my/{email}/{hashtag}")
+	@GetMapping("mycategory/postlist")
 	@ApiOperation(value = "내가 쓴 특정 해시태그의 글들을 출력(HashTag Category 안 게시물들) ")
-	public ResponseEntity<List<Post>> searchHashTag(@PathVariable String hashtag, @PathVariable String email) throws Exception {
-		System.out.println("내가 쓴 특정 해시태그의 글들을 출력");
-		List<Post> list = postService.findMyHashPost(hashtag, email);
-		for(Post post : list) post.setContent("");
-		return new ResponseEntity<List<Post>>(list, HttpStatus.OK);
+	public ResponseEntity<List<PostList>> searchHashTag(String hashtag, String email) throws Exception {
+		List<PostList> list = postListRepository.searchPostByMyTag(email, hashtag);
+		for(PostList post : list) {
+			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
+			post.setNickname(post.getNickname());
+			post.setProfile(user.getProfile());
+			post.setScore(user.getScore());
+			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
+		}
+		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}	
 	
-	@GetMapping("mycategory/{email}")
+	@GetMapping("mycategory/taglist")
 	@ApiOperation(value = "내가 쓴 글들의 해시태그 리스트와 글 개수 리턴 - 정렬됨")
-	public ResponseEntity<List<Object[]>> searchMyHashCategory(@PathVariable String email) throws Exception {
-		System.out.println("내 Category 출력(정렬됨)");
+	public ResponseEntity<List<Object[]>> searchMyHashCategory(String email) throws Exception {
 		List<Hashtag> hashlist = hashtagService.myHashCategory(email);
 		Set<String> s = new TreeSet();
 		for(int i=0;i<hashlist.size();i++) s.add(hashlist.get(i).getHashtagPK().getHashtag());
@@ -244,10 +237,7 @@ public class PostController {
 	@PostMapping
 	@ApiOperation(value = "새 글 게시 - 글 정보 + 파일의 접근경로 DB에 저장")
 	public ResponseEntity<String> insert(@RequestBody Post post, HashtagList tag) {
-		System.out.println("새 글 게시");  
-		
-		Post p = postService.save(post);	// 글 저장
-		
+		Post p = postService.save(post);	// 글 저장		
 		for(int i=0;i<tag.getTag().size();i++) {
 			Hashtag ht = new Hashtag(new HashtagPK(p.getId(), tag.getTag().get(i)));
 			hashtagService.save(ht);
@@ -372,8 +362,6 @@ public class PostController {
 					}
 				}
 			});
-//			Storage storage = new Storage(new StoragePK(email, id));
-//			storageRepository.save(storage);	//storage 테이블에 좋아요 기록
 
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
@@ -390,7 +378,7 @@ public class PostController {
 				selectPost.setGood(tem.get().getGood()-1);
 				Post newPost = postService.save(selectPost);
 
-				// 보관함에서 지우기
+				// 좋아요 리스트에서 지우기
 				goodRepository.deleteByEmailAndPostid(email, id);
 
 			});
@@ -398,14 +386,6 @@ public class PostController {
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}
-	
-	@GetMapping("goodList")
-	@ApiOperation(value = "나의 좋아요 게시물 목록")
-	public ResponseEntity<String> getGoodList(String email) {
-		
-		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
-	}
-
 	
 	@PostMapping("storage")
 	@ApiOperation(value = "보관함에 저장")
