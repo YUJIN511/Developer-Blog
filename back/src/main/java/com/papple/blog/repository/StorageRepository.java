@@ -32,4 +32,7 @@ public interface StorageRepository  extends JpaRepository<Storage, PKSet>{
 	
 	@Query(value = "select * from storage where email = ?1", nativeQuery = true)
 	List<Storage> searchStorageByEmail(String email);
+	
+	@Query(value = "select count(*) from storage where email = ?1 and postid = ?2", nativeQuery = true)
+	int isStore(String email, Long postid);
 }
