@@ -20,6 +20,6 @@ import lombok.NoArgsConstructor;
 public class History {
    
     @EmbeddedId
-    private HistoryPK historyPK;
+    private PKSet historyPK;
     
 }

@@ -3,7 +3,7 @@ package com.papple.blog.repository;
 import javax.transaction.Transactional;
 
 import com.papple.blog.models.History;
-import com.papple.blog.models.HistoryPK;
+import com.papple.blog.models.PKSet;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HistoryRepository  extends JpaRepository<History, HistoryPK>{
+public interface HistoryRepository  extends JpaRepository<History, PKSet>{
     
     @Transactional
 	@Modifying
