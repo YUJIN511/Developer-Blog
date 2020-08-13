@@ -227,13 +227,18 @@ public class PostController {
 		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}
 	
-	@GetMapping("hashSearch/{word}")
+	@GetMapping("searchHash/{hashtag}")
 	@ApiOperation(value = "해시태그로 게시물 검색")
-	public ResponseEntity<List<Post>> searchByHashtag(@PathVariable String word) throws Exception {
-		System.out.println("해시태그 검색");
-		List<Post> list = postService.searchByHashtag(word);
-		for(Post post : list) post.setContent("");
-		return new ResponseEntity<List<Post>>(list, HttpStatus.OK);
+	public ResponseEntity<List<PostList>> searchByHashtag(@PathVariable String hashtag, String email) throws Exception {
+		List<PostList> list = postListRepository.searchByTag(hashtag);
+		for(PostList post : list) {
+			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
+			post.setNickname(post.getNickname());
+			post.setProfile(user.getProfile());
+			post.setScore(user.getScore());
+			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
+		}
+		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}
 	
 	@PostMapping

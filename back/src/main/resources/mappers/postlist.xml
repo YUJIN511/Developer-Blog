@@ -29,6 +29,11 @@
 		select * from post where title like CONCAT('%', #{word}, '%') or content like CONCAT('%', #{word}, '%')
 	</select>
 	
+	<!-- 해시태그 검색 -->
+	<select id="searchByTag" resultType="PostList">
+		select * from post where exists(select * from hashtag where postid = id and hashtag = #{hashtag})
+	</select>
+	
 	<!-- post id로 PostDetail 조회 -->
 	<select id="searchPostDetail" resultType="PostDetail">
 		select nickname, profile, score, id, title, content, summary, picture, writer, good, views, createdate

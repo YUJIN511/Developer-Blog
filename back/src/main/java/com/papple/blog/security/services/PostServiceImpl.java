@@ -51,10 +51,6 @@ public class PostServiceImpl implements PostService {
 		return postRepository.findFollowLatestByUser(email);
 	}
 
-	public List<Post> searchByHashtag(String word) {
-		return postRepository.searchByHashtag(word);
-	}
-
 	@Override
 	public void deleteByWriter(String email) {
 		postRepository.deleteByWriter(email);
