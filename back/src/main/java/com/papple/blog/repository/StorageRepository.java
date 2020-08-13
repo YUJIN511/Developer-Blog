@@ -4,6 +4,7 @@ import javax.transaction.Transactional;
 
 import com.papple.blog.models.FollowPK;
 import com.papple.blog.models.Storage;
+import com.papple.blog.models.StoragePK;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,7 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StorageRepository  extends JpaRepository<Storage, FollowPK>{
+public interface StorageRepository  extends JpaRepository<Storage, StoragePK>{
     
 	@Transactional
 	@Modifying

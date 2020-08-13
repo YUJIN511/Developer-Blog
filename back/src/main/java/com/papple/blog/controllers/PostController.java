@@ -38,6 +38,7 @@ import io.swagger.annotations.ApiOperation;
 
 import com.papple.blog.models.BlogConfig;
 import com.papple.blog.models.Follow;
+import com.papple.blog.models.FollowPK;
 import com.papple.blog.models.Good;
 import com.papple.blog.models.Hashtag;
 import com.papple.blog.models.HashtagPK;
@@ -411,6 +412,16 @@ public class PostController {
 		storageRepository.save(storage);
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
+	
+	@DeleteMapping("storage")
+	@ApiOperation(value = "보관함에서 삭제")
+	public ResponseEntity<String> deleteStorage(String email, Long postid) {
+		StoragePK pk = new StoragePK(email, postid);
+		storageRepository.deleteById(pk);
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
+	
+	
 	
 	@DeleteMapping
 	@ApiOperation(value = "포스트 삭제 - 보관함, 기록, 해시태그, 좋아요, 파일도 함께 삭제")
