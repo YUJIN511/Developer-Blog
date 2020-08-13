@@ -107,7 +107,7 @@
           v-if="getIsLogin()"
           >새 글쓰기</router-link
         >
-        <div class="notification-icon" v-if="getIsLogin()">
+        <div class="notification-icon" @click="openNotification" v-if="getIsLogin()">
           <svg
             version="1.1"
             id="notification_icon"
@@ -156,6 +156,7 @@
     <EmailModal />
     <UnregisterModal />
     <ProfilePicModal />
+    <Notification />
   </div>
 </template>
 
@@ -167,6 +168,7 @@ import Repassword from "@/components/user/Repassword.vue";
 import EmailModal from "@/components/user/EmailModal.vue";
 import UnregisterModal from "@/components/user/setting/UnregisterModal.vue";
 import ProfilePicModal from "@/components/user/setting/ProfilePicModal.vue";
+import Notification from "@/components/notification/notification.vue";
 
 import { mapActions, mapGetters } from "vuex";
 // import NavbarMini from "@/components/common/Navbar-mini.vue";
@@ -181,6 +183,7 @@ export default {
     EmailModal,
     UnregisterModal,
     ProfilePicModal,
+    Notification,
   },
   data() {
     return {
@@ -225,6 +228,9 @@ export default {
     moveToProfile() {
       this.$router.push({ name: "Setting" });
     },
+    openNotification(){
+      document.querySelector(".container-notification").classList.remove("hide");;
+    }
   },
   created() {
     this.fetchUserInfo(this.getEmail());
