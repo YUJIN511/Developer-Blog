@@ -22,7 +22,7 @@
               d="M19.5,22H2.5a.5.5,0,0,1-.5-.5V4.5a1,1,0,0,0-2,0V22a2,2,0,0,0,2,2H19.5a1,1,0,0,0,0-2Z"
             />
           </svg>
-          <img :src="thumbSrc" alt class="thumb-img" />
+          <img ref="thumbImg" :src="thumbSrc" alt class="thumb-img" />
           <button class="btn-thumbnail">
             <input type="file" ref="myFiles" @change="getThumbImage" />
           </button>
@@ -49,6 +49,7 @@
 <script>
 import axios from "axios";
 export default {
+  props: ["isEdit"],
   data: function() {
     return {
       show: false,
@@ -60,8 +61,10 @@ export default {
   methods: {
     showModal(articleData) {
       this.articleData = articleData;
-      console.log(this.articleData);
       this.show = true;
+      if (this.isEdit && articleData.picture !== "") {
+        this.thumbSrc = articleData.picture;
+      }
     },
     closeModal() {
       this.show = false;
@@ -77,16 +80,14 @@ export default {
         const fr = new FileReader();
         fr.onload = function() {
           document.querySelector(".thumb-img").src = fr.result;
-          document.querySelector(".svg-thumbnail").classList.add("hide");
         };
         fr.readAsDataURL(file);
       }
     },
-    async submit() {
+    async createPost() {
       try {
         const result = await this.sendImg();
         if (result) {
-          console.dir(this.articleData);
           axios
             .post(`${this.$apiServer}/post?${this.articleData.tagString}`, {
               content: this.articleData.content,
@@ -105,6 +106,40 @@ export default {
         }
       } catch (error) {
         console.log(error);
+      }
+    },
+    async updatePost() {
+      try {
+        const result = await this.sendImg();
+        if (result) {
+          axios
+            .put(`${this.$apiServer}/post?${this.articleData.tagString}`, {
+              content: this.articleData.content,
+              picture: this.articleData.picture,
+              summary: this.articleData.summary,
+              title: this.articleData.title,
+              writer: this.articleData.writer,
+              id: this.articleData.id,
+              good: this.articleData.good,
+              views: this.articleData.views
+            })
+            .then(() => {
+              alert("글수정이 완료되었습니다.");
+              location.href = "/";
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async submit() {
+      if (this.isEdit) {
+        this.updatePost();
+      } else {
+        this.createPost();
       }
     },
     async sendImg() {
@@ -200,6 +235,7 @@ main {
     width: 300px;
     height: 160px;
     border-radius: 5px;
+    z-index: 1;
   }
 }
 
@@ -212,6 +248,7 @@ main {
   color: white;
   font-size: 2em;
   font-weight: 900;
+  z-index: 2;
   &:hover {
     opacity: 0.5;
   }

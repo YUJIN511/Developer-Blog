@@ -2,8 +2,21 @@
   <div class="viewer">
     <header>
       <div class="title-line">
-        <h1 type="text" class="view-title" placeholder="제목" readonly>{{ title }}</h1>
-        <button class="btn-more">...</button>
+        <h1 type="text" class="view-title" placeholder="제목" readonly>
+          {{ title }}
+        </h1>
+        <UpdateModal
+          :articleId="postId"
+          ref="updateModal"
+          v-if="isShowUpdateModal"
+        />
+        <button
+          class="btn-more"
+          @click="isShowUpdateModal = !isShowUpdateModal"
+          v-if="getUserInfo().email === writer"
+        >
+          ...
+        </button>
       </div>
       <div class="article-info">
         <div class="user-info">
@@ -26,7 +39,9 @@
       </div>
 
       <div class="viewer-tags">
-        <button class="btn-tag" :key="idx" v-for="(tag, idx) in tagList">#{{ tag }}</button>
+        <button class="btn-tag" :key="idx" v-for="(tag, idx) in tagList">
+          #{{ tag }}
+        </button>
       </div>
       <div class="article-nav">
         <div ref="navContent" class="article-nav-content">
@@ -35,14 +50,20 @@
       </div>
       <div class="introduction">
         <img :src="thumbnail" alt v-if="thumbnail !== ''" />
-        <div ref="defaultThumbnail" class="default-thumbnail" v-else>{{ title }}</div>
+        <div ref="defaultThumbnail" class="default-thumbnail" v-else>
+          {{ title }}
+        </div>
       </div>
     </header>
     <editor-content class="editor__content" :editor="editor" />
     <div class="container-small-buttons">
       <div class="small-buttons">
         <button class="btn-like" @click="toggleLikeBtn">
-          <svg class="icon-like" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <svg
+            class="icon-like"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
             <path
               d="M12 4.248c-3.148-5.402-12-3.825-12 2.944 0 4.661 5.571 9.427 12 15.808 6.43-6.381 12-11.147 12-15.808 0-6.792-8.875-8.306-12-2.944z"
             />
@@ -83,6 +104,7 @@ import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
 import Comment from "./CommentModule.vue";
 import BlogInfo from "./BlogInfo.vue";
+import UpdateModal from "./updateModal";
 
 import {
   CodeBlockHighlight,
@@ -109,7 +131,8 @@ export default {
   components: {
     EditorContent,
     Comment,
-    BlogInfo
+    BlogInfo,
+    UpdateModal
   },
   data() {
     return {
@@ -160,8 +183,10 @@ export default {
       content: "",
       like: 0,
       isLike: false,
+      writer: "",
       commentModuleKey: 0,
-      articleData: {}
+      articleData: {},
+      isShowUpdateModal: false
     };
   },
   methods: {
@@ -193,6 +218,7 @@ export default {
           this.thumbnail = articleData.picture;
           this.like = articleData.good;
           this.isLike = articleData.isgood;
+          this.writer = articleData.writer;
           this.setLikeBtn();
         }
       } catch (error) {

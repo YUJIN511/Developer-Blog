@@ -1,14 +1,21 @@
 <template>
   <div class="editor">
     <ImageModal ref="ytmodal" @onConfirm="addCommand" />
-    <SummaryModal ref="smodal" />
+    <SummaryModal ref="smodal" :isEdit="isEdit" />
     <div class="container-editor">
       <header>
         <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
           <div class="menubar">
             <button class="btn-back" @click="goBack">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z"
+                />
               </svg>
             </button>
 
@@ -16,18 +23,24 @@
               class="menubar__button"
               :class="{ 'is-active': isActive.heading({ level: 1 }) }"
               @click="commands.heading({ level: 1 })"
-            >H1</button>
+            >
+              H1
+            </button>
             <button
               class="menubar__button"
               :class="{ 'is-active': isActive.heading({ level: 2 }) }"
               @click="commands.heading({ level: 2 })"
-            >H2</button>
+            >
+              H2
+            </button>
 
             <button
               class="menubar__button"
               :class="{ 'is-active': isActive.heading({ level: 3 }) }"
               @click="commands.heading({ level: 3 })"
-            >H3</button>
+            >
+              H3
+            </button>
             <div class="vertical-line"></div>
 
             <button
@@ -76,7 +89,9 @@
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>밑줄</title>
-                <path d="M22.5,21.248H1.5a1.25,1.25,0,0,0,0,2.5h21a1.25,1.25,0,0,0,0-2.5Z" />
+                <path
+                  d="M22.5,21.248H1.5a1.25,1.25,0,0,0,0,2.5h21a1.25,1.25,0,0,0,0-2.5Z"
+                />
                 <path
                   d="M1.978,2.748H3.341a.25.25,0,0,1,.25.25v8.523a8.409,8.409,0,0,0,16.818,0V3a.25.25,0,0,1,.25-.25h1.363a1.25,1.25,0,0,0,0-2.5H16.3a1.25,1.25,0,0,0,0,2.5h1.363a.25.25,0,0,1,.25.25v8.523a5.909,5.909,0,0,1-11.818,0V3a.25.25,0,0,1,.25-.25H7.7a1.25,1.25,0,1,0,0-2.5H1.978a1.25,1.25,0,0,0,0,2.5Z"
                 />
@@ -130,14 +145,22 @@
             </button>
 
             <button class="menubar__button" @click="commands.horizontal_rule">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
                 <path
                   d="M5,13 C4.44771525,13 4,12.5522847 4,12 C4,11.4477153 4.44771525,11 5,11 L19,11 C19.5522847,11 20,11.4477153 20,12 C20,12.5522847 19.5522847,13 19,13 L5,13 Z"
                 />
               </svg>
             </button>
 
-            <button class="menubar__button" @click="openImgModal(commands.image)">
+            <button
+              class="menubar__button"
+              @click="openImgModal(commands.image)"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>이미지 첨부</title>
                 <circle cx="9.75" cy="6.247" r="2.25" />
@@ -156,11 +179,20 @@
         </editor-menu-bar>
         <div class="end">
           <button class="btn">임시 저장</button>
-          <button class="btn" @click="openSummaryModal">작성 완료</button>
+          <button class="btn" @click="openSummaryModal">
+            <span v-if="!isEdit">작성</span>
+            <span v-else>수정</span> 완료
+          </button>
         </div>
       </header>
       <main>
-        <input type="text" :maxlength="20" v-model="title" class="title" placeholder="제목을 입력하세요" />
+        <input
+          type="text"
+          :maxlength="20"
+          v-model="title"
+          class="title"
+          placeholder="제목을 입력하세요"
+        />
         <div class="container-tags">
           <input
             type="text"
@@ -218,7 +250,9 @@
                 @click="showLinkMenu(getMarkAttrs('link'))"
                 :class="{ 'is-active': isActive.link() }"
               >
-                <span>{{ isActive.link() ? "링크 수정하기" : "링크 추가하기" }}</span>
+                <span>{{
+                  isActive.link() ? "링크 수정하기" : "링크 추가하기"
+                }}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <title>hyperlink-2</title>
                   <path
@@ -236,7 +270,11 @@
           </div>
         </editor-menu-bubble>
 
-        <editor-content class="editor__content" :editor="editor" />
+        <editor-content
+          ref="editorContent"
+          class="editor__content"
+          :editor="editor"
+        />
       </main>
     </div>
   </div>
@@ -249,6 +287,7 @@ import css from "highlight.js/lib/languages/css";
 import ImageModal from "./ImageModal";
 import SummaryModal from "./SummaryModal";
 import { mapGetters } from "vuex";
+import axios from "axios";
 
 import {
   CodeBlockHighlight,
@@ -279,11 +318,15 @@ export default {
   },
   data() {
     return {
+      isEdit: false,
       title: "",
       tagName: "",
       tagList: [],
       linkUrl: null,
       linkMenuIsActive: false,
+      html: "",
+      isUpdated: false,
+      picture: "",
       editor: new Editor({
         autoFocus: true,
         extensions: [
@@ -316,12 +359,11 @@ export default {
             showOnlyCurrent: true
           })
         ],
-
         onUpdate: ({ getHTML }) => {
+          this.isUpdated = true;
           this.html = getHTML();
         }
-      }),
-      html: ""
+      })
     };
   },
   methods: {
@@ -360,11 +402,44 @@ export default {
         container.insertBefore(newTag, e.path[0]);
       }
     },
+    tagSetting(tagList) {
+      console.log("tagSetting", tagList);
+      console.log("this.taglist", this.tagList);
+      tagList.forEach(elem => {
+        const removeBtn = document.createElement("button");
+        removeBtn.addEventListener("click", e => {
+          const selectedTag = e.currentTarget.parentElement;
+          const tagName = selectedTag.querySelector("span").innerText;
+          const idx = this.tagList.indexOf(tagName);
+          this.tagList.splice(idx, 1);
+          console.dir(this.tagList);
+          selectedTag.remove();
+        });
+        removeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>delete-2-alternate</title><path d="M20.485,3.511A12.01,12.01,0,1,0,24,12,12.009,12.009,0,0,0,20.485,3.511Zm-1.767,15.21A9.51,9.51,0,1,1,21.5,12,9.508,9.508,0,0,1,18.718,18.721Z"/><path d="M16.987,7.01a1.275,1.275,0,0,0-1.8,0l-3.177,3.177L8.829,7.01A1.277,1.277,0,0,0,7.024,8.816L10.2,11.993,7.024,15.171a1.277,1.277,0,0,0,1.805,1.806L12.005,13.8l3.177,3.178a1.277,1.277,0,0,0,1.8-1.806l-3.176-3.178,3.176-3.177A1.278,1.278,0,0,0,16.987,7.01Z"/></svg>
+`;
+        const span = document.createElement("span");
+        span.innerText = elem;
+        this.tagList.push(elem);
+
+        const newTag = document.createElement("div");
+        newTag.appendChild(span);
+        newTag.appendChild(removeBtn);
+
+        const container = document.querySelector(".container-tags");
+        const inputTags = document.querySelector(".input-tags");
+        container.insertBefore(newTag, inputTags);
+      });
+    },
     openImgModal(command) {
       this.$refs.ytmodal.showModal(command);
     },
     openSummaryModal() {
+      if (!this.isUpdated) {
+        this.html = this.$refs.editorContent.editor.view.dom.innerHTML;
+      }
+      console.log(this.$refs.editorContent.editor.view.dom.innerHTML);
       let tagString = "";
+      console.log(this.tagList);
       this.tagList.forEach(elem => {
         tagString += `tag=${elem}&`;
       });
@@ -374,7 +449,10 @@ export default {
         content: this.html,
         writer: this.getUserInfo().email,
         summary: "",
-        picture: ""
+        picture: this.picture,
+        id: this.$route.params.targetId,
+        good: this.like,
+        views: this.views
       };
       this.$refs.smodal.showModal(articleData);
     },
@@ -402,10 +480,42 @@ export default {
     },
     goBack() {
       this.$router.go(-1);
+    },
+    async getEditData() {
+      const email = this.getUserInfo().email;
+
+      try {
+        const res = await axios.get(
+          `${this.$apiServer}/post/postDetail?email=${email}&id=${this.$route.params.targetId}`
+        );
+
+        if (res.status === 200) {
+          const articleData = res.data;
+          this.createDate = articleData.createdate.split(" ")[0];
+          this.title = articleData.title;
+          this.content = articleData.content;
+          this.editor.setContent(this.content);
+          this.tagList = articleData.tag;
+          this.tagSetting(this.tagList);
+          this.picture = articleData.picture;
+          this.like = articleData.good;
+          this.views = articleData.views;
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
   beforeDestroy() {
     this.editor.destroy();
+  },
+  created() {
+    if (Object.keys(this.$route.params).length === 1) {
+      this.isEdit = true;
+      this.getEditData();
+    } else {
+      this.isEdit = false;
+    }
   }
 };
 </script>
