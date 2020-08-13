@@ -1,7 +1,7 @@
 .navbar {
   position: fixed;
   padding: 0px;
-  width: 256px;
+  width: 240px;
   height: 200vh;
   top: 0;
   bottom: 0;
@@ -16,7 +16,7 @@
   z-index: 2020;
   top: 0px;
   left: 0px;
-  width: 256px;
+  width: 240px;
   height: 100vh;
   background-color: white;
 }
@@ -43,7 +43,8 @@
   justify-content: space-between;
   align-items: center;
   height: 56px;
-  width: 256px;
+  width: 240px;
+  
   background-color: white;
 }
 
@@ -53,14 +54,14 @@
   align-items: center;
   width: 170px;
   height: 60px;
-  padding-left: 16px;
+  padding-left: 24px;
   .icon-toggle {
     width: 22px;
     height: 22px;
-    fill: #555555;
+    fill: #727272;
   }
   .logo {
-    margin: 0px 24px;
+    margin: 0px 36px;
     display: flex;
     #logo-img {
       fill: #65b1fb;
@@ -109,7 +110,7 @@
 }
 .navbar-item {
   width: 100%;
-  padding: 0px 30px;
+  padding: 0px 23px;
   vertical-align: bottom;
   .svg {
     width: 26px;
@@ -126,7 +127,7 @@
 .navbar-item button {
   width: 100%;
   color: rgb(129, 129, 129);
-  font-size: 1em;
+  font-size: 0.9em;
   text-align: left;
   padding: 10px 0px;
 }
@@ -144,8 +145,9 @@ hr {
   margin-top: 9px;
   margin-bottom: 9px;
   width: 100%;
-  background-color: rgb(226, 226, 226);
+  border-top: 0.5px solid rgba(0,0,0,.1);
 }
+
 .hr-header {
   margin-top: 0;
 }
@@ -159,10 +161,10 @@ hr {
   width: 100%;
 }
 .follow-list > span {
-  padding-left: 30px;
+  padding-left: 24px;
   padding-bottom: 5px;
   font-size: 1.1em;
-  color: rgb(194, 194, 194);
+  color: #727272;
 }
 .navbar-item {
   svg,
@@ -170,19 +172,19 @@ hr {
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    fill: #555555;
+    fill: #727272;
   }
 }
 .collapsed {
   display: none;
 }
 .btn-toggle span {
-  color: rgb(211, 209, 204);
+  color: #727272;
 }
 .btn-toggle svg {
   width: 1em;
   height: 1em;
-  fill: rgb(211, 209, 204);
+  fill: #727272;
 }
 .navbar-item .btn-toggle {
   padding-left: 4px;

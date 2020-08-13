@@ -461,8 +461,8 @@ input {
   font-weight: 700;
   border-bottom: 1px solid #dfdfdf;
   padding: 10px 0px;
-  margin-bottom: 10px;
-  background-color: $bgColor;
+  margin-bottom: 16px;
+  background-color: transparent;
   &::placeholder {
     color: #c4c4c4;
   }
@@ -478,13 +478,13 @@ input {
     align-items: center;
     height: 1.8em;
     background-color: rgba(0, 0, 0, 0);
-    border: 2px solid cadetblue;
-    color: cadetblue;
+    border: 2px solid #1A7CFF  ;
+    color: #1A7CFF;
     border-radius: 15px;
     padding: 0px 10px;
     padding-bottom: 2px;
     margin-right: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
 
     button {
       display: flex;
@@ -496,7 +496,7 @@ input {
     svg {
       width: 16px;
       height: 16px;
-      fill: rgb(177, 177, 177);
+      fill: #C1D8FF;
     }
   }
 }
@@ -507,8 +507,9 @@ input {
   border-radius: 5px;
   margin-bottom: 20px;
   border: none;
-  background-color: $bgColor;
+  background-color: transparent;
   font-size: 1.2em;
+  color: #1A7CFF;
   &::placeholder {
     color: #c4c4c4;
   }
