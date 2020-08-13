@@ -101,15 +101,8 @@ public class PostController {
 	public ResponseEntity<List<PostList>> searchAll(String email) throws Exception {
 		System.out.println("모든 포스트 출력");
 		List<PostList> list = postListRepository.searchAllPost();
-		if(email == null || email.equals("")) {	//비회원
-			System.out.println("빈칸");
-			return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
-		}
-		else {	//회원
-			System.out.println("안빈칸");
-			for(int i=0;i<list.size();i++) if(goodRepository.isGood(email, list.get(i).getId()) > 0) list.get(i).setIsgood(true);
-			return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
-		}
+		for(PostList post : list) if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
+		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("writer/{email}")
@@ -125,11 +118,8 @@ public class PostController {
 	@ApiOperation(value = "해당 POST ID의 포스트 보기 (email 값이 없으면 isgood은 false, 조회수 ++, email이 있으면 isgood 활성화, 조회수++, history 추가")
 	public ResponseEntity<PostDetail> searchByIdAndEmail(@RequestParam(required = true) Long id, 
 			@RequestParam(required = false) String email) throws Exception {
-		System.out.println("해당 id의 포스트 출력");
-		
 		// detail + hashtag
 		PostDetail detail = postListRepository.searchPostDetail(id);
-		System.out.println(detail);
 		List<String> tag = postListRepository.searchHashtag(id);
 		detail.setTag(tag);
 		
@@ -149,6 +139,8 @@ public class PostController {
 			History history = new History(new PKSet(email, id));
 			historyRepository.save(history);
 		}
+		// 저장여부 표시
+		if(storageRepository.isStore(email, id) > 0) detail.setIsstore(true);
 		
 		//작성자의 blog 설정
 		Optional<BlogConfig> bco = configRepository.findById(detail.getWriter());
