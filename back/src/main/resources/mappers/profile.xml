@@ -16,5 +16,11 @@
 	<delete id="deleteProfile">
 		delete from profile where email = #{email} and path = #{path}
 	</delete>
+	
+	<select id="myFollowList">
+		select u.email, u.nickname, u.profile, u.score, c.name blogname
+		from user u left join config c on u.email = c.email 
+		where exists(select * from follow f where f.follower = #{email} and u.email = f.followed)
+	</select>
 
 </mapper>
