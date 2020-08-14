@@ -19,14 +19,14 @@
 		order by createdate desc
 	</select>
 	
-	<!-- 해당 아이디의 post 조회(목록) -->
+	<!-- 해당 아이디의 post 조회(목록) 
 	<select id="searchPostById" resultType="PostList">
 		select nickname, profile, score, id, title, summary, picture, writer, good, views, createdate
 		from user join post on email = writer
 		where id = #{postid}
 		order by createdate desc
 	</select>
-	
+	-->
 	<!-- 일반 검색 -->
 	<select id="searchByWord" resultType="PostList">
 		select * from post where title like CONCAT('%', #{word}, '%') or content like CONCAT('%', #{word}, '%')
