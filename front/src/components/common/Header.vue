@@ -9,7 +9,9 @@
               xmlns:xlink="http://www.w3.org/1999/xlink"
               viewBox="0 0 26 26"
             >
-              <path d="M1,17.8v2.4h24v-2.4H1z M1,11.8v2.4h24v-2.4H1z M1,5.8v2.4h24V5.8H1z" />
+              <path
+                d="M1,17.8v2.4h24v-2.4H1z M1,11.8v2.4h24v-2.4H1z M1,5.8v2.4h24V5.8H1z"
+              />
             </svg>
           </button>
         </div>
@@ -54,7 +56,9 @@
                 d="M72.3,45.15a3.32,3.32,0,0,1-.94,2.4,3.49,3.49,0,0,1-2.41.94H56.42a3.1,3.1,0,0,1-3.34-3V5A3.32,3.32,0,0,1,54,2.54a3.53,3.53,0,0,1,2.4-.94H69a3.36,3.36,0,0,1,2.41.94A3.36,3.36,0,0,1,72.3,5v11H68V5.26H57.15V44.94H68V28.65H62.9V25.1h9.4Z"
                 transform="translate(-4 -1.5)"
               />
-              <polygon points="92 46.99 87.31 46.99 87.31 41.77 92 41.77 92 46.99 92 46.99" />
+              <polygon
+                points="92 46.99 87.31 46.99 87.31 41.77 92 41.77 92 46.99 92 46.99"
+              />
             </svg>
           </div>
         </router-link>
@@ -93,9 +97,17 @@
             </svg>
           </div>
         </button>
-        <button class="btn-login" @click="openLogin" v-if="!getIsLogin()">LOG . IN</button>
-        <router-link tag="button" class="btn-newpost" to="/article" v-if="getIsLogin()">새 글쓰기</router-link>
-        <div class="notification-icon" v-if="getIsLogin()">
+        <button class="btn-login" @click="openLogin" v-if="!getIsLogin()">
+          LOG . IN
+        </button>
+        <router-link
+          tag="button"
+          class="btn-newpost"
+          to="/article"
+          v-if="getIsLogin()"
+          >새 글쓰기</router-link
+        >
+        <div class="notification-icon" @click="openNotification" v-if="getIsLogin()">
           <svg
             version="1.1"
             id="notification_icon"
@@ -107,7 +119,9 @@
             style="enable-background:new 0 0 26 26;"
             xml:space="preserve"
           >
-            <path d="M6.2,23.7c-0.2,0.1-0.4,0.1-0.6,0.1c0.3,0,0.6-0.1,0.9-0.2l5.3-2L6.2,23.7z" />
+            <path
+              d="M6.2,23.7c-0.2,0.1-0.4,0.1-0.6,0.1c0.3,0,0.6-0.1,0.9-0.2l5.3-2L6.2,23.7z"
+            />
             <path
               d="M17.8,22.2c-0.1,1.3-0.9,2.3-2.1,2.7c-1.1,0.4-2.4,0-3.1-0.9c-0.2-0.3-0.2-0.4,0.1-0.6l4.6-1.8
 	C17.6,21.4,17.8,21.6,17.8,22.2z"
@@ -142,6 +156,7 @@
     <EmailModal />
     <UnregisterModal />
     <ProfilePicModal />
+    <Notification />
   </div>
 </template>
 
@@ -153,6 +168,7 @@ import Repassword from "@/components/user/Repassword.vue";
 import EmailModal from "@/components/user/EmailModal.vue";
 import UnregisterModal from "@/components/user/setting/UnregisterModal.vue";
 import ProfilePicModal from "@/components/user/setting/ProfilePicModal.vue";
+import Notification from "@/components/notification/notification.vue";
 
 import { mapActions, mapGetters } from "vuex";
 
@@ -165,7 +181,8 @@ export default {
     Repassword,
     EmailModal,
     UnregisterModal,
-    ProfilePicModal
+    ProfilePicModal,
+    Notification,
   },
   data() {
     return {
@@ -192,7 +209,7 @@ export default {
       background.classList.remove("hide");
     },
     openLogin() {
-      this.$refs.loginModal.showModal(this.$refs.joinModal);
+      document.querySelector(".container-login").classList.remove("hide");
     },
 
     logout() {
@@ -206,6 +223,9 @@ export default {
     },
     moveToProfile() {
       this.$router.push({ name: "Blog", params: { email: this.getEmail() } });
+    },
+    openNotification(){
+      document.querySelector(".container-notification").classList.remove("hide");
     }
   },
   created() {
