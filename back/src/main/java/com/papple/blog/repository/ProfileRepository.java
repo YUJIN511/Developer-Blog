@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.papple.blog.payload.response.FollowList;
+import com.papple.blog.payload.response.FollowListNavi;
 
 @Mapper
 public interface ProfileRepository {
@@ -13,4 +14,5 @@ public interface ProfileRepository {
 	int deleteProfile(String email, String path);
 	int unProfile(String email);
 	List<FollowList> myFollowList(String email);
+	List<FollowListNavi> myFollowListNavi(String email);
 }
