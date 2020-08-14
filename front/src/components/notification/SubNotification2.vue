@@ -1,7 +1,11 @@
 <template>
-    <div class="sub-notification" @click="moveUrl">
-        <div class="profile-image"></div>
-        <div class="notification-msg">{{data.message}} </div>
+    <div class="container-notification">
+        <div class="sub-notification" @click="moveUrl">
+            <div class="profile-image"></div>
+            <div class="notification-msg">{{data.message}} </div>
+            <span v-if="data.isread==false">1</span>
+        </div>
+        <button class="btn-delete" @click="deletenotification">✖</button>
     </div>
 </template>
 
@@ -18,6 +22,20 @@ export default {
         ...mapGetters({
             getEmail: "user/getEmail"
         }),
+        deletenotification(){
+            axios
+                .get(`${SERVER_URL}/api/notification/delete`,{
+                    params: {
+                        id: this.data.id,
+                    },
+                })
+                .then(() => {
+                    location.reload();
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
         moveUrl(){
             document.querySelector(".container-notification").classList.add("hide");
             axios
@@ -49,11 +67,13 @@ export default {
 </script>
 
 <style scoped>
+.container-notification{
+    display: flex;
+}
 .sub-notification {
   flex-direction: column;
   height: 40px;
   font-size: 12px;
-  margin: auto;
   padding :5px;
   display: table;
   cursor: pointer;
@@ -69,12 +89,27 @@ export default {
     margin-right: 10px;
   }
 .notification-msg{
-    width:210px;
+    min-width: 220px;
+    max-width: 700px;
     display: table-cell;
     vertical-align: middle;
+    text-align: center;
 
     background-color: rgba(0, 0, 0, 0.05);
     border-radius: 6px;
-    padding:5px;
+    padding:10px;
+}
+
+span{
+    padding: 8px;
+    color: #727272;
+}
+.btn-delete{
+    display : none;
+}
+.container-notification:hover .btn-delete{
+    display : inline;
+    margin :  0 15px;
+    color: #727272;
 }
 </style>
