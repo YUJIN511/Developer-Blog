@@ -31,7 +31,9 @@
             v-model="userInfo.password"
           />
           <div class="social-login">
-            <div class="social-title"><span>소셜 계정으로 로그인</span></div>
+            <div class="social-title">
+              <span>소셜 계정으로 로그인</span>
+            </div>
             <div class="social-body">
               <button class="btn btn-github">
                 <svg
@@ -63,15 +65,8 @@
           </div>
           <button class="btn btn-login" type="submit">로그인</button>
           <div class="login-footer">
-            <a
-              class="link-repassword"
-              href="javascript:void(0)"
-              @click="moveToRepassword"
-              >비밀번호 재설정</a
-            >
-            <a class="link-join" href="javascript:void(0)" @click="moveToJoin"
-              >계정 만들기</a
-            >
+            <a class="link-repassword" href="javascript:void(0)" @click="moveToRepassword">비밀번호 재설정</a>
+            <a class="link-join" href="javascript:void(0)" @click="moveToJoin">계정 만들기</a>
           </div>
         </form>
       </div>

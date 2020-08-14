@@ -94,6 +94,11 @@
 .nickname {
   font-size: 1em;
   margin-left: 8px;
+  max-height: 25px;
+  overflow: hidden;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .like {
