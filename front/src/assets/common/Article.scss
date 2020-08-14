@@ -118,18 +118,18 @@
 
 @media (min-width: $twoArticles) {
   .article {
-    width: 50%;
+    width: 100%;
     flex-grow: 0;
   }
 }
 @media (min-width: $threeArticles) {
   .article {
-    width: 33.3%;
+    width: 50%;
   }
 }
 @media (min-width: $fourArticles) {
   .article {
-    width: 25%;
+    width: 33.3%;
   }
 }
 @media (min-width: $fiveArticles) {
@@ -144,6 +144,6 @@
 }
 @media (min-width: $sevenArticles) {
   .article {
-    width: 25%;
+    width: 16.6%;
   }
 }
