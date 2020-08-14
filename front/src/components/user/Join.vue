@@ -245,6 +245,8 @@ export default {
 <style lang="scss" scoped>
 /** base */
 
+$minimumWidth: 950px;
+
 .container-join {
   position: fixed;
   z-index: 99999;
@@ -272,7 +274,7 @@ export default {
   height: 550px;
   background-color: rgb(252, 252, 252);
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-  @media (min-aspect-ratio: 3/2) {
+  @media (min-width: $minimumWidth) {
     width: 850px;
   }
   a {
@@ -295,7 +297,7 @@ export default {
     background-image: url(https://images.unsplash.com/photo-1523800503107-5bc3ba2a6f81?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1400&q=80);
     background-repeat: no-repeat;
     background-size: cover;
-    @media (min-aspect-ratio: 3/2) {
+    @media (min-width: $minimumWidth) {
       display: block;
     }
   }
@@ -305,7 +307,7 @@ export default {
     justify-content: center;
     padding: 24px;
     width: 100%;
-    @media (min-aspect-ratio: 3/2) {
+    @media (min-width: $minimumWidth) {
       width: 55%;
     }
     /** join form */
