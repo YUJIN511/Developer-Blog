@@ -56,14 +56,26 @@ public class MainController {
 	@GetMapping("/goodList")
 	@ApiOperation(value = "좋아요 글 리스트")
 	public ResponseEntity<List<PostList>> goodList(@RequestParam(required = true) final String email) throws Exception {
-		List<PostList> list = postListRepository.findGoodListByEmail(email);
-		for(PostList post : list) {
+		List<Long> idList = postListRepository.findGoodListByEmail(email);
+		List<PostList> list = new ArrayList<>();
+		for(Long postid : idList){
+			PostList post = postListRepository.searchPostById(postid);
 			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
-			post.setNickname(post.getNickname());
+			post.setNickname(user.getNickname());
 			post.setProfile(user.getProfile());
 			post.setScore(user.getScore());
 			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
+			list.add(post);
 		}
+		
+//		List<PostList> list = postListRepository.findGoodListByEmail(email);
+//		for(PostList post : list) {
+//			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
+//			post.setNickname(post.getNickname());
+//			post.setProfile(user.getProfile());
+//			post.setScore(user.getScore());
+//			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
+//		}
 		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}
 	
