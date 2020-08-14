@@ -10,8 +10,7 @@ import com.papple.blog.models.TagScore;
 
 @Repository
 public interface TagScoreRepository extends JpaRepository<TagScore, String>{
-	@Transactional
-	@Modifying
+	
 	@Query(value = "select count(*) from tagscore where tagname = ?1", nativeQuery = true)
 	int isExist(String tagname);
 	
