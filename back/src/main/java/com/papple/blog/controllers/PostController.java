@@ -47,6 +47,7 @@ import com.papple.blog.models.PKSet;
 import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
 import com.papple.blog.models.Storage;
+import com.papple.blog.models.TagScore;
 import com.papple.blog.models.User;
 import com.papple.blog.payload.response.HashtagList;
 import com.papple.blog.payload.response.PopularScore;
@@ -59,6 +60,7 @@ import com.papple.blog.repository.HistoryRepository;
 import com.papple.blog.repository.PostAlgorithmRepository;
 import com.papple.blog.repository.PostListRepository;
 import com.papple.blog.repository.StorageRepository;
+import com.papple.blog.repository.TagScoreRepository;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.CommentService;
 import com.papple.blog.security.services.FollowService;
@@ -95,7 +97,8 @@ public class PostController {
     private ConfigRepository configRepository;
 	@Autowired
 	private GoodRepository goodRepository;
-	
+	@Autowired
+	private TagScoreRepository tagscoreRepository;
 
 	@GetMapping("/all")
 	@ApiOperation(value = "모든 포스트 보기")
@@ -237,7 +240,10 @@ public class PostController {
 		else {
 			for(int i=0;i<tag.getTag().size();i++) {
 				Hashtag ht = new Hashtag(new HashtagPK(p.getId(), tag.getTag().get(i)));
-				hashtagService.save(ht);
+				hashtagService.save(ht);	//해시태그 등록
+				// 해시태그 점수 등록
+				if(tagscoreRepository.isExist(tag.getTag().get(i)) == 0) tagscoreRepository.save(new TagScore(tag.getTag().get(i), 0l));
+				else tagscoreRepository.plusScore(tag.getTag().get(i));
 			}
 		}
 
