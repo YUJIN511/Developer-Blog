@@ -39,26 +39,15 @@
 
 <script>
 import SubNotification from "@/components/notification/SubNotification.vue"
-import { mapGetters } from "vuex";
 
 export default {
     components:{SubNotification},
-    data() {
-        return {
-            eventSource: null,
-            notifications:[],
-        };
-    },
-    mounted(){
-       this.setupStream();
-    },
-    beforeDestroy() {
-        this.unSetupStream();
+     props: {
+        notifications: {
+        type: Array
+        }
     },
     methods: {
-         ...mapGetters({
-            getEmail: "user/getEmail",
-        }),
         closeNotification(){
             document.querySelector(".container-notification").classList.add("hide");
         },
@@ -70,33 +59,7 @@ export default {
             this.$router.push({ name: "Notification" });
             this.closeNotification();
         },
-        async setupStream() {
-            console.log("==> 이벤트 소스 수행");
-            this.eventSource =  await new EventSource(
-                "http://i3a604.p.ssafy.io:8081/api/notification/push?email="+this.getEmail(),
-                { withCredentials: true }
-            );
-            this.eventSource.onopen =  function(e) {
-                console.log("이벤트 소스 오픈");
-                console.log(e);
-            };
-            var instance = this;
-            this.eventSource.onmessage =  function(e) {
-                console.log("이벤트 소스 메시지 도착");
-                instance.notifications = JSON.parse(e.data);
-            };
-             this.eventSource.onerror = function(e) {
-                console.log("이벤트 소스 에러");
-                console.log(e);
-            };
-        },
-        unSetupStream() {
-            if (this.eventSource === null) {
-                return;
-            }
-            console.log("==> 이벤트 소스 종료");
-            this.eventSource.close();
-        }
+        
     },    
 }
 </script>
@@ -148,7 +111,8 @@ export default {
         background: white;
         box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
         position: fixed;
-        border: 4px solid #c0c0c0;
+        border-radius: 3%;
+        border: 4px solid #f0f0f0;
     }
     .modal-notification:after, .modal-notification:before {
         bottom: 100%;
@@ -169,7 +133,7 @@ export default {
     }
     .modal-notification:before {
         border-color: rgba(194, 225, 245, 0);
-        border-bottom-color: #c0c0c0;
+        border-bottom-color: #f0f0f0;
         border-width: 24px;
         margin-left: 75px;
     }
@@ -180,17 +144,22 @@ export default {
 
     hr {
         margin: 3px 0;
+        border-left: thick;
+        width: 95%;
+        margin: auto;
     }
     p {
         color: #1A7CFF;
         font-size: 14px;
         font-weight: 600;
-        margin: 10px 0;
+        padding: 12px;
+        cursor: pointer;
     }          
 
     .notification-list{
-       height: 78%;
-       overflow-y: auto;
+        padding: 5px;
+        height: 80%;
+        overflow-y: auto;
     }
     .notification-list::-webkit-scrollbar {
         display: none; /* Chrome, Safari, Opera*/
