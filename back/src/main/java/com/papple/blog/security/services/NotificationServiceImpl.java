@@ -199,5 +199,10 @@ public class NotificationServiceImpl implements NotificationService{
         return notificationRepository.findByTargetuserOrderByCreateatDesc(email);
     }
 
+    @Override
+    public void deleteById(Long id) {
+        notificationRepository.deleteById(id);
+    }
+
 
 }
