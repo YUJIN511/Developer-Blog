@@ -6,7 +6,7 @@
 
 	<!-- 게시물의 점수 - 좋아요*1 + 조회수*1 -->
 	<select id="getPopularScore" resultType="PopularScore">
-		select id postid, good+views score from post where good+views > 0
+		select id postid, good+views score from post where good+views > 0 
 	</select>
 	
 	<!-- 게시물의 점수 - 댓글 * 2 -->
