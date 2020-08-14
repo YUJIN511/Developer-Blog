@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import com.papple.blog.models.Notification;
-import com.papple.blog.models.NotificationAlert;
 import com.papple.blog.models.User;
 import com.papple.blog.payload.response.StreamDataSet;
 import com.papple.blog.repository.NotificationRepository;
@@ -77,20 +76,13 @@ public class NotificationServiceImpl implements NotificationService{
 
             final SseEmitter emitter = dataSet.getEmitter();
 
+            /** 알림데이터 생성 **/
             /** ?분 이내에 작성된 알람 목록 확인 **/
             final List<Notification> alertList = getListAnMinuteAndAlertFalse(receivingAlert);
 
             if (alertList.size() == 0) {
                 continue;
             }
-           
-            /** 알림데이터 생성 **/
-            NotificationAlert alert = NotificationAlert.builder()
-                    .email(user.getEmail())
-                    .notificationCount(noneReadCount)
-                    .notifications(alertList)
-                    .build();
-
 
             /** 알림 목록 ID 획득 **/
             alertIdList.addAll(alertList.stream()
@@ -99,7 +91,7 @@ public class NotificationServiceImpl implements NotificationService{
 
             try {
                 /** 알림 전송 수행 **/
-                emitter.send(alert, MediaType.APPLICATION_JSON_UTF8);
+                emitter.send(alertList, MediaType.APPLICATION_JSON_UTF8);
 
             } catch (Exception e) {
                 log.error("이미터 센드 시 에러 발생 :: {}", e.getMessage());
@@ -205,6 +197,11 @@ public class NotificationServiceImpl implements NotificationService{
     @Override
     public List<Notification> findByTargetuser(String email) {
         return notificationRepository.findByTargetuserOrderByCreateatDesc(email);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        notificationRepository.deleteById(id);
     }
 
 

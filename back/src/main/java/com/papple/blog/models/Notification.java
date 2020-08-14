@@ -33,8 +33,6 @@ public class Notification {
 
     private String actionuser;          // 알람 발생시킨 사용자
 
-    private String notiurl;             // 알람 클릭시 이동 url
-
     private Long postid;                // post id
 
     private Long commentid;             // comment id
@@ -47,13 +45,12 @@ public class Notification {
     public Notification(){}
 
     @Builder
-    public Notification(String message, String targetuser, String actionuser, String notiurl){
+    public Notification(String message, String targetuser, String actionuser){
         this.isalert = false;
         this.isread = false;
         this.message = message;
         this.targetuser = targetuser;
         this.actionuser = actionuser;
-        this.notiurl = notiurl;
     }
 
 }
