@@ -2,21 +2,13 @@
   <div class="viewer">
     <header>
       <div class="title-line">
-        <h1 type="text" class="view-title" placeholder="제목" readonly>
-          {{ title }}
-        </h1>
-        <UpdateModal
-          :articleId="postId"
-          ref="updateModal"
-          v-if="isShowUpdateModal"
-        />
+        <h1 type="text" class="view-title" placeholder="제목" readonly>{{ title }}</h1>
+        <UpdateModal :articleId="postId" ref="updateModal" v-if="isShowUpdateModal" />
         <button
           class="btn-more"
           @click="isShowUpdateModal = !isShowUpdateModal"
           v-if="getUserInfo().email === writer"
-        >
-          ...
-        </button>
+        >...</button>
       </div>
       <div class="article-info">
         <div class="user-info">
@@ -39,9 +31,7 @@
       </div>
 
       <div class="viewer-tags">
-        <button class="btn-tag" :key="idx" v-for="(tag, idx) in tagList">
-          #{{ tag }}
-        </button>
+        <button class="btn-tag" :key="idx" v-for="(tag, idx) in tagList">#{{ tag }}</button>
       </div>
       <div class="article-nav">
         <div ref="navContent" class="article-nav-content">
@@ -50,28 +40,23 @@
       </div>
       <div class="introduction">
         <img :src="thumbnail" alt v-if="thumbnail !== ''" />
-        <div ref="defaultThumbnail" class="default-thumbnail" v-else>
-          {{ title }}
-        </div>
+        <div ref="defaultThumbnail" class="default-thumbnail" v-else>{{ title }}</div>
       </div>
     </header>
     <editor-content class="editor__content" :editor="editor" />
     <div class="container-small-buttons">
       <div class="small-buttons">
         <button class="btn-like" @click="toggleLikeBtn">
-          <svg
-            class="icon-like"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
+          <svg class="icon-like" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path
               d="M12 4.248c-3.148-5.402-12-3.825-12 2.944 0 4.661 5.571 9.427 12 15.808 6.43-6.381 12-11.147 12-15.808 0-6.792-8.875-8.306-12-2.944z"
             />
           </svg>
           <span>{{ like }}</span>
         </button>
-        <button class="btn-library">
+        <button class="btn-library" @click="toggleLibraryBtn">
           <svg
+            class="icon-library"
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
             viewBox="0 0 26 26"
@@ -186,6 +171,7 @@ export default {
       writer: "",
       commentModuleKey: 0,
       articleData: {},
+      isStored: false,
       isShowUpdateModal: false
     };
   },
@@ -218,8 +204,10 @@ export default {
           this.thumbnail = articleData.picture;
           this.like = articleData.good;
           this.isLike = articleData.isgood;
+          this.isStored = articleData.isstore;
           this.writer = articleData.writer;
           this.setLikeBtn();
+          this.setLibraryBtn();
         }
       } catch (error) {
         console.log(error);
@@ -298,14 +286,50 @@ export default {
         );
         this.like++;
       } else {
-        axios.put(
-          `${this.$apiServer}/post/ungood?email=${
-            this.getUserInfo().email
-          }&id=${this.$route.query.id}`
-        );
+        axios
+          .put(
+            `${this.$apiServer}/post/ungood?email=${
+              this.getUserInfo().email
+            }&id=${this.$route.query.id}`
+          )
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => console.log(err));
         this.like--;
       }
       this.setLikeBtn();
+    },
+    setLibraryBtn() {
+      const libraryIcon = document.querySelector(".icon-library");
+      if (this.isStored) {
+        libraryIcon.classList.add("fill-blue");
+      } else {
+        libraryIcon.classList.remove("fill-blue");
+      }
+    },
+    toggleLibraryBtn() {
+      this.isStored = !this.isStored;
+      if (this.isStored) {
+        axios
+          .post(
+            `${this.$apiServer}/post/storage?email=${
+              this.getUserInfo().email
+            }&postid=${this.$route.query.id}`
+          )
+          .then(res => console.log(res))
+          .catch(err => console.log(err));
+      } else {
+        axios
+          .delete(
+            `${this.$apiServer}/post/storage?email=${
+              this.getUserInfo().email
+            }&postid=${this.$route.query.id}`
+          )
+          .then(res => console.log(res))
+          .catch(err => console.log(err));
+      }
+      this.setLibraryBtn();
     }
   },
   beforeDestroy() {
