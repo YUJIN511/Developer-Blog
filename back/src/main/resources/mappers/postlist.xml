@@ -8,6 +8,7 @@
 	<select id="searchAllPost" resultType="PostList">
 		select nickname, profile, score, id, title, summary, picture, writer, good, views, createdate
 		from user join post on email = writer
+		order by createdate desc
 	</select>
 	
 	<!-- 해당 이메일의 post 조회(내용) -->
