@@ -216,7 +216,7 @@ public class MainController {
 	@GetMapping("popularTag")
 	@ApiOperation("인기태그 리스트 출력")
 	public ResponseEntity<List<TagScore>> searchPopularTag() {
-		return new ResponseEntity<List<TagScore>>(tagScoreRepository.findAll(), HttpStatus.OK);
+		return new ResponseEntity<List<TagScore>>(tagScoreRepository.searchTagScore(), HttpStatus.OK);
 	}
 
 //	@GetMapping("/followPopular")
