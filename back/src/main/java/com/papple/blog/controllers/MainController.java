@@ -9,12 +9,14 @@ import java.util.PriorityQueue;
 import java.util.Map.Entry;
 
 import com.papple.blog.models.Post;
+import com.papple.blog.models.TagScore;
 import com.papple.blog.models.User;
 import com.papple.blog.payload.response.PopularScore;
 import com.papple.blog.payload.response.PostList;
 import com.papple.blog.repository.GoodRepository;
 import com.papple.blog.repository.PostAlgorithmRepository;
 import com.papple.blog.repository.PostListRepository;
+import com.papple.blog.repository.TagScoreRepository;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.PostService;
 
@@ -44,6 +46,8 @@ public class MainController {
 	private GoodRepository goodRepository;
 	@Autowired
 	private PostAlgorithmRepository algoRepository;
+	@Autowired
+	private TagScoreRepository tagScoreRepository;
 
     @GetMapping("/historyList")
 	@ApiOperation(value = "History 글 리스트")
@@ -207,6 +211,12 @@ public class MainController {
 			if(resultList.get(i).getId() != null && algoRepository.getPopularScoreByPostid(resultList.get(i).getId()) != null && goodRepository.isGood(email, resultList.get(i).getId()) > 0) // 여기서 null
 				resultList.get(i).setIsgood(true);
 		return new ResponseEntity<List<PostList>>(resultList, HttpStatus.OK); 
+	}
+	
+	@GetMapping("popularTag")
+	@ApiOperation("인기태그 리스트 출력")
+	public ResponseEntity<List<TagScore>> searchPopularTag() {
+		return new ResponseEntity<List<TagScore>>(tagScoreRepository.findAll(), HttpStatus.OK);
 	}
 
 //	@GetMapping("/followPopular")
