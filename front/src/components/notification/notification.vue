@@ -46,7 +46,6 @@ export default {
     data() {
         return {
             eventSource: null,
-            notificationData:[],
             notifications:[],
         };
     },
@@ -84,8 +83,7 @@ export default {
             var instance = this;
             this.eventSource.onmessage =  function(e) {
                 console.log("이벤트 소스 메시지 도착");
-                instance.notificationData = JSON.parse(e.data);
-                instance.notifications =  instance.notificationData.notifications;
+                instance.notifications = JSON.parse(e.data);
             };
              this.eventSource.onerror = function(e) {
                 console.log("이벤트 소스 에러");
