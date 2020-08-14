@@ -127,6 +127,10 @@ public class PostController {
 		List<String> tag = postListRepository.searchHashtag(id);
 		detail.setTag(tag);
 		
+		for(int i=0;i<tag.size();i++) {		//각 태그에 태그점수 증가
+			tagscoreRepository.plusScore(tag.get(i));
+		}
+		
 		if(email != null && !email.equals("")) {	//email이 있을 때만
 			if(goodRepository.isGood(email, id) > 0) detail.setIsgood(true);
 			// 조회 테이블에 추가(추천 게시물 관련)
@@ -219,6 +223,10 @@ public class PostController {
 	@GetMapping("searchHash/{hashtag}")
 	@ApiOperation(value = "해시태그로 게시물 검색")
 	public ResponseEntity<List<PostList>> searchByHashtag(@PathVariable String hashtag, String email) throws Exception {
+		//해당 태그가 없었다면, 인기태그에 추가. 있었다면, 점수 증가
+		if(tagscoreRepository.isExist(hashtag) == 0) tagscoreRepository.save(new TagScore(hashtag, 0l));
+		else tagscoreRepository.plusScore(hashtag);
+		
 		List<PostList> list = postListRepository.searchByTag(hashtag);
 		for(PostList post : list) {
 			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
@@ -243,7 +251,6 @@ public class PostController {
 				hashtagService.save(ht);	//해시태그 등록
 				// 해시태그 점수 등록
 				if(tagscoreRepository.isExist(tag.getTag().get(i)) == 0) tagscoreRepository.save(new TagScore(tag.getTag().get(i), 0l));
-				else tagscoreRepository.plusScore(tag.getTag().get(i));
 			}
 		}
 
