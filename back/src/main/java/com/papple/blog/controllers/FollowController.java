@@ -22,6 +22,7 @@ import com.papple.blog.models.FollowPK;
 import com.papple.blog.models.Notification;
 import com.papple.blog.models.User;
 import com.papple.blog.payload.response.FollowList;
+import com.papple.blog.payload.response.FollowListNavi;
 import com.papple.blog.repository.NotificationRepository;
 import com.papple.blog.repository.ProfileRepository;
 import com.papple.blog.repository.UserRepository;
@@ -50,12 +51,18 @@ public class FollowController {
 	private ProfileRepository profileRepository;
 	
 	@GetMapping("/list")
-	@ApiOperation(value = "내가 팔로우한 사람들을 return (내가 팔로우 한 유저 리스트)")
-	public ResponseEntity<List<FollowList>> searchByEmail(String email) throws Exception {
+	@ApiOperation(value = "내가 팔로우한 사람들을 return (내가 팔로우 한 유저 리스트 - 팔로우 탭에서)")
+	public ResponseEntity<List<FollowList>> searchFollowerByEmail(String email) throws Exception {
 		List<FollowList> list = profileRepository.myFollowList(email);
 		for(int i=0;i<list.size();i++) if(followService.isFollow(email, list.get(i).getEmail()) > 0) list.get(i).setFollow(true);	//팔로우 여부 업데이트
-		//알람 여부 업데이트 해줘야함
+		//알람 여부 업데이트 해줘야함	
 		return new ResponseEntity<List<FollowList>>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/navilist")
+	@ApiOperation(value = "내가 팔로우한 사람들을 return (내가 팔로우 한 유저 리스트 - 네비게이션 바에서)")
+	public ResponseEntity<List<FollowListNavi>> searchFollowerByEmailInNavi(String email) throws Exception {
+		return new ResponseEntity<List<FollowListNavi>>(profileRepository.myFollowListNavi(email), HttpStatus.OK);
 	}
 	
 	@GetMapping("/cnt/{followed}")

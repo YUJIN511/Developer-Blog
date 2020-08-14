@@ -22,5 +22,4 @@
 		from user u left join config c on u.email = c.email 
 		where exists(select * from follow f where f.follower = #{email} and u.email = f.followed)
 	</select>
-
 </mapper>
