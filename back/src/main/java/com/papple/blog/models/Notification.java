@@ -20,6 +20,8 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String profile;             // 프로필 사진
     
     private boolean isalert;            // 알람이 울렸는지
 
@@ -37,7 +39,7 @@ public class Notification {
 
     private Long commentid;             // comment id
 
-    private Integer type;               // [1, 10, 100, 1000, 10000, 100000, 1000000]
+    private Integer type;               // [1, 10, 100, 1000, 10000, 100000]
 
     @CreationTimestamp
     private LocalDateTime createat;

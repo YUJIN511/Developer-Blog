@@ -235,7 +235,7 @@ public class PostController {
 			hashtagService.save(ht);
 		}
 
-		// 알림 발생(0100000)
+		// 알림 발생(100000)
 		List<Follow> followerList = followService.findByFollowed(post.getWriter());	
 		String actionName = userRepository.getUserByEmail(post.getWriter()).getNickname();
 		for(Follow f : followerList){
@@ -243,7 +243,7 @@ public class PostController {
 				.message(actionName +"님의 블로그에 새로운 게시물이 등록되었습니다. 가장 먼저 방문해 게시물을 확인해보세요.")
 				.actionuser(post.getWriter())
 				.targetuser(f.getFollowPK().getFollower())
-				.notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+post.getId())
+				.notiurl("http://localhost:8081/api/post/postDetail?email="+post.getWriter()+"&id="+post.getId())
 				.build();
 			
 			notification.setType(1<<5);
@@ -346,7 +346,7 @@ public class PostController {
 									.message(actionName +"님이 회원님의 게시물을 좋아합니다.")
 									.actionuser(email)
 									.targetuser(newPost.getWriter())
-									.notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+id)
+									.notiurl("http://localhost:8081/api/post/postDetail?email="+email+"&id="+id)
 									.build();
 						notification.setPostid(id);
 						notification.setType(1<<0);

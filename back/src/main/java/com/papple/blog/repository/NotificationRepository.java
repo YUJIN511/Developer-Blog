@@ -14,7 +14,8 @@ import org.springframework.data.jpa.repository.Query;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long>{
 
-	List<Notification> findByTargetuserAndIsreadIsFalse(String email);				// 안읽은 알림
+	List<Notification> findByTargetuserAndIsreadIsFalse(String email);		// 안읽은 알림
+	List<Notification> findByTargetuserOrderByCreateatDesc(String email);						// 알림 모두 조회
 
 	// 내 글 좋아요 (이전에 좋아요 눌렀었는지)
 	Notification findByActionuserAndPostidAndType(String actionuser, Long postid, Integer type);
@@ -23,10 +24,17 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 	// 팔로우 알림
 	Notification findByActionuserAndTargetuserAndType(String actionuser, String targetuser, Integer type);
 
+	// 알림 표시
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE notification SET isalert = true WHERE id = ?1", nativeQuery = true)
 	void updateIsalertById(Long id);
+
+	// 읽음 표시
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE notification SET isread = true WHERE id = ?1", nativeQuery = true)
+	void updateIsreadById(Long id);
 
 	@Transactional
 	@Modifying

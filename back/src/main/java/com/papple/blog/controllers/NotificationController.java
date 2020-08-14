@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import io.swagger.annotations.ApiOperation;
+
 // @CrossOrigin(origins = "http://i3a604.p.ssafy.io", allowedHeaders = "*",allowCredentials = "true")
 @CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*",allowCredentials = "true")
 @RestController
@@ -30,7 +32,8 @@ public class NotificationController {
 	@Autowired
 	NotificationService notificationService;
 
-    @GetMapping(value = "user/push", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/push", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @ApiOperation(value = "알림 push")
     public ResponseEntity<SseEmitter> fetchNotify(@RequestParam(required = false) String email) {
 
         final User user = userRepository.getUserByEmail(email);
@@ -66,6 +69,22 @@ public class NotificationController {
         });
 
         return new ResponseEntity<>(emitter, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/updateIsread")
+    @ApiOperation(value = "Isread == true")
+    public ResponseEntity<?> updateIsread(@RequestParam Long id) {
+        notificationService.updateIsreadById(id);
+
+        return new ResponseEntity<String>("success", HttpStatus.OK);
+    }
+    
+    @GetMapping(value="/all")
+    @ApiOperation(value = "모든 알림 조회")
+    public ResponseEntity<List<Notification>> allNotification(@RequestParam String email) {
+        List<Notification> list = notificationService.findByTargetuser(email);
+
+        return new ResponseEntity<List<Notification>>(list, HttpStatus.OK);
     }
 
 
