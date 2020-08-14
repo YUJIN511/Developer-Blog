@@ -107,11 +107,8 @@
           v-if="getIsLogin()"
           >새 글쓰기</router-link
         >
-        <div
-          class="notification-icon"
-          @click="openNotification"
-          v-if="getIsLogin()"
-        >
+        <div>
+          <button class="notification-icon" @click="openNotification" v-if="getIsLogin()">
           <svg
             version="1.1"
             id="notification_icon"
@@ -145,6 +142,7 @@
 	C6.6,6.6,7,6.2,7.4,5.8c0.2-0.1,0.4-0.4,0.6-0.1C8.3,6,8,6.1,7.8,6.3z"
             />
           </svg>
+          </button>
         </div>
         <!-- <router-link class="profile-icon" v-if="getIsLogin()" to="/setting"> -->
         <div class="profile-image" v-if="getIsLogin()">
