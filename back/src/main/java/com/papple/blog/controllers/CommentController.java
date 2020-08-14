@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.papple.blog.models.Comment;
+import com.papple.blog.models.LikeComment;
 import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
 import com.papple.blog.payload.request.CommentRequest;
@@ -46,17 +47,22 @@ public class CommentController {
 
     @GetMapping("/allComment")
 	@ApiOperation(value = "해당 포스트의 모든 댓글 보기")
-	public ResponseEntity<List<CommentResponse>> allComment(@RequestParam(required = true) Long postid) throws Exception {
+	public ResponseEntity<List<CommentResponse>> allComment(@RequestParam(required = true) Long postid, @RequestParam(required = true) String email) throws Exception {
         List<CommentResponse> list = commentService.findByPostidAndReplytoIsNull(postid);
 
+        for(CommentResponse com : list){
+            com.setIslike(commentService.findByEmailAndCommentid(email, com.getId()));
+        }
         return new ResponseEntity<List<CommentResponse>>(list, HttpStatus.OK);
     }
     
     @GetMapping("/allReply")
 	@ApiOperation(value = "해당 댓글의 모든 답댓글 보기")
-	public ResponseEntity<List<CommentResponse>> allReply(@RequestParam(required = true) Long postid, @RequestParam(required = true) Long id) throws Exception {
+	public ResponseEntity<List<CommentResponse>> allReply(@RequestParam(required = true) Long postid, @RequestParam(required = true) Long id, @RequestParam(required = true) String email) throws Exception {
 		List<CommentResponse> list = commentService.findByPostidAndReplyto(postid, id);
-        
+        for(CommentResponse com : list){
+            com.setIslike(commentService.findByEmailAndCommentid(email, com.getId()));
+        }
         return new ResponseEntity<List<CommentResponse>>(list, HttpStatus.OK);
 	}   
     
@@ -151,6 +157,7 @@ public class CommentController {
         comment.setLikes(comment.getLikes()+1);
         commentService.save(comment);
 
+        commentService.likeComment(email, id);
 		// 알람 발생(0000100)
 		// 이전에 좋아요 눌렀었었는지 확인	>>>  notiurl 주소 front로 추후 변경
 		if(notificationService.findByActionuserAndCommentidAndType(email, id, 4) == null){
@@ -176,6 +183,7 @@ public class CommentController {
         comment.setLikes(comment.getLikes()-1);
         commentService.save(comment);
         
+        commentService.unlikeComment(email, id);
         return new ResponseEntity<String>("success", HttpStatus.OK);
 		
 	}

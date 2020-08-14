@@ -44,8 +44,8 @@ const router = new VueRouter({
     },
     {
       path: "/:email",
-      name: "UserPage",
-      component: () => import("@/views/blog/UserPage.vue"),
+      name: "Blog",
+      component: () => import("@/views/blog/Blog.vue"),
     },
   ],
 });

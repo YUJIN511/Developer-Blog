@@ -5,7 +5,18 @@
         <h1 type="text" class="view-title" placeholder="제목" readonly>
           {{ title }}
         </h1>
-        <button class="btn-more">...</button>
+        <UpdateModal
+          :articleId="postId"
+          ref="updateModal"
+          v-if="isShowUpdateModal"
+        />
+        <button
+          class="btn-more"
+          @click="isShowUpdateModal = !isShowUpdateModal"
+          v-if="getUserInfo().email === writer"
+        >
+          ...
+        </button>
       </div>
       <div class="article-info">
         <div class="user-info">
@@ -24,7 +35,7 @@
           </svg>
           <span>{{ nickname }}</span>
         </div>
-        <span class="create-date"> · {{ createDate }}</span>
+        <span class="create-date">· {{ createDate }}</span>
       </div>
 
       <div class="viewer-tags">
@@ -38,7 +49,7 @@
         </div>
       </div>
       <div class="introduction">
-        <img :src="thumbnail" alt="" v-if="thumbnail !== ''" />
+        <img :src="thumbnail" alt v-if="thumbnail !== ''" />
         <div ref="defaultThumbnail" class="default-thumbnail" v-else>
           {{ title }}
         </div>
@@ -80,7 +91,7 @@
         </button>
       </div>
     </div>
-    <BlogInfo />
+    <BlogInfo :articleData="articleData" />
     <Comment @reRender="reRender" :key="commentModuleKey" :postId="postId" />
   </div>
 </template>
@@ -93,6 +104,7 @@ import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
 import Comment from "./CommentModule.vue";
 import BlogInfo from "./BlogInfo.vue";
+import UpdateModal from "./updateModal";
 
 import {
   CodeBlockHighlight,
@@ -119,7 +131,8 @@ export default {
   components: {
     EditorContent,
     Comment,
-    BlogInfo
+    BlogInfo,
+    UpdateModal
   },
   data() {
     return {
@@ -170,7 +183,10 @@ export default {
       content: "",
       like: 0,
       isLike: false,
-      commentModuleKey: 0
+      writer: "",
+      commentModuleKey: 0,
+      articleData: {},
+      isShowUpdateModal: false
     };
   },
   methods: {
@@ -191,6 +207,7 @@ export default {
 
         if (res.status === 200) {
           const articleData = res.data;
+          this.articleData = articleData;
           this.createDate = articleData.createdate.split(" ")[0];
           this.title = articleData.title;
           this.content = articleData.content;
@@ -201,7 +218,7 @@ export default {
           this.thumbnail = articleData.picture;
           this.like = articleData.good;
           this.isLike = articleData.isgood;
-          console.log(articleData.isgood);
+          this.writer = articleData.writer;
           this.setLikeBtn();
         }
       } catch (error) {
@@ -248,9 +265,7 @@ export default {
       });
     },
     modifyAnchorDest() {
-      window.addEventListener("hashchange", function(e) {
-        console.log(e.oldURL);
-        console.log(e.newURL);
+      window.addEventListener("hashchange", function() {
         window.scrollTo(window.scrollX, window.scrollY - 100);
       });
     },
@@ -302,8 +317,8 @@ export default {
     this.modifyAnchorDest();
     this.initNav();
   },
-  created() {
-    this.getArticleData();
+  async created() {
+    await this.getArticleData();
   }
 };
 </script>

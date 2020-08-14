@@ -2,19 +2,18 @@
   <div class="container-comment">
     <header>
       <div>
-        <img :src="commentData.profile" alt="" />
+        <img :src="commentData.profile" alt />
       </div>
       <div class="info">
         <div class="user-info">
-          <span>😀</span><span>{{ commentData.nickname }}</span>
+          <span>😀</span>
+          <span>{{ commentData.nickname }}</span>
           <button class="btn-more">⫶</button>
         </div>
         <span class="date">{{ commentData.createdate.split("T")[0] }}</span>
       </div>
     </header>
-    <main>
-      {{ commentData.content }}
-    </main>
+    <main>{{ commentData.content }}</main>
     <footer>
       <button class="btn-like" @click="toggleLikeButton">
         <svg
@@ -60,13 +59,15 @@
         @click="toggleReply"
       >
         <svg
+          ref="replySvg"
           xmlns="http://www.w3.org/2000/svg"
           width="6"
           height="6"
           viewBox="0 0 24 24"
         >
-          <path d="M24 22h-24l12-20z" /></svg
-        >답글 {{ commentData.replycount }}개 보기
+          <path d="M24 22h-24l12-20z" />
+        </svg>
+        <span>답글 {{ commentData.replycount }}개 보기</span>
       </button>
       <ReplyList
         ref="replyList"
@@ -103,16 +104,23 @@ export default {
     }),
     toggleReply() {
       this.isReplyShow = !this.isReplyShow;
-      if (this.isReplyFirstCall) {
-        this.isReplyFirstCall = false;
-        this.$refs.replyList.getData();
+      const svg = this.$refs.replySvg;
+      if (this.isReplyShow) {
+        if (this.isReplyFirstCall) {
+          this.isReplyFirstCall = false;
+          this.$refs.replyList.getData();
+        }
+        console.dir(svg.nextSibling);
+        svg.classList.add("upper");
+        svg.nextSibling.innerText = "답글 숨기기";
+      } else {
+        svg.classList.remove("upper");
+        svg.nextSibling.innerText = `답글 ${this.commentData.replycount}개 보기`;
       }
     },
     setLikeBtn() {
       const likeIcon = this.$refs.likeIcon;
-      console.log(this.isLike);
       if (this.isLike) {
-        console.log(likeIcon);
         likeIcon.classList.add("fill-lightred");
       } else {
         likeIcon.classList.remove("fill-lightred");
@@ -160,7 +168,6 @@ export default {
   },
   mounted() {
     this.isLike = this.commentData.islike;
-    console.log("mounted: ", this.commentData.id);
     this.setLikeBtn();
   }
 };

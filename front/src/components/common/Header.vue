@@ -150,8 +150,8 @@
       </div>
     </div>
     <Navbar />
-    <Login />
-    <Join />
+    <Login ref="loginModal" />
+    <Join ref="joinModal" />
     <Repassword />
     <EmailModal />
     <UnregisterModal />
@@ -171,7 +171,6 @@ import ProfilePicModal from "@/components/user/setting/ProfilePicModal.vue";
 import Notification from "@/components/notification/notification.vue";
 
 import { mapActions, mapGetters } from "vuex";
-// import NavbarMini from "@/components/common/Navbar-mini.vue";
 
 export default {
   name: "Header",
@@ -187,18 +186,18 @@ export default {
   },
   data() {
     return {
-      searchWord: "",
+      searchWord: ""
     };
   },
   methods: {
     ...mapActions({
       Logout: "user/logout",
-      fetchUserInfo: "user/fetchUserInfo",
+      fetchUserInfo: "user/fetchUserInfo"
     }),
     ...mapGetters({
       getIsLogin: "user/getIsLogin",
       getUserInfo: "user/getUserInfo",
-      getEmail: "user/getEmail",
+      getEmail: "user/getEmail"
     }),
     showNavBar() {
       const navbar = document.querySelector(".navbar");
@@ -207,7 +206,6 @@ export default {
 
       body.classList.add("hide-scroll");
       navbar.setAttribute("style", "left: 0px");
-      //navbar.style.left = "0px";
       background.classList.remove("hide");
     },
     openLogin() {
@@ -216,20 +214,18 @@ export default {
 
     logout() {
       this.Logout();
-      // this.$router.go();
-      console.log(this.getIsLogin());
     },
     search() {
       this.$router.push({
         name: "Search",
-        params: { keyword: this.searchWord },
+        params: { keyword: this.searchWord }
       });
     },
     moveToProfile() {
-      this.$router.push({ name: "Setting" });
+      this.$router.push({ name: "Blog", params: { email: this.getEmail() } });
     },
     openNotification(){
-      document.querySelector(".container-notification").classList.remove("hide");;
+      document.querySelector(".container-notification").classList.remove("hide");
     }
   },
   created() {
@@ -237,18 +233,21 @@ export default {
   },
   mounted() {
     var profileImages = document.querySelectorAll(".profile-image");
-    profileImages.forEach((profileImage) => {
+    profileImages.forEach(profileImage => {
       profileImage.style.backgroundImage = `url('${
         this.getUserInfo().profile
       }')`;
-      console.log(this.getUserInfo());
     });
-  },
+  }
 };
 </script>
 
 <style scoped lang="scss">
 @import "@/assets/_variables.scss";
+
+button:hover {
+  opacity: 0.7;
+}
 
 .header-container {
   position: fixed;
@@ -262,6 +261,7 @@ export default {
 .header-front,
 .header-end {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   margin: 0px 20px;
 }
@@ -371,11 +371,12 @@ export default {
   .header-center {
     display: flex;
     margin: 0px 20px;
-    flex: 1 1 0;
-    max-width: 600px;
+    flex: 0 1 30%;
+    width: 300px;
   }
   .container-main-search {
     display: flex;
+    flex: 1 1 auto;
     align-items: baseline;
     width: 100%;
     color: rgb(162, 163, 163);
@@ -410,12 +411,12 @@ export default {
     display: none;
   }
   .input-main-search {
-    flex: 1 1 0;
+    flex: 1 1 20%;
     background: white;
     width: 640px;
     height: 30px;
     border: none;
-    border-bottom: 2px solid #bbbbbb;
+    border-bottom: 1px solid #dddddd;
     &:focus {
       outline: none !important;
       box-shadow: 0 0 4px rgb(137, 197, 199);
@@ -437,11 +438,14 @@ export default {
 
 .profile-image {
   background-position: center;
-  background-image: url(https://images.unsplash.com/photo-1517832207067-4db24a2ae47c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60);
-  background-size: 150%;
+  background-size: cover;
+  background-repeat: no-repeat;
   width: 36px;
   height: 36px;
   border-radius: 50%;
+  &:hover {
+    opacity: 0.7;
+  }
   button {
     width: 100%;
     height: 100%;
@@ -449,10 +453,6 @@ export default {
     color: rgba(0, 0, 0, 0);
     background-color: rgba(0, 0, 0, 0);
     border-radius: 50%;
-    &:hover {
-      color: rgba(255, 255, 255, 0.8);
-      background-color: rgba(0, 0, 0, 0.6);
-    }
   }
 }
 </style>

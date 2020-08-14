@@ -48,7 +48,7 @@ public class User {
 		this.password = password;
 		this.score = score;
 		this.usercertification = usercertification;
-		this.notification = "1111111";
+		this.notification = "111111";
 	}
 
 }

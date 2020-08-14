@@ -1,7 +1,7 @@
 <template>
   <div class="modal" v-if="show">
     <div class="modal-content">
-      <h1>Add image</h1>
+      <h1>배너 이미지 설정</h1>
 
       <div>
         <vue-dropzone
@@ -14,7 +14,7 @@
 
       <footer class="modal-footer">
         <button
-          @click="insertImage"
+          @click="$router.go()"
           class="success"
           :title="validImage ? '' : 'Image URL needs to be valid'"
           :disabled="!validImage"
@@ -29,6 +29,7 @@
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import axios from "axios";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -42,8 +43,9 @@ export default {
       tab: 1,
       dropzoneOptions: {
         url: "https://httpbin.org/post",
-        thumbnailWidth: 200,
+        thumbnailWidth: 500,
         maxFilesize: 2,
+        maxFiles: 1,
         dictDefaultMessage: "UPLOAD A FILE"
       }
     };
@@ -54,15 +56,15 @@ export default {
       this.imageSrc.forEach(elem => {
         isValid = elem.match(/\.(jpeg|jpg|gif|png)$/) != null;
       });
-
+      console.log(isValid);
       return isValid;
     }
   },
   methods: {
-    showModal(command) {
-      // Add the sent command
-      console.dir(command);
-      this.command = command;
+    ...mapGetters({
+      getUserInfo: "user/getUserInfo"
+    }),
+    showModal() {
       this.show = true;
     },
     vfileExceeded(file) {
@@ -73,10 +75,9 @@ export default {
     async vfileUploaded(file) {
       let formData = new FormData();
       formData.append("filename", file);
-
       try {
         const res = await axios.put(
-          `${this.$apiServer}/post/upload`,
+          `${this.$apiServer}/blog/upload?email=${this.getUserInfo().email}`,
           formData,
           {
             headers: {
@@ -84,7 +85,6 @@ export default {
             }
           }
         );
-
         if (res.status === 200) {
           this.imageSrc.push(res.data);
         }

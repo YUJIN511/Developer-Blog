@@ -1,7 +1,7 @@
 <template>
   <div class="editor">
     <ImageModal ref="ytmodal" @onConfirm="addCommand" />
-    <SummaryModal ref="smodal" />
+    <SummaryModal ref="smodal" :isEdit="isEdit" />
     <div class="container-editor">
       <header>
         <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
@@ -179,7 +179,10 @@
         </editor-menu-bar>
         <div class="end">
           <button class="btn">임시 저장</button>
-          <button class="btn" @click="openSummaryModal">작성 완료</button>
+          <button class="btn" @click="openSummaryModal">
+            <span v-if="!isEdit">작성</span>
+            <span v-else>수정</span> 완료
+          </button>
         </div>
       </header>
       <main>
@@ -247,9 +250,9 @@
                 @click="showLinkMenu(getMarkAttrs('link'))"
                 :class="{ 'is-active': isActive.link() }"
               >
-                <span>
-                  {{ isActive.link() ? "링크 수정하기" : "링크 추가하기" }}
-                </span>
+                <span>{{
+                  isActive.link() ? "링크 수정하기" : "링크 추가하기"
+                }}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <title>hyperlink-2</title>
                   <path
@@ -267,7 +270,11 @@
           </div>
         </editor-menu-bubble>
 
-        <editor-content class="editor__content" :editor="editor" />
+        <editor-content
+          ref="editorContent"
+          class="editor__content"
+          :editor="editor"
+        />
       </main>
     </div>
   </div>
@@ -280,6 +287,7 @@ import css from "highlight.js/lib/languages/css";
 import ImageModal from "./ImageModal";
 import SummaryModal from "./SummaryModal";
 import { mapGetters } from "vuex";
+import axios from "axios";
 
 import {
   CodeBlockHighlight,
@@ -310,11 +318,16 @@ export default {
   },
   data() {
     return {
+      isEdit: false,
       title: "",
       tagName: "",
       tagList: [],
       linkUrl: null,
       linkMenuIsActive: false,
+      html: "",
+      isUpdated: false,
+      picture: "",
+      summary: "",
       editor: new Editor({
         autoFocus: true,
         extensions: [
@@ -347,12 +360,11 @@ export default {
             showOnlyCurrent: true
           })
         ],
-
         onUpdate: ({ getHTML }) => {
+          this.isUpdated = true;
           this.html = getHTML();
         }
-      }),
-      html: ""
+      })
     };
   },
   methods: {
@@ -391,23 +403,57 @@ export default {
         container.insertBefore(newTag, e.path[0]);
       }
     },
+    tagSetting(tagList) {
+      console.log("tagSetting", tagList);
+      console.log("this.taglist", this.tagList);
+      tagList.forEach(elem => {
+        const removeBtn = document.createElement("button");
+        removeBtn.addEventListener("click", e => {
+          const selectedTag = e.currentTarget.parentElement;
+          const tagName = selectedTag.querySelector("span").innerText;
+          const idx = this.tagList.indexOf(tagName);
+          this.tagList.splice(idx, 1);
+          console.dir(this.tagList);
+          selectedTag.remove();
+        });
+        removeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>delete-2-alternate</title><path d="M20.485,3.511A12.01,12.01,0,1,0,24,12,12.009,12.009,0,0,0,20.485,3.511Zm-1.767,15.21A9.51,9.51,0,1,1,21.5,12,9.508,9.508,0,0,1,18.718,18.721Z"/><path d="M16.987,7.01a1.275,1.275,0,0,0-1.8,0l-3.177,3.177L8.829,7.01A1.277,1.277,0,0,0,7.024,8.816L10.2,11.993,7.024,15.171a1.277,1.277,0,0,0,1.805,1.806L12.005,13.8l3.177,3.178a1.277,1.277,0,0,0,1.8-1.806l-3.176-3.178,3.176-3.177A1.278,1.278,0,0,0,16.987,7.01Z"/></svg>
+`;
+        const span = document.createElement("span");
+        span.innerText = elem;
+        this.tagList.push(elem);
+
+        const newTag = document.createElement("div");
+        newTag.appendChild(span);
+        newTag.appendChild(removeBtn);
+
+        const container = document.querySelector(".container-tags");
+        const inputTags = document.querySelector(".input-tags");
+        container.insertBefore(newTag, inputTags);
+      });
+    },
     openImgModal(command) {
       this.$refs.ytmodal.showModal(command);
     },
     openSummaryModal() {
-      this.addIdToHTag();
+      if (!this.isUpdated) {
+        this.html = this.$refs.editorContent.editor.view.dom.innerHTML;
+      }
+      console.log(this.$refs.editorContent.editor.view.dom.innerHTML);
       let tagString = "";
+      console.log(this.tagList);
       this.tagList.forEach(elem => {
         tagString += `tag=${elem}&`;
       });
-      console.log(this.html);
       const articleData = {
         title: this.title,
         tagString,
         content: this.html,
         writer: this.getUserInfo().email,
-        summary: "",
-        picture: ""
+        summary: this.summary,
+        picture: this.picture,
+        id: this.$route.params.targetId,
+        good: this.like,
+        views: this.views
       };
       this.$refs.smodal.showModal(articleData);
     },
@@ -435,10 +481,43 @@ export default {
     },
     goBack() {
       this.$router.go(-1);
+    },
+    async getEditData() {
+      const email = this.getUserInfo().email;
+
+      try {
+        const res = await axios.get(
+          `${this.$apiServer}/post/postDetail?email=${email}&id=${this.$route.params.targetId}`
+        );
+
+        if (res.status === 200) {
+          const articleData = res.data;
+          this.createDate = articleData.createdate.split(" ")[0];
+          this.title = articleData.title;
+          this.content = articleData.content;
+          this.editor.setContent(this.content);
+          this.tagList = articleData.tag;
+          this.tagSetting(this.tagList);
+          this.picture = articleData.picture;
+          this.like = articleData.good;
+          this.views = articleData.views;
+          this.summary = articleData.summary;
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
   beforeDestroy() {
     this.editor.destroy();
+  },
+  created() {
+    if (Object.keys(this.$route.params).length === 1) {
+      this.isEdit = true;
+      this.getEditData();
+    } else {
+      this.isEdit = false;
+    }
   }
 };
 </script>
@@ -461,8 +540,8 @@ input {
   font-weight: 700;
   border-bottom: 1px solid #dfdfdf;
   padding: 10px 0px;
-  margin-bottom: 10px;
-  background-color: $bgColor;
+  margin-bottom: 16px;
+  background-color: transparent;
   &::placeholder {
     color: #c4c4c4;
   }
@@ -478,13 +557,13 @@ input {
     align-items: center;
     height: 1.8em;
     background-color: rgba(0, 0, 0, 0);
-    border: 2px solid cadetblue;
-    color: cadetblue;
+    border: 2px solid #1a7cff;
+    color: #1a7cff;
     border-radius: 15px;
     padding: 0px 10px;
     padding-bottom: 2px;
     margin-right: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
 
     button {
       display: flex;
@@ -496,7 +575,7 @@ input {
     svg {
       width: 16px;
       height: 16px;
-      fill: rgb(177, 177, 177);
+      fill: #c1d8ff;
     }
   }
 }
@@ -507,8 +586,9 @@ input {
   border-radius: 5px;
   margin-bottom: 20px;
   border: none;
-  background-color: $bgColor;
+  background-color: transparent;
   font-size: 1.2em;
+  color: #1a7cff;
   &::placeholder {
     color: #c4c4c4;
   }
