@@ -107,7 +107,11 @@
           v-if="getIsLogin()"
           >새 글쓰기</router-link
         >
-        <div class="notification-icon" @click="openNotification" v-if="getIsLogin()">
+        <div
+          class="notification-icon"
+          @click="openNotification"
+          v-if="getIsLogin()"
+        >
           <svg
             version="1.1"
             id="notification_icon"
@@ -182,7 +186,7 @@ export default {
     EmailModal,
     UnregisterModal,
     ProfilePicModal,
-    Notification,
+    Notification
   },
   data() {
     return {
@@ -224,8 +228,10 @@ export default {
     moveToProfile() {
       this.$router.push({ name: "Blog", params: { email: this.getEmail() } });
     },
-    openNotification(){
-      document.querySelector(".container-notification").classList.remove("hide");
+    openNotification() {
+      document
+        .querySelector(".container-notification")
+        .classList.remove("hide");
     }
   },
   created() {
@@ -437,6 +443,7 @@ button:hover {
 }
 
 .profile-image {
+  background-image: url("https://cdns.iconmonstr.com/wp-content/assets/preview/2012/240/iconmonstr-user-20.png") !important;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
