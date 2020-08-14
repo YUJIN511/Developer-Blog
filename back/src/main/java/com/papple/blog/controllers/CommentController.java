@@ -83,7 +83,7 @@ public class CommentController {
                     .message(actionName +"님이 회원님의 게시물에 댓글을 남겼습니다. "+comment.getContent())
                     .actionuser(comment.getEmail())
                     .targetuser(post.getWriter())
-                    .notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+comment.getPostid())
+                    .notiurl("http://localhost:8081/api/post/postDetail?email="+comment.getEmail()+"&id="+comment.getPostid())
                     .build();
                     
                 notification.setPostid(comment.getPostid());
@@ -102,7 +102,7 @@ public class CommentController {
                     .message(actionName +"님이 답글에서 회원님을 언급했습니다. "+comment.getContent())
                     .actionuser(comment.getEmail())
                     .targetuser(comm.getEmail())
-                    .notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+comment.getPostid())
+                    .notiurl("http://localhost:8081/api/post/postDetail?email="+comment.getEmail()+"&id="+comment.getPostid())
                     .build();
                     
                 notification.setPostid(comment.getPostid());
@@ -167,7 +167,7 @@ public class CommentController {
 				.message(actionName +"님이 회원님의 댓글을 좋아합니다.")
 				.actionuser(email)
 				.targetuser(comment.getEmail())
-				.notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+id)
+				.notiurl("http://localhost:8081/api/post/postDetail?email="+email+"&id="+comment.getPostid())
 				.build();
 			notification.setCommentid(id);
 			notification.setType(1<<2);

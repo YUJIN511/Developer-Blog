@@ -25,6 +25,7 @@ import com.papple.blog.models.NotificationAlert;
 import com.papple.blog.models.User;
 import com.papple.blog.payload.response.StreamDataSet;
 import com.papple.blog.repository.NotificationRepository;
+import com.papple.blog.repository.UserRepository;
 
 @Slf4j
 @Service
@@ -33,6 +34,8 @@ public class NotificationServiceImpl implements NotificationService{
 
     @Autowired
     private NotificationRepository notificationRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     private ConcurrentHashMap<String, StreamDataSet> eventMap = new ConcurrentHashMap<>();
     
@@ -74,7 +77,7 @@ public class NotificationServiceImpl implements NotificationService{
 
             final SseEmitter emitter = dataSet.getEmitter();
 
-            /** 30분 이내에 작성된 알람 목록 확인 **/
+            /** ?분 이내에 작성된 알람 목록 확인 **/
             final List<Notification> alertList = getListAnMinuteAndAlertFalse(receivingAlert);
 
             if (alertList.size() == 0) {
@@ -125,18 +128,20 @@ public class NotificationServiceImpl implements NotificationService{
 
         ArrayList<Notification> alertList = new ArrayList<>();
 
-        LocalDateTime beforeTime = LocalDateTime.now().minusMinutes(60*24);
+        // LocalDateTime beforeTime = LocalDateTime.now().minusMinutes(60*24);
 
         for (Notification notification : paramList) {
+            
+            // boolean isAlert = notification.isIsalert();
+            // LocalDateTime createdAt = notification.getCreateat();
+            // if (createdAt.isBefore(beforeTime) || isAlert) {
+            //     continue;
+            // }
 
-            boolean isAlert = notification.isIsalert();
-            LocalDateTime createdAt = notification.getCreateat();
+            User user = userRepository.getUserByEmail(notification.getActionuser());
+            notification.setProfile(user.getProfile());
 
-            if (createdAt.isBefore(beforeTime) || isAlert) {
-                continue;
-            }
-
-            // 30 분 이내 알리미 & 안 읽은 알리미
+            // 안 읽은 알리미
             alertList.add(notification);
         }
 
@@ -152,6 +157,11 @@ public class NotificationServiceImpl implements NotificationService{
         Set<Long> idSet = new HashSet<>(alertIds);
         idSet.stream().forEach(notificationRepository::updateIsalertById);
 
+    }
+    // 알림 읽은 표시
+    @Override
+    public void updateIsreadById(Long id) {
+        notificationRepository.updateIsreadById(id);
     }
     
     /**
@@ -185,12 +195,17 @@ public class NotificationServiceImpl implements NotificationService{
     @Override
     public void deleteByTargetuserAndType(String targetuser, Integer type) {
         notificationRepository.deleteByTargetuserAndType(targetuser, type);
-        return;
     }
 
     @Override
     public Notification findByActionuserAndCommentidAndType(String actionuser, Long commentid, Integer type) {
         return notificationRepository.findByActionuserAndCommentidAndType(actionuser, commentid, type);
     }
+
+    @Override
+    public List<Notification> findByTargetuser(String email) {
+        return notificationRepository.findByTargetuserOrderByCreateatDesc(email);
+    }
+
 
 }
