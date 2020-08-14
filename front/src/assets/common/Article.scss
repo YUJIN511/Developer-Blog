@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   border-radius: 2%;
-  height: 370px;
+  height: 420px;
   padding: 16px 16px;
 }
 .btn-read {
@@ -36,7 +36,7 @@
   }
   .body-article {
     height: 40%;
-    padding: 16px;
+    padding: 12px;
     text-align: left;
     overflow: hidden;
     background-color: white;
@@ -48,12 +48,14 @@
       -webkit-box-orient: vertical;
       text-overflow: ellipsis;
       word-break: break-word;
+      font-size: 1.4rem;
+      margin-bottom: 5px;
       overflow-wrap: break-word;
     }
     .description {
       word-break: break-word;
       overflow-wrap: break-word;
-      font-size: 0.875rem;
+      font-size: 1rem;
       line-height: 1.5;
       height: 3.9375rem;
       display: -webkit-box;
@@ -86,7 +88,6 @@
   .level-icon {
     width: 1.2em;
     height: 1.2em;
-    margin-bottom: 5px;
   }
 }
 
@@ -95,13 +96,17 @@
   margin-left: 8px;
   max-height: 25px;
   overflow: hidden;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .like {
   margin-left: auto;
   svg {
-    width: 1em;
-    height: 1em;
+    width: 1.2em;
+    height: 1.2em;
+    vertical-align: middle;
     margin-right: 16px;
     fill: rgb(228, 228, 228);
     :hover {
@@ -112,7 +117,8 @@
     fill: crimson;
   }
   span {
-    font-size: 0.9em;
+    vertical-align: middle;
+    font-size: 1rem;
   }
 }
 

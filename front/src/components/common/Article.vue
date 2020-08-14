@@ -3,9 +3,7 @@
     <button @click="readArticle" class="btn-read">
       <div ref="headerArticle" class="header-article">
         <img :src="data.picture" alt v-if="data.picture !== ''" />
-        <span :title="data.title" v-if="data.picture === ''">
-          {{ data.title }}
-        </span>
+        <span :title="data.title" v-if="data.picture === ''">{{ data.title }}</span>
       </div>
       <div class="body-article">
         <h5 :title="data.title">{{ data.title }}</h5>
@@ -36,7 +34,7 @@
           alt="level icon"
         />
       </div>
-      <div class="nickname">{{ data.nickname }}</div>
+      <div class="nickname" @click="moveToBlog()">{{ data.nickname }}</div>
       <div class="like">
         <button class="btn-like" @click="clickLike">
           <svg
@@ -93,6 +91,10 @@ export default {
         name: "ArticleView",
         query: { id: this.data.id }
       });
+    },
+    moveToBlog() {
+      this.$router.push({ name: "Blog", params: { email: this.data.writer } });
+      window.scroll(0, 0);
     }
   }
 };

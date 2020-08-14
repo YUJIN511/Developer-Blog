@@ -1,3 +1,5 @@
+@import "@/assets/_variables.scss";
+
 .profile {
   flex-shrink: 0;
   display: flex;
@@ -64,5 +66,38 @@
         }
       }
     }
+  }
+}
+
+
+@media (min-width: $twoArticles) {
+  .profile {
+    width: 100%;
+    flex-grow: 0;
+  }
+}
+@media (min-width: $threeArticles) {
+  .profile {
+    width: 50%;
+  }
+}
+@media (min-width: $fourArticles) {
+  .profile {
+    width: 33.3%;
+  }
+}
+@media (min-width: $fiveArticles) {
+  .profile {
+    width: 25%;
+  }
+}
+@media (min-width: $sixArticles) {
+  .profile {
+    width: 20%;
+  }
+}
+@media (min-width: $sevenArticles) {
+  .profile {
+    width: 16.6%;
   }
 }

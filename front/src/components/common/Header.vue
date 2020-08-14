@@ -184,7 +184,7 @@ export default {
     EmailModal,
     UnregisterModal,
     ProfilePicModal,
-    Notification,
+    Notification
   },
   data() {
     return {
@@ -226,8 +226,10 @@ export default {
     moveToProfile() {
       this.$router.push({ name: "Blog", params: { email: this.getEmail() } });
     },
-    openNotification(){
-      document.querySelector(".container-notification").classList.remove("hide");
+    openNotification() {
+      document
+        .querySelector(".container-notification")
+        .classList.remove("hide");
     }
   },
   created() {
@@ -429,16 +431,19 @@ button:hover {
   border-radius: 25px;
   color: #727272;
   border: 1px solid #727272;
-  padding: 0px 20px;
+  padding: 5px 20px;
   margin-right: 24px;
 }
 
 .notification-icon {
+  width: 24px;
+  height: 24px;
   margin-right: 24px;
   fill: #727272;
 }
 
 .profile-image {
+  background-image: url("https://cdns.iconmonstr.com/wp-content/assets/preview/2012/240/iconmonstr-user-20.png") !important;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

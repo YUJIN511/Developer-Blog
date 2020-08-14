@@ -161,8 +161,8 @@ export default {
   width: auto;
   height: 100%;
   svg {
-    width: 26px;
-    height: 26px;
+    width: 22px;
+    height: 22px;
     fill: #555555;
   }
 }
@@ -180,7 +180,7 @@ export default {
   }
   div {
     margin-top: 5px;
-    font-size: 0.8rem;
+    font-size: 0.8em;
     color: rgb(129, 129, 129);
   }
   &:hover {
