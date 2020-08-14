@@ -433,11 +433,13 @@ button:hover {
   border-radius: 25px;
   color: #727272;
   border: 1px solid #727272;
-  padding: 0px 20px;
+  padding: 5px 20px;
   margin-right: 24px;
 }
 
 .notification-icon {
+  width: 24px;
+  height: 24px;
   margin-right: 24px;
   fill: #727272;
 }
