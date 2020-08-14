@@ -107,7 +107,7 @@
           v-if="getIsLogin()"
           >새 글쓰기</router-link
         >
-        <div class="notification-icon" v-if="getIsLogin()">
+        <div class="notification-icon" @click="openNotification" v-if="getIsLogin()">
           <svg
             version="1.1"
             id="notification_icon"
@@ -156,6 +156,7 @@
     <EmailModal />
     <UnregisterModal />
     <ProfilePicModal />
+    <Notification />
   </div>
 </template>
 
@@ -167,6 +168,7 @@ import Repassword from "@/components/user/Repassword.vue";
 import EmailModal from "@/components/user/EmailModal.vue";
 import UnregisterModal from "@/components/user/setting/UnregisterModal.vue";
 import ProfilePicModal from "@/components/user/setting/ProfilePicModal.vue";
+import Notification from "@/components/notification/notification.vue";
 
 import { mapActions, mapGetters } from "vuex";
 
@@ -179,7 +181,8 @@ export default {
     Repassword,
     EmailModal,
     UnregisterModal,
-    ProfilePicModal
+    ProfilePicModal,
+    Notification,
   },
   data() {
     return {
@@ -220,6 +223,9 @@ export default {
     },
     moveToProfile() {
       this.$router.push({ name: "Blog", params: { email: this.getEmail() } });
+    },
+    openNotification(){
+      document.querySelector(".container-notification").classList.remove("hide");
     }
   },
   created() {
@@ -421,11 +427,13 @@ button:hover {
   border-radius: 25px;
   color: #727272;
   border: 1px solid #727272;
-  padding: 0px 20px;
+  padding: 5px 20px;
   margin-right: 24px;
 }
 
 .notification-icon {
+  width: 24px;
+  height: 24px;
   margin-right: 24px;
   fill: #727272;
 }

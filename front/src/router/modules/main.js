@@ -43,5 +43,10 @@ export default [
     path: "search/:keyword",
     name: "Search",
     component: () => import("@/views/Search.vue")
-  }
+  },
+  {
+    path: "notification",
+    name: "Notification",
+    component: () => import("@/views/notificationDetail.vue"),
+  },
 ];
