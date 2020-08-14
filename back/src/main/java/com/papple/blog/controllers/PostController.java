@@ -230,9 +230,14 @@ public class PostController {
 	@ApiOperation(value = "새 글 게시 - 글 정보 + 파일의 접근경로 DB에 저장")
 	public ResponseEntity<String> insert(@RequestBody Post post, HashtagList tag) {
 		Post p = postService.save(post);	// 글 저장		
-		for(int i=0;i<tag.getTag().size();i++) {
-			Hashtag ht = new Hashtag(new HashtagPK(p.getId(), tag.getTag().get(i)));
-			hashtagService.save(ht);
+		if(tag.getTag().size() == 1 && tag.getTag().get(0).equals("none")) {
+			System.out.println("태그 없음");
+		}
+		else {
+			for(int i=0;i<tag.getTag().size();i++) {
+				Hashtag ht = new Hashtag(new HashtagPK(p.getId(), tag.getTag().get(i)));
+				hashtagService.save(ht);
+			}
 		}
 
 		// 알림 발생(100000)
