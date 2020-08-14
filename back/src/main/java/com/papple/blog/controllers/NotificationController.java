@@ -40,15 +40,6 @@ public class NotificationController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
-        // 알림 설정 [OFF] 삭제
-        int setting = Integer.parseInt(user.getNotification(),2);
-  
-		for(int i=0; i<7; i++){
-			if((setting & (1<<i)) == 0){
-                notificationService.deleteByTargetuserAndType(email, 1<<i);
-			}
-		}
-
         final SseEmitter emitter = new SseEmitter();
         final StreamDataSet DATA_SET = new StreamDataSet(user, emitter);
         final String UNIQUE_UUID = email;

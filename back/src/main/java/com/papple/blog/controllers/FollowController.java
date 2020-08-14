@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.papple.blog.models.Follow;
 import com.papple.blog.models.FollowPK;
 import com.papple.blog.models.Notification;
+import com.papple.blog.models.User;
 import com.papple.blog.repository.NotificationRepository;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.FollowService;
@@ -72,19 +73,21 @@ public class FollowController {
 		Follow follow = new Follow(new FollowPK(follower, followed));
 		followService.save(follow);
 
-		// 알림발생(0010000)
-		// >>> notiurl 주소 front로 추후 변경
+		// 알림발생(010000)
 		String actionName = userRepository.getUserByEmail(follower).getNickname();
-		Notification notification = Notification.builder()
-			.message(actionName +"님이 당신을 팔로우 합니다.")
-			.actionuser(follower)
-			.targetuser(followed)
-			.notiurl("http://i3a604.p.ssafy.io/"+follower)
-			.build();
+		User user = userRepository.getUserByEmail(followed);
+        int setting = Integer.parseInt(user.getNotification(),2);
+        // 알림 ON 했는지
+        if( (setting& (1<<4)) != 0){
+			Notification notification = Notification.builder()
+				.message(actionName +"님이 당신을 팔로우 합니다.")
+				.actionuser(follower)
+				.targetuser(followed)
+				.build();
 
-			notification.setType(1<<4);
-			notificationService.save(notification);
-		
+				notification.setType(1<<4);
+				notificationService.save(notification);
+		}
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
