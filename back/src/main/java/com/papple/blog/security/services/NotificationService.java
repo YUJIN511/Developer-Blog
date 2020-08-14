@@ -21,4 +21,5 @@ public interface NotificationService {
     Notification findByActionuserAndCommentidAndType(String actionuser, Long commentid, Integer type);
     Notification findByActionuserAndTargetuserAndType(String follower, String followed, Integer type);
     void deleteByTargetuserAndType(String targetuser, Integer type);
+    void deleteById(Long id);
 }

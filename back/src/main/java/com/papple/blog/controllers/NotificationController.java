@@ -8,11 +8,13 @@ import com.papple.blog.payload.response.StreamDataSet;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.NotificationService;
 
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -76,6 +78,14 @@ public class NotificationController {
         List<Notification> list = notificationService.findByTargetuser(email);
 
         return new ResponseEntity<List<Notification>>(list, HttpStatus.OK);
+    }
+
+    @DeleteMapping
+    @ApiOperation(value = "알림 삭제")
+    public ResponseEntity<?> deleteNotification(@RequestParam Long id){
+        notificationService.deleteById(id);
+        
+        return new ResponseEntity<String>("success", HttpStatus.OK);
     }
 
 
