@@ -108,30 +108,34 @@
           >새 글쓰기</router-link
         >
         <div>
-          <button class="notification-icon" @click="openNotification" v-if="getIsLogin()">
-          <svg
-            version="1.1"
-            id="notification_icon"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px"
-            y="0px"
-            viewBox="0 0 26 26"
-            style="enable-background:new 0 0 26 26;"
-            xml:space="preserve"
+          <button
+            class="notification-icon"
+            @click="openNotification"
+            v-if="getIsLogin()"
           >
-            <path
-              d="M6.2,23.7c-0.2,0.1-0.4,0.1-0.6,0.1c0.3,0,0.6-0.1,0.9-0.2l5.3-2L6.2,23.7z"
-            />
-            <path
-              d="M17.8,22.2c-0.1,1.3-0.9,2.3-2.1,2.7c-1.1,0.4-2.4,0-3.1-0.9c-0.2-0.3-0.2-0.4,0.1-0.6l4.6-1.8
+            <svg
+              version="1.1"
+              id="notification_icon"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 26 26"
+              style="enable-background:new 0 0 26 26;"
+              xml:space="preserve"
+            >
+              <path
+                d="M6.2,23.7c-0.2,0.1-0.4,0.1-0.6,0.1c0.3,0,0.6-0.1,0.9-0.2l5.3-2L6.2,23.7z"
+              />
+              <path
+                d="M17.8,22.2c-0.1,1.3-0.9,2.3-2.1,2.7c-1.1,0.4-2.4,0-3.1-0.9c-0.2-0.3-0.2-0.4,0.1-0.6l4.6-1.8
 	C17.6,21.4,17.8,21.6,17.8,22.2z"
-            />
-            <path
-              d="M22.6,17.4c-2.2,0.8-4.4,1.7-6.6,2.5l-3.3,1.3l9.6-3.6c0.3-0.1,0.6-0.2,0.8-0.4C23,17.3,22.8,17.4,22.6,17.4z"
-            />
-            <path
-              d="M22.6,14.4c-1.2-0.6-2.1-1.6-2.6-2.8c0-0.1-0.1-0.2-0.1-0.2c-0.4-1-0.8-2-1.1-3c-1-3.3-4-5.6-7.4-5.8c-0.3,0-0.6,0-1,0h-0.1
+              />
+              <path
+                d="M22.6,17.4c-2.2,0.8-4.4,1.7-6.6,2.5l-3.3,1.3l9.6-3.6c0.3-0.1,0.6-0.2,0.8-0.4C23,17.3,22.8,17.4,22.6,17.4z"
+              />
+              <path
+                d="M22.6,14.4c-1.2-0.6-2.1-1.6-2.6-2.8c0-0.1-0.1-0.2-0.1-0.2c-0.4-1-0.8-2-1.1-3c-1-3.3-4-5.6-7.4-5.8c-0.3,0-0.6,0-1,0h-0.1
 	c-0.2,0-0.3-0.1-0.5-0.3C9.5,1.6,9,1.3,8.4,1.1L8.2,1C8.1,1,8,1,7.9,1H7.6L7.3,1.1C7.1,1.1,7,1.1,6.9,1.2L6.6,1.4
 	c-0.1,0-0.2,0.1-0.2,0.2L6.2,1.7C5.7,2.3,5.4,3.1,5.6,3.8c0,0.2,0,0.4-0.1,0.5l0,0L5.4,4.4C5.2,4.6,5,4.8,4.8,5.1
 	C2.3,7.5,1.6,11.2,3,14.3c0.4,1,0.8,2,1.1,3c0,0.1,0.1,0.2,0.1,0.3c0.4,1.2,0.4,2.6,0,3.8c-0.4,0.8-0.1,1.8,0.7,2.2
@@ -140,15 +144,19 @@
 	c0-0.2-0.1-0.6,0.2-0.6c0.4,0,0.3,0.4,0.3,0.6c0,0.2,0.1,0.5,0.1,0.7C5.4,12.7,5.4,12.8,5.2,12.9z M7.8,6.3C7.4,6.6,7,7,6.6,7.5
 	c-0.4,0.6-0.8,1.2-1,1.9c0,0.1-0.1,0.2-0.1,0.3c0,0.2-0.2,0.3-0.3,0.2c0,0,0,0,0,0C5,9.9,5,9.7,5,9.5l0.1-0.3C5.3,8.4,5.7,7.7,6.2,7
 	C6.6,6.6,7,6.2,7.4,5.8c0.2-0.1,0.4-0.4,0.6-0.1C8.3,6,8,6.1,7.8,6.3z"
-            />
-          </svg>
+              />
+            </svg>
           </button>
         </div>
-        <!-- <router-link class="profile-icon" v-if="getIsLogin()" to="/setting"> -->
-        <div class="profile-image" v-if="getIsLogin()">
-          <button class="banner-image-edit" @click="moveToProfile"></button>
+        <div>
+          <div class="profile-image" v-if="getIsLogin()">
+            <button
+              class="banner-image-edit"
+              @click="isUserNavbarShow = !isUserNavbarShow"
+            ></button>
+          </div>
+          <NavbarUserInfo v-if="isUserNavbarShow" />
         </div>
-        <!-- </router-link> -->
       </div>
     </div>
     <Navbar />
@@ -171,6 +179,7 @@ import EmailModal from "@/components/user/EmailModal.vue";
 import UnregisterModal from "@/components/user/setting/UnregisterModal.vue";
 import ProfilePicModal from "@/components/user/setting/ProfilePicModal.vue";
 import Notification from "@/components/notification/notification.vue";
+import NavbarUserInfo from "@/components/common/NavbarUserInfo.vue";
 
 import { mapActions, mapGetters } from "vuex";
 
@@ -184,11 +193,13 @@ export default {
     EmailModal,
     UnregisterModal,
     ProfilePicModal,
-    Notification
+    Notification,
+    NavbarUserInfo
   },
   data() {
     return {
-      searchWord: ""
+      searchWord: "",
+      isUserNavbarShow: false
     };
   },
   methods: {
