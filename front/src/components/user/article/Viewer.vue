@@ -193,13 +193,20 @@ export default {
 
         if (res.status === 200) {
           const articleData = res.data;
+          if (articleData.blogPicture === null)
+            articleData.blogPicture =
+              "https://cdns.iconmonstr.com/wp-content/assets/preview/2019/240/iconmonstr-school-28.png";
           this.articleData = articleData;
           this.createDate = articleData.createdate.split(" ")[0];
           this.title = articleData.title;
           this.content = articleData.content;
           this.editor.setContent(this.content);
           this.tagList = articleData.tag;
-          this.profile = articleData.profile;
+
+          this.profile =
+            articleData.profile === null
+              ? "https://cdns.iconmonstr.com/wp-content/assets/preview/2012/240/iconmonstr-user-20.png"
+              : articleData.profile;
           this.nickname = articleData.nickname;
           this.thumbnail = articleData.picture;
           this.like = articleData.good;
