@@ -74,7 +74,7 @@ export default {
         async setupStream() {
             console.log("==> 이벤트 소스 수행");
             this.eventSource =  await new EventSource(
-                "http://i3a604.p.ssafy.io:8081/api/notification/user/push?email="+this.getEmail(),
+                "http://i3a604.p.ssafy.io:8081/api/notification/push?email="+this.getEmail(),
                 { withCredentials: true }
             );
             this.eventSource.onopen =  function(e) {
