@@ -49,7 +49,7 @@ public class User {
 		this.score = score;
 		this.usercertification = usercertification;
 		this.notification = "111111";
-		this.profile = "http://i3a604.p.ssafy.io/images/profile/basic.png";
+		this.profile = "http://i3a604.p.ssafy.io/images/profile/pika.jpg";
 	}
 
 }
