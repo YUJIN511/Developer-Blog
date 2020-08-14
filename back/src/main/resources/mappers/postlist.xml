@@ -68,13 +68,13 @@
 	</select>
 	
 	<!-- 해당 사용자의 보관함 리스트 -->
-	<select id="findStorageListByEmail" resultType="PostList">
+	<select id="findStorageListByEmail" resultType="Long">
 		select postid from storage where email = #{email} order by createdate desc
 	</select>
 	
 	<!-- 해당 사용자의 팔로워의 최신 게시물 리스트 -->
 	<select id="findLatestMyFollowPost" resultType="PostList">
-		select * from post where writer = #{email} order by createdate desc
+		select * from post where exists(select * from follow where followed = writer and follower = #{email}) order by createdate desc
 	</select>
 
 
