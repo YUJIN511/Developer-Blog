@@ -197,12 +197,14 @@ export default {
 }
 
 main {
-  padding: 30px 70px;
+  padding: 30px 0px;
+  padding-left: 70px;
   display: flex;
   .content {
     position: relative;
     width: 100%;
     margin: 40px;
+    margin-right: 150px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -278,5 +280,10 @@ main {
   width: 150px;
   height: 150px;
   border-radius: 50%;
+}
+
+.container-article {
+  position: relative;
+  width: 100%;
 }
 </style>
