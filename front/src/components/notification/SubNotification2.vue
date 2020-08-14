@@ -24,7 +24,7 @@ export default {
         }),
         deletenotification(){
             axios
-                .get(`${SERVER_URL}/api/notification/delete`,{
+                .delete(`${SERVER_URL}/api/notification/`,{
                     params: {
                         id: this.data.id,
                     },
