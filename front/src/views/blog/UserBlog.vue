@@ -253,6 +253,8 @@ main {
     .container-tabs {
       margin: 12px;
       .btn {
+        font-size: 1em;
+        padding: 10px;
         border-radius: 0px;
         margin-right: 50px;
         &:focus {
