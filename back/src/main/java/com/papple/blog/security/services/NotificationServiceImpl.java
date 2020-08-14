@@ -99,7 +99,7 @@ public class NotificationServiceImpl implements NotificationService{
 
             try {
                 /** 알림 전송 수행 **/
-                emitter.send(alert, MediaType.APPLICATION_JSON_UTF8);
+                emitter.send(alertList, MediaType.APPLICATION_JSON_UTF8);
 
             } catch (Exception e) {
                 log.error("이미터 센드 시 에러 발생 :: {}", e.getMessage());
