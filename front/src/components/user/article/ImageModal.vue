@@ -128,6 +128,7 @@ export default {
   align-items: center;
   justify-content: center;
   position: fixed;
+  z-index: 10;
   top: 0;
   left: 0;
   bottom: 0;
