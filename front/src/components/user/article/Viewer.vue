@@ -3,7 +3,12 @@
     <header>
       <div class="title-line">
         <h1 type="text" class="view-title" placeholder="제목" readonly>{{ title }}</h1>
-        <button class="btn-more">...</button>
+        <UpdateModal :articleId="postId" ref="updateModal" v-if="isShowUpdateModal" />
+        <button
+          class="btn-more"
+          @click="isShowUpdateModal = !isShowUpdateModal"
+          v-if="getUserInfo().email === writer"
+        >...</button>
       </div>
       <div class="article-info">
         <div class="user-info">
@@ -84,6 +89,7 @@ import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
 import Comment from "./CommentModule.vue";
 import BlogInfo from "./BlogInfo.vue";
+import UpdateModal from "./updateModal";
 
 import {
   CodeBlockHighlight,
@@ -110,7 +116,8 @@ export default {
   components: {
     EditorContent,
     Comment,
-    BlogInfo
+    BlogInfo,
+    UpdateModal
   },
   data() {
     return {
@@ -161,9 +168,11 @@ export default {
       content: "",
       like: 0,
       isLike: false,
+      writer: "",
       commentModuleKey: 0,
       articleData: {},
-      isStored: false
+      isStored: false,
+      isShowUpdateModal: false
     };
   },
   methods: {
@@ -196,6 +205,7 @@ export default {
           this.like = articleData.good;
           this.isLike = articleData.isgood;
           this.isStored = articleData.isstore;
+          this.writer = articleData.writer;
           this.setLikeBtn();
           this.setLibraryBtn();
         }

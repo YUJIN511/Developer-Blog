@@ -23,7 +23,7 @@
         align-items: center;
         background-color: rgba(0, 0, 0, 0);
         height: 30px;
-        border: 2px solid rgb(167, 167, 167);
+        border: 1px solid rgb(167, 167, 167);
         color: rgb(143, 143, 143);
         font-size: 0.8em;
         padding: 0px 20px;
@@ -35,9 +35,9 @@
     main {
       flex-grow: 1;
       width: 50%;
-      padding: 30px;
-      padding-top: 50px;
-      background-color: $bgColor;
+      padding: 24px;
+      padding-top: 54px;
+      background-color: #F9FBFF;
     }
   }
 

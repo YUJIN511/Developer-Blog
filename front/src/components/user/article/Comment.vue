@@ -28,19 +28,46 @@
         </svg>
       </button>
       <span class="like-count">{{ commentData.likes }}</span>
-      <button class="btn-reply-write" @click="isReplyWriteShow = !isReplyWriteShow">답글</button>
+      <button
+        class="btn-reply-write"
+        @click="isReplyWriteShow = !isReplyWriteShow"
+      >
+        답글
+      </button>
       <div class="container-reply-toggle" v-if="isReplyWriteShow">
-        <textarea maxlength="100" placeholder="답글을 입력하세요" v-model="replyContent"></textarea>
-        <button class="btn-cancel" @click="isReplyWriteShow = false">취소</button>
-        <button class="btn-submit-reply" @click="submitReply" :disabled="replyContent === ''">답글작성</button>
+        <textarea
+          maxlength="100"
+          placeholder="답글을 입력하세요"
+          v-model="replyContent"
+        ></textarea>
+        <button class="btn-cancel" @click="isReplyWriteShow = false">
+          취소
+        </button>
+        <button
+          class="btn-submit-reply"
+          @click="submitReply"
+          :disabled="replyContent === ''"
+        >
+          답글작성
+        </button>
       </div>
     </footer>
     <template v-if="!isReply">
-      <button class="btn-reply-toggle" v-if="commentData.replycount !== 0" @click="toggleReply">
-        <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 24 24">
+      <button
+        class="btn-reply-toggle"
+        v-if="commentData.replycount !== 0"
+        @click="toggleReply"
+      >
+        <svg
+          ref="replySvg"
+          xmlns="http://www.w3.org/2000/svg"
+          width="6"
+          height="6"
+          viewBox="0 0 24 24"
+        >
           <path d="M24 22h-24l12-20z" />
         </svg>
-        답글 {{ commentData.replycount }}개 보기
+        <span>답글 {{ commentData.replycount }}개 보기</span>
       </button>
       <ReplyList
         ref="replyList"
@@ -77,9 +104,18 @@ export default {
     }),
     toggleReply() {
       this.isReplyShow = !this.isReplyShow;
-      if (this.isReplyFirstCall) {
-        this.isReplyFirstCall = false;
-        this.$refs.replyList.getData();
+      const svg = this.$refs.replySvg;
+      if (this.isReplyShow) {
+        if (this.isReplyFirstCall) {
+          this.isReplyFirstCall = false;
+          this.$refs.replyList.getData();
+        }
+        console.dir(svg.nextSibling);
+        svg.classList.add("upper");
+        svg.nextSibling.innerText = "답글 숨기기";
+      } else {
+        svg.classList.remove("upper");
+        svg.nextSibling.innerText = `답글 ${this.commentData.replycount}개 보기`;
       }
     },
     setLikeBtn() {

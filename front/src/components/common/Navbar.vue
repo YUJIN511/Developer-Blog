@@ -65,7 +65,7 @@
           </router-link>
         </div>
       </div>
-      <hr class="hr-header" />
+      <hr style="width:0px; margin-top:0px">
       <div class="navbar-body">
         <div class="navbar-item" @click="closeNavbar">
           <router-link tag="button" to="/">

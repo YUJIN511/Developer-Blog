@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,11 +37,19 @@ public class ConfigController {
 	@Autowired
     private ConfigRepository configRepository;
 
-
     @PostMapping
 	@ApiOperation(value = "블로그 설정 저장, 수정")
 	public ResponseEntity<BlogConfig> saveConfig(@RequestBody BlogConfig config) {
+    	
+    	Optional<BlogConfig> origin = configRepository.findById(config.getEmail());
+    	String picture = "";
+    	
+    	if(origin.isPresent()) {
+    		picture = origin.get().getPicture();
+    	}
     	BlogConfig bc = configRepository.save(config);			//id가 있으면 수정, 없으면 저장
+    	bc.setPicture(picture);
+    	configRepository.updatePicture(picture, origin.get().getEmail());
         return new ResponseEntity<BlogConfig>(bc, HttpStatus.OK);
     }
 

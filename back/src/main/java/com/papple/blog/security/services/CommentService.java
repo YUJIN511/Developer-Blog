@@ -14,4 +14,7 @@ public interface CommentService {
     void deleteById(Long id);
     void deleteByReplyto(Long id);
     void deleteByPostid(Long postid);
+    void likeComment(String email, Long commentid);
+    void unlikeComment(String email, Long commentid);
+    int findByEmailAndCommentid(String email, Long commentid);
 }
