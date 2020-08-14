@@ -47,6 +47,7 @@ import com.papple.blog.models.PKSet;
 import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
 import com.papple.blog.models.Storage;
+import com.papple.blog.models.TagScore;
 import com.papple.blog.models.User;
 import com.papple.blog.payload.response.HashtagList;
 import com.papple.blog.payload.response.PopularScore;
@@ -59,6 +60,7 @@ import com.papple.blog.repository.HistoryRepository;
 import com.papple.blog.repository.PostAlgorithmRepository;
 import com.papple.blog.repository.PostListRepository;
 import com.papple.blog.repository.StorageRepository;
+import com.papple.blog.repository.TagScoreRepository;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.CommentService;
 import com.papple.blog.security.services.FollowService;
@@ -95,7 +97,8 @@ public class PostController {
     private ConfigRepository configRepository;
 	@Autowired
 	private GoodRepository goodRepository;
-	
+	@Autowired
+	private TagScoreRepository tagscoreRepository;
 
 	@GetMapping("/all")
 	@ApiOperation(value = "모든 포스트 보기")
@@ -123,6 +126,10 @@ public class PostController {
 		PostDetail detail = postListRepository.searchPostDetail(id);
 		List<String> tag = postListRepository.searchHashtag(id);
 		detail.setTag(tag);
+		
+		for(int i=0;i<tag.size();i++) {		//각 태그에 태그점수 증가
+			tagscoreRepository.plusScore(tag.get(i));
+		}
 		
 		if(email != null && !email.equals("")) {	//email이 있을 때만
 			if(goodRepository.isGood(email, id) > 0) detail.setIsgood(true);
@@ -216,6 +223,10 @@ public class PostController {
 	@GetMapping("searchHash/{hashtag}")
 	@ApiOperation(value = "해시태그로 게시물 검색")
 	public ResponseEntity<List<PostList>> searchByHashtag(@PathVariable String hashtag, String email) throws Exception {
+		//해당 태그가 없었다면, 인기태그에 추가. 있었다면, 점수 증가
+		if(tagscoreRepository.isExist(hashtag) == 0) tagscoreRepository.save(new TagScore(hashtag, 0l));
+		else tagscoreRepository.plusScore(hashtag);
+		
 		List<PostList> list = postListRepository.searchByTag(hashtag);
 		for(PostList post : list) {
 			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
@@ -237,7 +248,9 @@ public class PostController {
 		else {
 			for(int i=0;i<tag.getTag().size();i++) {
 				Hashtag ht = new Hashtag(new HashtagPK(p.getId(), tag.getTag().get(i)));
-				hashtagService.save(ht);
+				hashtagService.save(ht);	//해시태그 등록
+				// 해시태그 점수 등록
+				if(tagscoreRepository.isExist(tag.getTag().get(i)) == 0) tagscoreRepository.save(new TagScore(tag.getTag().get(i), 0l));
 			}
 		}
 
