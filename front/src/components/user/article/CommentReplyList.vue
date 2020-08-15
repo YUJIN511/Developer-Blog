@@ -1,7 +1,12 @@
 <template>
   <div class="container-comment-reply-list">
     <template v-for="(data, idx) in replyList">
-      <Comment :isReply="true" :commentData="data" :key="idx" />
+      <Comment
+        @reload="reload"
+        :isReply="true"
+        :commentData="data"
+        :key="idx"
+      />
     </template>
   </div>
 </template>
@@ -32,10 +37,12 @@ export default {
           }&id=${this.commentId}&postid=${this.$route.query.id}`
         );
         this.replyList = res.data;
-        console.dir(this.replyList);
       } catch (error) {
         console.log(error);
       }
+    },
+    reload() {
+      this.$emit("reloadReply");
     }
   }
 };

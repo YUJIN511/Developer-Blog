@@ -2,36 +2,48 @@
   <div class="viewer">
     <header>
       <div class="title-line">
-        <h1 type="text" class="view-title" placeholder="제목" readonly>{{ title }}</h1>
-        <UpdateModal :articleId="postId" ref="updateModal" v-if="isShowUpdateModal" />
+        <h1 type="text" class="view-title" placeholder="제목" readonly>
+          {{ title }}
+        </h1>
+        <UpdateModal
+          :articleId="postId"
+          ref="updateModal"
+          v-if="isShowUpdateModal"
+        />
         <button
           class="btn-more"
           @click="isShowUpdateModal = !isShowUpdateModal"
           v-if="getUserInfo().email === writer"
-        >...</button>
+        >
+          ...
+        </button>
       </div>
       <div class="article-info">
         <div class="user-info">
-          <img class="img-profile" :src="profile" v-if="profile !== ''" />
-          <svg
-            v-else
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 0 26 26"
-          >
-            <path
-              d="M13,1C6.4,1,1,6.4,1,13s5.4,12,12,12s12-5.4,12-12S19.6,1,13,1z M13,4.6c2,0,3.6,1.6,3.6,3.6S15,11.8,13,11.8
+          <button @click="$router.push(`/${writer}`)">
+            <img class="img-profile" :src="profile" v-if="profile !== ''" />
+            <svg
+              v-else
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              viewBox="0 0 26 26"
+            >
+              <path
+                d="M13,1C6.4,1,1,6.4,1,13s5.4,12,12,12s12-5.4,12-12S19.6,1,13,1z M13,4.6c2,0,3.6,1.6,3.6,3.6S15,11.8,13,11.8
 	s-3.6-1.6-3.6-3.6S11,4.6,13,4.6z M13,21.6c-3,0-5.7-1.5-7.2-3.9c0-2.4,4.8-3.7,7.2-3.7c2.4,0,7.2,1.3,7.2,3.7
 	C18.7,20.1,16,21.6,13,21.6z"
-            />
-          </svg>
-          <span>{{ nickname }}</span>
+              />
+            </svg>
+            <span>{{ nickname }}</span>
+          </button>
         </div>
         <span class="create-date">· {{ createDate }}</span>
       </div>
 
       <div class="viewer-tags">
-        <button class="btn-tag" :key="idx" v-for="(tag, idx) in tagList">#{{ tag }}</button>
+        <button class="btn-tag" :key="idx" v-for="(tag, idx) in tagList">
+          #{{ tag }}
+        </button>
       </div>
       <div class="article-nav">
         <div ref="navContent" class="article-nav-content">
@@ -40,14 +52,20 @@
       </div>
       <div class="introduction">
         <img :src="thumbnail" alt v-if="thumbnail !== ''" />
-        <div ref="defaultThumbnail" class="default-thumbnail" v-else>{{ title }}</div>
+        <div ref="defaultThumbnail" class="default-thumbnail" v-else>
+          {{ title }}
+        </div>
       </div>
     </header>
     <editor-content class="editor__content" :editor="editor" />
     <div class="container-small-buttons">
       <div class="small-buttons">
         <button class="btn-like" @click="toggleLikeBtn">
-          <svg class="icon-like" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <svg
+            class="icon-like"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
             <path
               d="M12 4.248c-3.148-5.402-12-3.825-12 2.944 0 4.661 5.571 9.427 12 15.808 6.43-6.381 12-11.147 12-15.808 0-6.792-8.875-8.306-12-2.944z"
             />
@@ -193,13 +211,20 @@ export default {
 
         if (res.status === 200) {
           const articleData = res.data;
+          if (articleData.blogPicture === null)
+            articleData.blogPicture =
+              "https://cdns.iconmonstr.com/wp-content/assets/preview/2019/240/iconmonstr-school-28.png";
           this.articleData = articleData;
           this.createDate = articleData.createdate.split(" ")[0];
           this.title = articleData.title;
           this.content = articleData.content;
           this.editor.setContent(this.content);
           this.tagList = articleData.tag;
-          this.profile = articleData.profile;
+
+          this.profile =
+            articleData.profile === null
+              ? "https://cdns.iconmonstr.com/wp-content/assets/preview/2012/240/iconmonstr-user-20.png"
+              : articleData.profile;
           this.nickname = articleData.nickname;
           this.thumbnail = articleData.picture;
           this.like = articleData.good;

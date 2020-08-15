@@ -9,13 +9,20 @@
             viewBox="0 0 26 26"
             class="mini-menu-icon"
           >
-            <path d="M10.6,23.2V16h4.8v7.2h6v-9.6H25L13,2.8L1,13.6h3.6v9.6H10.6z" />
+            <path
+              d="M10.6,23.2V16h4.8v7.2h6v-9.6H25L13,2.8L1,13.6h3.6v9.6H10.6z"
+            />
           </svg>
           <div class="mini-menu-text">홈</div>
         </router-link>
       </div>
       <div class="item">
-        <router-link tag="button" class="btn-icon" to="/main/follow" id="btn-follow">
+        <router-link
+          tag="button"
+          class="btn-icon"
+          to="/main/follow"
+          id="btn-follow"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -25,7 +32,9 @@
             <g>
               <polygon points="7.7,10.8 6.4,10.9 4.2,9 8.6,8.7 	" />
               <polygon points="19.8,15.8 21,21.3 17.7,19.3 17.4,17.9 	" />
-              <polygon points="25,9 22.3,11.4 15.1,10.8 12.9,5.6 14.6,1.5 17.5,8.4 	" />
+              <polygon
+                points="25,9 22.3,11.4 15.1,10.8 12.9,5.6 14.6,1.5 17.5,8.4 	"
+              />
               <polygon
                 points="19.4,14.3 16.1,17.2 16.4,18.5 17.8,24.5 11.4,20.6 5,24.5 6.7,17.2 1,12.3 7.3,11.7 8.5,11.6 9.8,8.6 11.4,4.7 
 		12.3,6.9 14.3,11.6 21.3,12.2 21.8,12.3 	"
@@ -36,7 +45,12 @@
         </router-link>
       </div>
       <div class="item">
-        <router-link tag="button" class="btn-icon" to="/main/trending" id="btn-trending">
+        <router-link
+          tag="button"
+          class="btn-icon"
+          to="/main/trending"
+          id="btn-trending"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -58,7 +72,12 @@
         </router-link>
       </div>
       <div class="item">
-        <router-link tag="button" class="btn-icon" to="/main/history" id="btn-history">
+        <router-link
+          tag="button"
+          class="btn-icon"
+          to="/main/history"
+          id="btn-history"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -75,7 +94,12 @@
         </router-link>
       </div>
       <div class="item">
-        <router-link tag="button" class="btn-icon" to="/main/library" id="btn-library">
+        <router-link
+          tag="button"
+          class="btn-icon"
+          to="/main/library"
+          id="btn-library"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"

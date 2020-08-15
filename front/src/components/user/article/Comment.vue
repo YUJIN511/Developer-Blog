@@ -1,7 +1,7 @@
 <template>
   <div class="container-comment">
     <header>
-      <div>
+      <div class="profile-img-box">
         <img :src="commentData.profile" alt />
       </div>
       <div class="info">
@@ -13,7 +13,7 @@
         <span class="date">{{ commentData.createdate.split("T")[0] }}</span>
       </div>
     </header>
-    <main>{{ commentData.content }}</main>
+    <main ref="main"></main>
     <footer>
       <button class="btn-like" @click="toggleLikeButton">
         <svg
@@ -28,15 +28,30 @@
         </svg>
       </button>
       <span class="like-count">{{ commentData.likes }}</span>
-      <button class="btn-reply-write" @click="isReplyWriteShow = !isReplyWriteShow">답글</button>
-      <div class="container-reply-toggle" v-if="isReplyWriteShow">
-        <textarea maxlength="100" placeholder="답글을 입력하세요" v-model="replyContent"></textarea>
-        <button class="btn-cancel" @click="isReplyWriteShow = false">취소</button>
-        <button class="btn-submit-reply" @click="submitReply" :disabled="replyContent === ''">답글작성</button>
+      <button class="btn-reply-write" @click="toggleReplyTextarea">
+        답글
+      </button>
+      <div class="container-reply-toggle" v-show="isReplyTextareaShow">
+        <div
+          class="textarea"
+          contenteditable="true"
+          placeholder="답글을 입력하세요..."
+          ref="textarea"
+        ></div>
+        <button class="btn-cancel" @click="toggleReplyTextarea">
+          취소
+        </button>
+        <button class="btn-submit-reply" @click="submitReply">
+          답글작성
+        </button>
       </div>
     </footer>
     <template v-if="!isReply">
-      <button class="btn-reply-toggle" v-if="commentData.replycount !== 0" @click="toggleReply">
+      <button
+        class="btn-reply-toggle"
+        v-if="commentData.replycount !== 0"
+        @click="toggleReply"
+      >
         <svg
           ref="replySvg"
           xmlns="http://www.w3.org/2000/svg"
@@ -53,6 +68,7 @@
         :commentId="commentData.id"
         v-show="isReplyShow"
         :key="replyListKey"
+        @reloadReply="reloadReply"
       />
     </template>
   </div>
@@ -70,10 +86,10 @@ export default {
   data: function() {
     return {
       isReplyShow: false,
-      isReplyWriteShow: false,
+      isReplyTextareaShow: false,
       isReplyFirstCall: true,
       isLike: 0,
-      replyContent: `@${this.commentData.nickname} `,
+      replyContent: "",
       replyListKey: 0
     };
   },
@@ -89,13 +105,28 @@ export default {
           this.isReplyFirstCall = false;
           this.$refs.replyList.getData();
         }
-        console.dir(svg.nextSibling);
         svg.classList.add("upper");
         svg.nextSibling.innerText = "답글 숨기기";
       } else {
         svg.classList.remove("upper");
         svg.nextSibling.innerText = `답글 ${this.commentData.replycount}개 보기`;
       }
+    },
+    toggleReplyTextarea() {
+      this.isReplyTextareaShow = !this.isReplyTextareaShow;
+      if (this.isReplyTextareaShow) {
+        this.openReplyTextArea();
+      } else {
+        this.closeReplyTextArea();
+      }
+    },
+    openReplyTextArea() {
+      if (this.isReply) {
+        this.$refs.textarea.innerHTML = `<a contenteditable="false" style="color: dodgerblue; margin-right:10px" href="/${this.commentData.email}">@${this.commentData.nickname} </a>`;
+      }
+    },
+    closeReplyTextArea() {
+      this.$refs.textarea.innerHTML = "";
     },
     setLikeBtn() {
       const likeIcon = this.$refs.likeIcon;
@@ -127,27 +158,44 @@ export default {
     },
     async submitReply() {
       try {
-        const res = await axios.post(`${this.$apiServer}/comment`, {
-          content: this.replyContent,
+        let replyto = this.commentData.id;
+        if (this.isReply) {
+          replyto = this.commentData.replyto;
+        }
+        await axios.post(`${this.$apiServer}/comment`, {
+          content: this.$refs.textarea.innerHTML,
           email: this.getUserInfo().email,
           postid: this.$route.query.id,
-          replyto: this.commentData.id
+          replyto
         });
-        console.dir(res);
-        this.isReplyFirstCall = true; // 리로드 해서 내용물이 없어져서 다시 불러와야함
-        this.replyListKey++;
-        this.replyContent = "";
-        this.commentData.replycount++;
-        this.isReplyWriteShow = false;
-        alert("답글이 작성되었습니다.");
+        this.reloadReply();
+        if (this.isReply) {
+          this.emitReload();
+        }
       } catch (error) {
         console.log(error);
+      }
+    },
+    emitReload() {
+      this.$emit("reload");
+    },
+    reloadReply() {
+      this.isReplyFirstCall = true; // 리로드 해서 내용물이 없어져서 다시 불러와야함
+      this.replyListKey++;
+      this.$refs.textarea.innerHTML = "";
+      this.commentData.replycount++;
+      this.isReplyShow = false;
+      if (!this.isReply) {
+        const svg = this.$refs.replySvg;
+        svg.classList.remove("upper");
+        svg.nextSibling.innerText = `답글 ${this.commentData.replycount}개 보기`;
       }
     }
   },
   mounted() {
     this.isLike = this.commentData.islike;
     this.setLikeBtn();
+    this.$refs.main.innerHTML = this.commentData.content;
   }
 };
 </script>
@@ -163,10 +211,13 @@ export default {
     display: flex;
     align-items: center;
     width: 100%;
-    img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
+    .profile-img-box {
+      flex-shrink: 0;
+      img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+      }
     }
     .info {
       display: flex;
@@ -181,6 +232,8 @@ export default {
         }
         .btn-more {
           margin-left: auto;
+          font-size: 1em;
+          font-weight: 900;
           &:hover {
             opacity: 0.5;
           }
@@ -226,15 +279,19 @@ export default {
       justify-content: flex-end;
       flex-wrap: wrap;
       width: 100%;
-      textarea {
+      [contenteditable="true"]:empty:before {
+        content: attr(placeholder);
+        display: block;
+      }
+      .textarea {
         margin-top: 20px;
         margin-bottom: 10px;
         padding: 10px;
         width: 100%;
         height: 100px;
         resize: none;
-        border-color: lightgray;
-        &::placeholder {
+        border: 1px lightgray solid;
+        &::before {
           color: #c5c5c5;
         }
       }
