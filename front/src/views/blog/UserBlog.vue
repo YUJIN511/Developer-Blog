@@ -117,7 +117,9 @@ export default {
     },
     onSelectTag(tag) {
       axios
-        .get(`${SERVER_URL}/api/post/my/${this.userEmail}/${tag}`)
+        .get(
+          `${SERVER_URL}/api/post/mycategory/postlist?email=${this.userEmail}&hashtag=${tag}`
+        )
         .then(res => {
           this.articleData = res.data;
         })
@@ -205,12 +207,14 @@ export default {
 }
 
 main {
-  padding: 30px 70px;
+  padding: 30px 0px;
+  padding-left: 70px;
   display: flex;
   .content {
     position: relative;
     width: 100%;
     margin: 40px;
+    margin-right: 150px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -261,6 +265,8 @@ main {
     .container-tabs {
       margin: 12px;
       .btn {
+        font-size: 1em;
+        padding: 10px;
         border-radius: 0px;
         margin-right: 50px;
         &:focus {
@@ -284,5 +290,10 @@ main {
   width: 150px;
   height: 150px;
   border-radius: 50%;
+}
+
+.container-article {
+  position: relative;
+  width: 100%;
 }
 </style>

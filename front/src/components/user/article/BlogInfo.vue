@@ -1,9 +1,6 @@
 <template>
   <div class="container-blog-info">
-    <button
-      class="btn-moveto-info"
-      @click="$router.push(`/${articleData.writer}`)"
-    >
+    <button class="btn-moveto-info" @click="$router.push(`/${articleData.writer}`)">
       <img :src="articleData.blogPicture" alt />
       <div class="main-info">
         <div class="user-info">
@@ -12,9 +9,7 @@
         </div>
         <div class="blog-title">{{ articleData.blogName }}</div>
         <div class="blog-description">{{ articleData.blogDescription }}</div>
-        <div class="follower-number">
-          팔로우 {{ articleData.followerNum }}명
-        </div>
+        <div class="follower-number">팔로우 {{ articleData.followerNum }}명</div>
       </div>
     </button>
     <button class="btn-follow">팔로우</button>

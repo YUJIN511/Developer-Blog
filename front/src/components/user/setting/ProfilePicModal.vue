@@ -11,7 +11,7 @@
           accept="image/png, image/jpeg"
           @change="previewFile"
         />
-        <button @click="clickInput" class="btn btn-upload">...사진 업로드</button>
+        <button @click="clickInput" class="btn btn-upload">사진 업로드</button>
         <button @click="setDefaultImage" class="btn btn-setdefault">기본 프로필 이미지로 변경</button>
       </div>
       <div class="modal-body">
@@ -19,18 +19,21 @@
         <div class="container-images">
           <div
             class="previous-image"
-            v-for="image in images"
+            v-for="(image, i) in images"
             :key="image"
-            @click="deleteImage(image)"
+            @click="selectImage(image)"
+            @mouseover="showDeleteButton(i)"
+            @mouseout="hideDeleteButton(i)"
           >
+            <div class="banner-image-delete" @click="deleteImage(image)">✖</div>
             <img :src="image" />
-            <button class="banner-image-delete">✖</button>
+            <button class="banner-image-select"></button>
           </div>
         </div>
       </div>
       <div class="container-btns">
-        <button @click="saveChanges">저장</button>
-        <button class="btn-close" @click="closeModal">취소</button>
+        <button class="btn btn-save" @click="saveChanges">저장</button>
+        <button class="btn btn-close" @click="closeModal">취소</button>
       </div>
     </div>
   </div>
@@ -64,6 +67,7 @@ export default {
     },
     previewFile(event) {
       this.file = event.target.files[0];
+      console.log(this.file);
       this.url = URL.createObjectURL(this.file);
       document.querySelector(
         ".preview-image"
@@ -110,6 +114,46 @@ export default {
           this.fetchPictures();
         })
         .catch(err => console.log(err));
+    },
+    selectImage(url) {
+      document.querySelector(
+        ".preview-image"
+      ).style.backgroundImage = `url('${url}')`;
+      this.createFile(url).then(() => console.log(this.file));
+    },
+    async createFile(url) {
+      await fetch(url)
+        .then(response => {
+          let data = response.blob();
+          let metadata = {
+            type: "image/jpeg"
+          };
+          this.file = new File([data], "profile.jpg", metadata);
+        })
+        .catch(err => console.log(err));
+      // let response = await fetch(url);
+      // let data = await response.blob();
+      // let metadata = {
+      //   type: "image/jpeg"
+      // };
+      // this.file = new File([data], "test.jpg", metadata);
+      // ... do something with the file or return it
+    },
+    showDeleteButton(i) {
+      //       color: rgb(0, 0, 0);
+      // background-color: rgba(255, 255, 255);
+      document.querySelectorAll(".banner-image-delete")[
+        i
+      ].style.backgroundColor = "rgb(255, 255, 255)";
+      document.querySelectorAll(".banner-image-delete")[i].style.color =
+        "rgb(0, 0, 0)";
+    },
+    hideDeleteButton(i) {
+      document.querySelectorAll(".banner-image-delete")[
+        i
+      ].style.backgroundColor = "rgba(255, 255, 255, 0)";
+      document.querySelectorAll(".banner-image-delete")[i].style.color =
+        "rgba(0, 0, 0, 0)";
     }
   },
   mounted() {
@@ -156,12 +200,21 @@ export default {
 
 .modal-head {
   padding: 50px;
-  //   display: flex;
-  //   flex-direction: row;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-end;
+  .btn {
+    height: 30px;
+    background-color: transparent;
+    font-size: 1em;
+    font-weight: 600;
+    color: #1a7cff;
+  }
 }
 
 .modal-body {
-  padding: 50px;
+  padding: 0px 50px;
   position: relative;
   display: block;
   .button {
@@ -171,19 +224,17 @@ export default {
 }
 
 .preview-image {
-  position: absolute;
   background-image: url(https://images.unsplash.com/photo-1517832207067-4db24a2ae47c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60);
   background-position: center;
   background-size: 150%;
   width: 120px;
   height: 120px;
   border-radius: 50%;
+  margin: 0;
 }
 
 .container-images {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
+  height: 200px;
 }
 
 .previous-image {
@@ -195,15 +246,30 @@ export default {
   border-radius: 50%;
   margin: 10px;
   display: inline-block;
-  img {
+  .banner-image-delete {
     position: absolute;
     top: 0;
-    width: 100%;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    z-index: 1;
+    text-align: center;
+    font-size: small;
+    color: rgb(0, 0, 0, 0);
+    background-color: rgba(255, 255, 255, 0);
+  }
+  img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    min-width: 50px;
     height: 100%;
     border-radius: 50%;
   }
   button {
     position: absolute;
+    left: 0;
     top: 0;
     width: 100%;
     height: 100%;
@@ -213,15 +279,22 @@ export default {
       font-size: 2rem;
       font-weight: 0;
       color: rgba(255, 255, 255, 0.6);
-      background-color: rgba(0, 0, 0, 0.6);
+      background-color: rgba(0, 0, 0, 0.3);
     }
   }
 }
 
 .container-btns {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 24px;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  .btn {
+    width: 100%;
+  }
 }
 
 h1 {
@@ -230,12 +303,5 @@ h1 {
 
 .hide {
   display: none;
-}
-
-.btn {
-  background-color: rgb(69, 181, 187);
-}
-.btn:hover {
-  background-color: cadetblue;
 }
 </style>
