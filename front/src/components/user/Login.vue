@@ -178,7 +178,7 @@ $minimumWidth: 950px;
   .left-login {
     display: none;
     width: 45%;
-    background-image: url(https://images.unsplash.com/photo-1523800503107-5bc3ba2a6f81?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1400&q=80);
+    background-image: url(https://cdn.pixabay.com/photo/2015/09/04/23/28/wordpress-923188_960_720.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     @media (min-width: $minimumWidth) {
