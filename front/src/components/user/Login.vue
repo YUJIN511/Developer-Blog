@@ -18,6 +18,7 @@
             type="email"
             placeholder="이메일을 입력해 주세요"
             v-model="userInfo.email"
+            autocomplete="email"
           />
           <div class="password-label">
             <label for="password">비밀번호</label>
@@ -29,6 +30,7 @@
             minlength="8"
             placeholder="비밀번호를 입력해 주세요"
             v-model="userInfo.password"
+            autocomplete="current-password"
           />
           <div class="social-login">
             <div class="social-title">
@@ -65,8 +67,15 @@
           </div>
           <button class="btn btn-login" type="submit">로그인</button>
           <div class="login-footer">
-            <a class="link-repassword" href="javascript:void(0)" @click="moveToRepassword">비밀번호 재설정</a>
-            <a class="link-join" href="javascript:void(0)" @click="moveToJoin">계정 만들기</a>
+            <a
+              class="link-repassword"
+              href="javascript:void(0)"
+              @click="moveToRepassword"
+              >비밀번호 재설정</a
+            >
+            <a class="link-join" href="javascript:void(0)" @click="moveToJoin"
+              >계정 만들기</a
+            >
           </div>
         </form>
       </div>
