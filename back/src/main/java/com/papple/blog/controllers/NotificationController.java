@@ -8,7 +8,6 @@ import com.papple.blog.payload.response.StreamDataSet;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.NotificationService;
 
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,14 +33,22 @@ public class NotificationController {
 	@Autowired
 	NotificationService notificationService;
 
-    @GetMapping(value = "/push", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    @ApiOperation(value = "알림 push")
+    @GetMapping(value = "user/push", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> fetchNotify(@RequestParam(required = false) String email) {
 
         final User user = userRepository.getUserByEmail(email);
         if(user == null){   // 식별되지 않은 사용자인 경우
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+
+        // 알림 설정 [OFF] 삭제
+        int setting = Integer.parseInt(user.getNotification(),2);
+  
+		for(int i=0; i<7; i++){
+			if((setting & (1<<i)) == 0){
+                notificationService.deleteByTargetuserAndType(email, 1<<i);
+			}
+		}
 
         final SseEmitter emitter = new SseEmitter();
         final StreamDataSet DATA_SET = new StreamDataSet(user, emitter);
