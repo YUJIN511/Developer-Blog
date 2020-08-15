@@ -109,7 +109,9 @@ export default {
     },
     onSelectTag(tag) {
       axios
-        .get(`${SERVER_URL}/api/post/my/${this.userEmail}/${tag}`)
+        .get(
+          `${SERVER_URL}/api/post/mycategory/postlist?email=${this.userEmail}&hashtag=${tag}`
+        )
         .then(res => {
           this.articleData = res.data;
         })

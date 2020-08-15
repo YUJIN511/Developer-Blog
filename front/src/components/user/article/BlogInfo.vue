@@ -1,6 +1,6 @@
 <template>
   <div class="container-blog-info">
-    <img :src="articleData.blogPicture" alt />
+    <img :src="articleData.profile" alt />
     <div class="main-info">
       <div class="user-info">
         <span class="user-icon">😉</span>
