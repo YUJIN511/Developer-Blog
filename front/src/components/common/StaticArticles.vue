@@ -1,7 +1,7 @@
 <template>
   <div class="container-article">
     <template v-for="(data, idx) in datas">
-      <Article :isStatic="isStatic" :key="idx" v-bind:data="data" />
+      <Article :key="idx" v-bind:data="data" />
     </template>
   </div>
 </template>
@@ -14,10 +14,6 @@ export default {
   props: {
     datas: {
       type: Array
-    },
-    isStatic: {
-      type: Boolean,
-      default: false
     }
   }
 };

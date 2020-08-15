@@ -1,5 +1,5 @@
 <template>
-  <div class="article">
+  <div ref="article" class="article">
     <button @click="readArticle" class="btn-read">
       <div ref="headerArticle" class="header-article">
         <img :src="data.picture" alt v-if="data.picture !== ''" />
@@ -61,9 +61,16 @@ export default {
   props: {
     data: {
       type: Object
+    },
+    isStatic: {
+      type: Boolean,
+      default: false
     }
   },
   mounted() {
+    if (this.isStatic) {
+      this.$refs.article.classList.add("static");
+    }
     if (this.data.isLiked) {
       document.querySelector(".icon-like").classList.add("selected");
     }
