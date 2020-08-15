@@ -76,6 +76,7 @@ public class NotificationController {
     @ApiOperation(value = "모든 알림 조회")
     public ResponseEntity<List<Notification>> allNotification(@RequestParam String email) {
         List<Notification> list = notificationService.findByTargetuser(email);
+        for(Notification noti : list)   noti.setProfile(userRepository.getUserByEmail(noti.getActionuser()).getProfile());
 
         return new ResponseEntity<List<Notification>>(list, HttpStatus.OK);
     }
