@@ -3,7 +3,9 @@
     <button @click="readArticle" class="btn-read">
       <div ref="headerArticle" class="header-article">
         <img :src="data.picture" alt v-if="data.picture !== ''" />
-        <span :title="data.title" v-if="data.picture === ''">{{ data.title }}</span>
+        <span :title="data.title" v-if="data.picture === ''">{{
+          data.title
+        }}</span>
       </div>
       <div class="body-article">
         <h5 :title="data.title">{{ data.title }}</h5>
