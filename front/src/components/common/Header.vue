@@ -107,9 +107,13 @@
           v-if="getIsLogin()"
           >새 글쓰기</router-link
         >
-          <div class="container">
-              <a class="badge-num" v-if="notifications.length>0 && getIsLogin()">{{notifications.length}}</a>
-          </div>
+        <div class="container">
+          <a
+            class="badge-num"
+            v-if="notifications.length > 0 && getIsLogin()"
+            >{{ notifications.length }}</a
+          >
+        </div>
         <div>
           <button
             class="notification-icon"
@@ -169,7 +173,7 @@
     <EmailModal />
     <UnregisterModal />
     <ProfilePicModal />
-    <Notification :notifications="notifications"/>
+    <Notification :notifications="notifications" />
   </div>
 </template>
 
@@ -204,7 +208,7 @@ export default {
       searchWord: "",
       isUserNavbarShow: false,
       eventSource: null,
-      notifications:[],
+      notifications: []
     };
   },
   methods: {
@@ -248,32 +252,33 @@ export default {
         .classList.remove("hide");
     },
     async setupStream() {
-            console.log("==> 이벤트 소스 수행");
-            this.eventSource = await new EventSource(
-                "http://i3a604.p.ssafy.io:8081/api/notification/push?email="+this.getEmail(),
-                { withCredentials: true }
-            );
-            this.eventSource.onopen =  function(e) {
-                console.log("이벤트 소스 오픈");
-                console.log(e);
-            };
-            var instance = this;
-            this.eventSource.onmessage =  function(e) {
-                console.log("이벤트 소스 메시지 도착");
-                instance.notifications = JSON.parse(e.data);
-            };
-             this.eventSource.onerror = function(e) {
-                console.log("이벤트 소스 에러");
-                console.log(e);
-            };
-        },
-        unSetupStream() {
-            if (this.eventSource === null) {
-                return;
-            }
-            console.log("==> 이벤트 소스 종료");
-            this.eventSource.close();
-        }
+      console.log("==> 이벤트 소스 수행");
+      this.eventSource = await new EventSource(
+        "http://i3a604.p.ssafy.io:8081/api/notification/push?email=" +
+          this.getEmail(),
+        { withCredentials: true }
+      );
+      this.eventSource.onopen = function(e) {
+        console.log("이벤트 소스 오픈");
+        console.log(e);
+      };
+      var instance = this;
+      this.eventSource.onmessage = function(e) {
+        console.log("이벤트 소스 메시지 도착");
+        instance.notifications = JSON.parse(e.data);
+      };
+      this.eventSource.onerror = function(e) {
+        console.log("이벤트 소스 에러");
+        console.log(e);
+      };
+    },
+    unSetupStream() {
+      if (this.eventSource === null) {
+        return;
+      }
+      console.log("==> 이벤트 소스 종료");
+      this.eventSource.close();
+    }
   },
   created() {
     this.fetchUserInfo(this.getEmail());
@@ -288,8 +293,8 @@ export default {
     this.setupStream();
   },
   beforeDestroy() {
-        this.unSetupStream();
-  },
+    this.unSetupStream();
+  }
 };
 </script>
 
@@ -511,8 +516,11 @@ button:hover {
   }
 }
 
-
-.container{position:relative;-webkit-perspective: 1000;-webkit-backface-visibility: hidden;}
+.container {
+  position: relative;
+  -webkit-perspective: 1000;
+  -webkit-backface-visibility: hidden;
+}
 .badge-num {
   box-sizing: border-box;
   font-family: "Trebuchet MS", sans-serif;
@@ -535,26 +543,42 @@ button:hover {
   animation: pulse 1.5s 1;
 }
 .badge-num:after {
-  content: '';
+  content: "";
   position: absolute;
-  top:-2px;
-  left:-2px;
-  border:2px solid rgba(255,0,0,.5);
-  opacity:0;
+  top: -2px;
+  left: -2px;
+  border: 2px solid rgba(255, 0, 0, 0.5);
+  opacity: 0;
   border-radius: 50%;
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: 100%;
   animation: sonar 1.5s 1;
 }
-@keyframes sonar { 
-  0% {transform: scale(.9); opacity:1;}
-  100% {transform: scale(2);opacity: 0;}
+@keyframes sonar {
+  0% {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
 }
 @keyframes pulse {
-  0% {transform: scale(1);}
-  20% {transform: scale(1.4); } 
-  50% {transform: scale(.9);} 
-  80% {transform: scale(1.2);} 
-  100% {transform: scale(1);}
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.4);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  80% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>
