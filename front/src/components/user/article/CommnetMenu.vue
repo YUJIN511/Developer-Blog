@@ -1,0 +1,72 @@
+<template>
+  <div class="container-comment-menu" v-if="isShow">
+    <div class="absolute">
+      <button @click="editStart">
+        수정 📝
+      </button>
+      <button @click="deleteComment">
+        삭제 ❌
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+export default {
+  props: ["content", "commentId"],
+  data: function() {
+    return {
+      isShow: false
+    };
+  },
+  methods: {
+    async deleteComment() {
+      if (confirm("정말 삭제하시겠습니까")) {
+        await axios.delete(`${this.$apiServer}/comment?id=${this.commentId}`);
+        this.$router.go();
+      }
+    },
+    editStart() {
+      this.$emit("editStart");
+      this.isShow = false;
+    },
+    toggleMenu() {
+      this.isShow = !this.isShow;
+    },
+    showMenu() {
+      this.isShow = true;
+    },
+    closeMenu() {
+      this.isShow = false;
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.container-comment-menu {
+  position: relative;
+  width: 0;
+  height: 0;
+  left: -10px;
+  top: 30px;
+  .absolute {
+    background-color: white;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.19), 0 1px 1px rgba(0, 0, 0, 0.23);
+    width: 80px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    button {
+      font-size: 0.8em;
+      padding: 7px 10px;
+      text-align: left;
+      &:hover {
+        background-color: aliceblue;
+      }
+    }
+  }
+}
+</style>
