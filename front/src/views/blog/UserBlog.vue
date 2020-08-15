@@ -2,11 +2,7 @@
   <div class="container-blog">
     <header></header>
     <main>
-      <TagList
-        :email="userEmail"
-        @select-tag="onSelectTag"
-        @select-all="onSelectAll"
-      />
+      <TagList :email="userEmail" @select-tag="onSelectTag" @select-all="onSelectAll" />
       <div class="content">
         <div class="content-header">
           <div class="container-profile">
@@ -17,21 +13,17 @@
                 <span>{{ userInfo.nickname }}</span>
               </div>
               <p class="blog-name">{{ userInfo.nickname }}님의 블로그</p>
-              <p class="blog-ex">극한의 코딩충</p>
+              <p class="blog-ex">{{ blogInfo.description }}</p>
               <p class="blog-follower">팔로워 {{ followersCnt }}명</p>
             </div>
           </div>
           <div class="container-btn-follow" v-if="showFollowBtn">
-            <button class="btn-follow" @click="follow">
-              {{ follow_text[isFollowing] }}
-            </button>
+            <button class="btn-follow" @click="follow">{{ follow_text[isFollowing] }}</button>
             <!-- <button class="btn-follow" @click="unfollow" v-if="isFollowing">팔로우 끊기</button> -->
           </div>
         </div>
         <div class="container-tabs">
-          <button class="btn btn-article" @click="clickArticle">
-            내 게시물
-          </button>
+          <button class="btn btn-article" @click="clickArticle">내 게시물</button>
           <button class="btn btn-Info" @click="clickInfo">정보</button>
         </div>
         <div class="content-body"></div>
@@ -70,7 +62,8 @@ export default {
       showInfo: false,
       showFollowBtn: null,
       isFollowing: 0,
-      follow_text: ["팔로우", "팔로우 끊기"]
+      follow_text: ["팔로우", "팔로우 끊기"],
+      blogInfo: []
     };
   },
   methods: {
@@ -116,6 +109,14 @@ export default {
         .get(`${SERVER_URL}/api/follow/cnt/${this.userEmail}`)
         .then(res => {
           this.followersCnt = res.data;
+        })
+        .catch(err => console.log(err));
+    },
+    fetchBlogInfo() {
+      axios
+        .get(`${SERVER_URL}/api/blog?email=${this.userEmail}`)
+        .then(res => {
+          this.blogInfo = res.data;
         })
         .catch(err => console.log(err));
     },
@@ -180,6 +181,7 @@ export default {
     this.fetchUserInfo();
     this.fetchArticles();
     this.fetchFollowersCnt();
+    this.fetchBlogInfo();
   },
   mounted() {
     if (this.userEmail === this.getEmail()) {
