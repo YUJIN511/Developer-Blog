@@ -75,14 +75,14 @@ export default {
   margin-top: 40px;
 }
 .input-comment {
-  margin: 20px 10px;
+  margin: 20px 0px;
   margin-bottom: 5px;
-  margin-right: 0px;
-  width: 98%;
+  width: 100%;
   height: 8rem;
   resize: none;
   border-color: rgb(211, 211, 211);
-  padding: 0.5rem 0.7rem;
+  border-radius: 5px;
+  padding: 0.7rem;
   &::placeholder {
     color: rgb(197, 197, 197);
   }
@@ -94,7 +94,8 @@ export default {
   margin-bottom: 40px;
   button {
     color: dodgerblue;
-    margin-right: 10px;
+    font-size: 0.8rem;
+    margin-right: 8px;
     &:disabled {
       color: rgb(216, 216, 216);
     }
