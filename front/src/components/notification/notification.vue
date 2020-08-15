@@ -68,8 +68,7 @@ export default {
     .row {
         width: 100%;
         display: inline-block;
-        padding: 0 8px;
-        margin-top: 8px;
+        padding: 8px 8px;
         span{
             float: left;
             font-size: 20px;
@@ -77,11 +76,10 @@ export default {
             color: #727272 ;
         }
        svg{
-           margin-top: 2px;
             float: right;
             width: 26px;
             height: 26px;
-            fill: #727272;
+            fill: #1A7CFF;
             cursor: pointer;
        }
     }
@@ -112,7 +110,7 @@ export default {
         box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
         position: fixed;
         border-radius: 3%;
-        border: 4px solid #f0f0f0;
+        border: 4px solid #E9F1FF;
     }
     .modal-notification:after, .modal-notification:before {
         bottom: 100%;
@@ -133,7 +131,7 @@ export default {
     }
     .modal-notification:before {
         border-color: rgba(194, 225, 245, 0);
-        border-bottom-color: #f0f0f0;
+        border-bottom-color: #E9F1FF;
         border-width: 24px;
         margin-left: 75px;
     }
@@ -147,12 +145,14 @@ export default {
         border-left: thick;
         width: 95%;
         margin: auto;
+        border-color: #c0c0c0;
+        border-top: 0px;
     }
     p {
         color: #1A7CFF;
         font-size: 14px;
         font-weight: 600;
-        padding: 12px;
+        padding: 10px;
         cursor: pointer;
     }          
 
