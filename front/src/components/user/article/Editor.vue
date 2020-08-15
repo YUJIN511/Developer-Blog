@@ -385,7 +385,6 @@ export default {
           const tagName = selectedTag.querySelector("span").innerText;
           const idx = this.tagList.indexOf(tagName);
           this.tagList.splice(idx, 1);
-          console.dir(this.tagList);
           selectedTag.remove();
         });
         removeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>delete-2-alternate</title><path d="M20.485,3.511A12.01,12.01,0,1,0,24,12,12.009,12.009,0,0,0,20.485,3.511Zm-1.767,15.21A9.51,9.51,0,1,1,21.5,12,9.508,9.508,0,0,1,18.718,18.721Z"/><path d="M16.987,7.01a1.275,1.275,0,0,0-1.8,0l-3.177,3.177L8.829,7.01A1.277,1.277,0,0,0,7.024,8.816L10.2,11.993,7.024,15.171a1.277,1.277,0,0,0,1.805,1.806L12.005,13.8l3.177,3.178a1.277,1.277,0,0,0,1.8-1.806l-3.176-3.178,3.176-3.177A1.278,1.278,0,0,0,16.987,7.01Z"/></svg>
@@ -404,8 +403,6 @@ export default {
       }
     },
     tagSetting(tagList) {
-      console.log("tagSetting", tagList);
-      console.log("this.taglist", this.tagList);
       tagList.forEach(elem => {
         const removeBtn = document.createElement("button");
         removeBtn.addEventListener("click", e => {
@@ -413,7 +410,6 @@ export default {
           const tagName = selectedTag.querySelector("span").innerText;
           const idx = this.tagList.indexOf(tagName);
           this.tagList.splice(idx, 1);
-          console.dir(this.tagList);
           selectedTag.remove();
         });
         removeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>delete-2-alternate</title><path d="M20.485,3.511A12.01,12.01,0,1,0,24,12,12.009,12.009,0,0,0,20.485,3.511Zm-1.767,15.21A9.51,9.51,0,1,1,21.5,12,9.508,9.508,0,0,1,18.718,18.721Z"/><path d="M16.987,7.01a1.275,1.275,0,0,0-1.8,0l-3.177,3.177L8.829,7.01A1.277,1.277,0,0,0,7.024,8.816L10.2,11.993,7.024,15.171a1.277,1.277,0,0,0,1.805,1.806L12.005,13.8l3.177,3.178a1.277,1.277,0,0,0,1.8-1.806l-3.176-3.178,3.176-3.177A1.278,1.278,0,0,0,16.987,7.01Z"/></svg>
@@ -438,9 +434,10 @@ export default {
       if (!this.isUpdated) {
         this.html = this.$refs.editorContent.editor.view.dom.innerHTML;
       }
-      console.log(this.$refs.editorContent.editor.view.dom.innerHTML);
       let tagString = "";
-      console.log(this.tagList);
+      if (this.tagList.length === 0) {
+        this.tagList.push("none");
+      }
       this.tagList.forEach(elem => {
         tagString += `tag=${elem}&`;
       });

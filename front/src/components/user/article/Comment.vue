@@ -1,20 +1,35 @@
 <template>
   <div class="container-comment">
     <header>
-      <div>
+      <div class="profile-img-box">
         <img :src="commentData.profile" alt />
       </div>
       <div class="info">
         <div class="user-info">
           <span>😀</span>
           <span>{{ commentData.nickname }}</span>
-          <button class="btn-more">⫶</button>
+          <button
+            class="btn-more"
+            v-if="getUserInfo().email === commentData.email"
+            @click="toggleMenu"
+          >
+            ⫶
+          </button>
+          <CommentMenu
+            ref="commentMenu"
+            :commentId="commentData.id"
+            @editStart="editStart"
+          />
         </div>
         <span class="date">{{ commentData.createdate.split("T")[0] }}</span>
       </div>
     </header>
-    <main>{{ commentData.content }}</main>
-    <footer>
+    <main ref="main"></main>
+    <div class="edit-buttons" v-if="isEditing">
+      <button @click="editCancel">취소</button>
+      <button @click="editSubmit">확인</button>
+    </div>
+    <footer v-if="!isEditing">
       <button class="btn-like" @click="toggleLikeButton">
         <svg
           class="icon-like-comment"
@@ -28,26 +43,20 @@
         </svg>
       </button>
       <span class="like-count">{{ commentData.likes }}</span>
-      <button
-        class="btn-reply-write"
-        @click="isReplyWriteShow = !isReplyWriteShow"
-      >
+      <button class="btn-reply-write" @click="toggleReplyTextarea">
         답글
       </button>
-      <div class="container-reply-toggle" v-if="isReplyWriteShow">
-        <textarea
-          maxlength="100"
-          placeholder="답글을 입력하세요"
-          v-model="replyContent"
-        ></textarea>
-        <button class="btn-cancel" @click="isReplyWriteShow = false">
+      <div class="container-reply-toggle" v-show="isReplyTextareaShow">
+        <div
+          class="textarea"
+          contenteditable="true"
+          placeholder="답글을 입력하세요..."
+          ref="textarea"
+        ></div>
+        <button class="btn-cancel" @click="toggleReplyTextarea">
           취소
         </button>
-        <button
-          class="btn-submit-reply"
-          @click="submitReply"
-          :disabled="replyContent === ''"
-        >
+        <button class="btn-submit-reply" @click="submitReply">
           답글작성
         </button>
       </div>
@@ -74,6 +83,7 @@
         :commentId="commentData.id"
         v-show="isReplyShow"
         :key="replyListKey"
+        @reloadReply="reloadReply"
       />
     </template>
   </div>
@@ -81,27 +91,65 @@
 
 <script>
 import ReplyList from "./CommentReplyList.vue";
+import CommentMenu from "./CommnetMenu";
 import axios from "axios";
 import { mapGetters } from "vuex";
 export default {
   props: ["isReply", "commentData"],
   components: {
-    ReplyList
+    ReplyList,
+    CommentMenu
   },
   data: function() {
     return {
       isReplyShow: false,
-      isReplyWriteShow: false,
+      isReplyTextareaShow: false,
       isReplyFirstCall: true,
       isLike: 0,
       replyContent: "",
-      replyListKey: 0
+      replyListKey: 0,
+      isEditing: false,
+      contentBeforeEdit: "",
+      isMenuShow: false
     };
   },
   methods: {
     ...mapGetters({
       getUserInfo: "user/getUserInfo"
     }),
+    toggleMenu() {
+      this.$refs.commentMenu.toggleMenu();
+    },
+
+    editStart() {
+      const main = this.$refs.main;
+      this.contentBeforeEdit = main.innerHTML;
+      this.isEditing = true;
+      main.setAttribute("contentEditable", "true");
+      main.classList.add("editing");
+      main.focus();
+    },
+    editSubmit() {
+      const main = this.$refs.main;
+      try {
+        axios.put(`${this.$apiServer}/comment`, {
+          content: main.innerHTML,
+          id: this.commentData.id
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      this.isEditing = false;
+      main.setAttribute("contentEditable", "false");
+      main.classList.remove("editing");
+    },
+    editCancel() {
+      const main = this.$refs.main;
+      main.innerHTML = this.contentBeforeEdit;
+      this.isEditing = false;
+      main.setAttribute("contentEditable", "false");
+      main.classList.remove("editing");
+    },
     toggleReply() {
       this.isReplyShow = !this.isReplyShow;
       const svg = this.$refs.replySvg;
@@ -110,13 +158,28 @@ export default {
           this.isReplyFirstCall = false;
           this.$refs.replyList.getData();
         }
-        console.dir(svg.nextSibling);
         svg.classList.add("upper");
         svg.nextSibling.innerText = "답글 숨기기";
       } else {
         svg.classList.remove("upper");
         svg.nextSibling.innerText = `답글 ${this.commentData.replycount}개 보기`;
       }
+    },
+    toggleReplyTextarea() {
+      this.isReplyTextareaShow = !this.isReplyTextareaShow;
+      if (this.isReplyTextareaShow) {
+        this.openReplyTextArea();
+      } else {
+        this.closeReplyTextArea();
+      }
+    },
+    openReplyTextArea() {
+      if (this.isReply) {
+        this.$refs.textarea.innerHTML = `<a contenteditable="false" style="color: dodgerblue; margin-right:10px" href="/${this.commentData.email}">@${this.commentData.nickname} </a>`;
+      }
+    },
+    closeReplyTextArea() {
+      this.$refs.textarea.innerHTML = "";
     },
     setLikeBtn() {
       const likeIcon = this.$refs.likeIcon;
@@ -148,145 +211,49 @@ export default {
     },
     async submitReply() {
       try {
-        const res = await axios.post(`${this.$apiServer}/comment`, {
-          content: this.replyContent,
+        let replyto = this.commentData.id;
+        if (this.isReply) {
+          replyto = this.commentData.replyto;
+        }
+        await axios.post(`${this.$apiServer}/comment`, {
+          content: this.$refs.textarea.innerHTML,
           email: this.getUserInfo().email,
           postid: this.$route.query.id,
-          replyto: this.commentData.id
+          replyto
         });
-        console.dir(res);
-        this.isReplyFirstCall = true; // 리로드 해서 내용물이 없어져서 다시 불러와야함
-        this.replyListKey++;
-        this.replyContent = "";
-        this.commentData.replycount++;
-        this.isReplyWriteShow = false;
-        alert("답글이 작성되었습니다.");
+        this.reloadReply();
+        if (this.isReply) {
+          this.emitReload();
+        }
       } catch (error) {
         console.log(error);
+      }
+    },
+    emitReload() {
+      this.$emit("reload");
+    },
+    reloadReply() {
+      this.isReplyFirstCall = true; // 리로드 해서 내용물이 없어져서 다시 불러와야함
+      this.replyListKey++;
+      this.$refs.textarea.innerHTML = "";
+      this.commentData.replycount++;
+      this.isReplyShow = false;
+      if (!this.isReply) {
+        const svg = this.$refs.replySvg;
+        svg.classList.remove("upper");
+        svg.nextSibling.innerText = `답글 ${this.commentData.replycount}개 보기`;
       }
     }
   },
   mounted() {
     this.isLike = this.commentData.islike;
     this.setLikeBtn();
+    this.$refs.main.innerHTML = this.commentData.content;
   }
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/_variables.scss";
-.container-comment {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 15px;
-  header {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-    }
-    .info {
-      display: flex;
-      width: 100%;
-      flex-direction: column;
-      margin-left: 15px;
-      .user-info {
-        display: flex;
-        justify-content: stretch;
-        span {
-          margin-right: 6px;
-        }
-        .btn-more {
-          margin-left: auto;
-          &:hover {
-            opacity: 0.5;
-          }
-        }
-      }
-      .date {
-        color: rgb(179, 179, 179);
-      }
-    }
-  }
-  main {
-    color: rgb(80, 80, 80);
-    margin: 1rem 0;
-  }
-  footer {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
-    width: 100%;
-    .btn-like {
-      display: flex;
-      align-items: center;
-      margin-right: 5px;
-      .icon-like-comment {
-        width: 20px;
-        height: 20px;
-        fill: rgb(165, 165, 165);
-      }
-      .fill-lightred {
-        fill: $lightRed;
-      }
-    }
-    .btn-reply-write {
-      margin-left: 15px;
-      color: gray;
-      &:hover {
-        color: black;
-      }
-    }
-    .container-reply-toggle {
-      display: flex;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      width: 100%;
-      textarea {
-        margin-top: 20px;
-        margin-bottom: 10px;
-        padding: 10px;
-        width: 100%;
-        height: 100px;
-        resize: none;
-        border-color: lightgray;
-        &::placeholder {
-          color: #c5c5c5;
-        }
-      }
-      .btn-cancel {
-        color: $gray;
-        margin-right: 20px;
-      }
-      .btn-submit-reply {
-        &:disabled {
-          color: rgb(216, 216, 216);
-        }
-        color: dodgerblue;
-      }
-    }
-  }
-  .btn-reply-toggle {
-    display: flex;
-    align-items: center;
-    color: dodgerblue;
-    margin-bottom: 20px;
-    &:hover {
-      opacity: 0.7;
-    }
-    svg {
-      transform: rotate(180deg);
-      fill: dodgerblue;
-      margin-right: 10px;
-      &.upper {
-        transform: rotate(0deg);
-      }
-    }
-  }
-}
+@import "@/assets/sass/comment.scss";
 </style>

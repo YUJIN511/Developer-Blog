@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.papple.blog.models.Post;
+import com.papple.blog.payload.response.PostList;
 import com.papple.blog.repository.PostRepository;
 
 @Service
@@ -35,38 +36,14 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<Post> searchByWord(String word) {
-		return postRepository.searchByWord(word);
-	}
-
-	@Override
 	public void deleteById(Long id) {
 		postRepository.deleteById(id);
 		return;
 	}
 
 	@Override
-	public List<Post> findHistoryByUser(String email) {
-		return postRepository.findHistoryByUser(email);
-	}
-
-	@Override
-	public List<Post> findMyHashPost(String hashtag, String email) {
-		return postRepository.findMyHashPost(hashtag, email);
-	}
-
-	@Override
-	public List<Post> findStorageByUser(String email) {
-		return postRepository.findStorageByUser(email);
-	}
-
-	@Override
 	public List<Post> findFollowLatestByUser(String email) {
 		return postRepository.findFollowLatestByUser(email);
-	}
-
-	public List<Post> searchByHashtag(String word) {
-		return postRepository.searchByHashtag(word);
 	}
 
 	@Override
@@ -98,5 +75,10 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public int cntCategory(String email, String hashtag) {
 		return postRepository.cntCategory(email, hashtag);
+	}
+
+	@Override
+	public int cntMyPost(String email) {
+		return postRepository.cntMyPost(email);
 	}
 }

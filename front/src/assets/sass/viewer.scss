@@ -44,14 +44,19 @@
       height: 20px;
       border-radius: 50%;
     }
-    svg {
-      width: 20px;
-      height: 20px;
-      fill: #999999;
-    }
-    span {
-      margin-left: 10px;
-      color: black;
+    button {
+      display: flex;
+      align-items: center;
+      svg {
+        width: 20px;
+        height: 20px;
+        fill: #999999;
+      }
+      span {
+        margin-left: 10px;
+        color: black;
+        font-size: 1.3em;
+      }
     }
   }
   .create-date {
@@ -144,6 +149,9 @@
       }
       .fill-lightred {
         fill: $lightRed;
+      }
+      .fill-blue {
+        fill: #65b1fb;
       }
       .icon-like {
         width: 20px;

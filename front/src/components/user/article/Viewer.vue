@@ -20,20 +20,22 @@
       </div>
       <div class="article-info">
         <div class="user-info">
-          <img class="img-profile" :src="profile" v-if="profile !== ''" />
-          <svg
-            v-else
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 0 26 26"
-          >
-            <path
-              d="M13,1C6.4,1,1,6.4,1,13s5.4,12,12,12s12-5.4,12-12S19.6,1,13,1z M13,4.6c2,0,3.6,1.6,3.6,3.6S15,11.8,13,11.8
+          <button @click="$router.push(`/${writer}`)">
+            <img class="img-profile" :src="profile" v-if="profile !== ''" />
+            <svg
+              v-else
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              viewBox="0 0 26 26"
+            >
+              <path
+                d="M13,1C6.4,1,1,6.4,1,13s5.4,12,12,12s12-5.4,12-12S19.6,1,13,1z M13,4.6c2,0,3.6,1.6,3.6,3.6S15,11.8,13,11.8
 	s-3.6-1.6-3.6-3.6S11,4.6,13,4.6z M13,21.6c-3,0-5.7-1.5-7.2-3.9c0-2.4,4.8-3.7,7.2-3.7c2.4,0,7.2,1.3,7.2,3.7
 	C18.7,20.1,16,21.6,13,21.6z"
-            />
-          </svg>
-          <span>{{ nickname }}</span>
+              />
+            </svg>
+            <span>{{ nickname }}</span>
+          </button>
         </div>
         <span class="create-date">· {{ createDate }}</span>
       </div>
@@ -70,8 +72,9 @@
           </svg>
           <span>{{ like }}</span>
         </button>
-        <button class="btn-library">
+        <button class="btn-library" @click="toggleLibraryBtn">
           <svg
+            class="icon-library"
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
             viewBox="0 0 26 26"
@@ -186,6 +189,7 @@ export default {
       writer: "",
       commentModuleKey: 0,
       articleData: {},
+      isStored: false,
       isShowUpdateModal: false
     };
   },
@@ -207,19 +211,28 @@ export default {
 
         if (res.status === 200) {
           const articleData = res.data;
+          if (articleData.blogPicture === null)
+            articleData.blogPicture =
+              "https://cdns.iconmonstr.com/wp-content/assets/preview/2019/240/iconmonstr-school-28.png";
           this.articleData = articleData;
           this.createDate = articleData.createdate.split(" ")[0];
           this.title = articleData.title;
           this.content = articleData.content;
           this.editor.setContent(this.content);
           this.tagList = articleData.tag;
-          this.profile = articleData.profile;
+
+          this.profile =
+            articleData.profile === null
+              ? "https://cdns.iconmonstr.com/wp-content/assets/preview/2012/240/iconmonstr-user-20.png"
+              : articleData.profile;
           this.nickname = articleData.nickname;
           this.thumbnail = articleData.picture;
           this.like = articleData.good;
           this.isLike = articleData.isgood;
+          this.isStored = articleData.isstore;
           this.writer = articleData.writer;
           this.setLikeBtn();
+          this.setLibraryBtn();
         }
       } catch (error) {
         console.log(error);
@@ -298,14 +311,50 @@ export default {
         );
         this.like++;
       } else {
-        axios.put(
-          `${this.$apiServer}/post/ungood?email=${
-            this.getUserInfo().email
-          }&id=${this.$route.query.id}`
-        );
+        axios
+          .put(
+            `${this.$apiServer}/post/ungood?email=${
+              this.getUserInfo().email
+            }&id=${this.$route.query.id}`
+          )
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => console.log(err));
         this.like--;
       }
       this.setLikeBtn();
+    },
+    setLibraryBtn() {
+      const libraryIcon = document.querySelector(".icon-library");
+      if (this.isStored) {
+        libraryIcon.classList.add("fill-blue");
+      } else {
+        libraryIcon.classList.remove("fill-blue");
+      }
+    },
+    toggleLibraryBtn() {
+      this.isStored = !this.isStored;
+      if (this.isStored) {
+        axios
+          .post(
+            `${this.$apiServer}/post/storage?email=${
+              this.getUserInfo().email
+            }&postid=${this.$route.query.id}`
+          )
+          .then(res => console.log(res))
+          .catch(err => console.log(err));
+      } else {
+        axios
+          .delete(
+            `${this.$apiServer}/post/storage?email=${
+              this.getUserInfo().email
+            }&postid=${this.$route.query.id}`
+          )
+          .then(res => console.log(res))
+          .catch(err => console.log(err));
+      }
+      this.setLibraryBtn();
     }
   },
   beforeDestroy() {

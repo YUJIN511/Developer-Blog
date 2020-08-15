@@ -34,7 +34,7 @@ export default {
   methods: {
     fetchTags() {
       axios
-        .get(`${SERVER_URL}/api/post/mycategory/${this.email}`)
+        .get(`${SERVER_URL}/api/post/mycategory/taglist?email=${this.email}`)
         .then(res => {
           this.tagData = res.data;
         })
@@ -65,7 +65,7 @@ export default {
 <style scoped lang="scss">
 .container-tags {
   width: 180px;
-  margin-top: 280px;
+  margin-top: 320px;
   margin-left: 150px;
   margin-right: 0;
   color: #727272;
@@ -82,7 +82,7 @@ export default {
   }
   p {
     text-align: left;
-    margin: 5px 0px;
+    margin: 8px 0px;
   }
 }
 </style>

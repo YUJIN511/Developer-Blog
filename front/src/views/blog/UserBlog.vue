@@ -2,7 +2,11 @@
   <div class="container-blog">
     <header></header>
     <main>
-      <TagList :email="userEmail" @select-tag="onSelectTag" @select-all="onSelectAll" />
+      <TagList
+        :email="userEmail"
+        @select-tag="onSelectTag"
+        @select-all="onSelectAll"
+      />
       <div class="content">
         <div class="content-header">
           <div class="container-profile">
@@ -18,16 +22,24 @@
             </div>
           </div>
           <div class="container-btn-follow" v-if="showFollowBtn">
-            <button class="btn-follow" @click="follow">{{ follow_text[isFollowing] }}</button>
+            <button class="btn-follow" @click="follow">
+              {{ follow_text[isFollowing] }}
+            </button>
             <!-- <button class="btn-follow" @click="unfollow" v-if="isFollowing">팔로우 끊기</button> -->
           </div>
         </div>
         <div class="container-tabs">
-          <button class="btn btn-article" @click="clickArticle">내 게시물</button>
+          <button class="btn btn-article" @click="clickArticle">
+            내 게시물
+          </button>
           <button class="btn btn-Info" @click="clickInfo">정보</button>
         </div>
         <div class="content-body"></div>
-        <FlexArticles :datas="articleData" v-if="showArticle" />
+        <FlexArticles
+          :isStatic="true"
+          :datas="articleData"
+          v-if="showArticle"
+        />
         <!-- <Info /> -->
       </div>
     </main>
@@ -109,7 +121,9 @@ export default {
     },
     onSelectTag(tag) {
       axios
-        .get(`${SERVER_URL}/api/post/my/${this.userEmail}/${tag}`)
+        .get(
+          `${SERVER_URL}/api/post/mycategory/postlist?email=${this.userEmail}&hashtag=${tag}`
+        )
         .then(res => {
           this.articleData = res.data;
         })
@@ -197,12 +211,14 @@ export default {
 }
 
 main {
-  padding: 30px 70px;
+  padding: 30px 0px;
+  padding-left: 70px;
   display: flex;
   .content {
     position: relative;
     width: 100%;
     margin: 40px;
+    margin-right: 150px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -253,6 +269,8 @@ main {
     .container-tabs {
       margin: 12px;
       .btn {
+        font-size: 1em;
+        padding: 10px;
         border-radius: 0px;
         margin-right: 50px;
         &:focus {
@@ -270,11 +288,16 @@ main {
 
 .blog-profile-image {
   position: relative;
-  background-image: url(https://images.unsplash.com/photo-1517832207067-4db24a2ae47c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60);
+  background-image: url("https://cdns.iconmonstr.com/wp-content/assets/preview/2019/240/iconmonstr-school-28.png") !important;
   background-position: center;
-  background-size: 150%;
+  background-size: cover;
   width: 150px;
   height: 150px;
   border-radius: 50%;
+}
+
+.container-article {
+  position: relative;
+  width: 100%;
 }
 </style>

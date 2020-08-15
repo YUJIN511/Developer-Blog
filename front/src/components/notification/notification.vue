@@ -2,7 +2,7 @@
     <div class="container-notification hide">
         <div class="background-notification" @click="closeNotification"></div>
         <div class="modal-notification">
-            <div class="navbar-item" >
+            <div class="row">
                 <div>
                     <span>알림</span>
                     <svg @click="moveSettingAlarm"
@@ -39,27 +39,15 @@
 
 <script>
 import SubNotification from "@/components/notification/SubNotification.vue"
-import { mapGetters } from "vuex";
 
 export default {
     components:{SubNotification},
-    data() {
-        return {
-            eventSource: null,
-            notificationData:[],
-            notifications:[],
-        };
-    },
-    mounted(){
-       this.setupStream();
-    },
-    beforeDestroy() {
-        this.unSetupStream();
+     props: {
+        notifications: {
+        type: Array
+        }
     },
     methods: {
-         ...mapGetters({
-            getEmail: "user/getEmail",
-        }),
         closeNotification(){
             document.querySelector(".container-notification").classList.add("hide");
         },
@@ -71,44 +59,30 @@ export default {
             this.$router.push({ name: "Notification" });
             this.closeNotification();
         },
-        async setupStream() {
-            console.log("==> 이벤트 소스 수행");
-            this.eventSource =  await new EventSource(
-                "http://i3a604.p.ssafy.io:8081/api/notification/push?email="+this.getEmail(),
-                { withCredentials: true }
-            );
-            this.eventSource.onopen =  function(e) {
-                console.log("이벤트 소스 오픈");
-                console.log(e);
-            };
-            var instance = this;
-            this.eventSource.onmessage =  function(e) {
-                console.log(this);
-                console.log("이벤트 소스 메시지 도착");
-                instance.notificationData = JSON.parse(e.data);
-                console.log( instance.notificationData);
-                instance.notifications =  instance.notificationData.notifications;
-                console.log( instance.notifications);
-                 
-            };
-             this.eventSource.onerror = function(e) {
-                console.log("이벤트 소스 에러");
-                console.log(e);
-            };
-        },
-        unSetupStream() {
-            if (this.eventSource === null) {
-                return;
-            }
-            console.log("==> 이벤트 소스 종료");
-            this.eventSource.close();
-        }
+        
     },    
 }
 </script>
 
 <style scoped lang="scss">
-    @import "@/assets/common/Navbar.scss";
+    .row {
+        width: 100%;
+        display: inline-block;
+        padding: 8px 8px;
+        span{
+            float: left;
+            font-size: 20px;
+            font-weight: bold;
+            color: #727272 ;
+        }
+       svg{
+            float: right;
+            width: 26px;
+            height: 26px;
+            fill: #1A7CFF;
+            cursor: pointer;
+       }
+    }
 
     .container-notification {
         position: fixed;
@@ -128,41 +102,68 @@ export default {
         background-color: rgba(0, 0, 0, 0.4);
     }
 
-    .modal-notification{
-        margin: 56px 105px 0 0;
-        position: fixed;
-        width: 280px;
-        height: 416px;
-        background-color: white;
+    .modal-notification {
+        margin: 70px 75px 0 0;
+        width: 294px;
+        height: 436.8px;
+        background: white;
         box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+        position: fixed;
+        border-radius: 3%;
+        border: 4px solid #E9F1FF;
+    }
+    .modal-notification:after, .modal-notification:before {
+        bottom: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
     }
 
+    .modal-notification:after {
+        border-color: rgba(136, 183, 213, 0);
+        border-bottom-color: white;
+        border-width: 18px;
+        margin-left: 81px;
+    }
+    .modal-notification:before {
+        border-color: rgba(194, 225, 245, 0);
+        border-bottom-color: #E9F1FF;
+        border-width: 24px;
+        margin-left: 75px;
+    }
+//
     .hide{
         display: none;
     }
 
     hr {
-        margin: 5px 0;
+        margin: 3px 0;
+        border-left: thick;
+        width: 95%;
+        margin: auto;
+        border-color: #c0c0c0;
+        border-top: 0px;
     }
     p {
         color: #1A7CFF;
         font-size: 14px;
         font-weight: 600;
-    }
-    .navbar-item{
-        margin : 7px 0px;
-        padding: 0px 10px;
-    }
-
-    .navbar-item span{
-       margin-right: 75%;
-       font-size: 20px;
-       font-weight: bold;
-       color: #727272 ;
-    }            
+        padding: 10px;
+        cursor: pointer;
+    }          
 
     .notification-list{
-       height: 79%;
+        padding: 5px;
+        height: 80%;
+        overflow-y: auto;
     }
+    .notification-list::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera*/
+    }
+
 
 </style>

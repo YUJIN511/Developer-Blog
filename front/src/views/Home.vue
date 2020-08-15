@@ -10,7 +10,7 @@
 <script>
 import FlexArticles from "@/components/common/FlexArticles.vue";
 import axios from "axios";
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 
 export default {
@@ -19,7 +19,7 @@ export default {
   },
   created() {
     axios
-      .get(`${SERVER_URL}/api/post/all`)
+      .get(`${SERVER_URL}/api/post/all?email=${this.getUserInfo().email}`)
       .then(res => {
         this.articleData = res.data;
       })
@@ -31,6 +31,9 @@ export default {
     this.paintBtn(document.querySelector("#btn-home"));
   },
   methods: {
+    ...mapGetters({
+      getUserInfo: "user/getUserInfo"
+    }),
     ...mapMutations({
       paintBtn: "navbarMini/paintBtn"
     })
