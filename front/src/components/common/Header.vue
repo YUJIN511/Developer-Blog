@@ -159,10 +159,10 @@
           <div class="profile-image" v-if="getIsLogin()">
             <button
               class="banner-image-edit"
-              @click="isUserNavbarShow = !isUserNavbarShow"
+              @click="$refs.navbarUserInfo.toggle()"
             ></button>
           </div>
-          <NavbarUserInfo v-if="isUserNavbarShow" />
+          <NavbarUserInfo ref="navbarUserInfo" />
         </div>
       </div>
     </div>
@@ -206,7 +206,6 @@ export default {
   data() {
     return {
       searchWord: "",
-      isUserNavbarShow: false,
       eventSource: null,
       notifications: []
     };

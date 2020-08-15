@@ -64,7 +64,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.data.isgood);
     if (this.data.isLiked) {
       document.querySelector(".icon-like").classList.add("selected");
     }
