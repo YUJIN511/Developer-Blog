@@ -1,5 +1,5 @@
 <template>
-  <div class="container-navbar-userinfo">
+  <div ref="navbarUser" class="container-navbar-userinfo hide">
     <div class="make-absolute">
       <header>
         <div class="profile-image">
@@ -70,6 +70,11 @@
 import { mapGetters, mapMutations } from "vuex";
 
 export default {
+  data: function() {
+    return {
+      isShow: false
+    };
+  },
   methods: {
     ...mapGetters({
       getUserInfo: "user/getUserInfo"
@@ -80,7 +85,26 @@ export default {
     logout() {
       this.setLogout();
       location.href = "/";
+    },
+    toggle() {
+      const navbarUser = document.querySelector(".container-navbar-userinfo");
+      if (navbarUser.classList.contains("hide")) {
+        navbarUser.classList.remove("hide");
+      } else {
+        navbarUser.classList.add("hide");
+      }
     }
+  },
+  mounted() {
+    const navbarUser = document.querySelector(".container-navbar-userinfo");
+    window.addEventListener("click", function(e) {
+      if (
+        !navbarUser.contains(e.target) &&
+        !e.target.classList.contains("banner-image-edit")
+      ) {
+        navbarUser.classList.add("hide");
+      }
+    });
   }
 };
 </script>
@@ -92,6 +116,9 @@ export default {
   height: 0px;
   left: -180px;
   top: 5px;
+  &.hide {
+    display: none;
+  }
   .make-absolute {
     display: flex;
     flex-direction: column;
