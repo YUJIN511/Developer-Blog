@@ -3,19 +3,22 @@
     <div class="background-profilepic" @click="closeModal"></div>
     <div class="modal-profilepic">
       <div class="modal-head">
-        <div class="preview-image"></div>
-        <input
-          type="file"
-          id="file"
-          style="display: none;"
-          accept="image/png, image/jpeg"
-          @change="previewFile"
-        />
-        <button @click="clickInput" class="btn btn-upload">사진 업로드</button>
-        <button @click="setDefaultImage" class="btn btn-setdefault">기본 프로필 이미지로 변경</button>
+        <p class="title">프로필 사진 변경</p>
+        <div class="modal-head-container">
+          <div class="preview-image"></div>
+          <input
+            type="file"
+            id="file"
+            style="display: none;"
+            accept="image/png, image/jpeg"
+            @change="previewFile"
+          />
+          <button @click="clickInput" class="btn btn-upload">파일 선택</button>
+          <button @click="setDefaultImage" class="btn btn-setdefault">기본 이미지로 변경</button>
+        </div>
       </div>
       <div class="modal-body">
-        <hr />
+        <p class="subtitle">지난 업로드 사진</p>
         <div class="container-images">
           <div
             class="previous-image"
@@ -135,13 +138,6 @@ export default {
           this.file = new File([data], "profile.jpg", metadata);
         })
         .catch(err => console.log(err));
-      // let response = await fetch(url);
-      // let data = await response.blob();
-      // let metadata = {
-      //   type: "image/jpeg"
-      // };
-      // this.file = new File([data], "test.jpg", metadata);
-      // ... do something with the file or return it
     },
     showDeleteButton(i) {
       document.querySelectorAll(".banner-image-delete")[
@@ -192,33 +188,56 @@ export default {
 .modal-profilepic {
   position: fixed;
   width: 700px;
-  height: 520px;
-  background-color: rgb(240, 240, 240);
+  // height: 600px;
+  background-color: rgb(255, 255, 255);
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-  border-radius: 3%;
   display: flex;
   flex-direction: column;
 }
 
 .modal-head {
-  padding: 50px;
+  margin: 16px;
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: flex-end;
-  .btn {
-    height: 30px;
-    background-color: transparent;
-    font-size: 1em;
-    font-weight: 600;
-    color: #1a7cff;
+  flex-direction: column;
+  align-items: flex-start;
+  .title {
+    position: relative;
+    font-size: 1.5em;
+  }
+  .modal-head-container {
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 10px;
+    .btn {
+      height: 40px;
+      background-color: transparent;
+      font-size: 1em;
+      font-weight: 600;
+      border-radius: 5px;
+      padding: 16px;
+      line-height: 0px;
+    }
+    .btn-upload {
+      color: #1a7cff;
+      border: 1px solid #1a7cff;
+    }
+    .btn-setdefault {
+      color: #727272;
+      border: 1px solid #727272;
+    }
   }
 }
 
 .modal-body {
-  padding: 0px 50px;
-  position: relative;
-  display: block;
+  margin: 16px;
+  .subtitle {
+    position: relative;
+    font-size: 1.3em;
+    text-align: left;
+  }
   .button {
     position: absolute;
     bottom: 0;
@@ -229,6 +248,7 @@ export default {
   background-image: url(https://images.unsplash.com/photo-1517832207067-4db24a2ae47c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60);
   background-position: center;
   background-size: 150%;
+  position: relative;
   width: 120px;
   height: 120px;
   border-radius: 50%;
@@ -236,7 +256,8 @@ export default {
 }
 
 .container-images {
-  height: 200px;
+  height: inline-block;
+  text-align: left;
 }
 
 .previous-image {
@@ -287,15 +308,24 @@ export default {
 }
 
 .container-btns {
-  position: absolute;
+  position: relative;
   bottom: 0;
   width: 100%;
-  padding: 24px;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  margin-top: 60px;
   .btn {
     width: 100%;
+    height: 48px;
+    color: #727272;
+    font-weight: 500;
+  }
+  .btn-save {
+    background-color: #c1d8ff;
+  }
+  .btn-close {
+    background-color: #f0f0f0;
   }
 }
 
