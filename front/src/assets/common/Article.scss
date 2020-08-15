@@ -77,6 +77,9 @@
   align-items: center;
   background-color: white;
   border-radius: 0 0 5px 5px;
+  .btn-like:hover {
+    cursor: unset;
+  }
   svg,
   .img-profile {
     width: 36px;
@@ -109,11 +112,8 @@
     vertical-align: middle;
     margin-right: 16px;
     fill: rgb(228, 228, 228);
-    :hover {
-      cursor: pointer;
-    }
   }
-  svg.selected {
+  svg.fill-red {
     fill: crimson;
   }
   span {
