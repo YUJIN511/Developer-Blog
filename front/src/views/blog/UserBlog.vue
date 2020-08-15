@@ -35,7 +35,11 @@
           <button class="btn btn-Info" @click="clickInfo">정보</button>
         </div>
         <div class="content-body"></div>
-        <FlexArticles :datas="articleData" v-if="showArticle" />
+        <FlexArticles
+          :isStatic="true"
+          :datas="articleData"
+          v-if="showArticle"
+        />
         <!-- <Info /> -->
       </div>
     </main>

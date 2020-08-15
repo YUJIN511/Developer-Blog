@@ -130,6 +130,10 @@ export default {
       display: flex;
       border-bottom: 1px rgb(233, 233, 233) solid;
       .profile-image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image: none !important;
         img {
           width: 36px;
           height: 36px;
