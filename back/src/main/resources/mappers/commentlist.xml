@@ -10,6 +10,7 @@
         FROM comment as c 
         JOIN user as u ON c.email=u.email 
         WHERE postid=#{postid} AND replyto is NULL
+        ORDER BY c.createdate
     </select>
 
     <!-- 해당 댓글의 모든 답댓글 조회 -->
@@ -18,6 +19,7 @@
         FROM comment as c 
         JOIN user as u ON c.email=u.email 
         WHERE postid=#{postid} AND replyto=#{replyto}
+        ORDER BY c.createdate
     </select>
 
     <!-- 해당 댓글 좋아요 -->

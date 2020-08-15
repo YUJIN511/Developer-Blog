@@ -129,7 +129,6 @@ public class CommentController {
 
         Comment comment = commentService.findById(commentRequest.getId()).get();
         comment.setContent(commentRequest.getContent());
-        comment.setCreatedate(LocalDateTime.now());
         commentService.save(comment);
 
         return new ResponseEntity<>("success", HttpStatus.OK);
@@ -183,6 +182,7 @@ public class CommentController {
                     .targetuser(comment.getEmail())
                     .build();
                 notification.setCommentid(id);
+                notification.setPostid(comment.getPostid());
                 notification.setType(1<<2);
                 notificationService.save(notification);
             }
