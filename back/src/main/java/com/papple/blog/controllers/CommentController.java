@@ -7,6 +7,7 @@ import com.papple.blog.models.Comment;
 import com.papple.blog.models.LikeComment;
 import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
+import com.papple.blog.models.User;
 import com.papple.blog.payload.request.CommentRequest;
 import com.papple.blog.payload.response.CommentResponse;
 import com.papple.blog.payload.response.MessageResponse;
@@ -74,40 +75,49 @@ public class CommentController {
 
         Post post = postService.findById(comment.getPostid()).get();
         String actionName = userRepository.getUserByEmail(comment.getEmail()).getNickname();
-       
-        if(comment.getReplyto()==null){ // 댓글
         
+        if(comment.getReplyto()==null){ // 댓글
+            
             if(!comment.getEmail().equals(post.getWriter())){   // 자신의 게시물일 경우 X
-                // 알림 발생(0000010)
-                Notification notification = Notification.builder()
-                    .message(actionName +"님이 회원님의 게시물에 댓글을 남겼습니다. "+comment.getContent())
-                    .actionuser(comment.getEmail())
-                    .targetuser(post.getWriter())
-                    .notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+comment.getPostid())
-                    .build();
-                    
-                notification.setPostid(comment.getPostid());
-                notification.setType(1<<1);
-                notificationService.save(notification);
+                // 알림 발생(000010)
+                User user = userRepository.getUserByEmail(post.getWriter());
+                int setting = Integer.parseInt(user.getNotification(),2);
+                // 알림 ON 했는지
+                if( (setting& (1<<1)) != 0){
+                    Notification notification = Notification.builder()
+                        .message(actionName +"님이 회원님의 게시물에 댓글을 남겼습니다. "+comment.getContent())
+                        .actionuser(comment.getEmail())
+                        .targetuser(post.getWriter())
+                        .build();
+                        
+                    notification.setPostid(comment.getPostid());
+                    notification.setType(1<<1);
+                    notificationService.save(notification);
+                }
             }
 
         } else{ // 답댓글
             Comment comm = commentService.findById(comment.getReplyto()).get();
             comm.setReplycount(comm.getReplycount()+1);
-            commentService.save(comment);   // 부모댓글 수정
+            commentService.save(comm);   // 부모댓글 수정
 
             if(!comment.getEmail().equals(comm.getEmail())){ // 자신의 댓글에 답글 다는 경우는 X
-                // 알림 발생(0001000)
-                Notification notification = Notification.builder()
-                    .message(actionName +"님이 답글에서 회원님을 언급했습니다. "+comment.getContent())
-                    .actionuser(comment.getEmail())
-                    .targetuser(comm.getEmail())
-                    .notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+comment.getPostid())
-                    .build();
-                    
-                notification.setPostid(comment.getPostid());
-                notification.setType(1<<3);
-                notificationService.save(notification);
+                // 알림 발생(001000)
+                User user = userRepository.getUserByEmail(comm.getEmail());
+                int setting = Integer.parseInt(user.getNotification(),2);
+                // 알림 ON 했는지
+                System.out.println(setting);
+                if( (setting & (1<<3)) != 0){
+                    Notification notification = Notification.builder()
+                        .message(actionName +"님이 답글에서 회원님을 언급했습니다. "+comment.getContent())
+                        .actionuser(comment.getEmail())
+                        .targetuser(comm.getEmail())
+                        .build();
+                        
+                    notification.setPostid(comment.getPostid());
+                    notification.setType(1<<3);
+                    notificationService.save(notification);
+                }
             }
         }
         return new ResponseEntity<>("success", HttpStatus.OK);
@@ -158,20 +168,24 @@ public class CommentController {
         commentService.save(comment);
 
         commentService.likeComment(email, id);
-		// 알람 발생(0000100)
-		// 이전에 좋아요 눌렀었었는지 확인	>>>  notiurl 주소 front로 추후 변경
+		// 알람 발생(000100)
+		// 이전에 좋아요 눌렀었었는지 확인
 		if(notificationService.findByActionuserAndCommentidAndType(email, id, 4) == null){
             String actionName = userRepository.getUserByEmail(email).getNickname();
 
-			Notification notification = Notification.builder()
-				.message(actionName +"님이 회원님의 댓글을 좋아합니다.")
-				.actionuser(email)
-				.targetuser(comment.getEmail())
-				.notiurl("http://i3a604.p.ssafy.io/post/postDetail/"+id)
-				.build();
-			notification.setCommentid(id);
-			notification.setType(1<<2);
-			notificationService.save(notification);
+            User user = userRepository.getUserByEmail(comment.getEmail());
+            int setting = Integer.parseInt(user.getNotification(),2);
+            // 알림 ON 했는지
+            if( (setting& (1<<2)) != 0){
+                Notification notification = Notification.builder()
+                    .message(actionName +"님이 회원님의 댓글을 좋아합니다.")
+                    .actionuser(email)
+                    .targetuser(comment.getEmail())
+                    .build();
+                notification.setCommentid(id);
+                notification.setType(1<<2);
+                notificationService.save(notification);
+            }
 		}
 		return new ResponseEntity<String>("success", HttpStatus.OK);
     }

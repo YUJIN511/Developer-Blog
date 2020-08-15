@@ -16,16 +16,16 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "storage")
-public class Storage {
+@Table(name = "good")
+public class Good {
    
     @EmbeddedId
-    private PKSet storagePK;
+    private PKSet goodPK;
     
     @CreationTimestamp
     private LocalDateTime createdate;
     
-    public Storage(PKSet storagePK){
-        this.storagePK = storagePK;
+    public Good(PKSet goodPK){
+        this.goodPK = goodPK;
     }
 }
