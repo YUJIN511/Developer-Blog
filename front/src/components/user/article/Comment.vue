@@ -1,7 +1,7 @@
 <template>
   <div class="container-comment">
     <header>
-      <div>
+      <div class="profile-img-box">
         <img :src="commentData.profile" alt />
       </div>
       <div class="info">
@@ -28,15 +28,36 @@
         </svg>
       </button>
       <span class="like-count">{{ commentData.likes }}</span>
-      <button class="btn-reply-write" @click="isReplyWriteShow = !isReplyWriteShow">답글</button>
+      <button
+        class="btn-reply-write"
+        @click="isReplyWriteShow = !isReplyWriteShow"
+      >
+        답글
+      </button>
       <div class="container-reply-toggle" v-if="isReplyWriteShow">
-        <textarea maxlength="100" placeholder="답글을 입력하세요" v-model="replyContent"></textarea>
-        <button class="btn-cancel" @click="isReplyWriteShow = false">취소</button>
-        <button class="btn-submit-reply" @click="submitReply" :disabled="replyContent === ''">답글작성</button>
+        <textarea
+          maxlength="100"
+          placeholder="답글을 입력하세요"
+          v-model="replyContent"
+        ></textarea>
+        <button class="btn-cancel" @click="isReplyWriteShow = false">
+          취소
+        </button>
+        <button
+          class="btn-submit-reply"
+          @click="submitReply"
+          :disabled="replyContent === ''"
+        >
+          답글작성
+        </button>
       </div>
     </footer>
     <template v-if="!isReply">
-      <button class="btn-reply-toggle" v-if="commentData.replycount !== 0" @click="toggleReply">
+      <button
+        class="btn-reply-toggle"
+        v-if="commentData.replycount !== 0"
+        @click="toggleReply"
+      >
         <svg
           ref="replySvg"
           xmlns="http://www.w3.org/2000/svg"
@@ -163,10 +184,13 @@ export default {
     display: flex;
     align-items: center;
     width: 100%;
-    img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
+    .profile-img-box {
+      flex-shrink: 0;
+      img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+      }
     }
     .info {
       display: flex;
@@ -181,6 +205,8 @@ export default {
         }
         .btn-more {
           margin-left: auto;
+          font-size: 1em;
+          font-weight: 900;
           &:hover {
             opacity: 0.5;
           }
