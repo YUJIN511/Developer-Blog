@@ -6,18 +6,19 @@
       <div class="right-login">
         <button class="btn-close" @click="closeLogin">✖</button>
         <div class="title">
-          <h1>로그인</h1>
-          <span>로그도트 서비스를 이용하시려면 로그인 해 주세요</span>
+          <h1>LOG . IN</h1>
+          <span>로그도트 서비스를 이용하시려면 로그인 해 주세요.</span>
         </div>
 
         <form class="container-login-form" @submit.prevent="login">
-          <label for="email">이메일</label>
+          <label for="email">이메일 주소</label>
           <input
             required
             name="email"
             type="email"
-            placeholder="이메일을 입력해 주세요"
+            placeholder="이메일 주소를 입력해 주세요"
             v-model="userInfo.email"
+            autocomplete="email"
           />
           <div class="password-label">
             <label for="password">비밀번호</label>
@@ -29,9 +30,12 @@
             minlength="8"
             placeholder="비밀번호를 입력해 주세요"
             v-model="userInfo.password"
+            autocomplete="current-password"
           />
           <div class="social-login">
-            <div class="social-title"><span>소셜 계정으로 로그인</span></div>
+            <div class="social-title">
+              <span>소셜 계정으로 로그인</span>
+            </div>
             <div class="social-body">
               <button class="btn btn-github">
                 <svg
@@ -62,18 +66,18 @@
             </div>
           </div>
           <button class="btn btn-login" type="submit">로그인</button>
-          <div class="login-footer">
+        </form>
+        <div class="login-footer">
             <a
               class="link-repassword"
               href="javascript:void(0)"
               @click="moveToRepassword"
-              >비밀번호 재설정</a
+              >비밀번호를 잊으셨나요?</a
             >
             <a class="link-join" href="javascript:void(0)" @click="moveToJoin"
               >계정 만들기</a
             >
           </div>
-        </form>
       </div>
     </div>
   </div>
@@ -122,7 +126,7 @@ export default {
         await this.fetchUserInfo(this.getEmail());
         this.$router.go();
       } else {
-        alert("아이디 혹은 비밀번호가 틀립니다.");
+        alert("아이디 또는 비밀번호가 틀립니다.");
       }
     }
   }
@@ -184,7 +188,6 @@ $minimumWidth: 950px;
   .right-login {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     padding: 24px;
     width: 100%;
     @media (min-width: $minimumWidth) {
@@ -193,22 +196,26 @@ $minimumWidth: 950px;
     /** login form */
     .container-login-form {
       display: flex;
+      height: 100%;
       flex-direction: column;
+      justify-content: center;
       align-content: flex-start;
     }
     label {
       text-align: left;
       margin-bottom: 8px;
     }
+
+    
     input {
       background-color: rgb(0, 0, 0, 0) !important;
-      border: none;
-      border-bottom: 1px solid black;
-      padding: 7px 0px;
-      margin-bottom: 12px;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      padding: 8px 5px;
+      margin-bottom: 16px;
     }
     input[type="password"] {
-      margin-bottom: 36px;
+      margin-bottom: 24px;
     }
     input:focus {
       outline: none !important;
@@ -235,7 +242,7 @@ $minimumWidth: 950px;
         justify-content: space-evenly;
         align-items: center;
         width: 100%;
-        margin: 12px 0px;
+        margin: 16px 0px;
         .btn {
           display: flex;
           justify-content: center;
@@ -270,10 +277,12 @@ $minimumWidth: 950px;
 
     .btn-login {
       width: 100%;
-      padding: 7px 10px;
-      color: black;
-      border: 1px solid black;
-      background-color: rgba(0, 0, 0, 0);
+      padding: 8px 10px;
+      color: white;
+      border-radius: 5px;
+      background-color: #6DA7FF;
+      font-weight: 500;
+      font-size: 0.9rem;
     }
     .btn-login:hover {
       background-color: rgb(219, 219, 219);
@@ -293,13 +302,14 @@ $minimumWidth: 950px;
     .login-footer {
       display: flex;
       justify-content: space-between;
+      justify-content: baseline;
       margin-top: 12px;
       a:hover {
         opacity: 0.7;
       }
       .link-repassword {
         text-decoration: none;
-        color: teal;
+        color: #FF5651;
       }
       .link-join {
         text-decoration: none;

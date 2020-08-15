@@ -6,19 +6,19 @@
       <div class="right-join">
         <button class="btn-close" @click="closeJoin">✖</button>
         <div class="title">
-          <h1>회원가입</h1>
-          <span>이메일로 회원가입</span>
+          <h1>LOG . JOIN</h1>
         </div>
 
         <form class="container-join-form" @submit.prevent="join">
-          <label for="email">이메일</label>
+          <label for="email">이메일 주소</label>
           <input
             required
             v-model="email"
             id="email"
-            placeholder="이메일을 입력해주세요"
+            placeholder="이메일 주소를 입력해주세요"
             name="email"
             type="email"
+            autocomplete="email"
           />
           <div class="password-label">
             <label for="password">비밀번호</label>
@@ -35,6 +35,7 @@
             placeholder="비밀번호를 입력해주세요"
             pattern="^((?=\S*?[A-Za-z0-9]).{0,})\S$"
             title="영문 숫자 혼합 8자 이상"
+            autocomplete="new-password"
           />
           <div class="password-label">
             <label for="password">비밀번호 확인</label>
@@ -48,6 +49,7 @@
             @keyup="passwordEqualCheck"
             placeholder="비밀번호를 한번 더 입력해주세요"
             class="password-confirm"
+            autocomplete="new-password"
           />
           <div class="social-join">
             <div class="social-title"><span>소셜 계정으로 로그인</span></div>
@@ -87,7 +89,9 @@
             </span>
           </div>
           <button class="btn btn-join" type="submit">회원가입</button>
-          <div class="join-footer">
+          
+        </form>
+        <div class="join-footer">
             <span
               >이미 계정이 있으신가요?
               <a
@@ -99,72 +103,9 @@
               하러 가기</span
             >
           </div>
-        </form>
       </div>
     </div>
   </div>
-  <!-- <div class="container-join" v-if="isShow">
-    <div class="background" @click="closeJoin"></div>
-    <div class="modal-join">
-      <button class="btn-close" @click="closeJoin">✖</button>
-
-      <h1>회원가입</h1>
-
-      <form class="container-join-form" @submit.prevent="join">
-        <label for="email">이메일</label>
-        <input
-          required
-          v-model="email"
-          id="email"
-          placeholder="이메일을 입력해주세요"
-          name="email"
-          type="email"
-        />
-
-        <label for="password">비밀번호 (영문, 숫자 8~20자)</label>
-        <input
-          v-model="password"
-          required
-          minlength="8"
-          maxlength="20"
-          id="password"
-          type="password"
-          name="password"
-          @keyup="passwordEqualCheck"
-          placeholder="비밀번호를 입력해주세요"
-          pattern="^((?=\S*?[A-Za-z0-9]).{0,})\S$"
-          title="영문 숫자 혼합 8자 이상"
-        />
-
-        <label for="password-confirm">비밀번호 확인</label>
-        <input
-          v-model="passwordConfirm"
-          required
-          id="password-confirm"
-          type="password"
-          name="password-confirm"
-          @keyup="passwordEqualCheck"
-          placeholder="비밀번호를 한번 더 입력해주세요"
-        />
-        <div class="msg msg-password-confirm">비밀번호가 일치하지 않습니다.</div>
-
-        <div class="container-term">
-          <input v-model="isTerm" type="checkbox" id="term" />
-          <span class="term">
-            <a href>약관</a> 및
-            <a href>개인정보</a>처리 방침에
-            동의합니다.
-          </span>
-        </div>
-
-        <button class="btn btn-join" type="submit">가입하기</button>
-        <div class="join-link">
-          <span>계정이 있으신가요?</span>
-          <a href="javascript:void(0)" @click="moveTojoin">로그인 하기</a>
-        </div>
-      </form>
-    </div>
-  </div> -->
 </template>
 
 <script>
@@ -271,11 +212,11 @@ $minimumWidth: 950px;
   display: flex;
   position: fixed;
   width: 400px;
-  height: 550px;
+  height: 520px;
   background-color: rgb(252, 252, 252);
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   @media (min-width: $minimumWidth) {
-    width: 850px;
+    width: 780px;
   }
   a {
     text-decoration: none;
@@ -286,10 +227,7 @@ $minimumWidth: 950px;
   }
   .title {
     text-align: left;
-    margin-bottom: 24px;
-    h1 {
-      margin-bottom: 12px;
-    }
+    margin-bottom: 12px;
   }
   .left-join {
     display: none;
@@ -304,7 +242,6 @@ $minimumWidth: 950px;
   .right-join {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     padding: 24px;
     width: 100%;
     @media (min-width: $minimumWidth) {
@@ -313,21 +250,23 @@ $minimumWidth: 950px;
     /** join form */
     .container-join-form {
       display: flex;
+      height: 100%;
+      justify-content: center;
       flex-direction: column;
       align-content: flex-start;
     }
     label {
       text-align: left;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
     }
     input {
       background-color: rgb(0, 0, 0, 0) !important;
-      border: none;
-      border-bottom: 1px solid black;
-      padding: 7px 0px;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      padding: 8px 5px;
       margin-bottom: 12px;
       .password-confirm {
-        margin-bottom: 36px;
+        margin-bottom: 24px;
       }
     }
 
@@ -357,7 +296,7 @@ $minimumWidth: 950px;
         justify-content: space-evenly;
         align-items: center;
         width: 100%;
-        margin: 12px 0px;
+        margin: 16px 0px;
         .btn {
           display: flex;
           justify-content: center;
@@ -402,14 +341,14 @@ $minimumWidth: 950px;
     }
     .btn-join {
       width: 100%;
-      height: 40px;
-      padding: 7px 10px;
-      color: rgb(153, 153, 153);
-      border: 1px solid black;
-      background-color: rgba(0, 0, 0, 0);
-      font-weight: 900;
-      font-size: 18px;
+      padding: 8px 10px;
+      color: white;
+      border-radius: 5px;
+      background-color: #6DA7FF;
+      font-weight: 500;
+      font-size: 0.9rem;
     }
+
     .btn-join:hover {
       background-color: rgb(240, 240, 240);
       color: black;
@@ -429,7 +368,6 @@ $minimumWidth: 950px;
     .join-footer {
       display: flex;
       justify-content: flex-end;
-      margin-top: 8px;
 
       .link-repassword {
         text-decoration: none;
