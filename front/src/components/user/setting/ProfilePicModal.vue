@@ -21,13 +21,12 @@
             class="previous-image"
             v-for="(image, i) in images"
             :key="image"
-            @click="selectImage(image)"
             @mouseover="showDeleteButton(i)"
             @mouseout="hideDeleteButton(i)"
           >
             <div class="banner-image-delete" @click="deleteImage(image)">✖</div>
             <img :src="image" />
-            <button class="banner-image-select"></button>
+            <button class="banner-image-select" @click="selectImage(image)"></button>
           </div>
         </div>
       </div>
@@ -51,7 +50,8 @@ export default {
     return {
       url: this.getProfile(),
       images: [],
-      file: ""
+      file: "",
+      path: ""
     };
   },
   methods: {
@@ -66,8 +66,8 @@ export default {
       document.querySelector(".container-profilepic").classList.add("hide");
     },
     previewFile(event) {
+      this.path = "";
       this.file = event.target.files[0];
-      console.log(this.file);
       this.url = URL.createObjectURL(this.file);
       document.querySelector(
         ".preview-image"
@@ -77,6 +77,9 @@ export default {
       let formData = new FormData();
       formData.append("filename", this.file);
       formData.append("email", this.getEmail());
+      if (this.path) {
+        formData.append("path", this.path);
+      }
       axios
         .post(`${SERVER_URL}/api/auth/profile`, formData, {
           headers: {
@@ -116,6 +119,7 @@ export default {
         .catch(err => console.log(err));
     },
     selectImage(url) {
+      this.path = url;
       document.querySelector(
         ".preview-image"
       ).style.backgroundImage = `url('${url}')`;
@@ -140,8 +144,6 @@ export default {
       // ... do something with the file or return it
     },
     showDeleteButton(i) {
-      //       color: rgb(0, 0, 0);
-      // background-color: rgba(255, 255, 255);
       document.querySelectorAll(".banner-image-delete")[
         i
       ].style.backgroundColor = "rgb(255, 255, 255)";
