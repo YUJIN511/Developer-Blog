@@ -2,7 +2,11 @@
   <div class="container-blog">
     <header></header>
     <main>
-      <TagList :email="userEmail" @select-tag="onSelectTag" @select-all="onSelectAll" />
+      <TagList
+        :email="userEmail"
+        @select-tag="onSelectTag"
+        @select-all="onSelectAll"
+      />
       <div class="content">
         <div class="content-header">
           <div class="container-profile">
@@ -18,12 +22,16 @@
             </div>
           </div>
           <div class="container-btn-follow" v-if="showFollowBtn">
-            <button class="btn-follow" @click="follow">{{ follow_text[isFollowing] }}</button>
+            <button class="btn-follow" @click="follow">
+              {{ follow_text[isFollowing] }}
+            </button>
             <!-- <button class="btn-follow" @click="unfollow" v-if="isFollowing">팔로우 끊기</button> -->
           </div>
         </div>
         <div class="container-tabs">
-          <button class="btn btn-article" @click="clickArticle">내 게시물</button>
+          <button class="btn btn-article" @click="clickArticle">
+            내 게시물
+          </button>
           <button class="btn btn-Info" @click="clickInfo">정보</button>
         </div>
         <div class="content-body"></div>
@@ -79,9 +87,11 @@ export default {
         })
         .catch(err => console.log(err));
       var profileImages = document.querySelectorAll(".blog-profile-image");
-      profileImages.forEach(profileImage => {
-        profileImage.style.backgroundImage = `url('${this.userInfo.profile}')`;
-      });
+      if (this.userInfo.profile !== null) {
+        profileImages.forEach(profileImage => {
+          profileImage.style.backgroundImage = `url('${this.userInfo.profile}')`;
+        });
+      }
     },
     clickArticle(event) {
       this.showArticle = true;
@@ -290,7 +300,7 @@ main {
 
 .blog-profile-image {
   position: relative;
-  background-image: url("https://cdns.iconmonstr.com/wp-content/assets/preview/2019/240/iconmonstr-school-28.png") !important;
+  background-image: url("https://cdns.iconmonstr.com/wp-content/assets/preview/2019/240/iconmonstr-school-28.png");
   background-position: center;
   background-size: cover;
   width: 150px;
