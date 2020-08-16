@@ -1,6 +1,8 @@
 <template>
   <div class="container-base">
-    <span class="title">팔로우한 사람들의 최신 게시물</span>
+    <span class="title" v-if="getUserInfo().email !== ''"
+      >팔로우한 사람들의 최신 게시물</span
+    >
     <FlexArticles :datas="followerArticleData" />
     <span class="title">추천 게시물</span>
     <FlexArticles :datas="articleData" />
