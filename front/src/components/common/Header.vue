@@ -178,7 +178,7 @@
     <EmailModal />
     <UnregisterModal />
     <ProfilePicModal />
-    <Notification :notifications="notifications" />
+    <NotificationModal :notifications="notifications" />
   </div>
 </template>
 
@@ -190,7 +190,7 @@ import Repassword from "@/components/user/Repassword.vue";
 import EmailModal from "@/components/user/EmailModal.vue";
 import UnregisterModal from "@/components/user/setting/UnregisterModal.vue";
 import ProfilePicModal from "@/components/user/setting/ProfilePicModal.vue";
-import Notification from "@/components/notification/notification.vue";
+import NotificationModal from "@/components/notification/notification.vue";
 import NavbarUserInfo from "@/components/common/NavbarUserInfo.vue";
 
 import { mapActions, mapGetters } from "vuex";
@@ -205,7 +205,7 @@ export default {
     EmailModal,
     UnregisterModal,
     ProfilePicModal,
-    Notification,
+    NotificationModal,
     NavbarUserInfo
   },
   data() {
@@ -282,19 +282,19 @@ export default {
           this.getEmail(),
         { withCredentials: true }
       );
-      this.eventSource.onopen = function(e) {
+      // this.eventSource.onopen = function(e) {
         // console.log("이벤트 소스 오픈");
-        console.log(e);
-      };
+        // console.log(e);
+      // };
       var instance = this;
       this.eventSource.onmessage = function(e) {
         // console.log("이벤트 소스 메시지 도착");
         instance.notifications = JSON.parse(e.data);
       };
-      this.eventSource.onerror = function(e) {
+      // this.eventSource.onerror = function(e) {
         // console.log("이벤트 소스 에러");
-        console.log(e);
-      };
+        // console.log(e);
+      // };
     },
     unSetupStream() {
       if (this.eventSource === null) {
