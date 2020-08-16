@@ -1,6 +1,11 @@
 <template>
   <div class="container-base">
-    <span class="title">{{ keyword }}에 대한 검색결과</span>
+    <span class="title"
+      ><span class="keyword">{{
+        keyword === undefined ? `#${tag}` : keyword
+      }}</span
+      >에 대한 검색결과</span
+    >
     <FlexArticles :datas="articleData" />
   </div>
 </template>
@@ -41,7 +46,7 @@ export default {
     fetchHashResult() {
       axios
         .get(
-          `${SERVER_URL}/api/post/hashSearch/${this.keyword}?email=${
+          `${SERVER_URL}/api/post/searchHash/${this.tag}?email=${
             this.getUserInfo().email
           }`
         )
@@ -64,4 +69,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/_variables.scss";
 @import "@/assets/common/Base.scss";
+.keyword {
+  color: dodgerblue;
+}
 </style>
