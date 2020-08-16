@@ -1,6 +1,6 @@
 <template>
   <div class="container-blog">
-    <header></header>
+    <header ref="blogBanner"></header>
     <main>
       <TagList
         :email="userEmail"
@@ -25,7 +25,6 @@
             <button class="btn-follow" @click="follow">
               {{ follow_text[isFollowing] }}
             </button>
-            <!-- <button class="btn-follow" @click="unfollow" v-if="isFollowing">팔로우 끊기</button> -->
           </div>
         </div>
         <div class="container-tabs">
@@ -40,7 +39,6 @@
           :datas="articleData"
           v-if="showArticle"
         />
-        <!-- <Info /> -->
       </div>
     </main>
   </div>
@@ -80,12 +78,14 @@ export default {
       getUserInfo: "user/getUserInfo"
     }),
     async fetchUserInfo() {
-      await axios
-        .get(`${SERVER_URL}/api/auth/userInfo?email=${this.userEmail}`)
-        .then(res => {
-          this.userInfo = res.data;
-        })
-        .catch(err => console.log(err));
+      try {
+        const res = await axios.get(
+          `${SERVER_URL}/api/auth/userInfo?email=${this.userEmail}`
+        );
+        this.userInfo = res.data;
+      } catch (error) {
+        console.log(error);
+      }
       var profileImages = document.querySelectorAll(".blog-profile-image");
       if (this.userInfo.profile !== null) {
         profileImages.forEach(profileImage => {
@@ -127,6 +127,7 @@ export default {
         .get(`${SERVER_URL}/api/blog?email=${this.userEmail}`)
         .then(res => {
           this.blogInfo = res.data;
+          this.$refs.blogBanner.style.backgroundImage = `url("${this.blogInfo.picture}")`;
         })
         .catch(err => console.log(err));
     },
@@ -213,6 +214,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-content: stretch;
+  margin-left: 72px;
   header {
     height: 320px;
     background-image: url(https://images.unsplash.com/photo-1589482736976-2cfd4400ae4f?ixlib=rb-1.2.1&auto=format&fit=crop&w=2614&q=80);
@@ -224,7 +226,6 @@ export default {
 
 main {
   padding: 30px 0px;
-  padding-left: 70px;
   display: flex;
   .content {
     position: relative;
