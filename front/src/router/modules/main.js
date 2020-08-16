@@ -40,13 +40,13 @@ export default [
     component: () => import("@/views/LikeList.vue")
   },
   {
-    path: "search/:keyword",
+    path: "search",
     name: "Search",
     component: () => import("@/views/Search.vue")
   },
   {
     path: "notification",
     name: "Notification",
-    component: () => import("@/views/notificationDetail.vue"),
-  },
+    component: () => import("@/views/notificationDetail.vue")
+  }
 ];

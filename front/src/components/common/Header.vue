@@ -239,8 +239,20 @@ export default {
     search() {
       this.$router.push({
         name: "Search",
-        params: { keyword: this.searchWord }
+        query: { keyword: this.searchWord }
       });
+      if (this.$route.name === "Search") {
+        this.$router.go();
+      }
+    },
+    tagSearch() {
+      this.$router.push({
+        name: "Search",
+        query: { tag: this.searchWord }
+      });
+      if (this.$route.name === "Search") {
+        this.$router.go();
+      }
     },
     moveToProfile() {
       this.$router.push({ name: "Blog", params: { email: this.getEmail() } });
