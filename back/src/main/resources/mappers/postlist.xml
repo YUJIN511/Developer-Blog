@@ -11,6 +11,14 @@
 		order by createdate desc
 	</select>
 	
+	<!-- 무한 스크롤 -->
+	<select id="paging" resultType="PostList">
+		select nickname, profile, score, id, title, summary, picture, writer, good, views, createdate
+		from user join post on email = writer
+		order by createdate desc
+		limit #{page}, 10 
+	</select>
+	
 	<!-- 해당 이메일의 post 조회(내용) -->
 	<select id="searchByEmail" resultType="PostList">
 		select nickname, profile, score, id, title, summary, picture, writer, good, views, createdate

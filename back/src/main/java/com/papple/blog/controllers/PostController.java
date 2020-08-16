@@ -109,6 +109,14 @@ public class PostController {
 		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}
 	
+	@GetMapping("/page")
+	@ApiOperation(value = "페이징 테스트")
+	public ResponseEntity<List<PostList>> Paging(int page)  {
+		int pgStart = 10*page - 9;
+		return new ResponseEntity<List<PostList>>(postListRepository.paging(pgStart), HttpStatus.OK);
+	}
+	
+	
 	@GetMapping("writer/{email}")
 	@ApiOperation(value = "해당 이메일의 포스트 리스트 보기(나 혹은 다른 사람 블로그에서)")
 	public ResponseEntity<List<PostList>> searchByEmail(@PathVariable String email) throws Exception {
