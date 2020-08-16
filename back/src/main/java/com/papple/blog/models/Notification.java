@@ -20,6 +20,8 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String profile;             // 프로필 사진
     
     private boolean isalert;            // 알람이 울렸는지
 
@@ -31,13 +33,11 @@ public class Notification {
 
     private String actionuser;          // 알람 발생시킨 사용자
 
-    private String notiurl;             // 알람 클릭시 이동 url
-
     private Long postid;                // post id
 
     private Long commentid;             // comment id
 
-    private Integer type;               // [1, 10, 100, 1000, 10000, 100000, 1000000]
+    private Integer type;               // [1, 10, 100, 1000, 10000, 100000]
 
     @CreationTimestamp
     private LocalDateTime createat;
@@ -45,13 +45,12 @@ public class Notification {
     public Notification(){}
 
     @Builder
-    public Notification(String message, String targetuser, String actionuser, String notiurl){
+    public Notification(String message, String targetuser, String actionuser){
         this.isalert = false;
         this.isread = false;
         this.message = message;
         this.targetuser = targetuser;
         this.actionuser = actionuser;
-        this.notiurl = notiurl;
     }
 
 }

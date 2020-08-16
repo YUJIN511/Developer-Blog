@@ -53,6 +53,7 @@ export default {
 .container-comment-reply-list {
   width: 100%;
   margin-bottom: 20px;
-  background-color: $lightgray;
+  background-color: #fafafa;
+  border-radius: 5px;
 }
 </style>

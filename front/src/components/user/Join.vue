@@ -6,17 +6,16 @@
       <div class="right-join">
         <button class="btn-close" @click="closeJoin">✖</button>
         <div class="title">
-          <h1>회원가입</h1>
-          <span>이메일로 회원가입</span>
+          <h1>LOG . JOIN</h1>
         </div>
 
         <form class="container-join-form" @submit.prevent="join">
-          <label for="email">이메일</label>
+          <label for="email">이메일 주소</label>
           <input
             required
             v-model="email"
             id="email"
-            placeholder="이메일을 입력해주세요"
+            placeholder="이메일 주소를 입력해주세요"
             name="email"
             type="email"
             autocomplete="email"
@@ -90,7 +89,9 @@
             </span>
           </div>
           <button class="btn btn-join" type="submit">회원가입</button>
-          <div class="join-footer">
+          
+        </form>
+        <div class="join-footer">
             <span
               >이미 계정이 있으신가요?
               <a
@@ -102,7 +103,6 @@
               하러 가기</span
             >
           </div>
-        </form>
       </div>
     </div>
   </div>
@@ -212,11 +212,11 @@ $minimumWidth: 950px;
   display: flex;
   position: fixed;
   width: 400px;
-  height: 550px;
+  height: 520px;
   background-color: rgb(252, 252, 252);
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   @media (min-width: $minimumWidth) {
-    width: 850px;
+    width: 780px;
   }
   a {
     text-decoration: none;
@@ -227,15 +227,12 @@ $minimumWidth: 950px;
   }
   .title {
     text-align: left;
-    margin-bottom: 24px;
-    h1 {
-      margin-bottom: 12px;
-    }
+    margin-bottom: 12px;
   }
   .left-join {
     display: none;
     width: 45%;
-    background-image: url(https://images.unsplash.com/photo-1523800503107-5bc3ba2a6f81?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1400&q=80);
+    background-image: url(https://cdn.pixabay.com/photo/2015/09/04/23/28/wordpress-923188_960_720.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     @media (min-width: $minimumWidth) {
@@ -245,7 +242,6 @@ $minimumWidth: 950px;
   .right-join {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     padding: 24px;
     width: 100%;
     @media (min-width: $minimumWidth) {
@@ -254,21 +250,23 @@ $minimumWidth: 950px;
     /** join form */
     .container-join-form {
       display: flex;
+      height: 100%;
+      justify-content: center;
       flex-direction: column;
       align-content: flex-start;
     }
     label {
       text-align: left;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
     }
     input {
       background-color: rgb(0, 0, 0, 0) !important;
-      border: none;
-      border-bottom: 1px solid black;
-      padding: 7px 0px;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      padding: 8px 5px;
       margin-bottom: 12px;
       .password-confirm {
-        margin-bottom: 36px;
+        margin-bottom: 24px;
       }
     }
 
@@ -298,7 +296,7 @@ $minimumWidth: 950px;
         justify-content: space-evenly;
         align-items: center;
         width: 100%;
-        margin: 12px 0px;
+        margin: 16px 0px;
         .btn {
           display: flex;
           justify-content: center;
@@ -343,14 +341,14 @@ $minimumWidth: 950px;
     }
     .btn-join {
       width: 100%;
-      height: 40px;
-      padding: 7px 10px;
-      color: rgb(153, 153, 153);
-      border: 1px solid black;
-      background-color: rgba(0, 0, 0, 0);
-      font-weight: 900;
-      font-size: 18px;
+      padding: 8px 10px;
+      color: white;
+      border-radius: 5px;
+      background-color: #6DA7FF;
+      font-weight: 500;
+      font-size: 0.9rem;
     }
+
     .btn-join:hover {
       background-color: rgb(240, 240, 240);
       color: black;
@@ -370,7 +368,6 @@ $minimumWidth: 950px;
     .join-footer {
       display: flex;
       justify-content: flex-end;
-      margin-top: 8px;
 
       .link-repassword {
         text-decoration: none;

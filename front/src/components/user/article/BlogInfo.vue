@@ -60,18 +60,19 @@ button:hover {
         margin-right: 10px;
       }
       .user-nickname {
-        font-weight: 900;
+        font-size: 1rem;
       }
       .blog-title {
-        font-size: 1.5rem;
-        font-weight: 900;
+        font-size: 1.6rem;
+        font-weight: 600;
       }
       .blog-description {
-        font-size: 1.1rem;
+        font-size: 1rem;
         overflow: hidden;
       }
       .follower-number {
-        font-weight: 900;
+        font-size: 1rem;
+        font-weight: 600;
       }
     }
   }

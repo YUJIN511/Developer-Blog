@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CommentReopository extends JpaRepository<Comment, Long> {
-    
+
     @Modifying
 	@Transactional
 	@Query(value = "delete from comment where replyto = ?1", nativeQuery = true)
