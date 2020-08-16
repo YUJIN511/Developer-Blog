@@ -15,6 +15,7 @@
 import WordCloud from "@/components/common/WordCloud.vue";
 import FlexAricles from "@/components/common/FlexArticles.vue";
 import { mapMutations } from "vuex";
+import axios from "axios";
 
 export default {
   components: {
@@ -23,26 +24,15 @@ export default {
   },
   data() {
     return {
-      words: [
-        { text: "Vue", value: 1000 },
-        { text: "Javascript", value: 200 },
-        { text: "Spring", value: 800 },
-        { text: "Django", value: 1000000 },
-        { text: "Python", value: 100 },
-        { text: "Java", value: 1000 },
-        { text: "React", value: 150 },
-        { text: "Ruby", value: 10000 },
-        { text: "CSS", value: 100 },
-        { text: "HTML", value: 2000 },
-        { text: "AI", value: 600 },
-        { text: "C++", value: 3000 },
-        { text: "Web", value: 6000 }
-      ],
+      words: [],
       fontSizeMapper: word => Math.log2(word.value) * 5,
       articleData: []
     };
   },
-  created() {
+
+  async created() {
+    await this.initTagData(15);
+
     this.articleData = [
       {
         thumbUrl:
@@ -86,9 +76,28 @@ export default {
       } else {
         likeIcon.classList.add("selected");
       }
+    },
+    async initTagData(limit) {
+      try {
+        const res = await axios.get(`${this.$apiServer}/main/popularTag`);
+        const datas = res.data;
+        let value = 100000;
+
+        for (let i = 0; i < limit && datas.length; i++) {
+          const word = {
+            text: datas[i].tagname,
+            value
+          };
+          value /= 2;
+          this.words.push(word);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 };
+// 50000 10000 2000 400 80
 </script>
 
 <style lang="scss" scoped>
