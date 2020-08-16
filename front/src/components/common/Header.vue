@@ -62,7 +62,7 @@
 
       <div class="header-item header-center" v-if="$route.meta.header !== 0">
         <div class="container-main-search">
-          <input type="search" class="input-main-search" v-model="searchWord" />
+          <input type="search" class="input-main-search" v-model="searchWord" @keyup.enter="search" />
           <button @click="search" class="btn-main-search desktop">
             <svg
               xmlns="http://www.w3.org/2000/svg"
