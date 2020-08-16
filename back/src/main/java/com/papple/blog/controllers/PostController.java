@@ -112,7 +112,7 @@ public class PostController {
 	@GetMapping("/page")
 	@ApiOperation(value = "페이징 테스트")
 	public ResponseEntity<List<PostList>> Paging(int page)  {
-		int pgStart = 10*page - 9;
+		int pgStart = 10 * (page - 1);
 		return new ResponseEntity<List<PostList>>(postListRepository.paging(pgStart), HttpStatus.OK);
 	}
 	
