@@ -108,7 +108,7 @@
             </svg>
         </button>
       </div>
-    <ShareModal  v-if="isShowShareModal"/>
+    <ShareModal  v-if="isShowShareModal" :articleData="articleData"/>
     </div>
     <BlogInfo :articleData="articleData" />
     <Comment @reRender="reRender" :key="commentModuleKey" :postId="postId" />

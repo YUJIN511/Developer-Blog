@@ -4,7 +4,9 @@ import router from "./router";
 import store from "./store";
 import VueCryptojs from "vue-cryptojs";
 import "@babel/polyfill";
-
+import VueSocialSharing from 'vue-social-sharing'
+ 
+Vue.use(VueSocialSharing);
 Vue.use(VueCryptojs);
 
 Vue.config.productionTip = false;
