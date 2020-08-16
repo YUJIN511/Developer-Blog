@@ -20,7 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.papple.blog.models.Follow;
 import com.papple.blog.models.FollowPK;
 import com.papple.blog.models.Notification;
+import com.papple.blog.models.User;
+import com.papple.blog.payload.response.FollowList;
+import com.papple.blog.payload.response.FollowListNavi;
 import com.papple.blog.repository.NotificationRepository;
+import com.papple.blog.repository.ProfileRepository;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.FollowService;
 import com.papple.blog.security.services.NotificationService;
@@ -43,11 +47,22 @@ public class FollowController {
 	@Autowired
 	private NotificationRepository NotificationRepository;
 
-	@GetMapping("/list/{follower}")
-	@ApiOperation(value = "내가 팔로우한 사람들을 return (내가 팔로우 한 유저 리스트)")
-	public ResponseEntity<List<Follow>> searchByEmail(@PathVariable String follower) throws Exception {
-		System.out.println("해당 이메일이 팔로워한 유저들 return");
-		return new ResponseEntity<List<Follow>>(followService.findByMyEmail(follower), HttpStatus.OK);
+	@Autowired
+	private ProfileRepository profileRepository;
+	
+	@GetMapping("/list")
+	@ApiOperation(value = "내가 팔로우한 사람들을 return (내가 팔로우 한 유저 리스트 - 팔로우 탭에서)")
+	public ResponseEntity<List<FollowList>> searchFollowerByEmail(String email) throws Exception {
+		List<FollowList> list = profileRepository.myFollowList(email);
+		for(int i=0;i<list.size();i++) if(followService.isFollow(email, list.get(i).getEmail()) > 0) list.get(i).setFollow(true);	//팔로우 여부 업데이트
+		//알람 여부 업데이트 해줘야함	
+		return new ResponseEntity<List<FollowList>>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/navilist")
+	@ApiOperation(value = "내가 팔로우한 사람들을 return (내가 팔로우 한 유저 리스트 - 네비게이션 바에서)")
+	public ResponseEntity<List<FollowListNavi>> searchFollowerByEmailInNavi(String email) throws Exception {
+		return new ResponseEntity<List<FollowListNavi>>(profileRepository.myFollowListNavi(email), HttpStatus.OK);
 	}
 	
 	@GetMapping("/cnt/{followed}")
@@ -72,19 +87,21 @@ public class FollowController {
 		Follow follow = new Follow(new FollowPK(follower, followed));
 		followService.save(follow);
 
-		// 알림발생(0010000)
-		// >>> notiurl 주소 front로 추후 변경
+		// 알림발생(010000)
 		String actionName = userRepository.getUserByEmail(follower).getNickname();
-		Notification notification = Notification.builder()
-			.message(actionName +"님이 당신을 팔로우 합니다.")
-			.actionuser(follower)
-			.targetuser(followed)
-			.notiurl("http://i3a604.p.ssafy.io/"+follower)
-			.build();
+		User user = userRepository.getUserByEmail(followed);
+        int setting = Integer.parseInt(user.getNotification(),2);
+        // 알림 ON 했는지
+        if( (setting& (1<<4)) != 0){
+			Notification notification = Notification.builder()
+				.message(actionName +"님이 당신을 팔로우 합니다.")
+				.actionuser(follower)
+				.targetuser(followed)
+				.build();
 
-			notification.setType(1<<4);
-			notificationService.save(notification);
-		
+				notification.setType(1<<4);
+				notificationService.save(notification);
+		}
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
@@ -100,7 +117,6 @@ public class FollowController {
 
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
-	
 	
 	
 }

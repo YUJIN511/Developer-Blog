@@ -28,20 +28,8 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 	@Query("DELETE FROM Post WHERE writer = ?1")
 	void deleteByWriter(String email);
 
-	@Query(value = "SELECT * FROM post where title like %?1% or content like %?1%", nativeQuery = true)
-	List<Post> searchByWord(String word);
-	
-	@Query(value = "select * from post p where exists(select * from hashtag h where h.postid = p.id and h.hashtag = ?1)", nativeQuery = true)	//해시태그 검색
-	List<Post> searchByHashtag(String word);
-
-	@Query(value = "SELECT * FROM post WHERE post.id IN (SELECT postid FROM history where email=?1)", nativeQuery = true)
-	List<Post> findHistoryByUser(String email);	// 해당 사용자의 방문 기록 검색
-
-	@Query(value = "select * from post p where exists(select * from hashtag h where h.postid = p.id and h.hashtag=?1) and p.writer = ?2", nativeQuery = true)
-	List<Post> findMyHashPost(String hashtag, String email);	// 내가 쓴 특정 해시태그의 글들을 출력(HashTag Category 안 게시물들) 
-	
-	@Query(value = "SELECT * FROM post WHERE post.id IN (SELECT postid FROM storage where email=?1)", nativeQuery = true)
-	List<Post> findStorageByUser(String email);	// 해당 사용자의 보관함 검색(좋아요 한 게시글)
+//	@Query(value = "select * from post p where exists(select * from hashtag h where h.postid = p.id and h.hashtag=?1) and p.writer = ?2", nativeQuery = true)
+//	List<Post> findMyHashPost(String hashtag, String email);	// 내가 쓴 특정 해시태그의 글들을 출력(HashTag Category 안 게시물들) 
 
 	@Query(value = "SELECT * FROM post WHERE post.writer IN (SELECT followed FROM follow WHERE follower = ?1) ORDER BY post.createdate"	, nativeQuery = true)
 	List<Post> findFollowLatestByUser(String email);	// 팔로우한 사용자들의 최신 글 검색
@@ -65,8 +53,7 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 	@Query(value = "select count(*) from post p where writer=?1 and exists(select * from hashtag h where h.postid = p.id and h.hashtag = ?2)", nativeQuery = true)
 	int cntCategory(String email, String hashtag);
 	
-	@Query(value = "select email, nickname, profile, score, id, title, content, summary, picture, writer, good, views, createdate"
-			+ " from user join post on email = writer", nativeQuery = true)
-	List<PostList> searchAllPost();
+	@Query(value = "select count(*) from post where writer = ?1", nativeQuery = true)
+	int cntMyPost(String email);
 
 }
