@@ -9,9 +9,7 @@
               xmlns:xlink="http://www.w3.org/1999/xlink"
               viewBox="0 0 26 26"
             >
-              <path
-                d="M1,17.8v2.4h24v-2.4H1z M1,11.8v2.4h24v-2.4H1z M1,5.8v2.4h24V5.8H1z"
-              />
+              <path d="M1,17.8v2.4h24v-2.4H1z M1,11.8v2.4h24v-2.4H1z M1,5.8v2.4h24V5.8H1z" />
             </svg>
           </button>
         </div>
@@ -56,9 +54,7 @@
                 d="M72.3,45.15a3.32,3.32,0,0,1-.94,2.4,3.49,3.49,0,0,1-2.41.94H56.42a3.1,3.1,0,0,1-3.34-3V5A3.32,3.32,0,0,1,54,2.54a3.53,3.53,0,0,1,2.4-.94H69a3.36,3.36,0,0,1,2.41.94A3.36,3.36,0,0,1,72.3,5v11H68V5.26H57.15V44.94H68V28.65H62.9V25.1h9.4Z"
                 transform="translate(-4 -1.5)"
               />
-              <polygon
-                points="92 46.99 87.31 46.99 87.31 41.77 92 41.77 92 46.99 92 46.99"
-              />
+              <polygon points="92 46.99 87.31 46.99 87.31 41.77 92 41.77 92 46.99 92 46.99" />
             </svg>
           </div>
         </router-link>
@@ -66,7 +62,7 @@
 
       <div class="header-item header-center" v-if="$route.meta.header !== 0">
         <div class="container-main-search">
-          <input type="search" class="input-main-search" v-model="searchWord" />
+          <input type="search" class="input-main-search" v-model="searchWord" @keyup.enter="search" />
           <button @click="search" class="btn-main-search desktop">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -97,29 +93,16 @@
             </svg>
           </div>
         </button>
-        <button class="btn-login" @click="openLogin" v-if="!getIsLogin()">
-          LOG . IN
-        </button>
-        <router-link
-          tag="button"
-          class="btn-newpost"
-          to="/article"
-          v-if="getIsLogin()"
-          >새 글쓰기</router-link
-        >
+        <button class="btn-login" @click="openLogin" v-if="!getIsLogin()">LOG . IN</button>
+        <router-link tag="button" class="btn-newpost" to="/article" v-if="getIsLogin()">새 글쓰기</router-link>
         <div class="container">
           <a
             class="badge-num"
             v-if="notifications.length > 0 && getIsLogin()"
-            >{{ notifications.length }}</a
-          >
+          >{{ notifications.length }}</a>
         </div>
         <div>
-          <button
-            class="notification-icon"
-            @click="openNotification"
-            v-if="getIsLogin()"
-          >
+          <button class="notification-icon" @click="openNotification" v-if="getIsLogin()">
             <svg
               version="1.1"
               id="notification_icon"
@@ -131,9 +114,7 @@
               style="enable-background:new 0 0 26 26;"
               xml:space="preserve"
             >
-              <path
-                d="M6.2,23.7c-0.2,0.1-0.4,0.1-0.6,0.1c0.3,0,0.6-0.1,0.9-0.2l5.3-2L6.2,23.7z"
-              />
+              <path d="M6.2,23.7c-0.2,0.1-0.4,0.1-0.6,0.1c0.3,0,0.6-0.1,0.9-0.2l5.3-2L6.2,23.7z" />
               <path
                 d="M17.8,22.2c-0.1,1.3-0.9,2.3-2.1,2.7c-1.1,0.4-2.4,0-3.1-0.9c-0.2-0.3-0.2-0.4,0.1-0.6l4.6-1.8
 	C17.6,21.4,17.8,21.6,17.8,22.2z"
@@ -157,10 +138,7 @@
         </div>
         <div>
           <div class="profile-image" v-if="getIsLogin()">
-            <button
-              class="banner-image-edit"
-              @click="$refs.navbarUserInfo.toggle()"
-            ></button>
+            <button class="banner-image-edit" @click="$refs.navbarUserInfo.toggle()"></button>
           </div>
           <NavbarUserInfo ref="navbarUserInfo" />
         </div>
@@ -239,8 +217,20 @@ export default {
     search() {
       this.$router.push({
         name: "Search",
-        params: { keyword: this.searchWord }
+        query: { keyword: this.searchWord }
       });
+      if (this.$route.name === "Search") {
+        this.$router.go();
+      }
+    },
+    tagSearch() {
+      this.$router.push({
+        name: "Search",
+        query: { tag: this.searchWord }
+      });
+      if (this.$route.name === "Search") {
+        this.$router.go();
+      }
     },
     moveToProfile() {
       this.$router.push({ name: "Blog", params: { email: this.getEmail() } });
@@ -495,7 +485,7 @@ button:hover {
 }
 
 .profile-image {
-  background-image: url("https://cdns.iconmonstr.com/wp-content/assets/preview/2012/240/iconmonstr-user-20.png") !important;
+  background-image: url("https://cdns.iconmonstr.com/wp-content/assets/preview/2012/240/iconmonstr-user-20.png");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
