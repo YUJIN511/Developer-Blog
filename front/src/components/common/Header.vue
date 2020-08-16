@@ -242,18 +242,26 @@ export default {
       this.Logout();
     },
     search() {
+      const keyword = this.searchWord;
+      if (keyword.charAt(0) === "#") {
+        this.tagSearch(keyword.substring(1));
+      } else {
+        this.keywordSearch(keyword);
+      }
+    },
+    keywordSearch(keyword) {
       this.$router.push({
         name: "Search",
-        query: { keyword: this.searchWord }
+        query: { keyword }
       });
       if (this.$route.name === "Search") {
         this.$router.go();
       }
     },
-    tagSearch() {
+    tagSearch(tag) {
       this.$router.push({
         name: "Search",
-        query: { tag: this.searchWord }
+        query: { tag }
       });
       if (this.$route.name === "Search") {
         this.$router.go();
