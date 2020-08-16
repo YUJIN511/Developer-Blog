@@ -24,34 +24,34 @@ const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 
 export default {
   components: {
-    FlexArticles,
+    FlexArticles
   },
   data: function() {
     return {
       articleData: [],
-      keyword: this.$route.params.keyword,
+      keyword: this.$route.params.keyword
     };
   },
   methods: {
     fetchWordResult() {
       axios
         .get(`${SERVER_URL}/api/post/search/${this.keyword}`)
-        .then((res) => {
+        .then(res => {
           console.log(res);
           this.articleData = res.data;
           console.log(this.articleData);
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     },
     fetchHashResult() {
       axios
         .get(`${SERVER_URL}/api/post/hashSearch/${this.keyword}`)
-        .then((res) => {
+        .then(res => {
           console.log(res);
           this.articleData = res.data;
         })
-        .catch((err) => console.log(err));
-    },
+        .catch(err => console.log(err));
+    }
   },
   created() {
     console.log(this.keyword);
@@ -72,7 +72,7 @@ export default {
         iconUrl: "@/assets/tree.svg",
         name: "닉네임1",
         isLiked: true,
-        likeCnt: 10,
+        likeCnt: 10
       },
       {
         thumbUrl:
@@ -85,10 +85,15 @@ export default {
         iconUrl: "@/assets/tree.svg",
         name: "닉네임2",
         isLiked: false,
-        likeCnt: 9,
-      },
+        likeCnt: 9
+      }
     ];
   },
+  watch: {
+    "$route.params.keyword": function() {
+      this.$router.go();
+    }
+  }
 };
 </script>
 
