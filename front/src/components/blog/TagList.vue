@@ -7,7 +7,12 @@
         <span @click="selectAll()">전체보기</span>
         <span>({{ totalcnt }})</span>
       </p>
-      <p class="list-item" v-for="tag in tagData" :key="tag.id" @click="selectTag(tag[0])">
+      <p
+        class="list-item"
+        v-for="tag in tagData"
+        :key="tag.id"
+        @click="selectTag(tag[0])"
+      >
         <span>{{ tag[0] }}</span>
         <span>({{ tag[1] }})</span>
       </p>
@@ -66,7 +71,7 @@ export default {
 .container-tags {
   width: 180px;
   margin-top: 320px;
-  margin-left: 150px;
+  margin-left: 20px;
   margin-right: 0;
   color: #727272;
   float: left;
