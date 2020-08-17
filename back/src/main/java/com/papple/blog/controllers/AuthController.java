@@ -399,21 +399,19 @@ public class AuthController {
 	@ApiOperation(value = "path 변수가 비었을 때는 서버에 파일 저장 + 유저 대표사진 update + profile history 등록,  path가 있을 때는 대표사진만 update")
 	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam String email, 
 			@RequestParam(required = false) String path, HttpServletRequest request) {
-
-		if(path == null || path.equals("")) {	// path 변수가 안들어오면 (새 첨부 파일로 대표이미지를 등록하면)
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-			Date nowdate = new Date();
-			String dateString = formatter.format(nowdate);	//현재시간 문자열
-			
-			String real_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile/" + 
-					dateString + "_" + mFile.getOriginalFilename();	//경로 + 날짜시간 + _ +파일이름으로 저장
-			String access_path = "http://i3a604.p.ssafy.io/images/profile/" + dateString + "_" + mFile.getOriginalFilename();
-			
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date nowdate = new Date();
+		String dateString = formatter.format(nowdate);	//현재시간 문자열
+		
+		String real_path = "/home/ubuntu/s03p13a604/back/src/main/webapp/resources/profile/" + 
+				dateString + "_" + mFile.getOriginalFilename();	//경로 + 날짜시간 + _ +파일이름으로 저장
+		String access_path = "http://i3a604.p.ssafy.io/images/profile/" + dateString + "_" + mFile.getOriginalFilename();
+		
+		if(path == null || path.equals("")) {	// path 변수가 안들어오면 (새 첨부 파일로 대표이미지를 등록하면)	
 			try {
 				mFile.transferTo(new File(real_path));					// 서버에 파일 저장
 				userRepository.updateProfile(access_path, email);		// 유저 대표사진 update
 				profileRepository.insertProfile(email, access_path);	// profile history 등록
-				profileRepository.updateProfile(email, access_path);	// 시간 재등록
 				return new ResponseEntity<String>(access_path, HttpStatus.OK);
 			} catch(Exception e) {
 				System.out.println("파일 업로드 실패");
@@ -422,6 +420,7 @@ public class AuthController {
 		}
 		else {		//path 변수가 들어오면
 			userRepository.updateProfile(path, email);		// 유저 대표사진 updatedd
+			profileRepository.updateProfile(email, access_path);	// 시간 재등록
 			return new ResponseEntity<String>(path, HttpStatus.OK);
 		}
 		
