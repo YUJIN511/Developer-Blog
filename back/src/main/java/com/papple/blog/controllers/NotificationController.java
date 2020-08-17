@@ -89,10 +89,16 @@ public class NotificationController {
         
         return new ResponseEntity<String>("success", HttpStatus.OK);
     }
+    @DeleteMapping(value="/read")
+    @ApiOperation(value = "읽은 알림 삭제")
+    public ResponseEntity<?> deleteNotifications(@RequestParam String email){
+        notificationService.deleteByTargetuserAndIsreadIsTrue(email);
 
+        return new ResponseEntity<String>("success", HttpStatus.OK);
+    }
     @DeleteMapping(value="/all")
     @ApiOperation(value = "알림 모두 삭제")
-    public ResponseEntity<?> deleteNotifications(@RequestParam String email){
+    public ResponseEntity<?> deleteAll(@RequestParam String email){
         notificationService.deleteByTargetuser(email);
         return new ResponseEntity<String>("success", HttpStatus.OK);
     }
