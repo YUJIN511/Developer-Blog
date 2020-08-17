@@ -55,6 +55,7 @@ import com.papple.blog.payload.request.UpdateRequest;
 import com.papple.blog.payload.response.JwtResponse;
 import com.papple.blog.payload.response.MessageResponse;
 import com.papple.blog.repository.AuthRepository;
+import com.papple.blog.repository.ConfigRepository;
 import com.papple.blog.repository.GoodRepository;
 import com.papple.blog.repository.HistoryRepository;
 import com.papple.blog.repository.ProfileRepository;
@@ -94,6 +95,8 @@ public class AuthController {
 	ProfileRepository profileRepository;
 	@Autowired
 	private GoodRepository goodRepository;
+	@Autowired
+	ConfigRepository configRepository;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -287,6 +290,8 @@ public class AuthController {
 					.body(new MessageResponse("Error: Nickname is already taken!"));
 		}
 		userRepository.updateNickname(nickname, email);
+		
+		configRepository.updateDefault(nickname + "의 블로그", nickname + "의 블로그 입니다.", email);
 
         return ResponseEntity.ok(new MessageResponse("Nickname registered successfully!"));
 	}
