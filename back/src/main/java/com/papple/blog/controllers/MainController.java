@@ -191,6 +191,13 @@ public class MainController {
 		}		
 		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}
+	
+	@GetMapping("popularTag")
+	@ApiOperation("인기태그 리스트 출력")
+	public ResponseEntity<List<TagScore>> searchPopularTag() {
+		return new ResponseEntity<List<TagScore>>(tagScoreRepository.searchTagScore(), HttpStatus.OK);
+	}
+
 
 	@GetMapping("popular")
 	@ApiOperation(value = "인기게시물 로직 : 좋아요(1) + 조회(1) + 댓글(2) + 공유(2)")
