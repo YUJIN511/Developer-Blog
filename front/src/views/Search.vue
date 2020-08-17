@@ -4,7 +4,9 @@
       ><span class="keyword">{{
         keyword === undefined ? `#${tag}` : keyword
       }}</span
-      >에 대한 검색결과</span
+      >{{
+        keyword === undefined ? "태그를 포함하는 게시글" : " 검색 결과"
+      }}</span
     >
     <FlexArticles :datas="articleData" />
   </div>
