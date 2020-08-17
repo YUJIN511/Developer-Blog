@@ -6,12 +6,13 @@
 
 	<!-- 해당 이메일의 프로필 사진 리스트 조회 -->
 	<select id="searchByEmail" resultType="String">
-		select path from profile where email = #{email} order by id desc;
+		select path from profile where email = #{email} order by createdate desc;
 	</select>
 	
 	<insert id="insertProfile">
 		insert into profile(email, path) values(#{email}, #{path})
 	</insert>
+	
 
 	<delete id="deleteProfile">
 		delete from profile where email = #{email} and path = #{path}
