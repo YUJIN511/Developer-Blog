@@ -412,11 +412,8 @@ public class AuthController {
 			try {
 				mFile.transferTo(new File(real_path));					// 서버에 파일 저장
 				userRepository.updateProfile(access_path, email);		// 유저 대표사진 update
-				int a = profileRepository.insertProfile(email, access_path);
-				System.out.println(a);
-				if(a == 0) {	// profile history 등록
-					profileRepository.updateProfile(email, access_path);
-				}
+				profileRepository.insertProfile(email, access_path);	// profile history 등록
+				profileRepository.updateProfile(email, access_path);	// 시간 재등록
 				return new ResponseEntity<String>(access_path, HttpStatus.OK);
 			} catch(Exception e) {
 				System.out.println("파일 업로드 실패");
