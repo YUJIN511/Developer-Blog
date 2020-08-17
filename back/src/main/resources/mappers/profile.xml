@@ -13,6 +13,10 @@
 		insert into profile(email, path, createdate) values(#{email}, #{path}, now())
 	</insert>
 	
+	<update id="updateProfile">
+		update profile set createdate = now() where email = #{email}
+	</update>
+	
 
 	<delete id="deleteProfile">
 		delete from profile where email = #{email} and path = #{path}
