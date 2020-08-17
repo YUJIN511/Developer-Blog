@@ -1,11 +1,11 @@
 <template>
-  <div class="container-tags">
-    <p class="list-title">TAG</p>
-    <hr />
+  <div class="container-tag-navigation">
+    <p class="list-title">Tags</p>
     <div class="list-items">
       <p class="list-item">
-        <span @click="selectAll()">전체보기</span>
-        <span>({{ totalcnt }})</span>
+        <button class="btn-tag-all" @click="selectAll()">
+          전체보기 ({{ totalcnt }})
+        </button>
       </p>
       <p
         class="list-item"
@@ -13,8 +13,7 @@
         :key="tag.id"
         @click="selectTag(tag[0])"
       >
-        <span>{{ tag[0] }}</span>
-        <span>({{ tag[1] }})</span>
+        <button>{{ tag[0] }} ({{ tag[1] }})</button>
       </p>
     </div>
   </div>
@@ -68,7 +67,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.container-tags {
+.container-tag-navigation {
   width: 180px;
   margin-top: 320px;
   margin-left: 20px;
@@ -77,17 +76,32 @@ export default {
   float: left;
   .list-title {
     margin: 12px 0px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgb(202, 202, 202);
+    text-align: right;
   }
   hr {
     width: 180px;
     margin: 0px;
   }
   .list-items {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
     margin: 12px 0px;
+    button {
+      color: dodgerblue;
+      font-weight: 500;
+      font-size: 1rem;
+      &:hover {
+        opacity: 0.7;
+      }
+    }
   }
   p {
     text-align: left;
-    margin: 8px 0px;
+    margin: 3px 0px;
   }
 }
 </style>
