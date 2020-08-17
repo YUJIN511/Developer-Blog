@@ -25,7 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.papple.blog.models.BlogConfig;
+import com.papple.blog.models.User;
 import com.papple.blog.repository.ConfigRepository;
+import com.papple.blog.repository.UserRepository;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -36,6 +38,8 @@ import io.swagger.annotations.ApiOperation;
 public class ConfigController {
 	@Autowired
     private ConfigRepository configRepository;
+	@Autowired
+	private UserRepository userRepository;
 
     @PostMapping
 	@ApiOperation(value = "블로그 설정 저장, 수정")
@@ -44,12 +48,20 @@ public class ConfigController {
     	Optional<BlogConfig> origin = configRepository.findById(config.getEmail());
     	String picture = "";
     	
+    	boolean isPresent = false;
     	if(origin.isPresent()) {
     		picture = origin.get().getPicture();
+    		isPresent = true;
     	}
     	BlogConfig bc = configRepository.save(config);			//id가 있으면 수정, 없으면 저장
     	bc.setPicture(picture);
     	configRepository.updatePicture(picture, origin.get().getEmail());
+    	
+    	if(!isPresent) {
+	    	User user = userRepository.findById(bc.getEmail()).get();
+	    	configRepository.updateDefault(user.getNickname() + "의 블로그", user.getNickname() + "의 블로그 입니다.", user.getEmail());
+    	}
+    	
         return new ResponseEntity<BlogConfig>(bc, HttpStatus.OK);
     }
 
