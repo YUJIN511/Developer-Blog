@@ -44,6 +44,7 @@ import io.swagger.annotations.ApiOperation;
 
 import com.papple.blog.email.MailHandler;
 import com.papple.blog.email.TempKey;
+import com.papple.blog.models.BlogConfig;
 import com.papple.blog.models.ERole;
 import com.papple.blog.models.Post;
 import com.papple.blog.models.Role;
@@ -291,7 +292,9 @@ public class AuthController {
 		}
 		userRepository.updateNickname(nickname, email);
 		
-		configRepository.updateDefault(nickname + "의 블로그", nickname + "의 블로그 입니다.", email);
+		
+		BlogConfig config = new BlogConfig(email, nickname + "의 블로그", nickname + "의 블로그 입니다.", "http://i3a604.p.ssafy.io/images/profile/basic.PNG");
+		configRepository.save(config);
 
         return ResponseEntity.ok(new MessageResponse("Nickname registered successfully!"));
 	}
