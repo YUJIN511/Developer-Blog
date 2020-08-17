@@ -1,5 +1,5 @@
 <template>
-  <div class="container-emailsent">
+  <div class="container-emailsent hide">
     <div class="background-emailsent"></div>
     <div class="modal-emailsent">
       <div class="left-emailsent"></div>
