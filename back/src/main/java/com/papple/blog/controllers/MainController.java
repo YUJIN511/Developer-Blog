@@ -121,6 +121,20 @@ public class MainController {
 		}		
 		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}
+	
+	@GetMapping("/followLatestHome")
+	@ApiOperation(value = "팔로우한 사용자들의 최신 글 리스트")
+	public ResponseEntity<List<PostList>> followLatestHome(@RequestParam(required = true) final String email) throws Exception {
+		List<PostList> list = postListRepository.findLatestMyFollowPostLimit10(email);
+		for(PostList post : list) {
+			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
+			post.setNickname(user.getNickname());
+			post.setProfile(user.getProfile());
+			post.setScore(user.getScore());
+			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
+		}		
+		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
+	}
 
 	@GetMapping("popular")
 	@ApiOperation(value = "인기게시물 로직 : 좋아요(1) + 조회(1) + 댓글(2) + 공유(2)")

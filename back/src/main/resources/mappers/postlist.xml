@@ -83,6 +83,11 @@
 	<select id="findLatestMyFollowPost" resultType="PostList">
 		select * from post where exists(select * from follow where followed = writer and follower = #{email}) order by createdate desc
 	</select>
+	
+	<!-- 10개만 보여주기 -->
+	<select id="findLatestMyFollowPostLimit10" resultType="PostList">
+		select * from post where exists(select * from follow where followed = writer and follower = #{email}) order by createdate desc limit 10
+	</select>
 
 
 </mapper>
