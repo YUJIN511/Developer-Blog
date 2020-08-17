@@ -18,77 +18,29 @@ import FlexFollow from "@/components/common/FlexFollow.vue";
 import FlexArticles from "@/components/common/FlexArticles.vue";
 import LimitedAccess from "@/components/user/LimitedAccess.vue";
 import { mapMutations, mapGetters } from "vuex";
+import axios from "axios";
+
+const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 
 export default {
   components: {
     FlexFollow,
     FlexArticles,
-    LimitedAccess,
+    LimitedAccess
   },
   data: function() {
     return {
-      data: [
-        {
-          profileUrl:
-            "https://images.unsplash.com/photo-1577703451648-77e854069658?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-          userName: "사용자 이름1",
-          blogName: "블로그 이름1",
-        },
-        {
-          profileUrl:
-            "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-          userName: "사용자 이름2",
-          blogName: "블로그 이름12",
-        },
-        {
-          profileUrl:
-            "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-          userName: "사용자 이름2",
-          blogName: "블로그 이름12",
-        },
-        {
-          profileUrl:
-            "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-          userName: "사용자 이름2",
-          blogName: "블로그 이름12",
-        },
-      ],
-      articleData: [
-        {
-          thumbUrl:
-            "https://images.unsplash.com/photo-1519052537078-e6302a4968d4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-          title: "글 제목1",
-          desc:
-            "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea voluptates eos laboriosam quo eaque earum laudantium modi natus, mollitia animi tempore, sint iste velit voluptatum. Est possimus rem, nostrum numquam totam natus eaque, enim sit nisi earum accusantium aliquid tenetur?",
-          profileUrl:
-            "https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-          iconUrl: "@/assets/tree.svg",
-          name: "닉네임1",
-          isLiked: true,
-          likeCnt: 10,
-        },
-        {
-          thumbUrl:
-            "https://images.unsplash.com/photo-1519052537078-e6302a4968d4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-          title: "글 제목2",
-          desc:
-            "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea voluptates eos laboriosam quo eaque earum laudantium modi natus, mollitia animi tempore, sint iste velit voluptatum. Est possimus rem, nostrum numquam totam natus eaque, enim sit nisi earum accusantium aliquid tenetur?",
-          profileUrl:
-            "https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-          iconUrl: "@/assets/tree.svg",
-          name: "닉네임2",
-          isLiked: false,
-          likeCnt: 9,
-        },
-      ],
+      data: [],
+      articleData: []
     };
   },
   methods: {
     ...mapMutations({
-      paintBtn: "navbarMini/paintBtn",
+      paintBtn: "navbarMini/paintBtn"
     }),
     ...mapGetters({
       getIsLogin: "user/getIsLogin",
+      getEmail: "user/getEmail"
     }),
     clickLike(e) {
       const likeIcon = e.currentTarget.querySelector("svg");
@@ -98,10 +50,31 @@ export default {
         likeIcon.classList.add("selected");
       }
     },
+    async fetchFollowerData() {
+      await axios
+        .get(`${SERVER_URL}/api/follow/list?email=${this.getEmail()}`)
+        .then(res => {
+          this.data = res.data.slice(0, 4);
+          console.log(this.data);
+        })
+        .catch(err => console.log(err));
+    },
+    async fetchArticleData() {
+      await axios
+        .get(`${SERVER_URL}/api/main/followLatest?email=${this.getEmail()}`)
+        .then(res => {
+          this.articleData = res.data;
+        })
+        .catch(err => console.log(err));
+    }
   },
   mounted() {
     this.paintBtn(document.querySelector("#btn-follow"));
   },
+  created() {
+    this.fetchFollowerData();
+    this.fetchArticleData();
+  }
 };
 </script>
 

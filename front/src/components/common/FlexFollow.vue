@@ -22,7 +22,6 @@ export default {
   },
   mounted() {
     const container = document.querySelector(".container-follow");
-    console.log(this.isWarp);
     if (this.isWarp) {
       container.classList.remove("nowrap");
     } else {

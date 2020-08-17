@@ -1,7 +1,9 @@
 <template>
   <div class="container-base">
-    <span class="title">팔로우한 사람들의 최신 게시물</span>
-    <FlexArticles :datas="articleData" />
+    <span class="title" v-if="getUserInfo().email !== ''"
+      >팔로우한 사람들의 최신 게시물</span
+    >
+    <FlexArticles :datas="followerArticleData" />
     <span class="title">추천 게시물</span>
     <FlexArticles :datas="articleData" />
   </div>
@@ -26,6 +28,7 @@ export default {
       .catch(err => {
         console.log(err);
       });
+    this.fetchFollowerArticles();
   },
   mounted() {
     this.paintBtn(document.querySelector("#btn-home"));
@@ -36,11 +39,24 @@ export default {
     }),
     ...mapMutations({
       paintBtn: "navbarMini/paintBtn"
-    })
+    }),
+    async fetchFollowerArticles() {
+      await axios
+        .get(
+          `${SERVER_URL}/api/main/followLatest?email=${
+            this.getUserInfo().email
+          }`
+        )
+        .then(res => {
+          this.followerArticleData = res.data;
+        })
+        .catch(err => console.log(err));
+    }
   },
   data: function() {
     return {
-      articleData: []
+      articleData: [],
+      followerArticleData: []
     };
   }
 };

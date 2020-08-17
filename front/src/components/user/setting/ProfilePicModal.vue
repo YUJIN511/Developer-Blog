@@ -58,9 +58,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions({
-      defaultProfile: "user/defaultProfile"
-    }),
+    ...mapActions({}),
     ...mapGetters({
       getEmail: "user/getEmail",
       getProfile: "user/getProfile"
@@ -109,7 +107,7 @@ export default {
       this.$el.querySelector(
         ".preview-image"
       ).style.backgroundImage = `url('${defaultImage}')`;
-      this.defaultProfile();
+      this.createFile(defaultImage).then(() => console.log(this.file));
     },
     deleteImage(url) {
       axios

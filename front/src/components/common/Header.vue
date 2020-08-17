@@ -65,9 +65,14 @@
       </div>
 
       <div class="header-item header-center" v-if="$route.meta.header !== 0">
-        <div class="container-main-search">
-          <input type="search" class="input-main-search" v-model="searchWord" />
-          <button @click="search" class="btn-main-search desktop">
+        <form class="container-main-search" @submit.prevent="search">
+          <input
+            type="search"
+            class="input-main-search"
+            v-model="searchWord"
+            @keyup.enter="search"
+          />
+          <button type="submit" class="btn-main-search desktop">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -79,7 +84,7 @@
               />
             </svg>
           </button>
-        </div>
+        </form>
       </div>
 
       <div class="header-item header-end" v-if="$route.meta.header !== 0">
@@ -173,7 +178,7 @@
     <EmailModal />
     <UnregisterModal />
     <ProfilePicModal />
-    <Notification :notifications="notifications" />
+    <NotificationModal :notifications="notifications" />
   </div>
 </template>
 
@@ -185,7 +190,7 @@ import Repassword from "@/components/user/Repassword.vue";
 import EmailModal from "@/components/user/EmailModal.vue";
 import UnregisterModal from "@/components/user/setting/UnregisterModal.vue";
 import ProfilePicModal from "@/components/user/setting/ProfilePicModal.vue";
-import Notification from "@/components/notification/notification.vue";
+import NotificationModal from "@/components/notification/notification.vue";
 import NavbarUserInfo from "@/components/common/NavbarUserInfo.vue";
 
 import { mapActions, mapGetters } from "vuex";
@@ -200,7 +205,7 @@ export default {
     EmailModal,
     UnregisterModal,
     ProfilePicModal,
-    Notification,
+    NotificationModal,
     NavbarUserInfo
   },
   data() {
@@ -237,10 +242,30 @@ export default {
       this.Logout();
     },
     search() {
+      const keyword = this.searchWord;
+      if (keyword.charAt(0) === "#") {
+        this.tagSearch(keyword.substring(1));
+      } else {
+        this.keywordSearch(keyword);
+      }
+    },
+    keywordSearch(keyword) {
       this.$router.push({
         name: "Search",
-        params: { keyword: this.searchWord }
+        query: { keyword }
       });
+      if (this.$route.name === "Search") {
+        this.$router.go();
+      }
+    },
+    tagSearch(tag) {
+      this.$router.push({
+        name: "Search",
+        query: { tag }
+      });
+      if (this.$route.name === "Search") {
+        this.$router.go();
+      }
     },
     moveToProfile() {
       this.$router.push({ name: "Blog", params: { email: this.getEmail() } });
@@ -257,19 +282,19 @@ export default {
           this.getEmail(),
         { withCredentials: true }
       );
-      this.eventSource.onopen = function(e) {
+      // this.eventSource.onopen = function(e) {
         // console.log("이벤트 소스 오픈");
-        console.log(e);
-      };
+        // console.log(e);
+      // };
       var instance = this;
       this.eventSource.onmessage = function(e) {
         // console.log("이벤트 소스 메시지 도착");
         instance.notifications = JSON.parse(e.data);
       };
-      this.eventSource.onerror = function(e) {
+      // this.eventSource.onerror = function(e) {
         // console.log("이벤트 소스 에러");
-        console.log(e);
-      };
+        // console.log(e);
+      // };
     },
     unSetupStream() {
       if (this.eventSource === null) {
@@ -495,7 +520,7 @@ button:hover {
 }
 
 .profile-image {
-  background-image: url("https://cdns.iconmonstr.com/wp-content/assets/preview/2012/240/iconmonstr-user-20.png") !important;
+  background-image: url("https://cdns.iconmonstr.com/wp-content/assets/preview/2012/240/iconmonstr-user-20.png");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
