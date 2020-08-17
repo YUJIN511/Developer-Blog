@@ -86,19 +86,20 @@ export default {
 <style scoped lang="scss">
     .row {
         width: 100%;
+        height: 36px;
         display: inline-block;
-        padding: 8px 8px;
+        padding: 8px 12px;
         span{
             float: left;
-            font-size: 20px;
+            font-size: 1rem;
             font-weight: bold;
             color: #727272 ;
         }
        svg{
             float: right;
-            width: 26px;
-            height: 26px;
-            fill: #1A7CFF;
+            width: 20px;
+            height: 20px;
+            fill: #727272;
             cursor: pointer;
        }
     }
@@ -124,12 +125,11 @@ export default {
     .modal-notification {
         margin: 70px 75px 0 0;
         width: 294px;
-        height: 436.8px;
+        height: 440px;
         background: white;
         box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
         position: fixed;
-        border-radius: 3%;
-        border: 4px solid #E9F1FF;
+        border-radius: 5px;
     }
     .modal-notification:after, .modal-notification:before {
         bottom: 100%;
@@ -149,8 +149,6 @@ export default {
         margin-left: 81px;
     }
     .modal-notification:before {
-        border-color: rgba(194, 225, 245, 0);
-        border-bottom-color: #E9F1FF;
         border-width: 24px;
         margin-left: 75px;
     }
@@ -160,24 +158,24 @@ export default {
     }
 
     hr {
-        margin: 3px 0;
         border-left: thick;
-        width: 95%;
+        width: 100%;
         margin: auto;
         border-color: #c0c0c0;
         border-top: 0px;
     }
     p {
         color: #1A7CFF;
-        font-size: 14px;
-        font-weight: 600;
+        font-size: 0.9rem;
+        font-weight: 400;
+        
         padding: 10px;
         cursor: pointer;
     }          
 
     .notification-list{
         padding: 5px;
-        height: 80%;
+        height: 360px;
         overflow-y: auto;
         .default{
             color: #727272;
