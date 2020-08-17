@@ -22,13 +22,32 @@
                 </div>
             </div>
             <hr>
-
             <div class="notification-list">
+                <div class="default" v-if="notification==null">
+                    <svg version="1.1" 
+                        id="Capa_1" 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        viewBox="0 0 416 416" 
+                        style="enable-background:new 0 0 416 416;" 
+                        xml:space="preserve">
+                    <g>
+                        <g>
+                            <g>
+                                <path d="M208,416c23.573,0,42.667-19.093,42.667-42.667h-85.333C165.333,396.907,184.427,416,208,416z"/>
+                                <path d="M336,288V181.333c0-65.6-34.88-120.32-96-134.827V32c0-17.707-14.293-32-32-32s-32,14.293-32,32v14.507
+                                    c-61.12,14.507-96,69.227-96,134.827V288l-42.667,42.667V352h341.333v-21.333L336,288z"/>
+                            </g>
+                        </g>
+                    </g>
+                    </svg>
+                    <h4>이곳에 알림이 표시됩니다.</h4>
+                    <span>블로그 활동을 통해 알림을 받아보세요.</span>
+                </div>
                 <template v-for="(data, id) in notifications">
                     <SubNotification :key="id" v-bind:data="data" />
                 </template>
             </div>
-
             <hr>
             <div>
                 <p @click="moveNotificationDetail">모두보기</p>
@@ -160,6 +179,21 @@ export default {
         padding: 5px;
         height: 80%;
         overflow-y: auto;
+        .default{
+            color: #727272;
+            margin:50px 0;
+            svg{
+                width: 100px;
+                fill:#c0c0c0;
+                margin: 15px 0;
+            }
+            h4{
+                margin: 8px 0;
+            }
+            span{
+                font-size: 14px;
+            }
+        }
     }
     .notification-list::-webkit-scrollbar {
         display: none; /* Chrome, Safari, Opera*/
