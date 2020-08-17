@@ -1,12 +1,14 @@
 <template>
   <div class="container-base">
-    <span class="title" v-if="getUserInfo().email !== ''"
+    <span
+      class="title"
+      v-if="getUserInfo().email !== '' && followerArticleData.length !== 0"
       >팔로우한 사람들의 최신 게시물</span
     >
     <FlexArticles :datas="followerArticleData" />
     <span class="title">추천 게시물</span>
     <FlexArticles :datas="articleData" />
-    <infinite-loading 
+    <infinite-loading
       slot="append"
       @infinite="infiniteHandler"
       force-use-infinite-wrapper=".el-table__body-wrapper"
@@ -28,14 +30,6 @@ export default {
     InfiniteLoading
   },
   created() {
-    axios
-      .get(`${SERVER_URL}/api/post/page?page=${this.page}`)
-      .then(res => {
-        this.articleData = res.data;
-      })
-      .catch(err => {
-        console.log(err);
-      });
     this.fetchFollowerArticles();
   },
   mounted() {
@@ -48,8 +42,8 @@ export default {
     ...mapMutations({
       paintBtn: "navbarMini/paintBtn"
     }),
-    async fetchFollowerArticles() {
-      await axios
+    fetchFollowerArticles() {
+      axios
         .get(
           `${SERVER_URL}/api/main/followLatestHome?email=${
             this.getUserInfo().email
