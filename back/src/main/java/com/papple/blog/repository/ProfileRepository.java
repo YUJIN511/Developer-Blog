@@ -11,7 +11,7 @@ import com.papple.blog.payload.response.FollowListNavi;
 public interface ProfileRepository {
 	List<String> searchByEmail(String email);
 	int insertProfile(String email, String path);
-	int updateProfile(String email);
+	int updateProfile(String email, String path);
 	int deleteProfile(String email, String path);
 	int unProfile(String email);
 	List<FollowList> myFollowList(String email);

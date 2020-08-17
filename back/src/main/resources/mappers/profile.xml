@@ -14,7 +14,7 @@
 	</insert>
 	
 	<update id="updateProfile">
-		update profile set createdate = now() where email = #{email}
+		update profile set createdate = now() where email = #{email} and path = #{path}
 	</update>
 	
 
