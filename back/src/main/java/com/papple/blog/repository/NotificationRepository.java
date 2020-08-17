@@ -41,9 +41,10 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 	@Query(value = "TRUNCATE notification", nativeQuery = true)
 	void deleteNotificationByCron();
 
+	// 해당 사용자의 알림 모두 삭제
 	@Transactional
 	@Modifying
-	@Query(value = "DELETE FROM notification WHERE targetuser=?1 AND type=?2", nativeQuery = true)
-	void deleteByTargetuserAndType(String targetuser, Integer type);
+	@Query(value = "DELETE FROM notification WHERE targetuser=?1", nativeQuery = true)
+	void deleteByTargetuser(String email);
   
 }

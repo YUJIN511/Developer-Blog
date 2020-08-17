@@ -185,8 +185,8 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public void deleteByTargetuserAndType(String targetuser, Integer type) {
-        notificationRepository.deleteByTargetuserAndType(targetuser, type);
+    public void deleteByTargetuser(String email) {
+        notificationRepository.deleteByTargetuser(email);
     }
 
     @Override
