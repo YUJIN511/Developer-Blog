@@ -103,7 +103,8 @@ public class MainController {
     @GetMapping("/goodList")
 	@ApiOperation(value = "좋아요 글 리스트")
 	public ResponseEntity<List<PostList>> goodList(@RequestParam(required = true) final String email, int page) throws Exception {
-		List<Long> idList = postListRepository.findGoodListByEmailPaging(email, page);
+    	int pgStart = 10 * (page - 1);
+		List<Long> idList = postListRepository.findGoodListByEmailPaging(email, pgStart);
 		List<PostList> list = new ArrayList<>();
 		for(Long postid : idList){
 			PostList post = postListRepository.searchPostById(postid);
@@ -137,7 +138,8 @@ public class MainController {
     @GetMapping("/storageList")
 	@ApiOperation(value = "보관함 글 리스트")
 	public ResponseEntity<List<PostList>> storageList(@RequestParam(required = true) final String email, int page) throws Exception {
-		List<Long> idList = postListRepository.findStorageListByEmailPaging(email, page);
+    	int pgStart = 10 * (page - 1);
+		List<Long> idList = postListRepository.findStorageListByEmailPaging(email, pgStart);
 		List<PostList> list = new ArrayList<>();
 		for(Long postid : idList){
 			PostList post = postListRepository.searchPostById(postid);
@@ -167,7 +169,8 @@ public class MainController {
     @GetMapping("/followLatest")
 	@ApiOperation(value = "팔로우한 사용자들의 최신 글 리스트")
 	public ResponseEntity<List<PostList>> followLatest(@RequestParam(required = true) final String email, int page) throws Exception {
-		List<PostList> list = postListRepository.findLatestMyFollowPostPaging(email, page);
+    	int pgStart = 10 * (page - 1);
+		List<PostList> list = postListRepository.findLatestMyFollowPostPaging(email, pgStart);
 		for(PostList post : list) {
 			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
 			post.setNickname(user.getNickname());
@@ -201,7 +204,7 @@ public class MainController {
 
 	@GetMapping("popular")
 	@ApiOperation(value = "인기게시물 로직 : 좋아요(1) + 조회(1) + 댓글(2) + 공유(2)")
-	public ResponseEntity<List<PostList>> getPoularPost(@RequestParam(required = false) String email) {
+	public ResponseEntity<List<PostList>> getPoularPost(@RequestParam(required = false) String email, int page) {
 		List<PopularScore> baseScore = algoRepository.getPopularScore();
 		List<PopularScore> commentScore = algoRepository.getCommentScore();
 		PriorityQueue<PopularScore> pq = new PriorityQueue<>(new Comparator<PopularScore>() {
@@ -230,6 +233,13 @@ public class MainController {
 		List<PostList> list = new ArrayList<>();	// 게시글 목록을 담을 List
 		for(PopularScore ps : scoreList) list.add(postListRepository.searchPostById(ps.getPostid()));
 		
+		
+		List<PostList> resList = new ArrayList<>();
+		int pgStart = 10 * (page - 1);
+		for(int i = pgStart ; i < pgStart + 10 ; i++) {
+			if(list.get(i) == null) break;
+			resList.add(list.get(i));
+		}
 		
 		/* 좋아요 유무 표시 */
 		if(email == null || email.equals("")) {	//비회원
