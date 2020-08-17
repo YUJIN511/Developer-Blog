@@ -26,7 +26,7 @@
           <span>|</span>
           <button @click="deleteall">전체 삭제</button>
          </div>
-          <div class="default" v-if="notifications==null">
+          <div class="default" v-if="notifications.length == 0">
               <svg version="1.1" 
                   id="Capa_1" 
                   xmlns="http://www.w3.org/2000/svg" 
