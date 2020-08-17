@@ -1,6 +1,6 @@
 <template>
   <div class="container-emailsent">
-    <div class="background-emailsent" @click="closeLogin"></div>
+    <div class="background-emailsent"></div>
     <div class="modal-emailsent">
       <div class="left-emailsent"></div>
       <div class="right-emailsent">
@@ -17,7 +17,7 @@
           <div>계정을 활성화 해주세요.</div>
         </div>
         <div class="emailsent-footer">
-          <a class="link-join" href="javascript:void(0)" @click="moveToJoin">계정 만들기</a>
+          <a class="link-join" href="javascript:void(0)" @click="closeModal">닫기</a>
         </div>
       </div>
     </div>
@@ -68,7 +68,7 @@ $minimumWidth: 950px;
   background-color: rgb(252, 252, 252);
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   @media (min-width: $minimumWidth) {
-    width: 780px;
+    width: 840px;
   }
   .title {
     text-align: left;
@@ -83,11 +83,13 @@ $minimumWidth: 950px;
     }
     div {
       text-align: left;
+      margin: 12px 0;
+      // font-size: 0.8em;
     }
   }
   .left-emailsent {
     display: none;
-    width: 45%;
+    width: 42%;
     background-image: url(https://cdn.pixabay.com/photo/2015/09/04/23/28/wordpress-923188_960_720.jpg);
     background-repeat: no-repeat;
     background-size: cover;
@@ -102,7 +104,7 @@ $minimumWidth: 950px;
     padding: 24px;
     width: 100%;
     @media (min-width: $minimumWidth) {
-      width: 55%;
+      width: 58%;
     }
 
     .btn-close {
@@ -119,9 +121,10 @@ $minimumWidth: 950px;
 
     .emailsent-footer {
       display: flex;
+      flex-direction: column;
       justify-content: right;
       justify-content: baseline;
-      // align-items: f;
+      align-items: flex-end;
       width: 100%;
       margin-top: 12px;
       a:hover {
