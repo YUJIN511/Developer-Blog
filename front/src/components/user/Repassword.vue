@@ -1,5 +1,5 @@
 <template>
-  <div class="container-repassword">
+  <div class="container-repassword hide">
     <div class="background-repassword"></div>
     <div class="modal-repassword">
       <div class="left-repassword"></div>
@@ -15,14 +15,25 @@
         </div>
         <form class="container-repassword-form">
           <div class="container-input">
-            <input required type="email" placeholder="이메일 주소를 입력하세요." v-model="email" />
+            <input
+              required
+              type="email"
+              placeholder="이메일 주소를 입력하세요."
+              v-model="email"
+            />
             <p class="msg-error hide">가입된 이메일이 아닙니다.</p>
           </div>
-          <button class="btn btn-repassword" type="button" @click="sendMail">비밀번호 재설정 메일 보내기</button>
+          <button class="btn btn-repassword" type="button" @click="sendMail">
+            비밀번호 재설정 메일 보내기
+          </button>
         </form>
         <div class="repassword-footer">
-          <a class="link-back" href="javascript:void(0)" @click="moveToLogin">뒤로가기</a>
-          <a class="link-close" href="javascript:void(0)" @click="closeModal">닫기</a>
+          <a class="link-back" href="javascript:void(0)" @click="moveToLogin"
+            >뒤로가기</a
+          >
+          <a class="link-close" href="javascript:void(0)" @click="closeModal"
+            >닫기</a
+          >
         </div>
       </div>
     </div>
@@ -35,7 +46,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      email: ""
+      email: "",
     };
   },
   methods: {
@@ -47,12 +58,12 @@ export default {
         .get(
           `http://i3a604.p.ssafy.io:8081/api/auth/passwordEmail?email=${this.email}`
         )
-        .then(res => {
+        .then((res) => {
           console.log(res);
           document.querySelector(".msg-error").classList.add("hide");
           alert("메일 발송 완료");
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           document.querySelector(".msg-error").classList.remove("hide");
         });
@@ -60,8 +71,8 @@ export default {
     moveToLogin() {
       document.querySelector(".container-login").classList.remove("hide");
       this.closeModal();
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -213,4 +224,3 @@ hr {
   display: none;
 }
 </style>
-
