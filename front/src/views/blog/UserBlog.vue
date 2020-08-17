@@ -231,7 +231,6 @@ main {
     position: relative;
     width: 100%;
     margin: 40px;
-    margin-right: 150px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
