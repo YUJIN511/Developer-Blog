@@ -14,7 +14,9 @@
             @change="previewFile"
           />
           <button @click="clickInput" class="btn btn-upload">파일 선택</button>
-          <button @click="setDefaultImage" class="btn btn-setdefault">기본 이미지로 변경</button>
+          <button @click="setDefaultImage" class="btn btn-setdefault">
+            기본 이미지로 변경
+          </button>
         </div>
       </div>
       <div class="modal-body">
@@ -29,7 +31,10 @@
           >
             <div class="banner-image-delete" @click="deleteImage(image)">✖</div>
             <img :src="image" />
-            <button class="banner-image-select" @click="selectImage(image)"></button>
+            <button
+              class="banner-image-select"
+              @click="selectImage(image)"
+            ></button>
           </div>
         </div>
       </div>
@@ -54,14 +59,14 @@ export default {
       url: this.getProfile(),
       images: [],
       file: "",
-      path: ""
+      path: "",
     };
   },
   methods: {
     ...mapActions({}),
     ...mapGetters({
       getEmail: "user/getEmail",
-      getProfile: "user/getProfile"
+      getProfile: "user/getProfile",
     }),
     closeModal() {
       document.querySelector(".container-profilepic").classList.add("hide");
@@ -84,12 +89,14 @@ export default {
       axios
         .post(`${SERVER_URL}/api/auth/profile`, formData, {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         })
-        .then(() => {})
-        .catch(err => console.log(err));
-      this.$router.go();
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
+      // this.$router.go();
     },
     clickInput() {
       document.querySelector("#file").click();
@@ -97,13 +104,14 @@ export default {
     fetchPictures() {
       axios
         .get(`${SERVER_URL}/api/auth/pflist?email=${this.getEmail()}`)
-        .then(res => {
+        .then((res) => {
           this.images = res.data;
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     setDefaultImage() {
-      let defaultImage = "http://i3a604.p.ssafy.io/images/profile/basic.png";
+      let defaultImage = "http://i3a604.p.ssafy.io/images/profile/basic.svg";
+      this.path = defaultImage;
       this.$el.querySelector(
         ".preview-image"
       ).style.backgroundImage = `url('${defaultImage}')`;
@@ -117,7 +125,7 @@ export default {
         .then(() => {
           this.fetchPictures();
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     selectImage(url) {
       this.path = url;
@@ -128,14 +136,14 @@ export default {
     },
     async createFile(url) {
       await fetch(url)
-        .then(response => {
+        .then((response) => {
           let data = response.blob();
           let metadata = {
-            type: "image/jpeg"
+            type: "image/jpeg",
           };
           this.file = new File([data], "profile.jpg", metadata);
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     showDeleteButton(i) {
       document.querySelectorAll(".banner-image-delete")[
@@ -150,14 +158,14 @@ export default {
       ].style.backgroundColor = "rgba(255, 255, 255, 0)";
       document.querySelectorAll(".banner-image-delete")[i].style.color =
         "rgba(0, 0, 0, 0)";
-    }
+    },
   },
   mounted() {
     this.fetchPictures();
     this.$el.querySelector(
       ".preview-image"
     ).style.backgroundImage = `url('${this.getProfile()}')`;
-  }
+  },
 };
 </script>
 
