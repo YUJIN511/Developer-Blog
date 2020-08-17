@@ -48,19 +48,12 @@ public class ConfigController {
     	Optional<BlogConfig> origin = configRepository.findById(config.getEmail());
     	String picture = "";
     	
-    	boolean isPresent = false;
     	if(origin.isPresent()) {
     		picture = origin.get().getPicture();
-    		isPresent = true;
     	}
     	BlogConfig bc = configRepository.save(config);			//id가 있으면 수정, 없으면 저장
     	bc.setPicture(picture);
     	configRepository.updatePicture(picture, origin.get().getEmail());
-    	
-    	if(!isPresent) {
-	    	User user = userRepository.findById(bc.getEmail()).get();
-	    	configRepository.updateDefault(user.getNickname() + "의 블로그", user.getNickname() + "의 블로그 입니다.", user.getEmail());
-    	}
     	
         return new ResponseEntity<BlogConfig>(bc, HttpStatus.OK);
     }
