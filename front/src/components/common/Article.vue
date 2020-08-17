@@ -40,6 +40,7 @@
       <button class="like" @click="toggleLikeBtn">
         <svg
           class="icon-like"
+          :class="{ 'fill-red': isLike }"
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
@@ -113,9 +114,9 @@ export default {
      setLikeBtn() {
       const likeIcon = document.querySelector(".icon-like");
       if (this.isLike) {
-        likeIcon.classList.add("fill-lightred");
+        likeIcon.classList.add("fill-red");
       } else {
-        likeIcon.classList.remove("fill-lightred");
+        likeIcon.classList.remove("fill-red");
       }
     },
      toggleLikeBtn() {
