@@ -17,7 +17,7 @@
           <div>계정을 활성화 해주세요.</div>
         </div>
         <div class="emailsent-footer">
-          <a class="link-join" href="javascript:void(0)" @click="closeModal">닫기</a>
+          <a class="link-close" href="javascript:void(0)" @click="closeModal">닫기</a>
         </div>
       </div>
     </div>
@@ -84,7 +84,6 @@ $minimumWidth: 950px;
     div {
       text-align: left;
       margin: 12px 0;
-      // font-size: 0.8em;
     }
   }
   .left-emailsent {
@@ -113,11 +112,6 @@ $minimumWidth: 950px;
       top: 10px;
       opacity: 0.8;
     }
-    .join-link {
-      margin-top: 10px;
-      text-align: center;
-      font-size: 0.9em;
-    }
 
     .emailsent-footer {
       display: flex;
@@ -130,11 +124,8 @@ $minimumWidth: 950px;
       a:hover {
         opacity: 0.7;
       }
-      .link-repassword {
-        text-decoration: none;
-        color: #ff5651;
-      }
-      .link-join {
+
+      .link-close {
         text-decoration: none;
         color: dodgerblue;
       }
