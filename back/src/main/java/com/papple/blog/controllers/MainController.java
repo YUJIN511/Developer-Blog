@@ -49,10 +49,28 @@ public class MainController {
 	@Autowired
 	private TagScoreRepository tagScoreRepository;
 
+//    @GetMapping("/historyList")
+//	@ApiOperation(value = "History 글 리스트")
+//	public ResponseEntity<List<PostList>> historyList(@RequestParam(required = true) final String email) throws Exception {
+//		List<Long> idList = postListRepository.findHistoryByUser(email);
+//		List<PostList> list = new ArrayList<>();
+//		for(Long postid : idList){
+//			PostList post = postListRepository.searchPostById(postid);
+//			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
+//			post.setNickname(user.getNickname());
+//			post.setProfile(user.getProfile());
+//			post.setScore(user.getScore());
+//			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
+//			list.add(post);
+//		}
+//		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
+//	}
+    
     @GetMapping("/historyList")
 	@ApiOperation(value = "History 글 리스트")
-	public ResponseEntity<List<PostList>> historyList(@RequestParam(required = true) final String email) throws Exception {
-		List<Long> idList = postListRepository.findHistoryByUser(email);
+	public ResponseEntity<List<PostList>> Paging(@RequestParam(required = true) final String email, int page)  {
+    	int pgStart = 10 * (page - 1);
+    	List<Long> idList = postListRepository.findHistoryByUserPaging(email, pgStart);
 		List<PostList> list = new ArrayList<>();
 		for(Long postid : idList){
 			PostList post = postListRepository.searchPostById(postid);
