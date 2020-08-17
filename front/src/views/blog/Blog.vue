@@ -30,7 +30,8 @@ export default {
 <style lang="scss" scoped>
 .container-setting {
   min-height: 100vh;
-  padding-top: 60px;
+  padding-top: 56px;
   display: flex;
+  background-color: #fafafa;
 }
 </style>
