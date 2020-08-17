@@ -233,7 +233,7 @@ public class MainController {
 		List<PostList> list = new ArrayList<>();	// 게시글 목록을 담을 List
 		for(PopularScore ps : scoreList) list.add(postListRepository.searchPostById(ps.getPostid()));
 		
-		
+		// 페이징
 		List<PostList> resList = new ArrayList<>();
 		int pgStart = 10 * (page - 1);
 		for(int i = pgStart ; i < pgStart + 10 ; i++) {
@@ -244,19 +244,19 @@ public class MainController {
 		/* 좋아요 유무 표시 */
 		if(email == null || email.equals("")) {	//비회원
 			System.out.println("빈칸");
-			return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
+			return new ResponseEntity<List<PostList>>(resList, HttpStatus.OK);
 		}
 		else {	//회원
 			System.out.println("안빈칸");
 			for(int i=0;i<list.size();i++) if(list.get(i) != null && goodRepository.isGood(email, list.get(i).getId()) > 0) list.get(i).setIsgood(true);
-			return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
+			return new ResponseEntity<List<PostList>>(resList, HttpStatus.OK);
 		}
 	}
 
 	
 	@GetMapping("recommend")
 	@ApiOperation(value = "추천게시물 리스트")
-	public ResponseEntity<List<PostList>> getRecommendPost(@RequestParam String email) {
+	public ResponseEntity<List<PostList>> getRecommendPost(@RequestParam String email, int page) {
 		List<Long> postList = algoRepository.getLookUp(email);	// 해당 user가 조회했던 게시물 목록
 		Map<Long, Long> score = new HashMap<>();
 		for(Long postid : postList) if(algoRepository.getPopularScoreByPostid(postid) != null) {
@@ -294,11 +294,20 @@ public class MainController {
 				}
 			}
 		}
+		
+		// 페이징
+		List<PostList> resList = new ArrayList<>();
+		int pgStart = 10 * (page - 1);
+		for(int i = pgStart ; i < pgStart + 10 ; i++) {
+			if(resultList.get(i) == null) break;
+			resList.add(resultList.get(i));
+		}
+		
 		//좋아요 여부 체크
-		for(int i=0;i<resultList.size();i++)
-			if(resultList.get(i).getId() != null && algoRepository.getPopularScoreByPostid(resultList.get(i).getId()) != null && goodRepository.isGood(email, resultList.get(i).getId()) > 0) // 여기서 null
-				resultList.get(i).setIsgood(true);
-		return new ResponseEntity<List<PostList>>(resultList, HttpStatus.OK); 
+		for(int i=0;i<resList.size();i++)
+			if(resList.get(i).getId() != null && algoRepository.getPopularScoreByPostid(resList.get(i).getId()) != null && goodRepository.isGood(email, resList.get(i).getId()) > 0) // 여기서 null
+				resList.get(i).setIsgood(true);
+		return new ResponseEntity<List<PostList>>(resList, HttpStatus.OK); 
 	}
 
 
