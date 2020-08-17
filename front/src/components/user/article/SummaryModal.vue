@@ -32,7 +32,7 @@
           :maxlength="maxSummary"
           class="content-article"
           v-model="articleData.summary"
-          placeholder="글 목록에 노출될 내용을 적어주세요."
+          placeholder="게시물을 간단하게 소개해 주세요."
         ></textarea>
         <span class="char-limit"
           >{{ articleData.summary.length }}/{{ maxSummary }}</span
@@ -40,7 +40,7 @@
       </main>
       <footer>
         <button class="btn btn-cancel" @click="closeModal">취소</button>
-        <button class="btn btn-complete" @click="submit">진짜 완료</button>
+        <button class="btn btn-complete" @click="submit">작성완료</button>
       </footer>
     </div>
   </div>
@@ -198,7 +198,6 @@ export default {
   position: absolute;
   background-color: $bgColor;
   width: 350px;
-  height: 530px;
   padding: 15px 25px;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   border-radius: 5px;
@@ -288,6 +287,7 @@ h5 {
   text-align: right;
   font-size: 0.7em;
   color: rgb(172, 172, 172);
+  margin-top: 4px;
   margin-right: 10px;
 }
 
@@ -298,20 +298,17 @@ footer {
 }
 
 .btn {
-  height: 40px;
-  padding: 5px 10px;
+  padding: 8px 10px;
   &:hover {
     opacity: 0.7;
   }
 }
 
 .btn-cancel {
-  background-color: rgb(172, 172, 172);
-  color: white;
+  color: #727272;
 }
 .btn-complete {
-  background-color: cornflowerblue;
-  color: white;
+  color: dodgerblue;
   margin-left: 10px;
 }
 </style>
