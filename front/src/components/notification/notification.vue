@@ -23,7 +23,7 @@
             </div>
             <hr>
             <div class="notification-list">
-                <div class="default" v-if="notification==null">
+                <div class="default" v-if="notifications.length == 0">
                     <svg version="1.1" 
                         id="Capa_1" 
                         xmlns="http://www.w3.org/2000/svg" 
