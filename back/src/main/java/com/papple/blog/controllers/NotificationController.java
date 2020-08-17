@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.annotation.ApplicationScope;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import io.swagger.annotations.ApiOperation;
@@ -89,5 +90,10 @@ public class NotificationController {
         return new ResponseEntity<String>("success", HttpStatus.OK);
     }
 
-
+    @DeleteMapping(value="/all")
+    @ApiOperation(value = "알림 모두 삭제")
+    public ResponseEntity<?> deleteNotifications(@RequestParam String email){
+        notificationService.deleteByTargetuser(email);
+        return new ResponseEntity<String>("success", HttpStatus.OK);
+    }
 }
