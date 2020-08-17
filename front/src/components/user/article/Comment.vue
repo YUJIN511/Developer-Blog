@@ -81,7 +81,7 @@ import { mapGetters } from "vuex";
 export default {
   props: ["isReply", "commentData"],
   components: {
-    ReplyList
+    ReplyList,
   },
   data: function() {
     return {
@@ -90,12 +90,12 @@ export default {
       isReplyFirstCall: true,
       isLike: 0,
       replyContent: "",
-      replyListKey: 0
+      replyListKey: 0,
     };
   },
   methods: {
     ...mapGetters({
-      getUserInfo: "user/getUserInfo"
+      getUserInfo: "user/getUserInfo",
     }),
     toggleReply() {
       this.isReplyShow = !this.isReplyShow;
@@ -166,7 +166,7 @@ export default {
           content: this.$refs.textarea.innerHTML,
           email: this.getUserInfo().email,
           postid: this.$route.query.id,
-          replyto
+          replyto,
         });
         this.reloadReply();
         if (this.isReply) {
@@ -174,6 +174,7 @@ export default {
         }
       } catch (error) {
         console.log(error);
+        alert("로그인이 필요한 서비스입니다.");
       }
     },
     emitReload() {
@@ -190,13 +191,13 @@ export default {
         svg.classList.remove("upper");
         svg.nextSibling.innerText = `답글 ${this.commentData.replycount}개 보기`;
       }
-    }
+    },
   },
   mounted() {
     this.isLike = this.commentData.islike;
     this.setLikeBtn();
     this.$refs.main.innerHTML = this.commentData.content;
-  }
+  },
 };
 </script>
 
