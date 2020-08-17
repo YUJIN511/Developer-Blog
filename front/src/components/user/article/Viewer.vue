@@ -77,23 +77,6 @@
           </svg>
           <span>{{ like }}</span>
         </button>
-        <button class="btn-library" @click="toggleLibraryBtn">
-          <svg
-            class="icon-library"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 0 26 26"
-          >
-            <g>
-              <g>
-                <path
-                  d="M24.4,4l-1.9-2.2C22.2,1.3,21.6,1,21,1H5C4.4,1,3.8,1.3,3.5,1.7L1.6,4C1.2,4.4,1,5,1,5.7v16.7C1,23.8,2.2,25,3.7,25h18.7
-	c1.5,0,2.7-1.2,2.7-2.7V5.7C25,5,24.8,4.4,24.4,4z M13,20.3L5.7,13h4.7v-2.7h5.3V13h4.7L13,20.3z M3.8,3.7l1.1-1.3h16l1.3,1.3H3.8z"
-                />
-              </g>
-            </g>
-          </svg>
-        </button>
         <button class="btn-share" @click="isShowShareModal = !isShowShareModal">
           <svg viewBox="0 0 512 512.00578" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -109,6 +92,23 @@
               11.777344 9.558593 21.335938 21.335937 21.335938h384c11.773438 0 21.332032-9.558594 21.332032-21.335938v-170.664062c0-11.796875 9.535156-21.335938 
               21.332031-21.335938 11.800781 0 21.335937 9.539063 21.335937 21.335938v170.664062c0 35.289063-28.714844 64-64 64zm0 0"
             />
+          </svg>
+        </button>
+        <button class="btn-library" @click="toggleLibraryBtn">
+          <svg
+            class="icon-library"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 26 26"
+          >
+            <g>
+              <g>
+                <path
+                  d="M24.4,4l-1.9-2.2C22.2,1.3,21.6,1,21,1H5C4.4,1,3.8,1.3,3.5,1.7L1.6,4C1.2,4.4,1,5,1,5.7v16.7C1,23.8,2.2,25,3.7,25h18.7
+	c1.5,0,2.7-1.2,2.7-2.7V5.7C25,5,24.8,4.4,24.4,4z M13,20.3L5.7,13h4.7v-2.7h5.3V13h4.7L13,20.3z M3.8,3.7l1.1-1.3h16l1.3,1.3H3.8z"
+                />
+              </g>
+            </g>
           </svg>
         </button>
       </div>
@@ -149,7 +149,7 @@ import {
   Strike,
   Underline,
   History,
-  Image
+  Image,
 } from "tiptap-extensions";
 export default {
   components: {
@@ -157,7 +157,7 @@ export default {
     Comment,
     BlogInfo,
     UpdateModal,
-    ShareModal
+    ShareModal,
   },
   data() {
     return {
@@ -167,8 +167,8 @@ export default {
           new CodeBlockHighlight({
             languages: {
               javascript,
-              css
-            }
+              css,
+            },
           }),
           new Blockquote(),
           new BulletList(),
@@ -187,14 +187,14 @@ export default {
           new Strike(),
           new Underline(),
           new History(),
-          new Image()
+          new Image(),
         ],
 
         content: "",
         onUpdate: ({ getHTML }) => {
           this.html = getHTML();
           console.log(this.html);
-        }
+        },
       }),
       postId: "",
       title: "",
@@ -213,12 +213,12 @@ export default {
       articleData: {},
       isStored: false,
       isShowUpdateModal: false,
-      isShowShareModal: false
+      isShowShareModal: false,
     };
   },
   methods: {
     ...mapGetters({
-      getUserInfo: "user/getUserInfo"
+      getUserInfo: "user/getUserInfo",
     }),
     reRender() {
       this.commentModuleKey++;
@@ -282,7 +282,7 @@ export default {
             ".editor__content h1, h2, h3"
           );
 
-          hList.forEach(elem => {
+          hList.forEach((elem) => {
             elem.id = elem.innerText;
           });
 
@@ -292,7 +292,7 @@ export default {
     },
     setNavAnchor(tagList) {
       const navContent = this.$refs.navContent;
-      tagList.forEach(elem => {
+      tagList.forEach((elem) => {
         const anchor = document.createElement("a");
         anchor.classList.add(elem.tagName);
         anchor.setAttribute("href", `#${elem.id}`);
@@ -340,10 +340,10 @@ export default {
               this.getUserInfo().email
             }&id=${this.$route.query.id}`
           )
-          .then(res => {
+          .then((res) => {
             console.log(res);
           })
-          .catch(err => console.log(err));
+          .catch((err) => console.log(err));
         this.like--;
       }
       this.setLikeBtn();
@@ -365,8 +365,8 @@ export default {
               this.getUserInfo().email
             }&postid=${this.$route.query.id}`
           )
-          .then(res => console.log(res))
-          .catch(err => console.log(err));
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
       } else {
         axios
           .delete(
@@ -374,11 +374,11 @@ export default {
               this.getUserInfo().email
             }&postid=${this.$route.query.id}`
           )
-          .then(res => console.log(res))
-          .catch(err => console.log(err));
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
       }
       this.setLibraryBtn();
-    }
+    },
   },
   beforeDestroy() {
     this.editor.destroy();
@@ -391,7 +391,7 @@ export default {
   },
   async created() {
     await this.getArticleData();
-  }
+  },
 };
 </script>
 
