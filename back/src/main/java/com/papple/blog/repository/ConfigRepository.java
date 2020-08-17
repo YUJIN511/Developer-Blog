@@ -14,4 +14,9 @@ public interface ConfigRepository extends JpaRepository<BlogConfig, String>{
 	@Modifying
 	@Query(value = "update config set picture = ?1 where email = ?2", nativeQuery = true)
 	void updatePicture(String picture, String email);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "update config c set name = ?1, description = ?2 where exists(select * from user u where u.email = c.email) and email = ?3", nativeQuery = true)
+	void updateDefault(String name, String description, String email);
 }
