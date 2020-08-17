@@ -281,7 +281,7 @@ public class AuthController {
 	}
 	
 	@GetMapping("/nicknameUpdate")
-	@ApiOperation(value = "닉네임 업데이트")
+	@ApiOperation(value = "닉네임 업데이트")	//이때가 닉네임 처음 설정할 때.
 	public ResponseEntity<?> nicknameUpdate(@RequestParam(required = true) final String nickname,
 									@RequestParam(required = true) final String email) {
 
