@@ -10,7 +10,7 @@
 	</select>
 	
 	<insert id="insertProfile">
-		insert into profile(email, path) values(#{email}, #{path})
+		insert into profile(email, path, createdate) values(#{email}, #{path}, now())
 	</insert>
 	
 
