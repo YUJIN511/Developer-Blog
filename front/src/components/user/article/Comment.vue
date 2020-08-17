@@ -247,7 +247,7 @@ export default {
   }
   main {
     color: rgb(80, 80, 80);
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     margin: 1rem 0;
   }
   footer {
