@@ -293,7 +293,7 @@ public class AuthController {
 		userRepository.updateNickname(nickname, email);
 		
 		
-		BlogConfig config = new BlogConfig(email, nickname + "의 블로그", nickname + "의 블로그 입니다.", "http://i3a604.p.ssafy.io/images/profile/basic.PNG");
+		BlogConfig config = new BlogConfig(email, nickname + "의 블로그", nickname + "의 블로그 입니다.", "http://i3a604.p.ssafy.io/images/profile/basic.svg");
 		configRepository.save(config);
 
         return ResponseEntity.ok(new MessageResponse("Nickname registered successfully!"));
