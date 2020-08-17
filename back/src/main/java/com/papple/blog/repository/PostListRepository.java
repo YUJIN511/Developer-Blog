@@ -26,13 +26,13 @@ public interface PostListRepository{
 	List<Long> findHistoryByUserPaging(String email, int page);		// 페이징
 	
 	List<Long> findGoodListByEmail(String email);			// 해당 사용자의 좋아요 리스트 검색
-	List<Long> findGoodListByEmailPaging(String email);		// 페이징
+	List<Long> findGoodListByEmailPaging(String email, int page);		// 페이징
 	
 	List<Long> findStorageListByEmail(String email);		// 해당 사용자의 보관함 리스트 검색
-	List<Long> findStorageListByEmailPaging(String email);	// 페이징
+	List<Long> findStorageListByEmailPaging(String email, int page);	// 페이징
 	
 	List<PostList> findLatestMyFollowPost(String email);		// 해당 사용자의 팔로워들의 최신 글 검색
-	List<PostList> findLatestMyFollowPostPaging(String email);	// 페이징
+	List<PostList> findLatestMyFollowPostPaging(String email, int page);	// 페이징
 	List<PostList> findLatestMyFollowPostLimit10(String email);
 	
 	List<PostList> paging(int page);
