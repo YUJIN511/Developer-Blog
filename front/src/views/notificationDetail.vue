@@ -21,6 +21,11 @@
             </router-link>
         </div>
         <hr>
+        <div class="notification-delete">
+          <button @click="deleteread">읽은 알림 삭제</button>
+          <span>|</span>
+          <button @click="deleteall">전체 삭제</button>
+         </div> 
         <template v-for="(data, id) in notifications">
           <SubNotification :key="id" v-bind:data="data" />
         </template>
@@ -47,6 +52,34 @@ export default {
     ...mapGetters({
             getEmail: "user/getEmail"
     }),
+    deleteall(){
+      axios
+        .delete(`${SERVER_URL}/api/notification/all`,{
+          params: {
+              email:this.getEmail(),
+          },
+        })
+        .then(() => {
+            location.reload();
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    },
+    deleteread(){
+      axios
+        .delete(`${SERVER_URL}/api/notification/read`,{
+          params: {
+              email:this.getEmail(),
+          },
+        })
+        .then(() => {
+            location.reload();
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
   },
   created() {
     axios
@@ -97,6 +130,8 @@ export default {
       background-color: white;
       border-radius: 3%;
       border: 3px solid #E9F1FF;
+      min-height: 300px;
+      max-height: 650px;
   }
   .notification-list::-webkit-scrollbar {
         display: none; /* Chrome, Safari, Opera*/
@@ -107,6 +142,19 @@ export default {
         border-bottom: 3px solid #E9F1FF;
         border-top: 0px;
     }
-  
+
+  .notification-delete{
+    width:100%;
+    margin-bottom:20px;
+    text-align: right;
+    button{
+      color: #727272;
+    }
+    span{
+      color: #727272;
+      margin: 0px 4px;
+      font-size: 14px;
+    }
+  }
 @import "@/assets/common/Base.scss";
 </style>
