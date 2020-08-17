@@ -21,6 +21,7 @@
           <button class="btn btn-repassword" type="button" @click="sendMail">비밀번호 재설정 메일 보내기</button>
         </form>
         <div class="repassword-footer">
+          <a class="link-back" href="javascript:void(0)" @click="moveToLogin">뒤로가기</a>
           <a class="link-close" href="javascript:void(0)" @click="closeModal">닫기</a>
         </div>
       </div>
@@ -55,6 +56,10 @@ export default {
           console.log(err);
           document.querySelector(".msg-error").classList.remove("hide");
         });
+    },
+    moveToLogin() {
+      document.querySelector(".container-login").classList.remove("hide");
+      this.closeModal();
     }
   }
 };
@@ -179,14 +184,18 @@ $minimumWidth: 950px;
     }
     .repassword-footer {
       display: flex;
-      flex-direction: column;
-      justify-content: right;
+      flex-direction: row;
+      justify-content: space-between;
       justify-content: baseline;
       align-items: flex-end;
       width: 100%;
       margin-top: 12px;
       a:hover {
         opacity: 0.7;
+      }
+      .link-back {
+        text-decoration: none;
+        color: #ff5651;
       }
       .link-close {
         text-decoration: none;
