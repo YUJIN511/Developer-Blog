@@ -188,7 +188,7 @@ public class PostController {
 		List<PostList> list = postListRepository.searchPostByMyTag(email, hashtag);
 		for(PostList post : list) {
 			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
-			post.setNickname(post.getNickname());
+			post.setNickname(user.getNickname());
 			post.setProfile(user.getProfile());
 			post.setScore(user.getScore());
 			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
@@ -220,7 +220,7 @@ public class PostController {
 		List<PostList> list = postListRepository.searchByWord(word);
 		for(PostList post : list) {
 			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
-			post.setNickname(post.getNickname());
+			post.setNickname(user.getNickname());
 			post.setProfile(user.getProfile());
 			post.setScore(user.getScore());
 			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
@@ -238,7 +238,7 @@ public class PostController {
 		List<PostList> list = postListRepository.searchByTag(hashtag);
 		for(PostList post : list) {
 			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
-			post.setNickname(post.getNickname());
+			post.setNickname(user.getNickname());
 			post.setProfile(user.getProfile());
 			post.setScore(user.getScore());
 			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
