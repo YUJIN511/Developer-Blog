@@ -204,5 +204,9 @@ public class NotificationServiceImpl implements NotificationService{
         notificationRepository.deleteById(id);
     }
 
+    @Override
+    public void deleteByTargetuserAndIsreadIsTrue(String email) {
+        notificationRepository.deleteByTargetuserAndIsreadIsTrue(email);
+    }
 
 }
