@@ -399,6 +399,7 @@ public class AuthController {
 	@ApiOperation(value = "path 변수가 비었을 때는 서버에 파일 저장 + 유저 대표사진 update + profile history 등록,  path가 있을 때는 대표사진만 update")
 	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam String email, 
 			@RequestParam(required = false) String path, HttpServletRequest request) {
+		System.out.println("/profile 들어옴!!");
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date nowdate = new Date();
 		String dateString = formatter.format(nowdate);	//현재시간 문자열
