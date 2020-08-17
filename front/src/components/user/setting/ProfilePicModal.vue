@@ -79,24 +79,25 @@ export default {
         ".preview-image"
       ).style.backgroundImage = `url('${this.url}')`;
     },
-    saveChanges() {
+    async saveChanges() {
       let formData = new FormData();
       formData.append("filename", this.file);
       formData.append("email", this.getEmail());
       if (this.path) {
         formData.append("path", this.path);
       }
-      axios
-        .post(`${SERVER_URL}/api/auth/profile`, formData, {
+      let result = await axios.post(
+        `${SERVER_URL}/api/auth/profile`,
+        formData,
+        {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => console.log(err));
-      // this.$router.go();
+        }
+      );
+      if (result) {
+        this.$router.go();
+      }
     },
     clickInput() {
       document.querySelector("#file").click();
