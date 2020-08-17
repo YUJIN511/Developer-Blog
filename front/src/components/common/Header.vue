@@ -176,6 +176,8 @@
     <Join ref="joinModal" />
     <Repassword />
     <EmailModal />
+    <ConditionsModal />
+    <AgreementModal />
     <UnregisterModal />
     <ProfilePicModal />
     <NotificationModal :notifications="notifications" />
@@ -188,6 +190,8 @@ import Login from "@/components/user/Login.vue";
 import Join from "@/components/user/Join.vue";
 import Repassword from "@/components/user/Repassword.vue";
 import EmailModal from "@/components/user/EmailModal.vue";
+import ConditionsModal from "@/components/user/ConditionsModal.vue";
+import AgreementModal from "@/components/user/AgreementModal.vue";
 import UnregisterModal from "@/components/user/setting/UnregisterModal.vue";
 import ProfilePicModal from "@/components/user/setting/ProfilePicModal.vue";
 import NotificationModal from "@/components/notification/notification.vue";
@@ -203,27 +207,29 @@ export default {
     Join,
     Repassword,
     EmailModal,
+    ConditionsModal,
+    AgreementModal,
     UnregisterModal,
     ProfilePicModal,
     NotificationModal,
-    NavbarUserInfo
+    NavbarUserInfo,
   },
   data() {
     return {
       searchWord: "",
       eventSource: null,
-      notifications: []
+      notifications: [],
     };
   },
   methods: {
     ...mapActions({
       Logout: "user/logout",
-      fetchUserInfo: "user/fetchUserInfo"
+      fetchUserInfo: "user/fetchUserInfo",
     }),
     ...mapGetters({
       getIsLogin: "user/getIsLogin",
       getUserInfo: "user/getUserInfo",
-      getEmail: "user/getEmail"
+      getEmail: "user/getEmail",
     }),
     showNavBar() {
       const navbar = document.querySelector(".navbar");
@@ -252,7 +258,7 @@ export default {
     keywordSearch(keyword) {
       this.$router.push({
         name: "Search",
-        query: { keyword }
+        query: { keyword },
       });
       if (this.$route.name === "Search") {
         this.$router.go();
@@ -261,7 +267,7 @@ export default {
     tagSearch(tag) {
       this.$router.push({
         name: "Search",
-        query: { tag }
+        query: { tag },
       });
       if (this.$route.name === "Search") {
         this.$router.go();
@@ -283,8 +289,8 @@ export default {
         { withCredentials: true }
       );
       // this.eventSource.onopen = function(e) {
-        // console.log("이벤트 소스 오픈");
-        // console.log(e);
+      // console.log("이벤트 소스 오픈");
+      // console.log(e);
       // };
       var instance = this;
       this.eventSource.onmessage = function(e) {
@@ -292,8 +298,8 @@ export default {
         instance.notifications = JSON.parse(e.data);
       };
       // this.eventSource.onerror = function(e) {
-        // console.log("이벤트 소스 에러");
-        // console.log(e);
+      // console.log("이벤트 소스 에러");
+      // console.log(e);
       // };
     },
     unSetupStream() {
@@ -302,14 +308,14 @@ export default {
       }
       // console.log("==> 이벤트 소스 종료");
       this.eventSource.close();
-    }
+    },
   },
   created() {
     this.fetchUserInfo(this.getEmail());
   },
   mounted() {
     var profileImages = document.querySelectorAll(".profile-image");
-    profileImages.forEach(profileImage => {
+    profileImages.forEach((profileImage) => {
       profileImage.style.backgroundImage = `url('${
         this.getUserInfo().profile
       }')`;
@@ -318,7 +324,7 @@ export default {
   },
   beforeDestroy() {
     this.unSetupStream();
-  }
+  },
 };
 </script>
 

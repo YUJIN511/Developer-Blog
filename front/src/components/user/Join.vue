@@ -85,24 +85,21 @@
           <div class="container-term">
             <input v-model="isTerm" type="checkbox" id="term" />
             <span class="term">
-              <a href>약관</a> 및 <a href>개인정보</a>처리 방침에 동의합니다.
+              <a @click="openConditions">약관</a> 및
+              <a @click="openAgreement">개인정보</a>처리 방침에 동의합니다.
             </span>
           </div>
           <button class="btn btn-join" type="submit">회원가입</button>
-          
         </form>
         <div class="join-footer">
-            <span
-              >이미 계정이 있으신가요?
-              <a
-                class="link-join"
-                href="javascript:void(0)"
-                @click="moveToLogin"
-                >로그인</a
-              >
-              하러 가기</span
+          <span
+            >이미 계정이 있으신가요?
+            <a class="link-join" href="javascript:void(0)" @click="moveToLogin"
+              >로그인</a
             >
-          </div>
+            하러 가기</span
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -120,7 +117,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      Join: "user/join"
+      Join: "user/join",
     }),
     closeJoin() {
       this.email = "";
@@ -150,7 +147,7 @@ export default {
           if (result.status === 200) {
             this.Join({
               email: this.email,
-              password: this.password
+              password: this.password,
             });
             this.closeJoin();
             var modal = document.querySelector(".container-emailsent");
@@ -166,7 +163,15 @@ export default {
     openEmailSent() {
       this.closeJoin();
       document.querySelector(".container-emailsent").classList.remove("hide");
-    }
+    },
+    openConditions() {
+      this.closeJoin();
+      document.querySelector(".container-conditions").classList.remove("hide");
+    },
+    openAgreement() {
+      this.closeJoin();
+      document.querySelector(".container-agreement").classList.remove("hide");
+    },
   },
   data: () => {
     return {
@@ -175,11 +180,11 @@ export default {
       passwordConfirm: "",
       isTerm: false,
       dom: {
-        passwordConfirmErrMsg: ""
+        passwordConfirmErrMsg: "",
       },
-      joinModal: ""
+      joinModal: "",
     };
-  }
+  },
 };
 </script>
 
@@ -344,7 +349,7 @@ $minimumWidth: 950px;
       padding: 8px 10px;
       color: white;
       border-radius: 5px;
-      background-color: #6DA7FF;
+      background-color: #6da7ff;
       font-weight: 500;
       font-size: 0.9rem;
     }
