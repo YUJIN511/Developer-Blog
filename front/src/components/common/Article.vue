@@ -80,7 +80,6 @@ export default {
     
     this.isLike = this.data.isgood;
     this.like = this.data.good;
-    this.setLikeBtn();
     
     if (this.isStatic) {
       this.$refs.article.classList.add("static");
@@ -111,14 +110,6 @@ export default {
       this.$router.push({ name: "Blog", params: { email: this.data.writer } });
       window.scroll(0, 0);
     },
-     setLikeBtn() {
-      const likeIcon = document.querySelector(".icon-like");
-      if (this.isLike) {
-        likeIcon.classList.add("fill-red");
-      } else {
-        likeIcon.classList.remove("fill-red");
-      }
-    },
      toggleLikeBtn() {
       this.isLike = !this.isLike;
       if (this.isLike) {
@@ -142,7 +133,6 @@ export default {
           .catch(err => console.log(err));
         this.like--;
       }
-      this.setLikeBtn();
     },
   }
 };
