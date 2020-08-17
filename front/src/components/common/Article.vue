@@ -37,10 +37,9 @@
         />
       </div>
       <div class="nickname" @click="moveToBlog()">{{ data.nickname }}</div>
-      <div class="like">
+      <button class="like" @click="toggleLikeBtn">
         <svg
           class="icon-like"
-          :class="{ 'fill-red': data.isgood }"
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
@@ -50,13 +49,16 @@
             d="M12 4.248c-3.148-5.402-12-3.825-12 2.944 0 4.661 5.571 9.427 12 15.808 6.43-6.381 12-11.147 12-15.808 0-6.792-8.875-8.306-12-2.944z"
           />
         </svg>
-        <span class="like-count">{{ data.good }}</span>
-      </div>
+        <span class="like-count">{{ like }}</span>
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import axios from "axios";
+
 export default {
   props: {
     data: {
@@ -67,13 +69,22 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+       isLike: false,
+       like : 0,
+    }
+  },
   mounted() {
+    
+    this.isLike = this.data.isgood;
+    this.like = this.data.good;
+    this.setLikeBtn();
+    
     if (this.isStatic) {
       this.$refs.article.classList.add("static");
     }
-    if (this.data.isLiked) {
-      document.querySelector(".icon-like").classList.add("selected");
-    }
+
     if (this.data.picture === "") {
       const thumbnail = this.$refs.headerArticle;
       const R = Math.random() * 155 + 100;
@@ -86,6 +97,9 @@ export default {
     }
   },
   methods: {
+    ...mapGetters({
+      getUserInfo: "user/getUserInfo"
+    }),
     readArticle() {
       this.$router.push({
         name: "ArticleView",
@@ -95,7 +109,40 @@ export default {
     moveToBlog() {
       this.$router.push({ name: "Blog", params: { email: this.data.writer } });
       window.scroll(0, 0);
-    }
+    },
+     setLikeBtn() {
+      const likeIcon = document.querySelector(".icon-like");
+      if (this.isLike) {
+        likeIcon.classList.add("fill-lightred");
+      } else {
+        likeIcon.classList.remove("fill-lightred");
+      }
+    },
+     toggleLikeBtn() {
+      this.isLike = !this.isLike;
+      if (this.isLike) {
+        axios.put(
+          `${this.$apiServer}/post/good?email=${this.getUserInfo().email}&id=${
+            this.data.id
+          }`,
+          {}
+        );
+        this.like++;
+      } else {
+        axios
+          .put(
+            `${this.$apiServer}/post/ungood?email=${
+              this.getUserInfo().email
+            }&id=${this.data.id}`
+          )
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => console.log(err));
+        this.like--;
+      }
+      this.setLikeBtn();
+    },
   }
 };
 </script>
