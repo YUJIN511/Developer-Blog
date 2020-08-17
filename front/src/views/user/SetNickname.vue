@@ -4,7 +4,11 @@
       <div class="container-nickname">
         <div></div>
         <div>
-          <input class="input-nickname" v-model="nickname" placeholder="닉네임 입력 (영문)" />
+          <input
+            class="input-nickname"
+            v-model="nickname"
+            placeholder="닉네임 입력 (영문)"
+          />
         </div>
         <div class="more-arrow" @click="setNickname()"></div>
       </div>
@@ -23,35 +27,41 @@ export default {
     return {
       email: this.$route.params.email,
       token: this.$route.params.token,
-      nickname: ""
+      nickname: "",
     };
   },
   methods: {
     ...mapActions({
-      ReceiveToken: "user/receiveToken"
+      ReceiveToken: "user/receiveToken",
+      FetchUserInfo: "user/fetchUserInfo",
     }),
     ...mapGetters({
-      getIsLogin: "user/getIsLogin"
+      getIsLogin: "user/getIsLogin",
+      getEmail: "user/getEmail",
     }),
     setNickname() {
       axios
         .get(`${SERVER_URL}/api/auth/nicknameUpdate`, {
           params: {
             email: this.email,
-            nickname: this.nickname
-          }
+            nickname: this.nickname,
+          },
         })
         .then(() => {
+          this.fetchUserInfo();
           alert("회원가입이 완료되었습니다.");
           this.$router.push({ name: "Main" });
         });
-    }
+    },
+    async fetchUserInfo() {
+      await this.FetchUserInfo(this.getEmail());
+    },
   },
   created() {
     this.ReceiveToken({ token: this.token, email: this.email })
       .then(() => console.log(this.getIsLogin()))
-      .catch(err => console.log(err));
-  }
+      .catch((err) => console.log(err));
+  },
 };
 </script>
 
