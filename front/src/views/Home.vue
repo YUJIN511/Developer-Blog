@@ -6,6 +6,12 @@
     <FlexArticles :datas="followerArticleData" />
     <span class="title">추천 게시물</span>
     <FlexArticles :datas="articleData" />
+    <infinite-loading 
+      slot="append"
+      @infinite="infiniteHandler"
+      force-use-infinite-wrapper=".el-table__body-wrapper"
+    >
+    </infinite-loading>
   </div>
 </template>
 
@@ -13,15 +19,17 @@
 import FlexArticles from "@/components/common/FlexArticles.vue";
 import axios from "axios";
 import { mapMutations, mapGetters } from "vuex";
+import InfiniteLoading from "vue-infinite-loading";
 const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 
 export default {
   components: {
-    FlexArticles
+    FlexArticles,
+    InfiniteLoading
   },
   created() {
     axios
-      .get(`${SERVER_URL}/api/post/all?email=${this.getUserInfo().email}`)
+      .get(`${SERVER_URL}/api/post/page?page=${this.page}`)
       .then(res => {
         this.articleData = res.data;
       })
@@ -43,7 +51,7 @@ export default {
     async fetchFollowerArticles() {
       await axios
         .get(
-          `${SERVER_URL}/api/main/followLatest?email=${
+          `${SERVER_URL}/api/main/followLatestHome?email=${
             this.getUserInfo().email
           }`
         )
@@ -51,12 +59,30 @@ export default {
           this.followerArticleData = res.data;
         })
         .catch(err => console.log(err));
+    },
+    infiniteHandler($state) {
+      axios
+        .get(`${SERVER_URL}/api/post/page?page=${this.page}`)
+        .then(response => {
+          if (response.data.length) {
+            this.articleData = this.articleData.concat(response.data);
+            $state.loaded();
+            this.page += 1;
+            if (this.articleData.length / 10 == 0) {
+              $state.complete();
+            }
+          } else {
+            $state.complete();
+          }
+        })
+        .catch(err => console.log(err));
     }
   },
   data: function() {
     return {
       articleData: [],
-      followerArticleData: []
+      followerArticleData: [],
+      page: 1
     };
   }
 };
