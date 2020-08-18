@@ -26,16 +26,7 @@
 	C18.7,20.1,16,21.6,13,21.6z"
         />
       </svg>
-      <div class="level-icon">
-        <img
-          class="level-icon"
-          width="12px"
-          height="12px"
-          viewBox="0 0 24 24"
-          src="@/assets/tree.svg"
-          alt="level icon"
-        />
-      </div>
+      <LevelIcon :score="data.score" />
       <div class="nickname" @click="moveToBlog()">{{ data.nickname }}</div>
       <button class="like" @click="toggleLikeBtn">
         <svg
@@ -59,8 +50,12 @@
 <script>
 import { mapGetters } from "vuex";
 import axios from "axios";
+import LevelIcon from "@/components/user/LevelIcon.vue";
 
 export default {
+  components: {
+    LevelIcon
+  },
   props: {
     data: {
       type: Object
@@ -72,15 +67,14 @@ export default {
   },
   data() {
     return {
-       isLike: false,
-       like : 0,
-    }
+      isLike: false,
+      like: 0
+    };
   },
   mounted() {
-    
     this.isLike = this.data.isgood;
     this.like = this.data.good;
-    
+
     if (this.isStatic) {
       this.$refs.article.classList.add("static");
     }
@@ -110,7 +104,7 @@ export default {
       this.$router.push({ name: "Blog", params: { email: this.data.writer } });
       window.scroll(0, 0);
     },
-     toggleLikeBtn() {
+    toggleLikeBtn() {
       this.isLike = !this.isLike;
       if (this.isLike) {
         axios.put(
@@ -133,7 +127,7 @@ export default {
           .catch(err => console.log(err));
         this.like--;
       }
-    },
+    }
   }
 };
 </script>
