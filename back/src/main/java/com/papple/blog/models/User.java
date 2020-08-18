@@ -44,6 +44,7 @@ public class User {
 	private Set<Role> roles = new HashSet<>();
 
 	public User() {
+		this.todayscore = 0l;
 	}
 
 	public User(String email, String nickname, String password, Integer usercertification, Long score) {

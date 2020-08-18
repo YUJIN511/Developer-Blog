@@ -307,7 +307,7 @@ public class MainController {
 		
 		//좋아요 여부 체크
 		for(int i=0;i<resList.size();i++)
-			if(resList.get(i).getId() != null && algoRepository.getPopularScoreByPostid(resList.get(i).getId()) != null && goodRepository.isGood(email, resList.get(i).getId()) > 0) // 여기서 null
+			if(resList.get(i) != null && resList.get(i).getId() != null && algoRepository.getPopularScoreByPostid(resList.get(i).getId()) != null && goodRepository.isGood(email, resList.get(i).getId()) > 0) // 여기서 null
 				resList.get(i).setIsgood(true);
 		return new ResponseEntity<List<PostList>>(resList, HttpStatus.OK); 
 	}
