@@ -13,6 +13,7 @@
         width: 60px;
         height: 60px;
         border-radius: 50%;
+        cursor: pointer;
       }
     }
     .info {
@@ -25,6 +26,9 @@
         justify-content: stretch;
         span {
           margin-right: 6px;
+          &:hover {
+            cursor: pointer;
+          }
         }
         .btn-more {
           margin-left: auto;
