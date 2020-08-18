@@ -41,7 +41,6 @@ export default {
 
   async created() {
     await this.initTagData(15);
-    this.fetchPopularArticlesData();
   },
   mounted() {
     this.paintBtn(document.querySelector("#btn-trending"));
