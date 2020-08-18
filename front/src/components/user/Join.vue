@@ -117,7 +117,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      Join: "user/join",
+      Join: "user/join"
     }),
     closeJoin() {
       this.email = "";
@@ -147,7 +147,7 @@ export default {
           if (result.status === 200) {
             this.Join({
               email: this.email,
-              password: this.password,
+              password: this.password
             });
             this.closeJoin();
             var modal = document.querySelector(".container-emailsent");
@@ -171,7 +171,7 @@ export default {
     openAgreement() {
       this.closeJoin();
       document.querySelector(".container-agreement").classList.remove("hide");
-    },
+    }
   },
   data: () => {
     return {
@@ -180,11 +180,11 @@ export default {
       passwordConfirm: "",
       isTerm: false,
       dom: {
-        passwordConfirmErrMsg: "",
+        passwordConfirmErrMsg: ""
       },
-      joinModal: "",
+      joinModal: ""
     };
-  },
+  }
 };
 </script>
 

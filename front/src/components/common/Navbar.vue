@@ -299,12 +299,12 @@ export default {
   data: function() {
     return {
       isCollapsed: true,
-      followings: [],
+      followings: []
     };
   },
   methods: {
     ...mapGetters({
-      getEmail: "user/getEmail",
+      getEmail: "user/getEmail"
     }),
     closeNavbar() {
       const navbar = document.querySelector(".navbar");
@@ -348,11 +348,11 @@ export default {
     moveToFollowingProfile(email) {
       this.$router.push({ name: "Blog", params: { email: email } });
       this.closeNavbar();
-    },
+    }
   },
   created() {
     this.fetchFollowList();
-  },
+  }
 };
 </script>
 

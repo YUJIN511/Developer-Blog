@@ -8,13 +8,19 @@
     <div class="right">
       <div class="name">{{ data.nickname }}</div>
       <div class="blog-name" v-if="data.blogname">{{ data.blogname }}</div>
-      <div class="blog-name blog-name-empty" v-if="!data.blogname">이름 없음</div>
+      <div class="blog-name blog-name-empty" v-if="!data.blogname">
+        이름 없음
+      </div>
       <div class="footer">
         <button class="btn-alarm">
           <img src="@/assets/notification_icon.svg" alt="알림 설정" />
         </button>
-        <button class="btn-follow" v-if="isFollowing" @click="unfollow">팔로우 취소</button>
-        <button class="btn-follow" v-if="!isFollowing" @click="follow">팔로우</button>
+        <button class="btn-follow" v-if="isFollowing" @click="unfollow">
+          팔로우 취소
+        </button>
+        <button class="btn-follow" v-if="!isFollowing" @click="follow">
+          팔로우
+        </button>
       </div>
     </div>
   </div>

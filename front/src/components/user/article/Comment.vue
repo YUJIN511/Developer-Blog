@@ -7,7 +7,7 @@
       <div class="info">
         <div class="user-info" @click="moveToBlog">
           <span>😀</span>
-          <span >{{ commentData.nickname }}</span>
+          <span>{{ commentData.nickname }}</span>
           <button class="btn-more">⫶</button>
         </div>
         <span class="date">{{ commentData.createdate.split("T")[0] }}</span>
@@ -81,7 +81,7 @@ import { mapGetters } from "vuex";
 export default {
   props: ["isReply", "commentData"],
   components: {
-    ReplyList,
+    ReplyList
   },
   data: function() {
     return {
@@ -90,12 +90,12 @@ export default {
       isReplyFirstCall: true,
       isLike: 0,
       replyContent: "",
-      replyListKey: 0,
+      replyListKey: 0
     };
   },
   methods: {
     ...mapGetters({
-      getUserInfo: "user/getUserInfo",
+      getUserInfo: "user/getUserInfo"
     }),
     toggleReply() {
       this.isReplyShow = !this.isReplyShow;
@@ -166,7 +166,7 @@ export default {
           content: this.$refs.textarea.innerHTML,
           email: this.getUserInfo().email,
           postid: this.$route.query.id,
-          replyto,
+          replyto
         });
         this.reloadReply();
         if (this.isReply) {
@@ -192,15 +192,18 @@ export default {
         svg.nextSibling.innerText = `답글 ${this.commentData.replycount}개 보기`;
       }
     },
-    moveToBlog(){
-      this.$router.push({ name: "Blog", params: { email: this.commentData.email } });
-    },
+    moveToBlog() {
+      this.$router.push({
+        name: "Blog",
+        params: { email: this.commentData.email }
+      });
+    }
   },
   mounted() {
     this.isLike = this.commentData.islike;
     this.setLikeBtn();
     this.$refs.main.innerHTML = this.commentData.content;
-  },
+  }
 };
 </script>
 

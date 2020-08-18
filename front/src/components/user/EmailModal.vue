@@ -17,7 +17,9 @@
           <div>계정을 활성화 해주세요.</div>
         </div>
         <div class="emailsent-footer">
-          <a class="link-close" href="javascript:void(0)" @click="closeModal">닫기</a>
+          <a class="link-close" href="javascript:void(0)" @click="closeModal"
+            >닫기</a
+          >
         </div>
       </div>
     </div>
