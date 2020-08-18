@@ -177,7 +177,7 @@ img {
   height: 36px;
   border-radius: 50%;
   fill: gray;
-  margin-right: 7px;
+  margin-right: 15px;
 }
 
 .notification-msg {
@@ -197,12 +197,11 @@ img {
 
 .badge-icon {
   position: absolute;
-  width: 25px;
-  height: 25px;
-  border: 2px solid white;
+  width: 20px;
+  height: 20px;
   cursor: default;
   border-radius: 50%;
-  top: 22px;
-  right: 4px;
+  top: 16px;
+  right: -10px;
 }
 </style>
