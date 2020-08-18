@@ -261,25 +261,6 @@ public class PostController {
 				if(tagscoreRepository.isExist(tag.getTag().get(i)) == 0) tagscoreRepository.save(new TagScore(tag.getTag().get(i), 0l));
 			}
 		}
-
-		// 알림 발생(100000)
-		List<Follow> followerList = followService.findByFollowed(post.getWriter());	
-		String actionName = userRepository.getUserByEmail(post.getWriter()).getNickname();
-		for(Follow f : followerList){
-			User user = userRepository.getUserByEmail(f.getFollowPK().getFollower());
-            int setting = Integer.parseInt(user.getNotification(),2);
-            // 알림 ON 했는지
-            if( (setting& (1<<5)) != 0){
-				Notification notification = Notification.builder()
-					.message(actionName +"님의 블로그에 새로운 게시물이 등록되었습니다. 가장 먼저 방문해 게시물을 확인해보세요.")
-					.actionuser(post.getWriter())
-					.targetuser(f.getFollowPK().getFollower())
-					.build();
-				
-				notification.setType(1<<5);
-				notificationService.save(notification);
-			}
-		}
 		
 		// 점수 추가 - 포스팅 : 100점
 		Long max_score = 150l;
@@ -302,6 +283,25 @@ public class PostController {
 		System.out.println("pre_day : " + pre_day);
 		System.out.println("post_day : " + post_day);
 		
+
+		// 알림 발생(100000)
+		List<Follow> followerList = followService.findByFollowed(post.getWriter());	
+		String actionName = userRepository.getUserByEmail(post.getWriter()).getNickname();
+		for(Follow f : followerList){
+			User user = userRepository.getUserByEmail(f.getFollowPK().getFollower());
+            int setting = Integer.parseInt(user.getNotification(),2);
+            // 알림 ON 했는지
+            if( (setting& (1<<5)) != 0){
+				Notification notification = Notification.builder()
+					.message(actionName +"님의 블로그에 새로운 게시물이 등록되었습니다. 가장 먼저 방문해 게시물을 확인해보세요.")
+					.actionuser(post.getWriter())
+					.targetuser(f.getFollowPK().getFollower())
+					.build();
+				
+				notification.setType(1<<5);
+				notificationService.save(notification);
+			}
+		}
 		
 		if(p != null) return new ResponseEntity<>("success", HttpStatus.OK);
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
