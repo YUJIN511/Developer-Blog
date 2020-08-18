@@ -14,9 +14,10 @@
         <div class="background" @click="disableNickname()"></div>
         <span>닉네임</span>
         <div class="container-inputNickname">
-          <input class="input-nickname" v-model="nickname" placeholder="영문" />
+          <input class="input-nickname" v-model="nickname"/>
           <button class="btn btn-edit" @click="updateNickname">수정하기</button>
         </div>
+        <hr>
       </div>
       <div class="level-icon">
         <span>레벨 / 경험치</span>
