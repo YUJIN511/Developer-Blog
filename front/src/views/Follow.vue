@@ -9,6 +9,12 @@
       <FlexFollow :isWarp="false" :datas="data" />
       <span class="title">팔로우 한 사람들의 최신 게시물</span>
       <FlexArticles :datas="articleData" />
+      <infinite-loading
+        slot="append"
+        @infinite="infiniteHandler"
+        force-use-infinite-wrapper=".el-table__body-wrapper"
+      >
+      </infinite-loading>
     </div>
   </div>
 </template>
@@ -17,6 +23,7 @@
 import FlexFollow from "@/components/common/FlexFollow.vue";
 import FlexArticles from "@/components/common/FlexArticles.vue";
 import LimitedAccess from "@/components/user/LimitedAccess.vue";
+import InfiniteLoading from "vue-infinite-loading";
 import { mapMutations, mapGetters } from "vuex";
 import axios from "axios";
 
@@ -26,12 +33,14 @@ export default {
   components: {
     FlexFollow,
     FlexArticles,
-    LimitedAccess
+    LimitedAccess,
+    InfiniteLoading
   },
   data: function() {
     return {
       data: [],
-      articleData: []
+      articleData: [],
+      page: 1
     };
   },
   methods: {
@@ -50,8 +59,8 @@ export default {
         likeIcon.classList.add("selected");
       }
     },
-    async fetchFollowerData() {
-      await axios
+    fetchFollowerData() {
+      axios
         .get(`${SERVER_URL}/api/follow/list?email=${this.getEmail()}`)
         .then(res => {
           this.data = res.data.slice(0, 4);
@@ -59,11 +68,24 @@ export default {
         })
         .catch(err => console.log(err));
     },
-    async fetchArticleData() {
-      await axios
-        .get(`${SERVER_URL}/api/main/followLatest?email=${this.getEmail()}`)
-        .then(res => {
-          this.articleData = res.data;
+    infiniteHandler($state) {
+      axios
+        .get(
+          `${SERVER_URL}/api/main/followLatest?email=${this.getEmail()}&page=${
+            this.page
+          }`
+        )
+        .then(response => {
+          if (response.data.length) {
+            this.articleData = this.articleData.concat(response.data);
+            $state.loaded();
+            this.page += 1;
+            if (this.articleData.length / 10 == 0) {
+              $state.complete();
+            }
+          } else {
+            $state.complete();
+          }
         })
         .catch(err => console.log(err));
     }
@@ -73,7 +95,6 @@ export default {
   },
   created() {
     this.fetchFollowerData();
-    this.fetchArticleData();
   }
 };
 </script>
