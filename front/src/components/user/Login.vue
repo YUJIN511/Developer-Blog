@@ -85,6 +85,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import axios from "axios";
 
 export default {
   name: "Login",
@@ -120,13 +121,31 @@ export default {
       document.querySelector(".container-repassword").classList.remove("hide");
     },
     async login() {
-      const result = await this.Login(this.userInfo);
+      try {
+        const res = await axios.get(
+          `${this.$apiServer}/auth/userInfo?email=${this.userInfo.email}`
+        );
+        if (res.data === "") {
+          alert("등록되지 않은 이메일 입니다.");
+          return;
+        } else if (res.data.usercertification === 0) {
+          alert("이메일 인증이 완료되지 않았습니다.");
+          return;
+        }
+      } catch (error) {
+        console.log(error);
+      }
 
-      if (result) {
-        await this.fetchUserInfo(this.getEmail());
-        this.$router.go();
-      } else {
-        alert("아이디 또는 비밀번호가 틀립니다.");
+      try {
+        const result = await this.Login(this.userInfo);
+        if (result) {
+          await this.fetchUserInfo(this.getEmail());
+          this.$router.go();
+        } else {
+          alert("비밀번호가 틀립니다.");
+        }
+      } catch (error) {
+        console.log(error);
       }
     }
   }
