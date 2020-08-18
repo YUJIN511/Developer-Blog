@@ -46,7 +46,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      email: "",
+      email: ""
     };
   },
   methods: {
@@ -58,12 +58,12 @@ export default {
         .get(
           `http://i3a604.p.ssafy.io:8081/api/auth/passwordEmail?email=${this.email}`
         )
-        .then((res) => {
+        .then(res => {
           console.log(res);
           document.querySelector(".msg-error").classList.add("hide");
           alert("메일 발송 완료");
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           document.querySelector(".msg-error").classList.remove("hide");
         });
@@ -71,8 +71,8 @@ export default {
     moveToLogin() {
       document.querySelector(".container-login").classList.remove("hide");
       this.closeModal();
-    },
-  },
+    }
+  }
 };
 </script>
 

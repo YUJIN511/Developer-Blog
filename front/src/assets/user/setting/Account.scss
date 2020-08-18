@@ -24,18 +24,25 @@
     margin: 0;
   }
   .container-inputPassword {
-    margin-top: 10px;
+    margin-top: 5px;
     margin-bottom: 10px;
   }
   .edit-nickname {
     margin-bottom: 24px;
+    hr{
+      width: 530px;
+      border: 1.5px solid #c0c0c0;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      border-block-end: none;
+    }
   }
   .edit-password {
     margin-bottom: 24px;
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    margin: 0;
+    margin: 0 10px;
     width: 500px;
   }
 
@@ -152,7 +159,9 @@ main {
 }
 
 .nickname {
+  padding:0 3px;
   position: relative;
+  cursor: pointer;
 }
 
 .background {
@@ -162,30 +171,26 @@ main {
 }
 
 .input-nickname {
-  background-image: linear-gradient(lightgrey, lightgrey);
-  background-position: bottom 5px center;
-  background-size: calc(100% - 10px) 1px;
-  background-repeat: no-repeat;
-  width: 500px;
+  width: 470px;
   border: 0;
-  padding-bottom: 15px;
   justify-self: center;
   font-weight: 400;
   font-size: 1.7em;
   z-index: 1;
+  color: #c0c0c0;
 }
 
 .input-password {
   background-image: linear-gradient(lightgrey, lightgrey);
   background-position: bottom 5px center;
-  background-size: calc(100% - 10px) 1px;
+  background-size: calc(100% - 0px) 1.5px;
   background-repeat: no-repeat;
   width: 500px;
   border: 0;
   padding-bottom: 15px;
   justify-self: center;
   font-weight: 400;
-  font-size: 1.3rem;
+  font-size: 1rem;
   z-index: 1;
   margin-top: 5px;
 }
@@ -195,7 +200,8 @@ input:focus {
 }
 
 .btn-edit {
-  color: rgb(53, 53, 240);
+  color: #1A7CFF; 
+  font-weight: 600;
   z-index: 1;
   &:hover {
     color: rgb(121, 121, 173);
@@ -203,7 +209,7 @@ input:focus {
 }
 
 .btn-pw {
-  color: rgb(53, 53, 240);
+  color: #1A7CFF;
   z-index: 1;
   &:hover {
     color: rgb(121, 121, 173);
@@ -211,6 +217,7 @@ input:focus {
 }
 
 .span-password {
+  cursor: pointer;
   &:hover {
     color: rgb(121, 121, 173);
   }
@@ -219,12 +226,13 @@ input:focus {
 .container-unregister {
   position: relative;
   bottom: 0;
-  margin-top: 100px;
+  margin-top: 50px;
 }
 
 .span-unregister {
   color: #9c9c9c;
   font-weight: 200;
+  cursor: pointer;
 }
 
 .msg {

@@ -14,8 +14,8 @@ export default {
   methods: {
     openLogin() {
       document.querySelector(".container-login").classList.remove("hide");
-    },
-  },
+    }
+  }
 };
 </script>
 

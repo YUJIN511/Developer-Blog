@@ -18,7 +18,9 @@
           class="success"
           :title="validImage ? '' : 'Image URL needs to be valid'"
           :disabled="!validImage"
-        >이미지 추가</button>
+        >
+          이미지 추가
+        </button>
         <button @click="show = false" class="danger">창 닫기</button>
       </footer>
     </div>

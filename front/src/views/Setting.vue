@@ -38,7 +38,7 @@ export default {
         this.getUserInfo().profile
       }')`;
     }
-  },
+  }
 };
 </script>
 

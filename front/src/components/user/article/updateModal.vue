@@ -1,5 +1,5 @@
-<template>
-  <div class="container-update-modal">
+<template v-if="isShow">
+  <div ref="updateModal" class="container-update-modal hide" v-if="isShow">
     <div ref="updateModal" class="update-modal">
       <button class="btn-delete" @click="deletePost">
         게시글
@@ -17,6 +17,11 @@
 import axios from "axios";
 export default {
   props: ["articleId"],
+  data: function() {
+    return {
+      isShow: true
+    };
+  },
   methods: {
     async deletePost() {
       alert("정말 삭제 하시겠습니까?");
@@ -32,7 +37,21 @@ export default {
         name: "ArticleEdit",
         params: { targetId: this.articleId }
       });
+    },
+    toggle() {
+      this.$refs.updateModal.classList.toggle("hide");
     }
+  },
+  mounted() {
+    const updateModal = this.$refs.updateModal;
+    window.addEventListener("click", function(e) {
+      if (
+        !updateModal.contains(e.target) &&
+        !e.target.classList.contains("btn-more")
+      ) {
+        updateModal.classList.add("hide");
+      }
+    });
   }
 };
 </script>
@@ -73,5 +92,8 @@ export default {
       }
     }
   }
+}
+.hide {
+  display: none;
 }
 </style>
