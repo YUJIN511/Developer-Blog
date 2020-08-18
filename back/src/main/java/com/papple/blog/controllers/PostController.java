@@ -288,6 +288,7 @@ public class PostController {
 		List<Follow> followerList = followService.findByFollowed(post.getWriter());	
 		String actionName = userRepository.getUserByEmail(post.getWriter()).getNickname();
 		for(Follow f : followerList){
+			if(f == null) continue;	// NullPointerException Remove
 			User user = userRepository.getUserByEmail(f.getFollowPK().getFollower());
             int setting = Integer.parseInt(user.getNotification(),2);
             // 알림 ON 했는지
