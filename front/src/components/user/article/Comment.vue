@@ -1,13 +1,13 @@
 <template>
   <div class="container-comment">
     <header>
-      <div class="profile-img-box">
+      <div class="profile-img-box" @click="moveToBlog">
         <img :src="commentData.profile" alt />
       </div>
       <div class="info">
-        <div class="user-info">
+        <div class="user-info" @click="moveToBlog">
           <span>😀</span>
-          <span>{{ commentData.nickname }}</span>
+          <span >{{ commentData.nickname }}</span>
           <button class="btn-more">⫶</button>
         </div>
         <span class="date">{{ commentData.createdate.split("T")[0] }}</span>
@@ -192,6 +192,9 @@ export default {
         svg.nextSibling.innerText = `답글 ${this.commentData.replycount}개 보기`;
       }
     },
+    moveToBlog(){
+      this.$router.push({ name: "Blog", params: { email: this.commentData.email } });
+    },
   },
   mounted() {
     this.isLike = this.commentData.islike;
@@ -214,6 +217,7 @@ export default {
     width: 100%;
     .profile-img-box {
       flex-shrink: 0;
+      cursor: pointer;
       img {
         width: 60px;
         height: 60px;
@@ -228,6 +232,7 @@ export default {
       .user-info {
         display: flex;
         justify-content: stretch;
+        cursor: pointer;
         span {
           margin-right: 6px;
         }
