@@ -112,11 +112,16 @@
   width: 100%;
   padding: 0px 23px;
   vertical-align: bottom;
+  transition: all 1s linear;
   .svg {
     width: 26px;
     height: 26px;
   }
   div {
+    display: flex;
+    align-items: center;
+  }
+  button {
     display: flex;
     align-items: center;
   }
