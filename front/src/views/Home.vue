@@ -27,42 +27,68 @@ const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 export default {
   components: {
     FlexArticles,
-    InfiniteLoading
+    InfiniteLoading,
   },
   created() {
     this.fetchFollowerArticles();
+    console.log(this.getUserInfo());
   },
   mounted() {
     this.paintBtn(document.querySelector("#btn-home"));
   },
   methods: {
     ...mapGetters({
-      getUserInfo: "user/getUserInfo"
+      getUserInfo: "user/getUserInfo",
     }),
     ...mapMutations({
-      paintBtn: "navbarMini/paintBtn"
+      paintBtn: "navbarMini/paintBtn",
     }),
     fetchFollowerArticles() {
-      axios
-        .get(
-          `${SERVER_URL}/api/main/followLatestHome?email=${
-            this.getUserInfo().email
-          }`
-        )
-        .then(res => {
-          this.followerArticleData = res.data;
-        })
-        .catch(err => console.log(err));
+      if (this.getUserInfo().email) {
+        axios
+          .get(
+            `${SERVER_URL}/api/main/followLatestHome?email=${
+              this.getUserInfo().email
+            }`
+          )
+          .then((res) => {
+            this.followerArticleData = res.data;
+            console.log(res.data);
+          })
+          .catch((err) => console.log(err));
+      }
     },
     infiniteHandler($state) {
       axios
         .get(`${SERVER_URL}/api/main/recommend?`, {
           params: {
             email: this.getUserInfo().email,
-            page: this.page
+            page: this.page,
+          },
+        })
+        .then((response) => {
+          if (response.data.length) {
+            this.articleData = this.articleData.concat(response.data);
+            $state.loaded();
+            this.page += 1;
+            if (this.articleData.length / 10 == 0) {
+              $state.complete();
+            }
+          } else {
+            // $state.complete();
+            this.infiniteHandlerTrending();
           }
         })
-        .then(response => {
+        .catch((err) => console.log(err));
+    },
+    infiniteHandlerTrending($state) {
+      axios
+        .get(
+          `${this.$apiServer}/main/popular?email=${
+            this.getUserInfo().email
+          }&page=${this.page}`
+        )
+        .then((response) => {
           if (response.data.length) {
             this.articleData = this.articleData.concat(response.data);
             $state.loaded();
@@ -74,16 +100,16 @@ export default {
             $state.complete();
           }
         })
-        .catch(err => console.log(err));
-    }
+        .catch((err) => console.log(err));
+    },
   },
   data: function() {
     return {
       articleData: [],
       followerArticleData: [],
-      page: 1
+      page: 1,
     };
-  }
+  },
 };
 </script>
 
