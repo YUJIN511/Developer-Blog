@@ -399,7 +399,6 @@ public class AuthController {
 	@ApiOperation(value = "path 변수가 비었을 때는 서버에 파일 저장 + 유저 대표사진 update + profile history 등록,  path가 있을 때는 대표사진만 update")
 	public ResponseEntity<String> fileUpload(@RequestParam("filename") MultipartFile mFile, @RequestParam String email, 
 			@RequestParam(required = false) String path, HttpServletRequest request) {
-		System.out.println("/profile 들어옴!!");
 		if(path == null || path.equals("")) {	// path 변수가 안들어오면 (새 첨부 파일로 대표이미지를 등록하면(
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 			Date nowdate = new Date();
@@ -420,7 +419,6 @@ public class AuthController {
 		}
 		else {		//path 변수가 들어오면
 			userRepository.updateProfile(path, email);		// 유저 대표사진 updatedd
-			System.out.println("path 변수가 들어오면");
 			profileRepository.updateProfile(email, path);	// 시간 재등록
 			return new ResponseEntity<String>(path, HttpStatus.OK);
 		}
