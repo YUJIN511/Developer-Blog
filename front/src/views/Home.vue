@@ -56,7 +56,12 @@ export default {
     },
     infiniteHandler($state) {
       axios
-        .get(`${SERVER_URL}/api/post/page?page=${this.page}`)
+        .get(`${SERVER_URL}/api/main/recommend?`,{
+            params: {
+                email: this.getUserInfo().email,
+                page:this.page
+            }
+        })
         .then(response => {
           if (response.data.length) {
             this.articleData = this.articleData.concat(response.data);
