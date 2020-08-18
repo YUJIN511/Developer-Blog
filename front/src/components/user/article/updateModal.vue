@@ -1,5 +1,5 @@
-<template v-if="isShow">
-  <div ref="updateModal" class="container-update-modal hide" v-if="isShow">
+<template>
+  <div ref="updateModal" class="container-update-modal hide">
     <div ref="updateModal" class="update-modal">
       <button class="btn-delete" @click="deletePost">
         게시글

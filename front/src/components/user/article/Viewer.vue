@@ -8,7 +8,7 @@
         <UpdateModal :articleId="postId" ref="updateModal" />
         <button
           class="btn-more"
-          @click="$refs.updateModal.toggle"
+          @click="toggleUpdateModal"
           v-if="getUserInfo().email === writer"
         >
           ...
@@ -218,6 +218,9 @@ export default {
     }),
     reRender() {
       this.commentModuleKey++;
+    },
+    toggleUpdateModal() {
+      this.$refs.updateModal.toggle();
     },
     async getArticleData() {
       const articleId = (this.postId = this.$route.query.id);
