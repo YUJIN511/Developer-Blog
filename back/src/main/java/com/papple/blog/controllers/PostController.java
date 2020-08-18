@@ -290,6 +290,7 @@ public class PostController {
 		for(Follow f : followerList){
 			if(f == null) continue;	// NullPointerException Remove
 			User user = userRepository.getUserByEmail(f.getFollowPK().getFollower());
+			if(user == null) continue;
             int setting = Integer.parseInt(user.getNotification(),2);
             // 알림 ON 했는지
             if( (setting& (1<<5)) != 0){
