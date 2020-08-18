@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container-follow">
     <LimitedAccess v-if="!getIsLogin()" />
     <div class="container-base" v-if="getIsLogin()">
       <div class="container-title">
@@ -103,12 +103,19 @@ export default {
 @import "@/assets/_variables.scss";
 @import "@/assets/common/Base.scss";
 
-body {
+.container-follow {
   overflow-x: hidden;
-}
-.container-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+  .container-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    a {
+      color: dodgerblue;
+      text-decoration: none;
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
 }
 </style>
