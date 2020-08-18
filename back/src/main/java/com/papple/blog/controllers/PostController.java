@@ -478,6 +478,27 @@ public class PostController {
 		return new ResponseEntity<List<Storage>>(storageRepository.searchStorageByEmail(email), HttpStatus.OK);
 	}
 	
+	@PostMapping("share")
+	@ApiOperation(value = "보관함에서 삭제")
+	public ResponseEntity<String> share(String email) {
+		// 점수 추가 - 공유 : 4점
+		Long max_score = 150l;
+		Long act_score = 4l;
+		Long cur_score = algoRepository.getScore(email);
+		Long acq_score = max_score - cur_score < act_score ? max_score - cur_score : act_score;
+		
+		String ori_day = algoRepository.getDate(email);
+		String pre_day = algoRepository.getDateFormatted(email);
+		algoRepository.updateDate(email);
+		String post_day = algoRepository.getDateFormatted(email);
+		if(ori_day != null && pre_day.equals(post_day)) algoRepository.updateScore(acq_score, email);
+		else {
+			algoRepository.setScore(email);
+			algoRepository.updateScore(act_score, email);
+		}		
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
+	
 	@DeleteMapping
 	@ApiOperation(value = "포스트 삭제 - 보관함, 기록, 해시태그, 좋아요, 파일도 함께 삭제")
 	public ResponseEntity<String> delete(Long id) {
