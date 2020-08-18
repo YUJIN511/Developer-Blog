@@ -413,6 +413,23 @@ public class PostController {
 				}
 			});
 
+			// 점수 추가 - 좋아요 : 20점
+			Long max_score = 150l;
+			Long act_score = 20l;
+			Long cur_score = algoRepository.getScore(email);
+			Long acq_score = max_score - cur_score < act_score ? max_score - cur_score : act_score;
+			
+			String ori_day = algoRepository.getDate(email);
+			String pre_day = algoRepository.getDateFormatted(email);
+			algoRepository.updateDate(email);
+			String post_day = algoRepository.getDateFormatted(email);
+			if(ori_day != null && pre_day.equals(post_day)) algoRepository.updateScore(acq_score, email);
+			else {
+				algoRepository.setScore(email);
+				algoRepository.updateScore(act_score, email);
+			}
+			
+			
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
