@@ -5,14 +5,10 @@
         <h1 type="text" class="view-title" placeholder="제목" readonly>
           {{ title }}
         </h1>
-        <UpdateModal
-          :articleId="postId"
-          ref="updateModal"
-          v-if="isShowUpdateModal"
-        />
+        <UpdateModal :articleId="postId" ref="updateModal" />
         <button
           class="btn-more"
-          @click="isShowUpdateModal = !isShowUpdateModal"
+          @click="$refs.updateModal.toggle"
           v-if="getUserInfo().email === writer"
         >
           ...

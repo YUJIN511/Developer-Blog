@@ -1,7 +1,7 @@
 <template>
   <div class="profile">
     <div class="left">
-      <button class="btn-profile">
+      <button class="btn-profile" @click="$router.push(`/${data.email}`)">
         <img :src="data.profile" alt />
       </button>
     </div>
