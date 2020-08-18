@@ -65,7 +65,7 @@
 	
 	<!-- 날짜 추출 : 월_일-->
 	<select id="getDate" resultType="String">
-		select concat(concat(month(createdate),"_"), day(createdate)) from user where email = #{email};
+		select concat(concat(month(recentscoredate),"_"), day(recentscoredate)) from user where email = #{email};
 	</select>
 	
 	<!-- 회원 점수 추출 -->
