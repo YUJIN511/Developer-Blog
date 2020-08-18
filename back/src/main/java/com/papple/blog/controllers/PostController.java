@@ -280,6 +280,7 @@ public class PostController {
 		
 		System.out.println("cur_score : " + cur_score);
 		System.out.println("acq_score : " + acq_score);
+		System.out.println("ori_day : " + ori_day);
 		System.out.println("pre_day : " + pre_day);
 		System.out.println("post_day : " + post_day);
 		
