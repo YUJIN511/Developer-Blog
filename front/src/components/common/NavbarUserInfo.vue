@@ -83,8 +83,10 @@ export default {
       setLogout: "user/setLogout"
     }),
     logout() {
-      this.setLogout();
-      location.href = "/";
+      if (confirm("로그아웃 하시겠습니까?")) {
+        this.setLogout();
+        location.href = "/";
+      }
     },
     toggle() {
       const navbarUser = document.querySelector(".container-navbar-userinfo");
