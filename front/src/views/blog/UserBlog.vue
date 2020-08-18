@@ -16,7 +16,7 @@
                 <LevelIcon :score="userInfo.score" />
                 <span>{{ userInfo.nickname }}</span>
               </div>
-              <p class="blog-name">{{ userInfo.nickname }}님의 블로그</p>
+              <p class="blog-name">{{ blogInfo.name }}</p>
               <p class="blog-ex">{{ blogInfo.description }}</p>
               <p class="blog-follower">팔로워 {{ followersCnt }}명</p>
             </div>
