@@ -11,6 +11,7 @@ import com.papple.blog.models.User;
 import com.papple.blog.payload.request.CommentRequest;
 import com.papple.blog.payload.response.CommentResponse;
 import com.papple.blog.payload.response.MessageResponse;
+import com.papple.blog.repository.PostAlgorithmRepository;
 import com.papple.blog.repository.UserRepository;
 import com.papple.blog.security.services.CommentService;
 import com.papple.blog.security.services.NotificationService;
@@ -45,6 +46,8 @@ public class CommentController {
     private PostService postService;
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private PostAlgorithmRepository algoRepository;
 
     @GetMapping("/allComment")
 	@ApiOperation(value = "해당 포스트의 모든 댓글 보기")
@@ -75,6 +78,23 @@ public class CommentController {
 
         Post post = postService.findById(comment.getPostid()).get();
         String actionName = userRepository.getUserByEmail(comment.getEmail()).getNickname();
+        
+        // 점수 추가 - 댓글 : 4점
+     	Long max_score = 150l;
+     	Long act_score = 4l;
+     	Long cur_score = algoRepository.getScore(comment.getEmail());
+     	Long acq_score = max_score - cur_score < act_score ? max_score - cur_score : act_score;
+     	
+     	String ori_day = algoRepository.getDate(comment.getEmail());
+     	String pre_day = algoRepository.getDateFormatted(comment.getEmail());
+     	algoRepository.updateDate(comment.getEmail());
+     	String post_day = algoRepository.getDateFormatted(comment.getEmail());
+     	if(ori_day != null && pre_day.equals(post_day)) algoRepository.updateScore(acq_score, comment.getEmail());
+     	else {
+     		algoRepository.setScore(comment.getEmail());
+     		algoRepository.updateScore(act_score, comment.getEmail());
+     	}
+        
         
         if(comment.getReplyto()==null){ // 댓글
             
