@@ -63,8 +63,13 @@
 	
 	
 	
-	<!-- 날짜 추출 : 월_일-->
+	<!-- 날짜 추출 -->
 	<select id="getDate" resultType="String">
+		select recentscoredate from user where email = #{email};
+	</select>
+	
+	<!-- 날짜 추출 : 월_일-->
+	<select id="getDateFormatted" resultType="String">
 		select concat(concat(month(recentscoredate),"_"), day(recentscoredate)) from user where email = #{email};
 	</select>
 	
