@@ -25,4 +25,5 @@ public interface PostAlgorithmRepository {
 	int setScore(String email);
 	Long getScore(String email);
 	String getDate(String email);
+	String getDateFormatted(String email);
 }

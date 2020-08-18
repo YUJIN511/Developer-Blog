@@ -287,10 +287,11 @@ public class PostController {
 		Long cur_score = algoRepository.getScore(post.getWriter());
 		Long acq_score = max_score - cur_score < act_score ? max_score - cur_score : act_score;
 		
-		String pre_day = algoRepository.getDate(post.getWriter());
+		String ori_day = algoRepository.getDate(post.getWriter());
+		String pre_day = algoRepository.getDateFormatted(post.getWriter());
 		algoRepository.updateDate(post.getWriter());
-		String post_day = algoRepository.getDate(post.getWriter());
-		if(pre_day.equals(post_day)) algoRepository.updateScore(acq_score, post.getWriter());
+		String post_day = algoRepository.getDateFormatted(post.getWriter());
+		if(ori_day != null && pre_day.equals(post_day)) algoRepository.updateScore(acq_score, post.getWriter());
 		else {
 			algoRepository.setScore(post.getWriter());
 			algoRepository.updateScore(act_score, post.getWriter());
