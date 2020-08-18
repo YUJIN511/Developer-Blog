@@ -5,16 +5,33 @@
         <img :src="commentData.profile" alt />
       </div>
       <div class="info">
-        <div class="user-info" @click="moveToBlog">
-          <span>😀</span>
-          <span>{{ commentData.nickname }}</span>
-          <button class="btn-more">⫶</button>
+        <div class="user-info">
+          <LevelIcon @click="moveToBlog" :score="commentData.score" />
+          <span @click="moveToBlog">{{ commentData.nickname }}</span>
+          <button
+            class="btn-more"
+            v-if="getUserInfo().email === commentData.email"
+            @click="toggleMenu"
+            ref="btnMore"
+          >
+            ⫶
+          </button>
+          <CommentMenu
+            ref="commentMenu"
+            :commentId="commentData.id"
+            :btnMore="$refs.btnMore"
+            @editStart="editStart"
+          />
         </div>
         <span class="date">{{ commentData.createdate.split("T")[0] }}</span>
       </div>
     </header>
     <main ref="main"></main>
-    <footer>
+    <div class="edit-buttons" v-if="isEditing">
+      <button @click="editCancel">취소</button>
+      <button @click="editSubmit">확인</button>
+    </div>
+    <footer v-if="!isEditing">
       <button class="btn-like" @click="toggleLikeButton">
         <svg
           class="icon-like-comment"
@@ -76,12 +93,17 @@
 
 <script>
 import ReplyList from "./CommentReplyList.vue";
+import CommentMenu from "./CommnetMenu";
 import axios from "axios";
 import { mapGetters } from "vuex";
+import LevelIcon from "@/components/user/LevelIcon.vue";
+
 export default {
   props: ["isReply", "commentData"],
   components: {
-    ReplyList
+    ReplyList,
+    CommentMenu,
+    LevelIcon
   },
   data: function() {
     return {
@@ -90,13 +112,50 @@ export default {
       isReplyFirstCall: true,
       isLike: 0,
       replyContent: "",
-      replyListKey: 0
+      replyListKey: 0,
+      isEditing: false,
+      contentBeforeEdit: "",
+      isMenuShow: false
     };
   },
   methods: {
     ...mapGetters({
       getUserInfo: "user/getUserInfo"
     }),
+    toggleMenu() {
+      this.$refs.commentMenu.toggleMenu();
+    },
+
+    editStart() {
+      const main = this.$refs.main;
+      this.contentBeforeEdit = main.innerHTML;
+      this.isEditing = true;
+      main.setAttribute("contentEditable", "true");
+      main.classList.add("editing");
+      main.focus();
+    },
+    editSubmit() {
+      const main = this.$refs.main;
+      try {
+        axios.put(`${this.$apiServer}/comment`, {
+          content: main.innerHTML,
+          id: this.commentData.id
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      this.isEditing = false;
+      main.setAttribute("contentEditable", "false");
+      main.classList.remove("editing");
+    },
+    editCancel() {
+      const main = this.$refs.main;
+      main.innerHTML = this.contentBeforeEdit;
+      this.isEditing = false;
+      main.setAttribute("contentEditable", "false");
+      main.classList.remove("editing");
+    },
+
     toggleReply() {
       this.isReplyShow = !this.isReplyShow;
       const svg = this.$refs.replySvg;
@@ -209,138 +268,5 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/_variables.scss";
-.container-comment {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 15px;
-  header {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    .profile-img-box {
-      flex-shrink: 0;
-      cursor: pointer;
-      img {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-      }
-    }
-    .info {
-      display: flex;
-      width: 100%;
-      flex-direction: column;
-      margin-left: 15px;
-      .user-info {
-        display: flex;
-        justify-content: stretch;
-        cursor: pointer;
-        span {
-          margin-right: 6px;
-        }
-        .btn-more {
-          margin-left: auto;
-          font-size: 1em;
-          font-weight: 900;
-          &:hover {
-            opacity: 0.5;
-          }
-        }
-      }
-      .date {
-        color: rgb(179, 179, 179);
-      }
-    }
-  }
-  main {
-    color: rgb(80, 80, 80);
-    font-size: 0.9rem;
-    margin: 1rem 0;
-  }
-  footer {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
-    font-size: 0.8rem;
-    width: 100%;
-    .btn-like {
-      display: flex;
-      align-items: center;
-      margin-right: 5px;
-      .icon-like-comment {
-        width: 20px;
-        height: 20px;
-        padding: 2px;
-        fill: rgb(165, 165, 165);
-      }
-      .fill-lightred {
-        fill: $lightRed;
-      }
-    }
-    .btn-reply-write {
-      margin-left: 15px;
-      font-size: 0.8rem;
-      color: #727272;
-      &:hover {
-        color: black;
-      }
-    }
-    .container-reply-toggle {
-      display: flex;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      background: #fafafa;
-      margin-top: 15px;
-      border-radius: 5px;
-      padding: 15px;
-      width: 100%;
-      [contenteditable="true"]:empty:before {
-        content: attr(placeholder);
-        display: block;
-      }
-      .textarea {
-        margin-bottom: 10px;
-        padding: 0.5em;
-        font-size: 0.8rem;
-        width: 100%;
-        height: 100px;
-        resize: none;
-        border-radius: 5px;
-        background: white;
-        &::before {
-          color: #c5c5c5;
-        }
-      }
-      .btn-cancel {
-        color: $gray;
-        margin-right: 20px;
-      }
-      .btn-submit-reply {
-        &:disabled {
-          color: rgb(216, 216, 216);
-        }
-        color: dodgerblue;
-      }
-    }
-  }
-  .btn-reply-toggle {
-    display: flex;
-    align-items: center;
-    color: dodgerblue;
-    margin-bottom: 20px;
-    &:hover {
-      opacity: 0.7;
-    }
-    svg {
-      transform: rotate(180deg);
-      fill: dodgerblue;
-      margin-right: 10px;
-      &.upper {
-        transform: rotate(0deg);
-      }
-    }
-  }
-}
+@import "@/assets/sass/comment.scss";
 </style>
