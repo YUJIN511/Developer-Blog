@@ -413,9 +413,9 @@ public class PostController {
 				}
 			});
 
-			// 점수 추가 - 좋아요 : 20점
+			// 점수 추가 - 좋아요 : 2점
 			Long max_score = 150l;
-			Long act_score = 20l;
+			Long act_score = 2l;
 			Long cur_score = algoRepository.getScore(email);
 			Long acq_score = max_score - cur_score < act_score ? max_score - cur_score : act_score;
 			
