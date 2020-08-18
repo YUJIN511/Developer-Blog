@@ -1,7 +1,7 @@
 <template>
   <div class="container-notification">
-    <div class="sub-notification" @click="moveUrl">
-      <div class="badge">
+    <div class="sub-notificationDetail" @click="moveUrl">
+      <div class="detail-badge">
         <svg 
           v-if="data.type==1 || data.type==4"
           class="badge-icon like"
@@ -195,17 +195,32 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
 .container-notification {
   display: flex;
 }
-.sub-notification {
+.sub-notificationDetail {
   flex-direction: column;
   height: 40px;
   font-size: 12px;
   margin: 8px;
   display: table;
   cursor: pointer;
+  
+  .detail-badge {
+    position: relative;
+  
+    .badge-icon {
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      cursor: default;
+      border-radius: 50%;
+      top: 22px;
+      right: 4px;
+    }
+  }
 }
 .profile-image {
   height: 15%;
@@ -249,17 +264,4 @@ span {
   display: inline;
 }
 
-.badge {
-  position: relative;
-}
-
-.badge-icon {
-  position: absolute;
-  width: 25px;
-  height: 25px;
-  cursor: default;
-  border-radius: 50%;
-  top: 22px;
-  right: 4px;
-}
 </style>

@@ -63,7 +63,7 @@
 <script>
 import axios from "axios";
 import { mapGetters } from "vuex";
-import SubNotification from "@/components/notification/SubNotification2.vue";
+import SubNotification from "@/components/notification/SubNotificationDetail.vue";
 
 const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 
