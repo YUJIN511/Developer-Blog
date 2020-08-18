@@ -61,4 +61,31 @@
 		insert into tagscore(tagname, score) values(#{hashtag}, 0)
 	</insert>
 	
+	
+	
+	<!-- 날짜 추출 : 월_일-->
+	<select id="getDate" resultType="String">
+		select concat(concat(month(createdate),"_"), day(createdate)) from user where email = #{email};
+	</select>
+	
+	<!-- 회원 점수 추출 -->
+	<select id="getScore" resultType="Long">
+		select todayscore from user where email = #{email}
+	</select>
+	
+	<!-- 회원 점수 추가 -->
+	<update id="updateScore">
+		update user set score = score + #{score}, todayscore = todayscore + #{score} where email = #{email}
+	</update>
+	
+	<!-- 오늘의 점수 0점으로 -->
+	<update id="setScore">
+		update user set todayscore = 0 where email = #{email}
+	</update>
+	
+	<!-- 날짜 최신화 -->
+	<update id="updateDate">
+		update user set recentscoredate = now() where email = #{email}
+	</update>
+	
 </mapper>

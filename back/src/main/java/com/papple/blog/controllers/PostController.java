@@ -280,6 +280,28 @@ public class PostController {
 				notificationService.save(notification);
 			}
 		}
+		
+		// 점수 추가 - 포스팅 : 100점
+		Long max_score = 150l;
+		Long act_score = 100l;
+		Long cur_score = algoRepository.getScore(post.getWriter());
+		Long acq_score = max_score - cur_score < act_score ? max_score - cur_score : act_score;
+		
+		String pre_day = algoRepository.getDate(post.getWriter());
+		algoRepository.updateDate(post.getWriter());
+		String post_day = algoRepository.getDate(post.getWriter());
+		if(pre_day.equals(post_day)) algoRepository.updateScore(acq_score, post.getWriter());
+		else {
+			algoRepository.setScore(post.getWriter());
+			algoRepository.updateScore(act_score, post.getWriter());
+		}
+		
+		System.out.println("cur_score : " + cur_score);
+		System.out.println("acq_score : " + acq_score);
+		System.out.println("pre_day : " + pre_day);
+		System.out.println("post_day : " + post_day);
+		
+		
 		if(p != null) return new ResponseEntity<>("success", HttpStatus.OK);
 		return new ResponseEntity<String>("fail", HttpStatus.FORBIDDEN);
 	}

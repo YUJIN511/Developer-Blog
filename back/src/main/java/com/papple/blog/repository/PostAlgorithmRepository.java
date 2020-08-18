@@ -19,4 +19,10 @@ public interface PostAlgorithmRepository {
 	List<Long> getPostidByTag(String hashtag);
 	int isTag(String hashtag);
 	int insertTag(String hashtag);
+	
+	int updateScore(Long score, String email);
+	int updateDate(String email);
+	int setScore(String email);
+	Long getScore(String email);
+	String getDate(String email);
 }
