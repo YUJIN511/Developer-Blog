@@ -194,6 +194,12 @@ public class AuthController {
 		 return ResponseEntity.ok().body(new MessageResponse("Success"));
 	}
 
+	@GetMapping("/sendEmail")
+	@ApiOperation(value = "인증 이메일 보내기")
+	public ResponseEntity<?> sendEmail(@RequestParam final String email){
+		sendMail(email);
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
 	// 회원가입시 인증 이메일 보내기
 	@Async
 	public void sendMail(String email){
