@@ -68,16 +68,16 @@
           <button class="btn btn-login" type="submit">로그인</button>
         </form>
         <div class="login-footer">
-            <a
-              class="link-repassword"
-              href="javascript:void(0)"
-              @click="moveToRepassword"
-              >비밀번호를 잊으셨나요?</a
-            >
-            <a class="link-join" href="javascript:void(0)" @click="moveToJoin"
-              >계정 만들기</a
-            >
-          </div>
+          <a
+            class="link-repassword"
+            href="javascript:void(0)"
+            @click="moveToRepassword"
+            >비밀번호를 잊으셨나요?</a
+          >
+          <a class="link-join" href="javascript:void(0)" @click="moveToJoin"
+            >계정 만들기</a
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -206,7 +206,6 @@ $minimumWidth: 950px;
       margin-bottom: 8px;
     }
 
-    
     input {
       background-color: rgb(0, 0, 0, 0) !important;
       border: 1px solid #cccccc;
@@ -280,7 +279,7 @@ $minimumWidth: 950px;
       padding: 8px 10px;
       color: white;
       border-radius: 5px;
-      background-color: #6DA7FF;
+      background-color: #6da7ff;
       font-weight: 500;
       font-size: 0.9rem;
     }
@@ -309,7 +308,7 @@ $minimumWidth: 950px;
       }
       .link-repassword {
         text-decoration: none;
-        color: #FF5651;
+        color: #ff5651;
       }
       .link-join {
         text-decoration: none;

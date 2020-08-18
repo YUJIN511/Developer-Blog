@@ -2,7 +2,9 @@
   <div style="background:white" class="container-account">
     <header>
       <div class="profile-image">
-        <button class="banner-image-edit" @click="openProfilePic">수정하기</button>
+        <button class="banner-image-edit" @click="openProfilePic">
+          수정하기
+        </button>
       </div>
     </header>
     <main>
@@ -14,10 +16,10 @@
         <div class="background" @click="disableNickname()"></div>
         <span>닉네임</span>
         <div class="container-inputNickname">
-          <input class="input-nickname" v-model="nickname"/>
+          <input class="input-nickname" v-model="nickname" />
           <button class="btn btn-edit" @click="updateNickname">수정하기</button>
         </div>
-        <hr>
+        <hr />
       </div>
       <div class="level-icon">
         <span>레벨 / 경험치</span>
@@ -42,11 +44,18 @@
         </div>
       </div>
       <div class="level-icon">
-        <span class="span-password" @click="enablePassword()">비밀번호 바꾸기</span>
+        <span class="span-password" @click="enablePassword()"
+          >비밀번호 바꾸기</span
+        >
         <div class="edit-password hide">
           <div class="background" @click="disablePassword()"></div>
           <div class="container-inputPassword">
-            <input class="input-password" v-model="password" type="password" placeholder="현재 비밀번호" />
+            <input
+              class="input-password"
+              v-model="password"
+              type="password"
+              placeholder="현재 비밀번호"
+            />
             <input
               class="input-password"
               v-model="newpassword"
@@ -61,13 +70,17 @@
               @keyup="passwordEqualCheck"
               placeholder="새 비밀번호 확인"
             />
-            <div class="msg msg-password-confirm hide">비밀번호가 일치하지 않습니다.</div>
+            <div class="msg msg-password-confirm hide">
+              비밀번호가 일치하지 않습니다.
+            </div>
           </div>
           <button class="btn btn-pw" @click="updatePassword()">변경하기</button>
         </div>
       </div>
       <div class="container-unregister">
-        <span class="span-unregister" @click="openUnregisterModal()">회원 탈퇴</span>
+        <span class="span-unregister" @click="openUnregisterModal()"
+          >회원 탈퇴</span
+        >
       </div>
     </main>
     <!-- 블러효과 용 -->

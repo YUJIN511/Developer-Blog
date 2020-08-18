@@ -212,24 +212,24 @@ export default {
     UnregisterModal,
     ProfilePicModal,
     NotificationModal,
-    NavbarUserInfo,
+    NavbarUserInfo
   },
   data() {
     return {
       searchWord: "",
       eventSource: null,
-      notifications: [],
+      notifications: []
     };
   },
   methods: {
     ...mapActions({
       Logout: "user/logout",
-      fetchUserInfo: "user/fetchUserInfo",
+      fetchUserInfo: "user/fetchUserInfo"
     }),
     ...mapGetters({
       getIsLogin: "user/getIsLogin",
       getUserInfo: "user/getUserInfo",
-      getEmail: "user/getEmail",
+      getEmail: "user/getEmail"
     }),
     showNavBar() {
       const navbar = document.querySelector(".navbar");
@@ -258,7 +258,7 @@ export default {
     keywordSearch(keyword) {
       this.$router.push({
         name: "Search",
-        query: { keyword },
+        query: { keyword }
       });
       if (this.$route.name === "Search") {
         this.$router.go();
@@ -267,7 +267,7 @@ export default {
     tagSearch(tag) {
       this.$router.push({
         name: "Search",
-        query: { tag },
+        query: { tag }
       });
       if (this.$route.name === "Search") {
         this.$router.go();
@@ -308,14 +308,14 @@ export default {
       }
       // console.log("==> 이벤트 소스 종료");
       this.eventSource.close();
-    },
+    }
   },
   created() {
     this.fetchUserInfo(this.getEmail());
   },
   mounted() {
     var profileImages = document.querySelectorAll(".profile-image");
-    profileImages.forEach((profileImage) => {
+    profileImages.forEach(profileImage => {
       profileImage.style.backgroundImage = `url('${
         this.getUserInfo().profile
       }')`;
@@ -324,7 +324,7 @@ export default {
   },
   beforeDestroy() {
     this.unSetupStream();
-  },
+  }
 };
 </script>
 

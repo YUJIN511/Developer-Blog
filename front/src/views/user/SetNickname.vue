@@ -27,25 +27,25 @@ export default {
     return {
       email: this.$route.params.email,
       token: this.$route.params.token,
-      nickname: "",
+      nickname: ""
     };
   },
   methods: {
     ...mapActions({
       ReceiveToken: "user/receiveToken",
-      FetchUserInfo: "user/fetchUserInfo",
+      FetchUserInfo: "user/fetchUserInfo"
     }),
     ...mapGetters({
       getIsLogin: "user/getIsLogin",
-      getEmail: "user/getEmail",
+      getEmail: "user/getEmail"
     }),
     setNickname() {
       axios
         .get(`${SERVER_URL}/api/auth/nicknameUpdate`, {
           params: {
             email: this.email,
-            nickname: this.nickname,
-          },
+            nickname: this.nickname
+          }
         })
         .then(() => {
           this.fetchUserInfo();
@@ -55,13 +55,13 @@ export default {
     },
     async fetchUserInfo() {
       await this.FetchUserInfo(this.getEmail());
-    },
+    }
   },
   created() {
     this.ReceiveToken({ token: this.token, email: this.email })
       .then(() => console.log(this.getIsLogin()))
-      .catch((err) => console.log(err));
-  },
+      .catch(err => console.log(err));
+  }
 };
 </script>
 

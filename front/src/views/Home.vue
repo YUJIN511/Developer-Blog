@@ -56,11 +56,11 @@ export default {
     },
     infiniteHandler($state) {
       axios
-        .get(`${SERVER_URL}/api/main/recommend?`,{
-            params: {
-                email: this.getUserInfo().email,
-                page:this.page
-            }
+        .get(`${SERVER_URL}/api/main/recommend?`, {
+          params: {
+            email: this.getUserInfo().email,
+            page: this.page
+          }
         })
         .then(response => {
           if (response.data.length) {

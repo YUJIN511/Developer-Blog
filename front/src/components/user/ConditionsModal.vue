@@ -278,8 +278,8 @@ export default {
     moveToLogin() {
       document.querySelector(".container-join").classList.remove("hide");
       this.closeModal();
-    },
-  },
+    }
+  }
 };
 </script>
 
