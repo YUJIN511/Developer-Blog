@@ -1,5 +1,6 @@
 package com.papple.blog.models;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,6 +32,10 @@ public class User {
 	private Integer usercertification;
 
 	private String notification;
+	
+	private LocalDateTime recentscoredate;
+	
+	private Long todayscore;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(	name = "user_roles", 
