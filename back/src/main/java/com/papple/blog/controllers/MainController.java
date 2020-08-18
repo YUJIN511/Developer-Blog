@@ -143,8 +143,9 @@ public class MainController {
 		List<PostList> list = new ArrayList<>();
 		for(Long postid : idList){
 			PostList post = postListRepository.searchPostById(postid);
+			if(post == null) continue;
 			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
-			if(post == null || user == null) continue;
+			if(user == null) continue;
 			post.setNickname(user.getNickname());
 			post.setProfile(user.getProfile());
 			post.setScore(user.getScore());
