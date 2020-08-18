@@ -237,7 +237,7 @@ public class MainController {
 		List<PostList> resList = new ArrayList<>();
 		int pgStart = 10 * (page - 1);
 		for(int i = pgStart ; i < pgStart + 10 ; i++) {
-			if(list.get(i) == null) break;
+			if(i >= resList.size()) break;
 			resList.add(list.get(i));
 		}
 		
@@ -299,7 +299,7 @@ public class MainController {
 		List<PostList> resList = new ArrayList<>();
 		int pgStart = 10 * (page - 1);
 		for(int i = pgStart ; i < pgStart + 10 ; i++) {
-			if(resultList.get(i) == null) break;
+			if(i >= resList.size()) break;
 			resList.add(resultList.get(i));
 		}
 		
