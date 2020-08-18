@@ -13,7 +13,7 @@
             <div class="blog-profile-image"></div>
             <div class="profile">
               <div class="name">
-                <span class="level">LV.1</span>
+                <LevelIcon :score="userInfo.score" />
                 <span>{{ userInfo.nickname }}</span>
               </div>
               <p class="blog-name">{{ userInfo.nickname }}님의 블로그</p>
@@ -49,6 +49,7 @@ import axios from "axios";
 import { mapGetters } from "vuex";
 
 import TagList from "@/components/blog/TagList.vue";
+import LevelIcon from "@/components/user/LevelIcon.vue";
 import FlexArticles from "@/components/common/FlexArticles.vue";
 
 const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
@@ -56,7 +57,8 @@ const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 export default {
   components: {
     TagList,
-    FlexArticles
+    FlexArticles,
+    LevelIcon
   },
   data() {
     return {
@@ -252,7 +254,9 @@ main {
         justify-content: space-between;
         margin: 0px 24px;
         .name {
+          display: flex;
           margin-bottom: 5px;
+          div,
           span {
             margin-right: 12px;
             font-weight: 1000;
