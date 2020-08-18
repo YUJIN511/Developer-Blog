@@ -1,6 +1,6 @@
 <template>
   <div class="container-notification">
-      <div class="sub-notification" @click="moveUrl">
+    <div class="sub-notification" @click="moveUrl">
       <div class="badge">
         <svg 
           v-if="data.type==1 || data.type==4"
@@ -257,7 +257,6 @@ span {
   position: absolute;
   width: 25px;
   height: 25px;
-  border: 2px solid white;
   cursor: default;
   border-radius: 50%;
   top: 22px;
