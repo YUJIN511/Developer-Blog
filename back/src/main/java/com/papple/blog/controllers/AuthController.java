@@ -482,7 +482,8 @@ public class AuthController {
 	public RedirectView loginSucess(HttpSession httpSession){
 
 		SessionUser user = (SessionUser) httpSession.getAttribute("user");
-		return new RedirectView("http://localhost:8080/loginsucess/"+user.getEmail());
+
+		return new RedirectView("http://localhost:8080/main/home/"+user.getEmail());
 	}
 }
 
