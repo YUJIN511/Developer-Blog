@@ -30,7 +30,7 @@
             @mouseout="hideDeleteButton(i)"
           >
             <div class="banner-image-delete" @click="deleteImage(image)">✖</div>
-            <img :src="image" />
+            <img :src="image" class="img-previous-image" />
             <button
               class="banner-image-select"
               @click="selectImage(image, i)"
@@ -59,14 +59,14 @@ export default {
       url: this.getProfile(),
       images: [],
       file: "",
-      path: ""
+      path: "",
     };
   },
   methods: {
     ...mapActions({}),
     ...mapGetters({
       getEmail: "user/getEmail",
-      getProfile: "user/getProfile"
+      getProfile: "user/getProfile",
     }),
     closeModal() {
       document.querySelector(".container-profilepic").classList.add("hide");
@@ -91,8 +91,8 @@ export default {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       if (result) {
@@ -105,10 +105,10 @@ export default {
     fetchPictures() {
       axios
         .get(`${SERVER_URL}/api/auth/pflist?email=${this.getEmail()}`)
-        .then(res => {
+        .then((res) => {
           this.images = res.data;
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     setDefaultImage() {
       let defaultImage = "http://i3a604.p.ssafy.io/images/profile/basic.svg";
@@ -126,17 +126,17 @@ export default {
         .then(() => {
           this.fetchPictures();
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     selectImage(url, ind) {
       this.path = url;
-      var prevList = document.getElementsByClassName("previous-image");
+      var prevList = document.getElementsByClassName("img-previous-image");
       for (var i = 0; i < prevList.length; i++) {
         if (i == ind) {
           prevList[i].classList.add("selected");
-          prevList[i].classList.remove("unselected");
+          // prevList[i].classList.remove("unselected");
         } else {
-          prevList[i].classList.add("unselected");
+          // prevList[i].classList.add("unselected");
           prevList[i].classList.remove("selected");
         }
       }
@@ -147,14 +147,14 @@ export default {
     },
     async createFile(url) {
       await fetch(url)
-        .then(response => {
+        .then((response) => {
           let data = response.blob();
           let metadata = {
-            type: "image/jpeg"
+            type: "image/jpeg",
           };
           this.file = new File([data], "profile.jpg", metadata);
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     showDeleteButton(i) {
       document.querySelectorAll(".banner-image-delete")[
@@ -169,14 +169,14 @@ export default {
       ].style.backgroundColor = "rgba(255, 255, 255, 0)";
       document.querySelectorAll(".banner-image-delete")[i].style.color =
         "rgba(0, 0, 0, 0)";
-    }
+    },
   },
   mounted() {
     this.fetchPictures();
     this.$el.querySelector(
       ".preview-image"
     ).style.backgroundImage = `url('${this.getProfile()}')`;
-  }
+  },
 };
 </script>
 
@@ -347,12 +347,13 @@ export default {
 }
 
 .selected {
-  outline: blue solid 3px;
+  // outline: cornflowerblue solid 1px;
+  box-shadow: 0 0 3px 2px cornflowerblue;
 }
 
-.unselected {
-  outline: 0px;
-}
+// .unselected {
+//   outline: 0px;
+// }
 
 h1 {
   margin: 30px 0px;
