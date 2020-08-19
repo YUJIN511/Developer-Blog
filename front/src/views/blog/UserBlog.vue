@@ -231,12 +231,12 @@ export default {
 }
 
 main {
-  padding: 30px 0px;
   display: flex;
+  width: 80%;
+  align-self: center;
   .content {
     position: relative;
     width: 100%;
-    margin: 40px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -282,6 +282,8 @@ main {
       }
       .btn-follow {
         color: #1a7cff;
+        height: 100%;
+        margin-right: 8px;
         font-weight: 700;
         font-size: 1.5em;
       }

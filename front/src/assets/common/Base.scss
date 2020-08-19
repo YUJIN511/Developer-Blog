@@ -5,7 +5,7 @@
   min-height: 100vh;
   text-align: left;
   padding-right: 32px;
-  padding-top: 88px;
+  padding-top: 56px;
 }
 .title {
   font-size: 1rem;
@@ -22,6 +22,6 @@
 @media (min-width: $threeArticles) {
   .container-base {
     padding-left: 88px;
-    padding-top: 80px;
+    padding-top: 56px;
   }
 }

@@ -527,20 +527,19 @@ button:hover {
 .badge-num {
   box-sizing: border-box;
   font-family: "Trebuchet MS", sans-serif;
-  background: #ff0000;
+  background: #FF6D6D;
   cursor: default;
   border-radius: 50%;
   color: #fff;
-  font-weight: bold;
-  font-size: 15px;
-  height: 25px;
-  line-height: 1.55em;
-  top: -25px;
-  right: -35px;
-  border: 2px solid #fff;
+  font-size: 0.8rem;
+  height: 20px;
+  width: 20px;
+  line-height: 1.2rem;
+  top: -20px;
+  right: -30px;
+  border: 1px solid #fff;
   position: absolute;
   text-align: center;
-  width: 25px;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
   -webkit-animation: pulse 1.5s 1;
   animation: pulse 1.5s 1;

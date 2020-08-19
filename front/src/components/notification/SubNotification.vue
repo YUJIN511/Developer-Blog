@@ -174,11 +174,12 @@ img {
 
 .badge-icon {
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
+  background: cornflowerblue;
   cursor: default;
   border-radius: 50%;
-  top: 16px;
-  right: -10px;
+  top: 18px;
+  right: -2px;
 }
 </style>
