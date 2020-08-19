@@ -74,6 +74,10 @@ export default {
       this.$el.querySelector(
         ".preview-image"
       ).style.backgroundImage = `url('${this.getProfile()}')`;
+      var prevList = document.getElementsByClassName("img-previous-image");
+      for (var i = 0; i < prevList.length; i++) {
+        prevList[i].classList.remove("selected");
+      }
     },
     previewFile(event) {
       this.path = "";
@@ -101,7 +105,6 @@ export default {
       );
       if (result) {
         this.$router.go();
-        this.fetchPictures();
         this.$el.querySelector(
           ".preview-image"
         ).style.backgroundImage = `url('${this.getProfile()}')`;
