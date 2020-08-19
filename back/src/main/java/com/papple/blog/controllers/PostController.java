@@ -3,6 +3,7 @@ package com.papple.blog.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -249,6 +250,8 @@ public class PostController {
 	@PostMapping
 	@ApiOperation(value = "새 글 게시 - 글 정보 + 파일의 접근경로 DB에 저장")
 	public ResponseEntity<String> insert(@RequestBody Post post, HashtagList tag) {
+		LocalDateTime curDate = algoRepository.getCurDate();
+		post.setCreatedate(curDate);
 		Post p = postService.save(post);	// 글 저장		
 		if(tag.getTag().size() == 1 && tag.getTag().get(0).equals("none")) {
 			System.out.println("태그 없음");
