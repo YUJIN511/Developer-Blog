@@ -74,10 +74,12 @@ public class CommentController {
     @ApiOperation(value = "새 댓글 쓰기")
     public ResponseEntity<String> writeComment(@RequestBody Comment comment) {
     
-        commentService.save(comment);     // 댓글또는답댓글 저장
+        Comment com = commentService.save(comment);     // 댓글또는답댓글 저장
 
         Post post = postService.findById(comment.getPostid()).get();
         String actionName = userRepository.getUserByEmail(comment.getEmail()).getNickname();
+        
+        algoRepository.setCurDateComment(com.getId());
         
         // 점수 추가 - 댓글 : 4점
      	Long max_score = 150l;
