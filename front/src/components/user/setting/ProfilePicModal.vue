@@ -59,7 +59,7 @@ export default {
       url: this.getProfile(),
       images: [],
       file: "",
-      path: "",
+      path: ""
     };
   },
   methods: {
@@ -70,6 +70,10 @@ export default {
     }),
     closeModal() {
       document.querySelector(".container-profilepic").classList.add("hide");
+      this.fetchPictures();
+      this.$el.querySelector(
+        ".preview-image"
+      ).style.backgroundImage = `url('${this.getProfile()}')`;
     },
     previewFile(event) {
       this.path = "";
@@ -92,7 +96,7 @@ export default {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-          },
+          }
         }
       );
       if (result) {
@@ -105,10 +109,10 @@ export default {
     fetchPictures() {
       axios
         .get(`${SERVER_URL}/api/auth/pflist?email=${this.getEmail()}`)
-        .then((res) => {
+        .then(res => {
           this.images = res.data;
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     },
     setDefaultImage() {
       let defaultImage = "http://i3a604.p.ssafy.io/images/profile/basic.svg";
@@ -126,7 +130,7 @@ export default {
         .then(() => {
           this.fetchPictures();
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     },
     selectImage(url, ind) {
       this.path = url;
@@ -134,9 +138,7 @@ export default {
       for (var i = 0; i < prevList.length; i++) {
         if (i == ind) {
           prevList[i].classList.add("selected");
-          // prevList[i].classList.remove("unselected");
         } else {
-          // prevList[i].classList.add("unselected");
           prevList[i].classList.remove("selected");
         }
       }
@@ -169,14 +171,14 @@ export default {
       ].style.backgroundColor = "rgba(255, 255, 255, 0)";
       document.querySelectorAll(".banner-image-delete")[i].style.color =
         "rgba(0, 0, 0, 0)";
-    },
+    }
   },
   mounted() {
     this.fetchPictures();
     this.$el.querySelector(
       ".preview-image"
     ).style.backgroundImage = `url('${this.getProfile()}')`;
-  },
+  }
 };
 </script>
 
@@ -347,13 +349,8 @@ export default {
 }
 
 .selected {
-  // outline: cornflowerblue solid 1px;
   box-shadow: 0 0 3px 2px cornflowerblue;
 }
-
-// .unselected {
-//   outline: 0px;
-// }
 
 h1 {
   margin: 30px 0px;
