@@ -47,7 +47,7 @@
           </svg>
           <span>카카오톡</span>
         </button>
-        <ShareNetwork
+        <ShareNetwork 
           class="btn"
           network="facebook"
           :url="url"
@@ -56,6 +56,7 @@
           :hashtags="articleData.tag[0]"
         >
           <svg
+            @click="incrementScore"
             version="1.1"
             id="Capa_1"
             xmlns="http://www.w3.org/2000/svg"
@@ -80,6 +81,7 @@
           :hashtags="articleData.tag[0]"
         >
           <svg
+            @click="incrementScore"
             version="1.1"
             id="Capa_1"
             xmlns="http://www.w3.org/2000/svg"
@@ -119,6 +121,7 @@
           :hashtags="articleData.tag[0]"
         >
           <svg
+            @click="incrementScore"
             version="1.1"
             id="Capa_1"
             xmlns="http://www.w3.org/2000/svg"
@@ -185,6 +188,8 @@
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 <script>
 import axios from "axios";
+import { mapMutations, mapGetters } from "vuex";
+const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 export default {
   props: {
     articleData: {
@@ -204,6 +209,9 @@ export default {
     this.commentCnt = res.data.length;
   },
   methods: {
+    ...mapGetters({
+      getUserInfo: "user/getUserInfo"
+    }),
     sendKakao() {
       Kakao.Link.sendDefault({
         objectType: "feed",
@@ -236,6 +244,7 @@ export default {
           }
         ]
       });
+      this.incrementScore();
     },
     copyurl() {
       var t = document.createElement("textarea");
@@ -245,6 +254,11 @@ export default {
       document.execCommand("copy");
       document.body.removeChild(t);
       alert("주소가 복사되었습니다.\n원하는 곳에 붙여넣기(Ctrl+V)해주세요.");
+    },
+    incrementScore() {
+      axios.post(`
+      ${this.$apiServer}/post/share?email=${this.getUserInfo().email}
+      `);
     }
   }
 };
