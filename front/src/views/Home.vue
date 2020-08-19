@@ -27,21 +27,20 @@ const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 export default {
   components: {
     FlexArticles,
-    InfiniteLoading,
+    InfiniteLoading
   },
   created() {
     this.fetchFollowerArticles();
-    console.log(this.getUserInfo());
   },
   mounted() {
     this.paintBtn(document.querySelector("#btn-home"));
   },
   methods: {
     ...mapGetters({
-      getUserInfo: "user/getUserInfo",
+      getUserInfo: "user/getUserInfo"
     }),
     ...mapMutations({
-      paintBtn: "navbarMini/paintBtn",
+      paintBtn: "navbarMini/paintBtn"
     }),
     fetchFollowerArticles() {
       if (this.getUserInfo().email) {
@@ -51,11 +50,10 @@ export default {
               this.getUserInfo().email
             }`
           )
-          .then((res) => {
+          .then(res => {
             this.followerArticleData = res.data;
-            console.log(res.data);
           })
-          .catch((err) => console.log(err));
+          .catch(err => console.log(err));
       }
     },
     infiniteHandler($state) {
@@ -63,10 +61,10 @@ export default {
         .get(`${SERVER_URL}/api/main/recommend?`, {
           params: {
             email: this.getUserInfo().email,
-            page: this.page,
-          },
+            page: this.page
+          }
         })
-        .then((response) => {
+        .then(response => {
           if (response.data.length) {
             this.articleData = this.articleData.concat(response.data);
             $state.loaded();
@@ -74,12 +72,14 @@ export default {
             if (this.articleData.length / 10 == 0) {
               $state.complete();
             }
+            this.isFirstPage = false;
+          } else if (this.isFirstPage) {
+            this.infiniteHandlerTrending($state);
           } else {
-            // $state.complete();
-            this.infiniteHandlerTrending();
+            $state.complete();
           }
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     },
     infiniteHandlerTrending($state) {
       axios
@@ -88,7 +88,7 @@ export default {
             this.getUserInfo().email
           }&page=${this.page}`
         )
-        .then((response) => {
+        .then(response => {
           if (response.data.length) {
             this.articleData = this.articleData.concat(response.data);
             $state.loaded();
@@ -100,16 +100,17 @@ export default {
             $state.complete();
           }
         })
-        .catch((err) => console.log(err));
-    },
+        .catch(err => console.log(err));
+    }
   },
   data: function() {
     return {
       articleData: [],
       followerArticleData: [],
       page: 1,
+      isFirstPage: true
     };
-  },
+  }
 };
 </script>
 

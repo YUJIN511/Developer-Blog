@@ -132,15 +132,15 @@ export default {
 .row {
   width: 100%;
   display: inline-block;
-  padding: 10px;
+  padding: 16px;
   #all {
     float: left;
-    font-size: 20px;
+    font-size: 1.2rem;
     font-weight: bold;
     color: #727272;
   }
   #setting {
-    width: 24px;
+    width: 20px;
     margin-top: 2px;
     float: right;
     fill: #c0c0c0;
@@ -149,12 +149,9 @@ export default {
 }
 .notification-list {
   width: 60%;
-  padding: 10px;
   margin: auto;
   overflow-y: auto;
   background-color: white;
-  border-radius: 3%;
-  border: 3px solid #e9f1ff;
   min-height: 400px;
   max-height: 650px;
 
@@ -181,7 +178,6 @@ export default {
 hr {
   margin: 3px 0;
   border-left: thick;
-  border-bottom: 3px solid #e9f1ff;
   border-top: 0px;
 }
 

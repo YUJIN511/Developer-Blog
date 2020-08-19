@@ -17,12 +17,18 @@
         </div>
       </div>
     </button>
-    <button class="btn-follow">팔로우</button>
+    <button class="btn-follow" v-if="!isFollowed" @click="addFollow()">
+      팔로우
+    </button>
+    <button class="btn-follow" v-else @click="cancelFollow()">
+      팔로우 취소
+    </button>
   </div>
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
+import { mapGetters } from "vuex";
 import LevelIcon from "@/components/user/LevelIcon.vue";
 
 export default {
@@ -33,6 +39,66 @@ export default {
   },
   components: {
     LevelIcon
+  },
+  data: function() {
+    return {
+      isFollowed: false
+    };
+  },
+  created() {
+    this.isFollow();
+  },
+  methods: {
+    ...mapGetters({
+      getUserInfo: "user/getUserInfo"
+    }),
+    addFollow() {
+      axios
+        .post(
+          `${this.$apiServer}/follow/add?follower=${
+            this.getUserInfo().email
+          }&followed=${this.articleData.writer}`
+        )
+        .then(() => {
+          this.isFollowed = true;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    cancelFollow() {
+      axios
+        .delete(
+          `${this.$apiServer}/follow/del?follower=${
+            this.getUserInfo().email
+          }&followed=${this.articleData.writer}`
+        )
+        .then(() => {
+          this.isFollowed = false;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    isFollow() {
+      // articleData를 늦게 가져와서 기다려야 함
+      const intervalID = window.setInterval(async () => {
+        if (this.articleData !== undefined) {
+          clearInterval(intervalID);
+          try {
+            const res = await axios.get(
+              `${this.$apiServer}/follow/isfollow?follower=${
+                this.getUserInfo().email
+              }&followed=${this.articleData.writer}`
+            );
+            this.isFollowed = res.data;
+          } catch (error) {
+            console.log(error);
+            return false;
+          }
+        }
+      }, 300);
+    }
   }
 };
 </script>
