@@ -126,8 +126,8 @@ export default {
               this.getUserInfo().email
             }&id=${this.data.id}`
           )
-          .then((res) => {
-            console.log(res);
+          .then(() => {
+            // console.log(res);
           })
           .catch((err) => console.log(err));
         this.like--;

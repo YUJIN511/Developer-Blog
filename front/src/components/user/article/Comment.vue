@@ -198,7 +198,7 @@ export default {
     },
     toggleLikeButton() {
       if (this.getIsLogin() === false) {
-        alert("게시물이 마음에 드시나요? 로그인하여 의견을 알려주세요.");
+        alert("댓글이 마음에 드시나요? 로그인하여 의견을 알려주세요.");
         // document.querySelector(".container-login").classList.remove("hide");
         return;
       }

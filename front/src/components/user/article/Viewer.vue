@@ -153,7 +153,7 @@ import {
   Strike,
   Underline,
   History,
-  Image
+  Image,
 } from "tiptap-extensions";
 export default {
   components: {
@@ -161,7 +161,7 @@ export default {
     Comment,
     BlogInfo,
     UpdateModal,
-    ShareModal
+    ShareModal,
   },
   data() {
     return {
@@ -179,8 +179,8 @@ export default {
               ruby,
               swift,
               cpp,
-              cs
-            }
+              cs,
+            },
           }),
           new Blockquote(),
           new BulletList(),
@@ -199,14 +199,14 @@ export default {
           new Strike(),
           new Underline(),
           new History(),
-          new Image()
+          new Image(),
         ],
 
         content: "",
         onUpdate: ({ getHTML }) => {
           this.html = getHTML();
           console.log(this.html);
-        }
+        },
       }),
       postId: "",
       title: "",
@@ -225,12 +225,13 @@ export default {
       articleData: {},
       isStored: false,
       isShowUpdateModal: false,
-      isShowShareModal: false
+      isShowShareModal: false,
     };
   },
   methods: {
     ...mapGetters({
-      getUserInfo: "user/getUserInfo"
+      getUserInfo: "user/getUserInfo",
+      getIsLogin: "user/getIsLogin",
     }),
     reRender() {
       this.commentModuleKey++;
@@ -297,7 +298,7 @@ export default {
             ".editor__content h1, .editor__content h2, .editor__content h3"
           );
 
-          hList.forEach(elem => {
+          hList.forEach((elem) => {
             elem.id = elem.innerText;
           });
 
@@ -307,7 +308,7 @@ export default {
     },
     setNavAnchor(tagList) {
       const navContent = this.$refs.navContent;
-      tagList.forEach(elem => {
+      tagList.forEach((elem) => {
         const anchor = document.createElement("a");
         anchor.classList.add(elem.tagName);
         anchor.setAttribute("href", `#${elem.id}`);
@@ -339,6 +340,10 @@ export default {
       }
     },
     toggleLikeBtn() {
+      if (this.getIsLogin() === false) {
+        alert("게시물이 마음에 드시나요? 로그인하여 의견을 알려주세요.");
+        return;
+      }
       this.isLike = !this.isLike;
       if (this.isLike) {
         axios.put(
@@ -355,10 +360,10 @@ export default {
               this.getUserInfo().email
             }&id=${this.$route.query.id}`
           )
-          .then(res => {
+          .then((res) => {
             console.log(res);
           })
-          .catch(err => console.log(err));
+          .catch((err) => console.log(err));
         this.like--;
       }
       this.setLikeBtn();
@@ -380,8 +385,8 @@ export default {
               this.getUserInfo().email
             }&postid=${this.$route.query.id}`
           )
-          .then(res => console.log(res))
-          .catch(err => console.log(err));
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
       } else {
         axios
           .delete(
@@ -389,11 +394,11 @@ export default {
               this.getUserInfo().email
             }&postid=${this.$route.query.id}`
           )
-          .then(res => console.log(res))
-          .catch(err => console.log(err));
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
       }
       this.setLibraryBtn();
-    }
+    },
   },
   beforeDestroy() {
     this.editor.destroy();
@@ -406,7 +411,7 @@ export default {
   },
   async created() {
     await this.getArticleData();
-  }
+  },
 };
 </script>
 

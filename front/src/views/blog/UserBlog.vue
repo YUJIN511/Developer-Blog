@@ -148,6 +148,10 @@ export default {
       this.fetchArticles();
     },
     async follow() {
+      if (this.getIsLogin() === false) {
+        alert(`로그인하여 ${this.userInfo.nickname}님의 글을 받아보세요!`);
+        return;
+      }
       if (this.isFollowing === 0) {
         await axios
           .post(
