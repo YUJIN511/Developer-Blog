@@ -94,7 +94,7 @@
 	</update>
 
 	
-	<update id="setCurDate">
-		update post set createdate = now() where writer = #{email}
+	<update id="setCurDatePost">
+		update post set createdate = now() where id = #{postid}
 	</update>
 </mapper>
