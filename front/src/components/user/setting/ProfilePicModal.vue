@@ -33,7 +33,7 @@
             <img :src="image" />
             <button
               class="banner-image-select"
-              @click="selectImage(image)"
+              @click="selectImage(image, i)"
             ></button>
           </div>
         </div>
@@ -128,8 +128,18 @@ export default {
         })
         .catch(err => console.log(err));
     },
-    selectImage(url) {
+    selectImage(url, ind) {
       this.path = url;
+      var prevList = document.getElementsByClassName("previous-image");
+      for (var i = 0; i < prevList.length; i++) {
+        if (i == ind) {
+          prevList[i].classList.add("selected");
+          prevList[i].classList.remove("unselected");
+        } else {
+          prevList[i].classList.add("unselected");
+          prevList[i].classList.remove("selected");
+        }
+      }
       document.querySelector(
         ".preview-image"
       ).style.backgroundImage = `url('${url}')`;
@@ -334,6 +344,14 @@ export default {
   .btn-close {
     background-color: #f0f0f0;
   }
+}
+
+.selected {
+  outline: blue solid 3px;
+}
+
+.unselected {
+  outline: 0px;
 }
 
 h1 {
