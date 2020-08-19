@@ -478,6 +478,9 @@ public class AuthController {
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
-
+	@GetMapping("/loginSuccess")
+	public RedirectView loginSucess(){
+		return new RedirectView("http://i3a604.p.ssafy.io");
+	}
 }
 

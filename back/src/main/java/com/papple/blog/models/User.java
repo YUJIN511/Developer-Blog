@@ -7,20 +7,21 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
 @Table(	name = "user", 
-		uniqueConstraints = { 
-			@UniqueConstraint(columnNames = "email"), 
-			@UniqueConstraint(columnNames = "nickname")
-		})
+uniqueConstraints = { 
+	@UniqueConstraint(columnNames = "email"), 
+	@UniqueConstraint(columnNames = "nickname")
+})
+@Entity
 @Data
 public class User {
 	@Id
 	private String email;
 
-	@NotBlank
 	private String password;
 	
 	private String nickname;
@@ -59,4 +60,19 @@ public class User {
 		this.profile = "http://i3a604.p.ssafy.io/images/profile/basic.svg";
 	}
 
+	@Builder
+    public User(String nickname, String email, String profile, Set<Role> roles) {
+        this.nickname = nickname;
+        this.email = email;
+        this.profile = profile;
+        this.roles = roles;
+    }
+    public User update(String nickname, String profile) {
+        this.nickname = nickname;
+        this.profile = profile;
+        return this;
+    }
+    public String getRoleKey() {
+        return "ROLE_USER";
+    }
 }

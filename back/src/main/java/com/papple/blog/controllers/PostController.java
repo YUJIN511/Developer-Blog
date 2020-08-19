@@ -302,6 +302,7 @@ public class PostController {
 					.build();
 				
 				notification.setType(1<<5);
+				notification.setPostid(p.getId());
 				notificationService.save(notification);
 			}
 		}

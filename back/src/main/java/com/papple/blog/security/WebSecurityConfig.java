@@ -2,6 +2,7 @@ package com.papple.blog.security;
 
 import com.papple.blog.security.jwt.AuthEntryPointJwt;
 import com.papple.blog.security.jwt.AuthTokenFilter;
+import com.papple.blog.social.CustomOAuth2UserService;
 import com.papple.blog.security.services.UserDetailsServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private AuthEntryPointJwt unauthorizedHandler;
-
+	
+	@Autowired
+	private CustomOAuth2UserService customOAuth2UserService;
+	
 	@Bean
 	public AuthTokenFilter authenticationJwtTokenFilter() {
 		return new AuthTokenFilter();
@@ -72,5 +76,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 		http.formLogin()
 			.usernameParameter("email");
+
+		http
+			.logout().logoutSuccessUrl("/")
+			.and()
+				.oauth2Login().userInfoEndpoint().userService(customOAuth2UserService);
+		http
+		.oauth2Login().defaultSuccessUrl("/api/auth/loginSuccess").failureUrl("/api/auth/loginFailure");
 	}
 }
