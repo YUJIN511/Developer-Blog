@@ -53,6 +53,7 @@ public class User {
 		this.email = email;
 		this.nickname = nickname;
 		this.password = password;
+		this.todayscore = 0l;
 		this.score = score;
 		this.usercertification = usercertification;
 		this.notification = "111111";
