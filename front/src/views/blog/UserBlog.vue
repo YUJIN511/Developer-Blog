@@ -58,7 +58,7 @@ export default {
   components: {
     TagList,
     FlexArticles,
-    LevelIcon
+    LevelIcon,
   },
   data() {
     return {
@@ -71,13 +71,14 @@ export default {
       showFollowBtn: null,
       isFollowing: 0,
       follow_text: ["팔로우", "팔로우 끊기"],
-      blogInfo: []
+      blogInfo: [],
     };
   },
   methods: {
     ...mapGetters({
       getEmail: "user/getEmail",
-      getUserInfo: "user/getUserInfo"
+      getUserInfo: "user/getUserInfo",
+      getIsLogin: "user/getIsLogin",
     }),
     async fetchUserInfo() {
       try {
@@ -90,7 +91,7 @@ export default {
       }
       var profileImages = document.querySelectorAll(".blog-profile-image");
       if (this.userInfo.profile !== null) {
-        profileImages.forEach(profileImage => {
+        profileImages.forEach((profileImage) => {
           profileImage.style.backgroundImage = `url('${this.userInfo.profile}')`;
         });
       }
@@ -111,37 +112,37 @@ export default {
     fetchArticles() {
       axios
         .get(`${SERVER_URL}/api/post/writer/${this.userEmail}`)
-        .then(res => {
+        .then((res) => {
           this.articleData = res.data;
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     fetchFollowersCnt() {
       axios
         .get(`${SERVER_URL}/api/follow/cnt/${this.userEmail}`)
-        .then(res => {
+        .then((res) => {
           this.followersCnt = res.data;
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     fetchBlogInfo() {
       axios
         .get(`${SERVER_URL}/api/blog?email=${this.userEmail}`)
-        .then(res => {
+        .then((res) => {
           this.blogInfo = res.data;
           this.$refs.blogBanner.style.backgroundImage = `url("${this.blogInfo.picture}")`;
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     onSelectTag(tag) {
       axios
         .get(
           `${SERVER_URL}/api/post/mycategory/postlist?email=${this.userEmail}&hashtag=${tag}`
         )
-        .then(res => {
+        .then((res) => {
           this.articleData = res.data;
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     onSelectAll() {
       this.fetchArticles();
@@ -158,7 +159,7 @@ export default {
             this.fetchFollowersCnt();
             this.checkFollowing();
           })
-          .catch(err => console.log(err));
+          .catch((err) => console.log(err));
       } else {
         this.unfollow();
       }
@@ -170,10 +171,10 @@ export default {
             this.userEmail
           }&follower=${this.getEmail()}`
         )
-        .then(res => {
+        .then((res) => {
           console.log(res);
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
       this.fetchFollowersCnt();
       this.checkFollowing();
     },
@@ -184,11 +185,12 @@ export default {
             this.userEmail
           }&follower=${this.getEmail()}`
         )
-        .then(res => {
+        .then((res) => {
+          console.log(res);
           this.isFollowing = res.data;
         })
-        .catch(err => console.log(err));
-    }
+        .catch((err) => console.log(err));
+    },
   },
   created() {
     this.fetchUserInfo();
@@ -202,8 +204,10 @@ export default {
     } else {
       this.showFollowBtn = true;
     }
-    this.checkFollowing();
-  }
+    if (this.getIsLogin()) {
+      this.checkFollowing();
+    }
+  },
 };
 </script>
 
