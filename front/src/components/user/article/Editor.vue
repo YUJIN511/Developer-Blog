@@ -178,7 +178,7 @@
           </div>
         </editor-menu-bar>
         <div class="end">
-          <button class="btn">임시 저장</button>
+          <button class="btn" @click="tempSave">임시 저장</button>
           <button class="btn" @click="openSummaryModal">
             <span v-if="!isEdit">작성</span>
             <span v-else>수정</span> 완료
@@ -388,6 +388,30 @@ export default {
     ...mapGetters({
       getUserInfo: "user/getUserInfo"
     }),
+    async tempSave() {
+      // 내용 한 번도 안 바꾸면 this.html이 갱신이 안 됨
+      // 그래서 따로 가져옴
+      if (this.html === "") {
+        this.html = this.$refs.editorContent.editor.view.dom.innerHTML;
+      }
+
+      try {
+        await axios.post(
+          `${this.$apiServer}/temppost?${this.tagListToString()}`,
+          {
+            content: this.html,
+            picture: this.picture,
+            summary: this.summary,
+            title: this.title,
+            writer: this.getUserInfo().email
+          }
+        );
+
+        alert("임시저장이 완료되었습니다.");
+      } catch (error) {
+        console.log(error);
+      }
+    },
     makeTags(e) {
       const curKey = e.key;
       if (curKey === "Enter") {
@@ -455,16 +479,10 @@ export default {
       if (!this.isUpdated) {
         this.html = this.$refs.editorContent.editor.view.dom.innerHTML;
       }
-      let tagString = "";
-      if (this.tagList.length === 0) {
-        this.tagList.push("none");
-      }
-      this.tagList.forEach(elem => {
-        tagString += `tag=${elem}&`;
-      });
+
       const articleData = {
         title: this.title,
-        tagString,
+        tagString: this.tagListToString(),
         content: this.html,
         writer: this.getUserInfo().email,
         summary: this.summary,
@@ -474,6 +492,20 @@ export default {
         views: this.views
       };
       this.$refs.smodal.showModal(articleData);
+    },
+    tagListToString() {
+      let tagString = "";
+
+      // 태그 없는경우 예외처리
+      if (this.tagList.length === 0) {
+        this.tagList.push("none");
+      }
+
+      this.tagList.forEach(elem => {
+        tagString += `tag=${elem}&`;
+      });
+
+      return tagString;
     },
     addCommand(data) {
       if (data.command !== null) {
@@ -514,8 +546,7 @@ export default {
           this.title = articleData.title;
           this.content = articleData.content;
           this.editor.setContent(this.content);
-          this.tagList = articleData.tag;
-          this.tagSetting(this.tagList);
+          this.tagSetting(articleData.tag);
           this.picture = articleData.picture;
           this.like = articleData.good;
           this.views = articleData.views;
@@ -529,11 +560,48 @@ export default {
   beforeDestroy() {
     this.editor.destroy();
   },
-  created() {
+  async created() {
+    // 기존 글 수정
     if (Object.keys(this.$route.params).length === 1) {
       this.isEdit = true;
       this.getEditData();
-    } else {
+    }
+    // 새 글
+    else {
+      const res = await axios.get(
+        `${this.$apiServer}/temppost/is?email=${this.getUserInfo().email}`
+      );
+
+      // 임시저장 있을 때
+      if (res.data) {
+        if (
+          confirm(
+            "임시 저장된 글을 불러오시겠습니까? (취소할 경우 임시 저장된 글은 삭제됩니다.)"
+          )
+        ) {
+          try {
+            const { data } = await axios.get(
+              `${this.$apiServer}/temppost?email=${this.getUserInfo().email}`
+            );
+            this.title = data.title;
+            this.content = data.content;
+            this.editor.setContent(this.content);
+            this.tagSetting(data.tag);
+            this.picture = data.picture;
+            this.summary = data.summary;
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          try {
+            axios.delete(
+              `${this.$apiServer}/temppost?email=${this.getUserInfo().email}`
+            );
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      }
       this.isEdit = false;
     }
   }

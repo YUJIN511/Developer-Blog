@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import axios from "axios";
 
 const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
@@ -59,7 +59,7 @@ export default {
       url: this.getProfile(),
       images: [],
       file: "",
-      path: "",
+      path: ""
     };
   },
   methods: {
@@ -68,8 +68,18 @@ export default {
       getEmail: "user/getEmail",
       getProfile: "user/getProfile",
     }),
+    ...mapMutations({
+      setProfile: "user/setProfile"
+    }),
     closeModal() {
       document.querySelector(".container-profilepic").classList.add("hide");
+      this.$el.querySelector(
+        ".preview-image"
+      ).style.backgroundImage = `url('${this.getProfile()}')`;
+      var prevList = document.getElementsByClassName("img-previous-image");
+      for (var i = 0; i < prevList.length; i++) {
+        prevList[i].classList.remove("selected");
+      }
     },
     previewFile(event) {
       this.path = "";
@@ -92,11 +102,13 @@ export default {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-          },
+          }
         }
       );
       if (result) {
+        console.log(result.data);
         this.$router.go();
+        // this.setProfile();
       }
     },
     clickInput() {
@@ -105,10 +117,10 @@ export default {
     fetchPictures() {
       axios
         .get(`${SERVER_URL}/api/auth/pflist?email=${this.getEmail()}`)
-        .then((res) => {
+        .then(res => {
           this.images = res.data;
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     },
     setDefaultImage() {
       let defaultImage = "http://i3a604.p.ssafy.io/images/profile/basic.svg";
@@ -126,7 +138,7 @@ export default {
         .then(() => {
           this.fetchPictures();
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     },
     selectImage(url, ind) {
       this.path = url;
@@ -167,14 +179,14 @@ export default {
       ].style.backgroundColor = "rgba(255, 255, 255, 0)";
       document.querySelectorAll(".banner-image-delete")[i].style.color =
         "rgba(0, 0, 0, 0)";
-    },
+    }
   },
   mounted() {
     this.fetchPictures();
     this.$el.querySelector(
       ".preview-image"
     ).style.backgroundImage = `url('${this.getProfile()}')`;
-  },
+  }
 };
 </script>
 
