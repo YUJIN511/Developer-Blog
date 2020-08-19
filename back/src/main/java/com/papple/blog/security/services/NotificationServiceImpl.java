@@ -129,7 +129,8 @@ public class NotificationServiceImpl implements NotificationService{
             // if (createdAt.isBefore(beforeTime) || isAlert) {
             //     continue;
             // }
-
+        	if(notification == null) continue;
+        	System.out.println(notification);
             User user = userRepository.getUserByEmail(notification.getActionuser());
             notification.setProfile(user.getProfile());
 
