@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import axios from "axios";
 
 const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
@@ -67,6 +67,9 @@ export default {
     ...mapGetters({
       getEmail: "user/getEmail",
       getProfile: "user/getProfile",
+    }),
+    ...mapMutations({
+      setProfile: "user/setProfile"
     }),
     closeModal() {
       document.querySelector(".container-profilepic").classList.add("hide");
@@ -103,7 +106,9 @@ export default {
         }
       );
       if (result) {
+        console.log(result.data);
         this.$router.go();
+        // this.setProfile();
       }
     },
     clickInput() {
