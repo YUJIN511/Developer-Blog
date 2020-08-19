@@ -59,37 +59,37 @@ public class TemporaryPostController {
 		return new ResponseEntity<TemporaryPost>(post, HttpStatus.OK);
 	}
 	
-	@GetMapping("/is")
-	@ApiOperation("임시 게시물이 있는지 여부 반환(있음 : 1, 없음 : 0)")
-	public ResponseEntity<Integer> isTemPost(String email) {
-		return new ResponseEntity<Integer>(temRepository.isTemPost(email), HttpStatus.OK);
-	}
-	
-	@DeleteMapping
-	@ApiOperation("임시게시물 삭제")
-	public ResponseEntity<String> delTemPost(String email) {
-		temRepository.deleteById(email);
-		return new ResponseEntity<String>("success", HttpStatus.OK);
-	}
-	
-	@GetMapping
-	@ApiOperation("임시 게시물 가져오기")
-	public ResponseEntity<TemPostResponse> getTemPost(String email) {
-		
-		TemporaryPost tempost = temRepository.findById(email).get();	// 해당 이메일의 임시포스트
-		//해당 데이터가 없을 때, 예외처리
-		System.out.println(tempost);
-		
-		TemPostResponse response = new TemPostResponse(tempost.getWriter(), tempost.getTitle(), tempost.getContent(), tempost.getPicture(), tempost.getSummary());
-		
-		StringTokenizer st = new StringTokenizer(tempost.getTag(), "++");	// 태그 자르기
-		List<String> tag = new ArrayList<>();
-		while(st.hasMoreTokens()) tag.add(st.nextToken());
-		System.out.println(tag);
-		
-		response.setTag(tag);
-		
-		return new ResponseEntity<TemPostResponse>(response, HttpStatus.OK);
-	}
+//	@GetMapping("/is")
+//	@ApiOperation("임시 게시물이 있는지 여부 반환(있음 : 1, 없음 : 0)")
+//	public ResponseEntity<Integer> isTemPost(String email) {
+//		return new ResponseEntity<Integer>(temRepository.isTemPost(email), HttpStatus.OK);
+//	}
+//	
+//	@DeleteMapping
+//	@ApiOperation("임시게시물 삭제")
+//	public ResponseEntity<String> delTemPost(String email) {
+//		temRepository.deleteById(email);
+//		return new ResponseEntity<String>("success", HttpStatus.OK);
+//	}
+//	
+//	@GetMapping
+//	@ApiOperation("임시 게시물 가져오기")
+//	public ResponseEntity<TemPostResponse> getTemPost(String email) {
+//		
+//		TemporaryPost tempost = temRepository.findById(email).get();	// 해당 이메일의 임시포스트
+//		//해당 데이터가 없을 때, 예외처리
+//		System.out.println(tempost);
+//		
+//		TemPostResponse response = new TemPostResponse(tempost.getWriter(), tempost.getTitle(), tempost.getContent(), tempost.getPicture(), tempost.getSummary());
+//		
+//		StringTokenizer st = new StringTokenizer(tempost.getTag(), "++");	// 태그 자르기
+//		List<String> tag = new ArrayList<>();
+//		while(st.hasMoreTokens()) tag.add(st.nextToken());
+//		System.out.println(tag);
+//		
+//		response.setTag(tag);
+//		
+//		return new ResponseEntity<TemPostResponse>(response, HttpStatus.OK);
+//	}
 
 }
