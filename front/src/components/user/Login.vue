@@ -39,7 +39,7 @@
             <span>소셜 계정으로 로그인</span>
           </div>
           <div class="social-body">
-            <button class="btn btn-github" @click="socialLogin('github')">
+            <button class="btn btn-github">
               <svg
                 class="logo-github"
                 xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +52,11 @@
                 />
               </svg>
             </button>
-            <button class=" btn btn-google" @click="socialLogin('google')">
+            <a
+              href="http://i3a604.p.ssafy.io:8081/oauth2/authorization/google"
+              class=" btn btn-google"
+              @click="socialLogin('google')"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -112,8 +116,8 @@
                   />
                 </g>
               </svg>
-            </button>
-            <button class="btn btn-facebook" @click="socialLogin('github')">
+            </a>
+            <button class="btn btn-facebook">
               <svg
                 class="logo-facebook"
                 xmlns="http://www.w3.org/2000/svg"
@@ -147,8 +151,6 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
-
-const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
 
 export default {
   name: "Login",
@@ -211,15 +213,12 @@ export default {
         console.log(error);
       }
     },
-    socialLogin(platform) {
-      // document.querySelector(".container-login").classList.add("hide");
-      axios
-        .get(`${SERVER_URL}/oauth2/authorize/${platform}`)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => console.log(err));
-    },
+    // socialLogin(platform){
+    //   document.querySelector(".container-login").classList.add("hide");
+    //     axios.get(
+    //         `${SERVER_URL}/oauth2/authorize/${platform}`
+    //     )
+    // }
   },
 };
 </script>
