@@ -448,6 +448,10 @@ export default {
       this.$refs.ytmodal.showModal(command);
     },
     openSummaryModal() {
+      if (this.title === "") {
+        alert("제목을 입력해 주세요.");
+        return;
+      }
       if (!this.isUpdated) {
         this.html = this.$refs.editorContent.editor.view.dom.innerHTML;
       }
