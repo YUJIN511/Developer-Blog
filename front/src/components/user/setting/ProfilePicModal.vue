@@ -70,7 +70,6 @@ export default {
     }),
     closeModal() {
       document.querySelector(".container-profilepic").classList.add("hide");
-      this.fetchPictures();
       this.$el.querySelector(
         ".preview-image"
       ).style.backgroundImage = `url('${this.getProfile()}')`;
@@ -105,9 +104,6 @@ export default {
       );
       if (result) {
         this.$router.go();
-        this.$el.querySelector(
-          ".preview-image"
-        ).style.backgroundImage = `url('${this.getProfile()}')`;
       }
     },
     clickInput() {
