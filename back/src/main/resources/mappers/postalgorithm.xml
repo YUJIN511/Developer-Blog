@@ -98,4 +98,8 @@
 	<select id="getCurDate" resultType="LocalDateTime">
 		select now() from dual
 	</select>
+	
+	<update id="setCurDate">
+		update post set createdate = now() where writer = #{email}
+	</update>
 </mapper>
