@@ -92,12 +92,7 @@
 	<update id="updateDate">
 		update user set recentscoredate = now() where email = #{email}
 	</update>
-	
-	
-	<!-- 현재 날짜, 시간을 return -->
-	<select id="getCurDate" resultType="LocalDateTime">
-		select now() from dual
-	</select>
+
 	
 	<update id="setCurDate">
 		update post set createdate = now() where writer = #{email}

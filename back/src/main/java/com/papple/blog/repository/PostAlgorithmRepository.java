@@ -28,6 +28,5 @@ public interface PostAlgorithmRepository {
 	String getDate(String email);
 	String getDateFormatted(String email);
 	
-	LocalDateTime getCurDate();
 	int setCurDate(String email);
 }
