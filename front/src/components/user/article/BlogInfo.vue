@@ -34,15 +34,15 @@ import LevelIcon from "@/components/user/LevelIcon.vue";
 export default {
   props: {
     articleData: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   components: {
-    LevelIcon
+    LevelIcon,
   },
   data: function() {
     return {
-      isFollowed: false
+      isFollowed: false,
     };
   },
   created() {
@@ -50,9 +50,14 @@ export default {
   },
   methods: {
     ...mapGetters({
-      getUserInfo: "user/getUserInfo"
+      getUserInfo: "user/getUserInfo",
+      getIsLogin: "user/getIsLogin",
     }),
     addFollow() {
+      if (this.getIsLogin() === false) {
+        alert(`로그인하여 ${this.articleData.nickname}님의 글을 받아보세요!`);
+        return;
+      }
       axios
         .post(
           `${this.$apiServer}/follow/add?follower=${
@@ -62,7 +67,7 @@ export default {
         .then(() => {
           this.isFollowed = true;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -76,7 +81,7 @@ export default {
         .then(() => {
           this.isFollowed = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -98,8 +103,8 @@ export default {
           }
         }
       }, 300);
-    }
-  }
+    },
+  },
 };
 </script>
 
