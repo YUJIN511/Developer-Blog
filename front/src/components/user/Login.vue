@@ -116,19 +116,26 @@
                 </g>
               </svg>
             </a>
-            <button class="btn btn-facebook">
-              <svg
-                class="logo-facebook"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"
-                />
+            <a
+              href="http://i3a604.p.ssafy.io:8081/oauth2/authorization/naver"
+              class=" btn btn-naver"
+            >
+              <svg 
+              enable-background="new 0 0 512 512" 
+              height="50px" 
+              id="Layer_1" 
+              version="1.1" 
+              viewBox="0 0 512 512" 
+              width="50px" 
+              xml:space="preserve" 
+              xmlns="http://www.w3.org/2000/svg" 
+              xmlns:xlink="http://www.w3.org/1999/xlink"><g>
+                <circle cx="255.999" cy="256" r="246.455"  style="fill:#00C500"/></g>
+                <g><path d="M124.152,139.41h91.746c0,0,83.332,125.871,85.793,129.246c2.52,3.41,2.812,0,2.812,0   
+                c-3.844-19.477-8.016-28.219-8.016-59.379V139.41h91.359v233.18h-91.359c0,0-81.621-119.156-84.082-122.449   
+                c-2.473-3.316-2.801,0-2.801,0c3.141,16.078,5.918,18.762,5.918,46.688v75.762h-91.371V139.41L124.152,139.41z" fill="#FFFFFF"/></g>
               </svg>
-            </button>
+            </a>
           </div>
         </div>
         <div class="login-footer">
