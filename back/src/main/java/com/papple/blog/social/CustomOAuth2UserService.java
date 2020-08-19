@@ -51,9 +51,18 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         
     }
     private User saveOrUpdate(OAuthAttributes attributes) {
-        User user = userRepository.findById(attributes.getEmail())
-                .map(entity -> entity.update(attributes.getName(), attributes.getPicture()))
-                .orElse(attributes.toEntity());
+        
+        User user = userRepository.findById(attributes.getEmail()).get();
+
+        user.setUsercertification(1);
+        if(user.getProfile().equals("http://i3a604.p.ssafy.io/images/profile/basic.svg")) user.setProfile(attributes.getPicture());
+        
+        if(user.getNickname() == null) user.setNickname(attributes.getName());
+        
+        if(user.getNotification() == null) user.setNotification("111111");
+
+        if(user.getScore()==null) user.setScore(0l);
+        
         return userRepository.save(user);
     }
 }
