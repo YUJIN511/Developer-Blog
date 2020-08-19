@@ -59,7 +59,7 @@ public class TemporaryPostController {
 		return new ResponseEntity<TemporaryPost>(post, HttpStatus.OK);
 	}
 	
-	@GetMapping
+	@GetMapping("/is")
 	@ApiOperation("임시 게시물이 있는지 여부 반환(있음 : 1, 없음 : 0)")
 	public ResponseEntity<Integer> isTemPost(String email) {
 		return new ResponseEntity<Integer>(temRepository.isTemPost(email), HttpStatus.OK);
