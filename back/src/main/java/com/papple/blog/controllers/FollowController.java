@@ -112,8 +112,11 @@ public class FollowController {
 		followService.deleteFollow(follower, followed);
 
 		// 팔로우 알림 삭제
-		Notification notification = NotificationRepository.findByActionuserAndTargetuserAndType(follower, followed, 10000);
-		NotificationRepository.deleteById(notification.getId());
+		Notification notification = NotificationRepository.findByActionuserAndTargetuserAndType(follower, followed, 16);
+
+		if(notification != null){
+			NotificationRepository.deleteById(notification.getId());
+		}
 
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
