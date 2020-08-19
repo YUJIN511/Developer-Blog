@@ -1,5 +1,6 @@
 package com.papple.blog.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -26,4 +27,6 @@ public interface PostAlgorithmRepository {
 	Long getScore(String email);
 	String getDate(String email);
 	String getDateFormatted(String email);
+	
+	LocalDateTime getCurDate();
 }
