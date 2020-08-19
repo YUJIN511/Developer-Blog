@@ -29,4 +29,5 @@ public interface PostAlgorithmRepository {
 	String getDateFormatted(String email);
 	
 	int setCurDatePost(Long postid);
+	int setCurDateComment(Long id);
 }
