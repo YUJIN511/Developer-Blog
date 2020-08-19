@@ -92,5 +92,13 @@
 	<update id="updateDate">
 		update user set recentscoredate = now() where email = #{email}
 	</update>
+
 	
+	<update id="setCurDatePost">
+		update post set createdate = now() where id = #{postid}
+	</update>
+	
+	<update id="setCurDateComment">
+		update comment set createdate = now() where id = #{id}
+	</update>
 </mapper>
