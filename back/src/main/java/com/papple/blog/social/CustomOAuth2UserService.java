@@ -51,7 +51,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         
     }
     private User saveOrUpdate(OAuthAttributes attributes) {
-
         User checkUser = userRepository.getUserByEmail(attributes.getEmail());
         if(checkUser== null){
                 User user = new User();
