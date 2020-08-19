@@ -7,7 +7,6 @@ import java.util.Set;
 import com.papple.blog.models.ERole;
 import com.papple.blog.models.Role;
 import com.papple.blog.models.User;
-import com.papple.blog.repository.RoleRepository;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -15,15 +14,14 @@ import lombok.Getter;
 @Getter
 public class OAuthAttributes {
     private Map<String, Object> attributes;
-    private String nameAttributeKey, name, email, picture;
+    private String nameAttributeKey, email, picture;
     
     @Builder
     public OAuthAttributes(Map<String, Object> attributes,
                            String nameAttributeKey,
-                           String name, String email, String picture) {
+                           String email, String picture) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
-        this.name = name;
         this.email = email;
         this.picture = picture;
     }
@@ -39,7 +37,6 @@ public class OAuthAttributes {
                                            Map<String, Object> attributes) {
         return OAuthAttributes
                         .builder()
-                        .name((String) attributes.get("name"))
                         .email((String) attributes.get("email"))
                         .picture((String) attributes.get("picture"))
                         .attributes(attributes)
@@ -52,7 +49,6 @@ public class OAuthAttributes {
 
     return OAuthAttributes
                 .builder()
-                .name((String) response.get("name"))
                 .email((String) response.get("email"))
                 .picture((String) response.get("profile_image"))
                 .attributes(response)
@@ -60,8 +56,6 @@ public class OAuthAttributes {
                 .build();
     }
 
-
-    private RoleRepository roleRepository;
     public User toEntity() {
         
         Set<Role> roles = new HashSet<>();
@@ -69,7 +63,6 @@ public class OAuthAttributes {
         roles.add(userRole);
         
         return User.builder()
-                .nickname(name)
                 .email(email)
                 .profile(picture)
                 .roles(roles)

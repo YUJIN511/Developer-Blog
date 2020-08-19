@@ -6,10 +6,9 @@ import lombok.Getter;
 
 @Getter
 public class SessionUser {
-    private String name, email, picture;
+    private String email, picture;
     
     public SessionUser(User user) {
-        this.name = user.getNickname();
         this.email = user.getEmail();
         this.picture = user.getProfile();
     }
