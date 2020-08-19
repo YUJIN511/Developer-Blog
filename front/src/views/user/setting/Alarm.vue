@@ -213,10 +213,11 @@ export default {
 <style lang="scss" scoped>
 .container-alarm {
   display: flex;
+  background: #fff;
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-  padding: 30px 60px;
+  padding: 24px;
 }
 .item {
   display: flex;
@@ -228,16 +229,17 @@ export default {
   border-bottom: 1px solid rgb(201, 201, 201);
 }
 .title {
-  font-size: 1.5em;
+  font-size: 1.4rem;
   font-weight: 900;
   margin-bottom: 20px;
 }
 .example {
   color: rgb(163, 163, 163);
-  font-size: 0.8em;
+  font-size: 0.8rem;
 }
 input[type="radio"] {
   margin-right: 10px;
+  margin-bottom: 8px;
 }
 form {
   display: flex;
