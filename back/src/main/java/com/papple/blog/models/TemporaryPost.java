@@ -8,11 +8,13 @@ import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Table( name = "tempost")
 @AllArgsConstructor
+@NoArgsConstructor
 public class TemporaryPost {
 
 	@Id
