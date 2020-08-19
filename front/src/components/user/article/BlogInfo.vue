@@ -161,11 +161,14 @@ button:hover {
     }
   }
   .btn-follow {
-    flex-shrink: 0;
-    margin-left: auto;
-    font-size: 1.2em;
-    color: dodgerblue;
-    font-weight: 900;
-  }
+        color: white;
+        background: cornflowerblue;
+        padding: 8px;
+        width: 120px;
+        border-radius: 5px;
+        margin-right: 8px;
+        font-weight: 400;
+        font-size: 1rem;
+      }
 }
 </style>
