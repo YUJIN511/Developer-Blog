@@ -55,7 +55,6 @@
             <a
               href="http://i3a604.p.ssafy.io:8081/oauth2/authorization/google"
               class=" btn btn-google"
-              @click="socialLogin('google')"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
