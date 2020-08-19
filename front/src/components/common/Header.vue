@@ -530,7 +530,6 @@ button:hover {
 .profile-image {
   // position: relative;
   display: flex;
-  background-image: url("https://cdns.iconmonstr.com/wp-content/assets/preview/2012/240/iconmonstr-user-20.png");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
