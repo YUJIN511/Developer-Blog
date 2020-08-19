@@ -3,16 +3,9 @@
     <p class="list-title">Tags</p>
     <div class="list-items">
       <p class="list-item">
-        <button class="btn-tag-all" @click="selectAll()">
-          전체보기 ({{ totalcnt }})
-        </button>
+        <button class="btn-tag-all" @click="selectAll()">전체보기 ({{ totalcnt }})</button>
       </p>
-      <p
-        class="list-item"
-        v-for="tag in tagData"
-        :key="tag.id"
-        @click="selectTag(tag[0])"
-      >
+      <p class="list-item" v-for="tag in tagData" :key="tag.id" @click="selectTag(tag[0])">
         <button>{{ tag[0] }} ({{ tag[1] }})</button>
       </p>
     </div>
@@ -97,6 +90,9 @@ export default {
       &:hover {
         opacity: 0.7;
       }
+    }
+    .btn-tag-all {
+      font-weight: 550;
     }
   }
   p {
