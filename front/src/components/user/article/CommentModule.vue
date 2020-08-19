@@ -28,32 +28,33 @@ export default {
     return {
       commentCnt: 0,
       commentContent: "",
-      commentList: ""
+      commentList: "",
     };
   },
   components: {
-    CommentList
+    CommentList,
   },
   methods: {
     ...mapGetters({
-      getUserInfo: "user/getUserInfo"
+      getUserInfo: "user/getUserInfo",
     }),
     submitComment() {
       axios
         .post(`${this.$apiServer}/comment`, {
           content: this.commentContent,
           email: this.getUserInfo().email,
-          postid: this.postId
+          postid: this.postId,
         })
         .then(() => {
           // alert("댓글이 등록됐습니다.");
           this.$emit("reRender");
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
-          alert("로그인이 필요한 서비스입니다.");
+          // alert("로그인이 필요한 서비스입니다.");
+          document.querySelector(".container-login").classList.remove("hide");
         });
-    }
+    },
   },
   async created() {
     try {
@@ -67,7 +68,7 @@ export default {
     } catch (error) {
       console.log(error);
     }
-  }
+  },
 };
 </script>
 
