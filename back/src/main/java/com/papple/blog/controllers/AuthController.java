@@ -487,7 +487,7 @@ public class AuthController {
 		if(checkUser.getUsercertification()==null){
 			checkUser.setUsercertification(1);
 			userRepository.save(checkUser);
-			BlogConfig config = new BlogConfig(user.getEmail(), user.getEmail() + "의 블로그", user.getEmail() + "의 블로그 입니다.", 
+			BlogConfig config = new BlogConfig(user.getEmail(), "개발자의 블로그", "개발자의 블로그 입니다.", 
 			"http://i3a604.p.ssafy.io/images/profile/blog_basic.jpg");
 			configRepository.save(config);
 
