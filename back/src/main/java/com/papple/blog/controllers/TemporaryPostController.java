@@ -34,30 +34,30 @@ import com.papple.blog.repository.TempPostRepository;
 @RestController
 @RequestMapping("/api/temppost")
 public class TemporaryPostController {
-//	@Autowired
-//	TempPostRepository temRepository;
-//	
-//	@PostMapping
-//	@ApiOperation("임시 게시물로 저장")
-//	public ResponseEntity<TemporaryPost> saveTemPost(@RequestBody TemporaryPost tempost, HashtagList tag) {
-//		StringBuilder hashtag = new StringBuilder();
-//		
-//		if(tag.getTag().size() == 1 && tag.getTag().get(0).equals("none")) {
-//			System.out.println("태그 없음");
-//		}
-//		else {
-//			for(int i=0;i<tag.getTag().size();i++) {
-//				if(i == tag.getTag().size() - 1) hashtag.append(tag.getTag().get(i));
-//				else hashtag.append(tag.getTag().get(i) + "++");
-//			}
-//		}
-//		System.out.println(hashtag.toString());
-//		
-//		tempost.setTag(hashtag.toString());
-//		
-//		TemporaryPost post = temRepository.save(tempost);
-//		return new ResponseEntity<TemporaryPost>(post, HttpStatus.OK);
-//	}
+	@Autowired
+	TempPostRepository temRepository;
+	
+	@PostMapping
+	@ApiOperation("임시 게시물로 저장")
+	public ResponseEntity<TemporaryPost> saveTemPost(@RequestBody TemporaryPost tempost, HashtagList tag) {
+		StringBuilder hashtag = new StringBuilder();
+		
+		if(tag.getTag().size() == 1 && tag.getTag().get(0).equals("none")) {
+			System.out.println("태그 없음");
+		}
+		else {
+			for(int i=0;i<tag.getTag().size();i++) {
+				if(i == tag.getTag().size() - 1) hashtag.append(tag.getTag().get(i));
+				else hashtag.append(tag.getTag().get(i) + "++");
+			}
+		}
+		System.out.println(hashtag.toString());
+		
+		tempost.setTag(hashtag.toString());
+		
+		TemporaryPost post = temRepository.save(tempost);
+		return new ResponseEntity<TemporaryPost>(post, HttpStatus.OK);
+	}
 	
 //	@GetMapping("/is")
 //	@ApiOperation("임시 게시물이 있는지 여부 반환(있음 : 1, 없음 : 0)")
