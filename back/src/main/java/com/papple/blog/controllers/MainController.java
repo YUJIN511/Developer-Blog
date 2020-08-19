@@ -48,23 +48,6 @@ public class MainController {
 	private PostAlgorithmRepository algoRepository;
 	@Autowired
 	private TagScoreRepository tagScoreRepository;
-
-//    @GetMapping("/historyList")
-//	@ApiOperation(value = "History 글 리스트")
-//	public ResponseEntity<List<PostList>> historyList(@RequestParam(required = true) final String email) throws Exception {
-//		List<Long> idList = postListRepository.findHistoryByUser(email);
-//		List<PostList> list = new ArrayList<>();
-//		for(Long postid : idList){
-//			PostList post = postListRepository.searchPostById(postid);
-//			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
-//			post.setNickname(user.getNickname());
-//			post.setProfile(user.getProfile());
-//			post.setScore(user.getScore());
-//			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
-//			list.add(post);
-//		}
-//		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
-//	}
     
     @GetMapping("/historyList")
 	@ApiOperation(value = "History 글 리스트")
@@ -84,22 +67,6 @@ public class MainController {
 		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}
 
-//	@GetMapping("/goodList")
-//	@ApiOperation(value = "좋아요 글 리스트")
-//	public ResponseEntity<List<PostList>> goodList(@RequestParam(required = true) final String email) throws Exception {
-//		List<Long> idList = postListRepository.findGoodListByEmail(email);
-//		List<PostList> list = new ArrayList<>();
-//		for(Long postid : idList){
-//			PostList post = postListRepository.searchPostById(postid);
-//			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
-//			post.setNickname(user.getNickname());
-//			post.setProfile(user.getProfile());
-//			post.setScore(user.getScore());
-//			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
-//			list.add(post);
-//		}
-//		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
-//	}
     @GetMapping("/goodList")
 	@ApiOperation(value = "좋아요 글 리스트")
 	public ResponseEntity<List<PostList>> goodList(@RequestParam(required = true) final String email, int page) throws Exception {
@@ -117,23 +84,6 @@ public class MainController {
 		}
 		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}
-	
-//	@GetMapping("/storageList")
-//	@ApiOperation(value = "보관함 글 리스트")
-//	public ResponseEntity<List<PostList>> storageList(@RequestParam(required = true) final String email) throws Exception {
-//		List<Long> idList = postListRepository.findStorageListByEmail(email);
-//		List<PostList> list = new ArrayList<>();
-//		for(Long postid : idList){
-//			PostList post = postListRepository.searchPostById(postid);
-//			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
-//			post.setNickname(user.getNickname());
-//			post.setProfile(user.getProfile());
-//			post.setScore(user.getScore());
-//			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
-//			list.add(post);
-//		}
-//		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
-//	}
     
     @GetMapping("/storageList")
 	@ApiOperation(value = "보관함 글 리스트")
@@ -155,19 +105,6 @@ public class MainController {
 		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
 	}
 
-//	@GetMapping("/followLatest")
-//	@ApiOperation(value = "팔로우한 사용자들의 최신 글 리스트")
-//	public ResponseEntity<List<PostList>> followLatest(@RequestParam(required = true) final String email) throws Exception {
-//		List<PostList> list = postListRepository.findLatestMyFollowPost(email);
-//		for(PostList post : list) {
-//			User user = userRepository.getUserByEmail(post.getWriter());	//작성자의 user 정보
-//			post.setNickname(user.getNickname());
-//			post.setProfile(user.getProfile());
-//			post.setScore(user.getScore());
-//			if(goodRepository.isGood(email, post.getId()) > 0) post.setIsgood(true);
-//		}		
-//		return new ResponseEntity<List<PostList>>(list, HttpStatus.OK);
-//	}
     @GetMapping("/followLatest")
 	@ApiOperation(value = "팔로우한 사용자들의 최신 글 리스트")
 	public ResponseEntity<List<PostList>> followLatest(@RequestParam(required = true) final String email, int page) throws Exception {
@@ -312,10 +249,4 @@ public class MainController {
 		return new ResponseEntity<List<PostList>>(resList, HttpStatus.OK); 
 	}
 
-
-//	@GetMapping("/followPopular")
-//	@ApiOperation(value = "팔로우한 사용자들의 인기 글 리스트")
-//	public ResponseEntity<List<Post>> followPopular(@RequestParam(required = true) final String email) throws Exception {
-//		return new ResponseEntity<List<Post>>(postService.findFollowPopularByUser(email), HttpStatus.OK);
-//	}
 }
