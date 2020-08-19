@@ -15,6 +15,7 @@ import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,8 +69,9 @@ import com.papple.blog.security.jwt.JwtUtils;
 import com.papple.blog.security.services.FollowService;
 import com.papple.blog.security.services.PostService;
 import com.papple.blog.security.services.UserDetailsImpl;
+import com.papple.blog.social.SessionUser;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = {"http://i3a604.p.ssafy.io", "http://localhost:8080" },allowedHeaders = "*",allowCredentials = "true", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -463,8 +465,6 @@ public class AuthController {
 //		profileRepository.unProfile(email);
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
-	
-	
 
 	@GetMapping("/notificationSetting")
 	@ApiOperation(value = "알림설정")
@@ -479,8 +479,11 @@ public class AuthController {
 	}
 	
 	@GetMapping("/loginSuccess")
-	public RedirectView loginSucess(){
-		return new RedirectView("http://i3a604.p.ssafy.io");
+	public RedirectView loginSucess(HttpSession httpSession){
+
+		SessionUser user = (SessionUser) httpSession.getAttribute("user");
+
+		return new RedirectView("http://localhost:8080/main/home/"+user.getEmail());
 	}
 }
 
