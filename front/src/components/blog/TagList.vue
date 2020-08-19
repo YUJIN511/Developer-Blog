@@ -62,9 +62,8 @@ export default {
 <style scoped lang="scss">
 .container-tag-navigation {
   width: 180px;
-  margin-top: 320px;
-  margin-left: 20px;
-  margin-right: 0;
+  margin-top: 270px;
+  margin-right: 24px;
   color: #727272;
   float: left;
   .list-title {
@@ -84,12 +83,16 @@ export default {
     align-items: flex-end;
     margin: 12px 0px;
     button {
-      color: dodgerblue;
+      color: #727272;
       font-weight: 500;
       font-size: 1rem;
       &:hover {
         opacity: 0.7;
       }
+      &:focus {
+        color: dodgerblue;
+      }
+      
     }
     .btn-tag-all {
       font-weight: 550;
