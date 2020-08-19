@@ -54,21 +54,21 @@ import LevelIcon from "@/components/user/LevelIcon.vue";
 
 export default {
   components: {
-    LevelIcon
+    LevelIcon,
   },
   props: {
     data: {
-      type: Object
+      type: Object,
     },
     isStatic: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       isLike: false,
-      like: 0
+      like: 0,
     };
   },
   mounted() {
@@ -92,12 +92,13 @@ export default {
   },
   methods: {
     ...mapGetters({
-      getUserInfo: "user/getUserInfo"
+      getUserInfo: "user/getUserInfo",
+      getIsLogin: "user/getIsLogin",
     }),
     readArticle() {
       this.$router.push({
         name: "ArticleView",
-        query: { id: this.data.id }
+        query: { id: this.data.id },
       });
     },
     moveToBlog() {
@@ -105,6 +106,10 @@ export default {
       window.scroll(0, 0);
     },
     toggleLikeBtn() {
+      if (this.getIsLogin() === false) {
+        alert("게시물이 마음에 드시나요? 로그인하여 의견을 알려주세요.");
+        return;
+      }
       this.isLike = !this.isLike;
       if (this.isLike) {
         axios.put(
@@ -121,14 +126,14 @@ export default {
               this.getUserInfo().email
             }&id=${this.data.id}`
           )
-          .then(res => {
+          .then((res) => {
             console.log(res);
           })
-          .catch(err => console.log(err));
+          .catch((err) => console.log(err));
         this.like--;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
