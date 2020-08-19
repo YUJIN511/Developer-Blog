@@ -6,9 +6,17 @@
     </header>
     <main>
       <span class="rem2">블로그 이름</span>
-      <textarea class="blog-title" v-model="title" placeholder="블로그 이름을 정해보세요."></textarea>
+      <textarea
+        class="blog-title"
+        v-model="title"
+        placeholder="블로그 이름을 정해보세요."
+      ></textarea>
       <span class="rem2">블로그 소개</span>
-      <textarea class="blog-description" placeholder="블로그 소개를 해보세요." v-model="description"></textarea>
+      <textarea
+        class="blog-description"
+        placeholder="블로그 소개를 해보세요."
+        v-model="description"
+      ></textarea>
       <div class="buttons">
         <button class="btn-submit" @click="updateBlogInfo">수정하기</button>
       </div>

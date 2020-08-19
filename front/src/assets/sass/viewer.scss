@@ -71,7 +71,7 @@
     color: dodgerblue;
     margin-right: 20px;
     margin-top: 8px;
-    font-size:1.2rem;
+    font-size: 1.2rem;
   }
 }
 
@@ -99,25 +99,30 @@
 .article-nav {
   display: flex;
   justify-content: flex-end;
-  width: 1000px;
+  width: 1050px;
   height: 10px;
   .article-nav-content {
     display: flex;
     flex-direction: column;
-    width: 100px;
-    height: 600px;
-    font-size: 0.9em;
+    width: 200px;
+    font-size: 0.8em;
+    border-left: 2px solid rgb(221, 221, 221);
+    padding-left: 20px;
     span {
       font-weight: 900;
       margin-bottom: 20px;
     }
     a {
-      color: #999999;
+      color: dodgerblue;
       font-weight: 100;
+      text-decoration: none;
       &:hover {
         text-decoration: none;
-        color: black;
+        opacity: 0.7;
       }
+    }
+    .H1 {
+      padding-top: 10px;
     }
     .H2 {
       margin-left: 15px;

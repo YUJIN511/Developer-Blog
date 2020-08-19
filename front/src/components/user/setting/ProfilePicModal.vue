@@ -14,7 +14,9 @@
             @change="previewFile"
           />
           <button @click="clickInput" class="btn btn-upload">파일 선택</button>
-          <button @click="setDefaultImage" class="btn btn-setdefault">기본 이미지로 변경</button>
+          <button @click="setDefaultImage" class="btn btn-setdefault">
+            기본 이미지로 변경
+          </button>
         </div>
       </div>
       <div class="modal-body">
@@ -29,7 +31,10 @@
           >
             <div class="banner-image-delete" @click="deleteImage(image)">✖</div>
             <img :src="image" />
-            <button class="banner-image-select" @click="selectImage(image)"></button>
+            <button
+              class="banner-image-select"
+              @click="selectImage(image)"
+            ></button>
           </div>
         </div>
       </div>
@@ -74,22 +79,25 @@ export default {
         ".preview-image"
       ).style.backgroundImage = `url('${this.url}')`;
     },
-    saveChanges() {
+    async saveChanges() {
       let formData = new FormData();
       formData.append("filename", this.file);
       formData.append("email", this.getEmail());
       if (this.path) {
         formData.append("path", this.path);
       }
-      axios
-        .post(`${SERVER_URL}/api/auth/profile`, formData, {
+      let result = await axios.post(
+        `${SERVER_URL}/api/auth/profile`,
+        formData,
+        {
           headers: {
             "Content-Type": "multipart/form-data"
           }
-        })
-        .then(() => {})
-        .catch(err => console.log(err));
-      this.$router.go();
+        }
+      );
+      if (result) {
+        this.$router.go();
+      }
     },
     clickInput() {
       document.querySelector("#file").click();
@@ -103,7 +111,8 @@ export default {
         .catch(err => console.log(err));
     },
     setDefaultImage() {
-      let defaultImage = "http://i3a604.p.ssafy.io/images/profile/basic.png";
+      let defaultImage = "http://i3a604.p.ssafy.io/images/profile/basic.svg";
+      this.path = defaultImage;
       this.$el.querySelector(
         ".preview-image"
       ).style.backgroundImage = `url('${defaultImage}')`;

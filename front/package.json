@@ -1,5 +1,5 @@
 {
-  "name": "front",
+  "name": "LOG.",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -19,6 +19,7 @@
     "vue-cookies": "^1.7.3",
     "vue-cryptojs": "^2.1.5",
     "vue-d3-cloud": "^0.2.0",
+    "vue-infinite-loading": "^2.4.5",
     "vue-router": "^3.2.0",
     "vue-social-sharing": "^3.0.0-beta.11",
     "vue2-dropzone": "^3.6.0",

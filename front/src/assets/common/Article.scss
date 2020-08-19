@@ -55,7 +55,7 @@
     .description {
       word-break: break-word;
       overflow-wrap: break-word;
-      font-size: 1rem;
+      font-size: 0.9rem;
       line-height: 1.5;
       height: 3.9375rem;
       display: -webkit-box;
@@ -113,7 +113,7 @@
     margin-right: 16px;
     fill: rgb(228, 228, 228);
   }
-  svg.fill-red {
+  .fill-red {
     fill: crimson;
   }
   span {

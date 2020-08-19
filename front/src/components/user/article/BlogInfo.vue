@@ -1,15 +1,20 @@
 <template>
   <div class="container-blog-info">
-    <button class="btn-moveto-info" @click="$router.push(`/${articleData.writer}`)">
+    <button
+      class="btn-moveto-info"
+      @click="$router.push(`/${articleData.writer}`)"
+    >
       <img :src="articleData.blogPicture" alt />
       <div class="main-info">
         <div class="user-info">
-          <span class="user-icon">😉</span>
+          <LevelIcon :score="articleData.score" />
           <span class="user-nickname">{{ articleData.nickname }}</span>
         </div>
         <div class="blog-title">{{ articleData.blogName }}</div>
         <div class="blog-description">{{ articleData.blogDescription }}</div>
-        <div class="follower-number">팔로우 {{ articleData.followerNum }}명</div>
+        <div class="follower-number">
+          팔로우 {{ articleData.followerNum }}명
+        </div>
       </div>
     </button>
     <button class="btn-follow">팔로우</button>
@@ -18,12 +23,16 @@
 
 <script>
 // import axios from "axios";
+import LevelIcon from "@/components/user/LevelIcon.vue";
 
 export default {
   props: {
     articleData: {
       type: Object
     }
+  },
+  components: {
+    LevelIcon
   }
 };
 </script>
@@ -56,9 +65,13 @@ button:hover {
       flex-direction: column;
       justify-content: space-between;
       align-items: flex-start;
-      .user-icon {
-        margin-right: 10px;
+      .user-info {
+        display: flex;
+        .level-icon {
+          margin-right: 10px;
+        }
       }
+
       .user-nickname {
         font-size: 1rem;
       }

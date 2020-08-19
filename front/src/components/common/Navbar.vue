@@ -12,7 +12,9 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 viewBox="0 0 26 26"
               >
-                <path d="M1,17.8v2.4h24v-2.4H1z M1,11.8v2.4h24v-2.4H1z M1,5.8v2.4h24V5.8H1z" />
+                <path
+                  d="M1,17.8v2.4h24v-2.4H1z M1,11.8v2.4h24v-2.4H1z M1,5.8v2.4h24V5.8H1z"
+                />
               </svg>
             </button>
           </div>
@@ -58,14 +60,16 @@
                     d="M72.3,45.15a3.32,3.32,0,0,1-.94,2.4,3.49,3.49,0,0,1-2.41.94H56.42a3.1,3.1,0,0,1-3.34-3V5A3.32,3.32,0,0,1,54,2.54a3.53,3.53,0,0,1,2.4-.94H69a3.36,3.36,0,0,1,2.41.94A3.36,3.36,0,0,1,72.3,5v11H68V5.26H57.15V44.94H68V28.65H62.9V25.1h9.4Z"
                     transform="translate(-4 -1.5)"
                   />
-                  <polygon points="92 46.99 87.31 46.99 87.31 41.77 92 41.77 92 46.99 92 46.99" />
+                  <polygon
+                    points="92 46.99 87.31 46.99 87.31 41.77 92 41.77 92 46.99 92 46.99"
+                  />
                 </svg>
               </div>
             </div>
           </router-link>
         </div>
       </div>
-      <hr style="width:0px; margin-top:0px">
+      <hr style="width:0px; margin-top:0px" />
       <div class="navbar-body">
         <div class="navbar-item" @click="closeNavbar">
           <router-link tag="button" to="/">
@@ -75,7 +79,9 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 viewBox="0 0 26 26"
               >
-                <path d="M10.6,23.2V16h4.8v7.2h6v-9.6H25L13,2.8L1,13.6h3.6v9.6H10.6z" />
+                <path
+                  d="M10.6,23.2V16h4.8v7.2h6v-9.6H25L13,2.8L1,13.6h3.6v9.6H10.6z"
+                />
               </svg>
               <span>홈</span>
             </div>
@@ -92,7 +98,9 @@
                 <g>
                   <polygon points="7.7,10.8 6.4,10.9 4.2,9 8.6,8.7 	" />
                   <polygon points="19.8,15.8 21,21.3 17.7,19.3 17.4,17.9 	" />
-                  <polygon points="25,9 22.3,11.4 15.1,10.8 12.9,5.6 14.6,1.5 17.5,8.4 	" />
+                  <polygon
+                    points="25,9 22.3,11.4 15.1,10.8 12.9,5.6 14.6,1.5 17.5,8.4 	"
+                  />
                   <polygon
                     points="19.4,14.3 16.1,17.2 16.4,18.5 17.8,24.5 11.4,20.6 5,24.5 6.7,17.2 1,12.3 7.3,11.7 8.5,11.6 9.8,8.6 11.4,4.7 
 		12.3,6.9 14.3,11.6 21.3,12.2 21.8,12.3 	"
@@ -189,77 +197,24 @@
         <hr />
         <div class="follow-list">
           <span>팔로우</span>
-          <div class="navbar-item">
-            <button>
-              <img src="@/assets/logo.png" alt />
-              <span>가나다</span>
-            </button>
-          </div>
-          <div class="navbar-item">
-            <button>
-              <img src="@/assets/logo.png" alt />
-              <span>가나다</span>
-            </button>
-          </div>
-          <div class="navbar-item">
-            <button>
-              <img src="@/assets/logo.png" alt />
-              <span>가나다</span>
-            </button>
-          </div>
-          <div class="navbar-item">
-            <button>
-              <img src="@/assets/logo.png" alt />
-              <span>가나다</span>
-            </button>
-          </div>
-          <div class="navbar-item">
-            <button>
-              <img src="@/assets/logo.png" alt />
-              <span>가나다</span>
-            </button>
-          </div>
-          <div class="navbar-item">
-            <button>
-              <img src="@/assets/logo.png" alt />
-              <span>가나다</span>
+          <div
+            class="navbar-item"
+            v-for="(following, idx) in followings"
+            :key="idx"
+            v-show="idx < followShowLimit"
+          >
+            <button @click="moveToFollowingProfile(following.email)">
+              <img :src="following.profile" alt />
+              <span>{{ following.nickname }}</span>
             </button>
           </div>
 
-          <div class="follow-list-collapsible collapsed">
-            <div class="navbar-item">
-              <button>
-                <img src="@/assets/logo.png" alt />
-                <span>가나다</span>
-              </button>
-            </div>
-            <div class="navbar-item">
-              <button>
-                <img src="@/assets/logo.png" alt />
-                <span>가나다</span>
-              </button>
-            </div>
-            <div class="navbar-item">
-              <button>
-                <img src="@/assets/logo.png" alt />
-                <span>가나다</span>
-              </button>
-            </div>
-            <div class="navbar-item">
-              <button>
-                <img src="@/assets/logo.png" alt />
-                <span>가나다</span>
-              </button>
-            </div>
-            <div class="navbar-item">
-              <button>
-                <img src="@/assets/logo.png" alt />
-                <span>가나다</span>
-              </button>
-            </div>
-          </div>
           <div class="navbar-item">
-            <button class="btn-toggle" @click="collapseFollowList">
+            <button
+              class="btn-toggle"
+              @click="collapseFollowList"
+              v-show="followings.length > constfollowShowLimit"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -267,7 +222,9 @@
                 viewBox="0 0 24 24"
                 class="arrow-down"
               >
-                <path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z" />
+                <path
+                  d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z"
+                />
               </svg>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -276,7 +233,9 @@
                 viewBox="0 0 24 24"
                 class="arrow-up collapsed"
               >
-                <path d="M0 16.67l2.829 2.83 9.175-9.339 9.167 9.339 2.829-2.83-11.996-12.17z" />
+                <path
+                  d="M0 16.67l2.829 2.83 9.175-9.339 9.167 9.339 2.829-2.83-11.996-12.17z"
+                />
               </svg>
               <span>더보기</span>
             </button>
@@ -323,14 +282,25 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import axios from "axios";
+
+const SERVER_URL = "http://i3a604.p.ssafy.io:8081";
+
 export default {
   props: ["showNavbar"],
   data: function() {
     return {
-      isCollapsed: true
+      isCollapsed: true,
+      followings: [],
+      followShowLimit: 5,
+      constfollowShowLimit: 5
     };
   },
   methods: {
+    ...mapGetters({
+      getEmail: "user/getEmail"
+    }),
     closeNavbar() {
       const navbar = document.querySelector(".navbar");
       const background = document.querySelector(".navbar-background");
@@ -341,7 +311,11 @@ export default {
       body.classList.remove("hide-scroll");
     },
     collapseFollowList() {
-      const list = document.querySelector(".follow-list-collapsible");
+      if (this.followShowLimit === this.constfollowShowLimit) {
+        this.followShowLimit = this.followings.length;
+      } else {
+        this.followShowLimit = this.constfollowShowLimit;
+      }
       const btnToggle = document.querySelector(".btn-toggle");
       const spanToggle = btnToggle.querySelector("span");
       const arrowUp = btnToggle.querySelector(".arrow-up");
@@ -349,18 +323,34 @@ export default {
 
       if (this.isCollapsed) {
         this.isCollapsed = false;
-        list.classList.remove("collapsed");
         spanToggle.innerText = "간략히 보기";
         arrowUp.classList.remove("collapsed");
         arrowDown.classList.add("collapsed");
       } else {
         this.isCollapsed = true;
-        list.classList.add("collapsed");
         spanToggle.innerText = "더보기";
         arrowUp.classList.add("collapsed");
         arrowDown.classList.remove("collapsed");
       }
+    },
+    async fetchFollowList() {
+      if (this.getEmail() === "") return;
+
+      let result = await axios.get(
+        `${SERVER_URL}/api/follow/navilist?email=${this.getEmail()}`
+      );
+      console.log(result);
+      if (result) {
+        this.followings = result.data;
+      }
+    },
+    moveToFollowingProfile(email) {
+      this.$router.push({ name: "Blog", params: { email: email } });
+      this.closeNavbar();
     }
+  },
+  mounted() {
+    this.fetchFollowList();
   }
 };
 </script>

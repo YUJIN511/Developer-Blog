@@ -9,12 +9,19 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
     user: userStore,
-    navbarMini
+    navbarMini,
   },
+
+  // plugins: [
+  //   createPersistedState({
+  //     paths: ["user"],
+  //   }),
+  // ],
 
   plugins: [
     createPersistedState({
-      paths: ["user"]
-    })
-  ]
+      storage: window.sessionStorage,
+      paths: ["user"],
+    }),
+  ],
 });

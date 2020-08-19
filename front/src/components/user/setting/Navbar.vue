@@ -42,10 +42,11 @@ export default {
       getUserInfo: "user/getUserInfo"
     }),
     logout() {
-      this.Logout().then(() => {
-        alert("로그아웃 되었습니다.");
-        this.$router.push({ name: "Main" });
-      });
+      if (confirm("로그아웃 하시겠습니까?")) {
+        this.Logout().then(() => {
+          location.href = "/";
+        });
+      }
     }
   }
 };

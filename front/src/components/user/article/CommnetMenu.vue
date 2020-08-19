@@ -1,5 +1,5 @@
 <template>
-  <div class="container-comment-menu" v-if="isShow">
+  <div ref="commentMenu" class="container-comment-menu" v-show="isShow">
     <div class="absolute">
       <button @click="editStart">
         수정 📝
@@ -14,7 +14,7 @@
 <script>
 import axios from "axios";
 export default {
-  props: ["content", "commentId"],
+  props: ["content", "commentId", "btnMore"],
   data: function() {
     return {
       isShow: false
@@ -40,6 +40,18 @@ export default {
     closeMenu() {
       this.isShow = false;
     }
+  },
+  mounted() {
+    const commentMenu = this.$refs.commentMenu;
+
+    window.addEventListener("click", e => {
+      if (
+        !commentMenu.contains(e.target) &&
+        e.target !== document.querySelector(".container-comment .btn-more")
+      ) {
+        this.closeMenu();
+      }
+    });
   }
 };
 </script>

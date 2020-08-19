@@ -7,6 +7,12 @@
     <div>
       <span class="title">인기 게시물</span>
       <FlexAricles :datas="articleData" />
+      <infinite-loading
+        slot="append"
+        @infinite="infiniteHandler"
+        force-use-infinite-wrapper=".el-table__body-wrapper"
+      >
+      </infinite-loading>
     </div>
   </div>
 </template>
@@ -14,25 +20,27 @@
 <script>
 import WordCloud from "@/components/common/WordCloud.vue";
 import FlexAricles from "@/components/common/FlexArticles.vue";
+import InfiniteLoading from "vue-infinite-loading";
 import { mapMutations, mapGetters } from "vuex";
 import axios from "axios";
 
 export default {
   components: {
     WordCloud,
+    InfiniteLoading,
     FlexAricles
   },
   data() {
     return {
       words: [],
       fontSizeMapper: word => Math.log2(word.value) * 5,
+      page: 1,
       articleData: []
     };
   },
 
   async created() {
     await this.initTagData(15);
-    this.fetchPopularArticlesData();
   },
   mounted() {
     this.paintBtn(document.querySelector("#btn-trending"));
@@ -52,15 +60,26 @@ export default {
         likeIcon.classList.add("selected");
       }
     },
-    async fetchPopularArticlesData() {
-      try {
-        const res = await axios.get(
-          `${this.$apiServer}/main/popular?email=${this.getUserInfo().email}`
-        );
-        this.articleData = res.data;
-      } catch (error) {
-        console.log(error);
-      }
+    infiniteHandler($state) {
+      axios
+        .get(
+          `${this.$apiServer}/main/popular?email=${
+            this.getUserInfo().email
+          }&page=${this.page}`
+        )
+        .then(response => {
+          if (response.data.length) {
+            this.articleData = this.articleData.concat(response.data);
+            $state.loaded();
+            this.page += 1;
+            if (this.articleData.length / 10 == 0) {
+              $state.complete();
+            }
+          } else {
+            $state.complete();
+          }
+        })
+        .catch(err => console.log(err));
     },
     async initTagData(limit) {
       try {
@@ -82,7 +101,6 @@ export default {
     }
   }
 };
-// 50000 10000 2000 400 80
 </script>
 
 <style lang="scss" scoped>
