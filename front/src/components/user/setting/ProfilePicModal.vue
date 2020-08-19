@@ -101,6 +101,10 @@ export default {
       );
       if (result) {
         this.$router.go();
+        this.fetchPictures();
+        this.$el.querySelector(
+          ".preview-image"
+        ).style.backgroundImage = `url('${this.getProfile()}')`;
       }
     },
     clickInput() {
