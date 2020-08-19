@@ -75,7 +75,7 @@ public class ConfigController {
    		//기존에 있던 사진 경로 추출
    		BlogConfig config = configRepository.findById(email).get();
    		if(config != null && config.getPicture() != null && !config.getPicture().equals("") && 	//기존 경로가 있을 때에만 기존 경로의 파일을 지운다.
-   				!config.getPicture().equals("http://i3a604.p.ssafy.io/images/profile/blog_basic.jpg")) {	// 기본사진도 지우지 않는다.
+   				!config.getPicture().equals("http://i3a604.p.ssafy.io/images/blogRep/blog_basic.jpg")) {	// 기본사진도 지우지 않는다.
    			String old_access_path = config.getPicture();
    							
    			String tem = old_access_path.replace("/blogRep", "+");

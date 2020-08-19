@@ -300,7 +300,7 @@ public class AuthController {
 		}
 		userRepository.updateNickname(nickname, email);
 		
-		BlogConfig config = new BlogConfig(email, nickname + "의 블로그", nickname + "의 블로그 입니다.", "http://i3a604.p.ssafy.io/images/profile/blog_basic.jpg");
+		BlogConfig config = new BlogConfig(email, nickname + "의 블로그", nickname + "의 블로그 입니다.", "http://i3a604.p.ssafy.io/images/blogRep/blog_basic.jpg");
 		configRepository.save(config);
 		
         return ResponseEntity.ok(new MessageResponse("Nickname registered successfully!"));
@@ -482,7 +482,7 @@ public class AuthController {
 	public RedirectView loginSucess(HttpSession httpSession){
 		SessionUser user = (SessionUser) httpSession.getAttribute("user");
 		BlogConfig config = new BlogConfig(user.getEmail(), user.getName() + "의 블로그", user.getName() + "의 블로그 입니다.", 
-			"http://i3a604.p.ssafy.io/images/profile/blog_basic.jpg");
+			"http://i3a604.p.ssafy.io/images/blogRep/blog_basic.jpg");
 		configRepository.save(config);
 		
 		return new RedirectView("http://localhost:8080/account/setNickname/"+user.getEmail());
