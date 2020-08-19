@@ -121,6 +121,14 @@ import { mapGetters } from "vuex";
 import axios from "axios";
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
+import java from "highlight.js/lib/languages/java";
+import json from "highlight.js/lib/languages/json";
+import markdown from "highlight.js/lib/languages/markdown";
+import python from "highlight.js/lib/languages/python";
+import ruby from "highlight.js/lib/languages/ruby";
+import swift from "highlight.js/lib/languages/swift";
+import cpp from "highlight.js/lib/languages/cpp";
+import cs from "highlight.js/lib/languages/cs";
 import Comment from "./CommentModule.vue";
 import BlogInfo from "./BlogInfo.vue";
 import UpdateModal from "./updateModal.vue";
@@ -163,7 +171,15 @@ export default {
           new CodeBlockHighlight({
             languages: {
               javascript,
-              css
+              css,
+              java,
+              json,
+              markdown,
+              python,
+              ruby,
+              swift,
+              cpp,
+              cs
             }
           }),
           new Blockquote(),

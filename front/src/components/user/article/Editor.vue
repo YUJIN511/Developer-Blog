@@ -284,6 +284,15 @@
 import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from "tiptap";
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
+import java from "highlight.js/lib/languages/java";
+import json from "highlight.js/lib/languages/json";
+import markdown from "highlight.js/lib/languages/markdown";
+import python from "highlight.js/lib/languages/python";
+import ruby from "highlight.js/lib/languages/ruby";
+import swift from "highlight.js/lib/languages/swift";
+import cpp from "highlight.js/lib/languages/cpp";
+import cs from "highlight.js/lib/languages/cs";
+
 import ImageModal from "./ImageModal";
 import SummaryModal from "./SummaryModal";
 import { mapGetters } from "vuex";
@@ -334,7 +343,15 @@ export default {
           new CodeBlockHighlight({
             languages: {
               javascript,
-              css
+              css,
+              java,
+              json,
+              markdown,
+              python,
+              ruby,
+              swift,
+              cpp,
+              cs
             }
           }),
           new Blockquote(),
@@ -431,6 +448,10 @@ export default {
       this.$refs.ytmodal.showModal(command);
     },
     openSummaryModal() {
+      if (this.title === "") {
+        alert("제목을 입력해 주세요.");
+        return;
+      }
       if (!this.isUpdated) {
         this.html = this.$refs.editorContent.editor.view.dom.innerHTML;
       }
