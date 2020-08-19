@@ -103,7 +103,7 @@ export default {
   components: {
     ReplyList,
     CommentMenu,
-    LevelIcon
+    LevelIcon,
   },
   data: function() {
     return {
@@ -115,12 +115,13 @@ export default {
       replyListKey: 0,
       isEditing: false,
       contentBeforeEdit: "",
-      isMenuShow: false
+      isMenuShow: false,
     };
   },
   methods: {
     ...mapGetters({
-      getUserInfo: "user/getUserInfo"
+      getUserInfo: "user/getUserInfo",
+      getIsLogin: "user/getIsLogin",
     }),
     toggleMenu() {
       this.$refs.commentMenu.toggleMenu();
@@ -139,7 +140,7 @@ export default {
       try {
         axios.put(`${this.$apiServer}/comment`, {
           content: main.innerHTML,
-          id: this.commentData.id
+          id: this.commentData.id,
         });
       } catch (error) {
         console.log(error);
@@ -196,6 +197,11 @@ export default {
       }
     },
     toggleLikeButton() {
+      if (this.getIsLogin() === false) {
+        alert("게시물이 마음에 드시나요? 로그인하여 의견을 알려주세요.");
+        // document.querySelector(".container-login").classList.remove("hide");
+        return;
+      }
       this.isLike = !this.isLike;
       if (this.isLike) {
         axios.put(
@@ -216,6 +222,10 @@ export default {
       this.setLikeBtn();
     },
     async submitReply() {
+      if (this.getIsLogin() === false) {
+        document.querySelector(".container-login").classList.remove("hide");
+        return;
+      }
       try {
         let replyto = this.commentData.id;
         if (this.isReply) {
@@ -225,7 +235,7 @@ export default {
           content: this.$refs.textarea.innerHTML,
           email: this.getUserInfo().email,
           postid: this.$route.query.id,
-          replyto
+          replyto,
         });
         this.reloadReply();
         if (this.isReply) {
@@ -233,7 +243,6 @@ export default {
         }
       } catch (error) {
         console.log(error);
-        alert("로그인이 필요한 서비스입니다.");
       }
     },
     emitReload() {
@@ -254,15 +263,15 @@ export default {
     moveToBlog() {
       this.$router.push({
         name: "Blog",
-        params: { email: this.commentData.email }
+        params: { email: this.commentData.email },
       });
-    }
+    },
   },
   mounted() {
     this.isLike = this.commentData.islike;
     this.setLikeBtn();
     this.$refs.main.innerHTML = this.commentData.content;
-  }
+  },
 };
 </script>
 
