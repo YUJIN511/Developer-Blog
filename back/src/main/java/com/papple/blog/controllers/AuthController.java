@@ -481,15 +481,24 @@ public class AuthController {
 	@GetMapping("/loginSuccess")
 	public RedirectView loginSucess(HttpSession httpSession){
 		SessionUser user = (SessionUser) httpSession.getAttribute("user");
-		
+		User checkUser =  userRepository.getUserByEmail(user.getEmail());
+
 		// 처음 로그인하는 계정인 경우 
-		if (configRepository.findById(user.getEmail())==null){
+		if(checkUser.getUsercertification()==null){
+			checkUser.setUsercertification(1);
+			userRepository.save(checkUser);
 			BlogConfig config = new BlogConfig(user.getEmail(), user.getEmail() + "의 블로그", user.getEmail() + "의 블로그 입니다.", 
-												"http://i3a604.p.ssafy.io/images/profile/blog_basic.jpg");
+			"http://i3a604.p.ssafy.io/images/profile/blog_basic.jpg");
 			configRepository.save(config);
-		}
+
+			return new RedirectView("http://localhost:8080/account/setNickname/"+user.getEmail());
+
+		} else{
+
+			return new RedirectView("http://localhost:8080/main/home/"+user.getEmail());
+			
+		}	
 		
-		return new RedirectView("http://localhost:8080/account/setNickname/"+user.getEmail());
 	}
 }
 
