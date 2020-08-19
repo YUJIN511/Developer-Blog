@@ -134,9 +134,7 @@ export default {
       for (var i = 0; i < prevList.length; i++) {
         if (i == ind) {
           prevList[i].classList.add("selected");
-          // prevList[i].classList.remove("unselected");
         } else {
-          // prevList[i].classList.add("unselected");
           prevList[i].classList.remove("selected");
         }
       }
@@ -347,13 +345,8 @@ export default {
 }
 
 .selected {
-  // outline: cornflowerblue solid 1px;
   box-shadow: 0 0 3px 2px cornflowerblue;
 }
-
-// .unselected {
-//   outline: 0px;
-// }
 
 h1 {
   margin: 30px 0px;
