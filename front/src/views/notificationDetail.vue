@@ -151,7 +151,7 @@ export default {
   width: 60%;
   margin: auto;
   overflow-y: auto;
-  background-color: white;
+  background-color: #fafafa;
   min-height: 400px;
   max-height: 650px;
 

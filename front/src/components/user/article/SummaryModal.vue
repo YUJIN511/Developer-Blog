@@ -62,7 +62,7 @@ export default {
     showModal(articleData) {
       this.articleData = articleData;
       this.show = true;
-      if (this.isEdit && articleData.picture !== "") {
+      if (articleData.picture !== "") {
         this.thumbSrc = articleData.picture;
       }
     },
