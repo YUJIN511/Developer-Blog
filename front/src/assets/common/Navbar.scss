@@ -5,7 +5,7 @@
   height: 200vh;
   top: 0;
   bottom: 0;
-  left: -256px;
+  left: -240px;
   transition: all 400ms cubic-bezier(0.51, 0.93, 0.58, 1);
   z-index: 1000;
 }
@@ -17,7 +17,7 @@
   top: 0px;
   left: 0px;
   width: 240px;
-  height: 100vh;
+  height: 100%;
   background-color: white;
 }
 
@@ -30,7 +30,7 @@
 
 /* toggle */
 .collapsed {
-  left: -256px;
+  left: -240px;
 }
 .hide {
   display: none;
@@ -132,7 +132,7 @@
 .navbar-item button {
   width: 100%;
   color: rgb(129, 129, 129);
-  font-size: 0.9em;
+  font-size: 0.8em;
   text-align: left;
   padding: 10px 0px;
 }
@@ -150,7 +150,7 @@ hr {
   margin-top: 9px;
   margin-bottom: 9px;
   width: 100%;
-  border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+  border-top: 0px solid rgba(0, 0, 0, 0.1);
 }
 
 .hr-header {
@@ -173,8 +173,8 @@ hr {
 }
 .navbar-item {
   svg {
-    width: 26px;
-    height: 26px;
+    width: 22px;
+    height: 22px;
     fill: #727272;
   }
   img {
