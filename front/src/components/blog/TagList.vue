@@ -47,9 +47,16 @@ export default {
     },
     selectTag(tag) {
       this.$emit("select-tag", tag);
+      this.changeMenu();
     },
     selectAll() {
       this.$emit("select-all");
+      this.changeMenu();
+    },
+    changeMenu() {
+      this.$emit("click-article");
+      document.querySelector(".btn-article").style.borderBottom = "3px solid #727272";
+      document.querySelector(".btn-Info").style.borderBottom = "none";
     }
   },
   mounted() {
