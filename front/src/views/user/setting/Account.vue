@@ -46,7 +46,7 @@
           </div>
         </div>
       </div>
-      <div class="level-icon">
+      <div class="level-icon" v-if="false">
         <span>연동된 SNS계정</span>
         <div class="container-btn-social">
           <button class="btn-circle btn-google"></button>
