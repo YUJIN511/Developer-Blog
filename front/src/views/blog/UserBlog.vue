@@ -264,9 +264,13 @@ main {
         .name {
           display: flex;
           margin-bottom: 5px;
-          div,
+          div {
+            margin-right: 8px;
+            font-weight: 1000;
+          }
           span {
-            margin-right: 12px;
+            line-height: 24px;
+            margin-right: 8px;
             font-weight: 1000;
           }
           .level {
