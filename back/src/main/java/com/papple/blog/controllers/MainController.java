@@ -11,13 +11,16 @@ import java.util.Map.Entry;
 import com.papple.blog.models.Post;
 import com.papple.blog.models.TagScore;
 import com.papple.blog.models.User;
+import com.papple.blog.payload.response.FollowList;
 import com.papple.blog.payload.response.PopularScore;
 import com.papple.blog.payload.response.PostList;
 import com.papple.blog.repository.GoodRepository;
 import com.papple.blog.repository.PostAlgorithmRepository;
 import com.papple.blog.repository.PostListRepository;
+import com.papple.blog.repository.ProfileRepository;
 import com.papple.blog.repository.TagScoreRepository;
 import com.papple.blog.repository.UserRepository;
+import com.papple.blog.security.services.FollowService;
 import com.papple.blog.security.services.PostService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +51,10 @@ public class MainController {
 	private PostAlgorithmRepository algoRepository;
 	@Autowired
 	private TagScoreRepository tagScoreRepository;
+	@Autowired
+	private ProfileRepository profileRepository;
+	@Autowired
+	private FollowService followService;
     
     @GetMapping("/historyList")
 	@ApiOperation(value = "History 글 리스트")
@@ -247,6 +254,14 @@ public class MainController {
 			if(resList.get(i) != null && resList.get(i).getId() != null && algoRepository.getPopularScoreByPostid(resList.get(i).getId()) != null && goodRepository.isGood(email, resList.get(i).getId()) > 0) // 여기서 null
 				resList.get(i).setIsgood(true);
 		return new ResponseEntity<List<PostList>>(resList, HttpStatus.OK); 
+	}
+	
+	@GetMapping("searchUser")
+	@ApiOperation("특정 유저를 검색한다! 부분검색 가능!")
+	public ResponseEntity<List<FollowList>> searchUser(String email, String word) throws Exception {
+		List<FollowList> userList = profileRepository.searchUser(word);	
+		for(int i=0;i<userList.size();i++) if(followService.isFollow(email, userList.get(i).getEmail()) > 0) userList.get(i).setFollow(true);	//팔로우 여부 업데이트
+		return new ResponseEntity<List<FollowList>>(userList, HttpStatus.OK);
 	}
 
 }

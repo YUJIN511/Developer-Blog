@@ -16,4 +16,5 @@ public interface ProfileRepository {
 	int unProfile(String email);
 	List<FollowList> myFollowList(String email);
 	List<FollowListNavi> myFollowListNavi(String email);
+	List<FollowList> searchUser(String word);
 }
