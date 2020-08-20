@@ -66,6 +66,9 @@ export default {
     setNotification(state, notification) {
       state.userInfo.notification = notification;
     },
+    setUserInfo(state, userInfo) {
+      state.userInfo = userInfo;
+    },
   },
 
   actions: {
@@ -109,6 +112,7 @@ export default {
         context.commit("setRole", res.data.roles["name"]);
         context.commit("setProfile", res.data.profile);
         context.commit("setNotification", res.data.notification);
+        context.commit("setUserInfo", res.data);
       } catch (error) {
         console.log(error);
       }
