@@ -25,7 +25,7 @@
         <span class="level-title"
           >레벨 / 경험치<button
             class="btn-aboutlevel"
-            @mouseover="showLevelAbout"
+            @mouseenter="showLevelAbout"
             @mouseleave="hideLevelAbout"
           >
             ❔
@@ -194,7 +194,6 @@ export default {
     hideLevelAbout() {
       this.showModal = false;
       document.querySelector(".container-levelabout").classList.add("hide");
-      document.querySelector(".modal-levelabout").style.top = "80px";
     },
   },
   mounted() {
@@ -231,10 +230,12 @@ export default {
     var levelAbout = document.querySelector(".modal-levelabout");
     var hoverButton = document.querySelector(".btn-aboutlevel");
     var viewportOffset = hoverButton.getBoundingClientRect();
-    var top = viewportOffset.buttom;
+    var top = viewportOffset.top;
     var left = viewportOffset.left;
-    levelAbout.style.buttom = `${top}px`;
-    levelAbout.style.left = `${left + 20}px`;
+    levelAbout.style.top = `${top - 430}px`;
+    levelAbout.style.left = `${left + 30}px`;
+    console.log(top);
+    console.log(left);
   },
 };
 </script>
