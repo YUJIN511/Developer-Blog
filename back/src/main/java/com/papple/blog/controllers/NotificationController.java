@@ -4,11 +4,12 @@ import java.util.List;
 
 import com.papple.blog.models.Notification;
 import com.papple.blog.models.User;
+import com.papple.blog.models.unNotification;
 import com.papple.blog.payload.response.StreamDataSet;
 import com.papple.blog.repository.UserRepository;
+import com.papple.blog.repository.unNotificationRepository;
 import com.papple.blog.security.services.NotificationService;
 
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.annotation.ApplicationScope;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +31,9 @@ import io.swagger.annotations.ApiOperation;
 public class NotificationController {
 
     @Autowired
-	UserRepository userRepository;
+    UserRepository userRepository;
+    @Autowired
+    unNotificationRepository unnotificationRepository;
 	@Autowired
 	NotificationService notificationService;
 
@@ -100,6 +102,25 @@ public class NotificationController {
     @ApiOperation(value = "알림 모두 삭제")
     public ResponseEntity<?> deleteAll(@RequestParam String email){
         notificationService.deleteByTargetuser(email);
+        return new ResponseEntity<String>("success", HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/off")
+    @ApiOperation(value = "actionuser(followed)의 모든 알람 끄기")
+    public ResponseEntity<?> OnNotification (@RequestParam String targetuser, @RequestParam String actionuser){
+
+        unNotification unNoti = new unNotification(targetuser, actionuser);
+        unnotificationRepository.save(unNoti);
+
+        return new ResponseEntity<String>("success", HttpStatus.OK);
+    }
+    @GetMapping(value = "/on")
+    @ApiOperation(value = "actionuser(followed)의 알람 다시 켜기")
+    public ResponseEntity<?> OffNotification (@RequestParam String targetuser, @RequestParam String actionuser){
+
+        Long id = unnotificationRepository.findByTargetuserAndActionuser(targetuser, actionuser).getId();
+        unnotificationRepository.deleteById(id);
+
         return new ResponseEntity<String>("success", HttpStatus.OK);
     }
 }

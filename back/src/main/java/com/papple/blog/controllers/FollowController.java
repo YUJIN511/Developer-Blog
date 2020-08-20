@@ -26,6 +26,7 @@ import com.papple.blog.payload.response.FollowListNavi;
 import com.papple.blog.repository.NotificationRepository;
 import com.papple.blog.repository.ProfileRepository;
 import com.papple.blog.repository.UserRepository;
+import com.papple.blog.repository.unNotificationRepository;
 import com.papple.blog.security.services.FollowService;
 import com.papple.blog.security.services.NotificationService;
 
@@ -50,11 +51,18 @@ public class FollowController {
 	@Autowired
 	private ProfileRepository profileRepository;
 	
+	@Autowired
+	private unNotificationRepository unnotificationRepository;
+
 	@GetMapping("/list")
 	@ApiOperation(value = "내가 팔로우한 사람들을 return (내가 팔로우 한 유저 리스트 - 팔로우 탭에서)")
 	public ResponseEntity<List<FollowList>> searchFollowerByEmail(String email) throws Exception {
 		List<FollowList> list = profileRepository.myFollowList(email);
-		for(int i=0;i<list.size();i++) if(followService.isFollow(email, list.get(i).getEmail()) > 0) list.get(i).setFollow(true);	//팔로우 여부 업데이트
+		for(int i=0;i<list.size();i++){
+			if(followService.isFollow(email, list.get(i).getEmail()) > 0) list.get(i).setFollow(true);	//팔로우 여부 업데이트
+			// 알림 여부 ON(true) OFF(false)
+			if(unnotificationRepository.findByTargetuserAndActionuser(email,list.get(i).getEmail()) != null) list.get(i).setNotification(false);
+		}	
 		//알람 여부 업데이트 해줘야함	
 		return new ResponseEntity<List<FollowList>>(list, HttpStatus.OK);
 	}

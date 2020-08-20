@@ -17,6 +17,6 @@ public class FollowList {
 	public FollowList() {
 		this.score = 0;
 		this.isFollow = false;
-		this.isNotification = false;
+		this.isNotification = true;	// 디폴트는 알람 ON
 	}
 }
