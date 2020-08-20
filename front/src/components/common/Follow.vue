@@ -12,11 +12,11 @@
         이름 없음
       </div>
       <div class="footer">
-        <button class="btn-alarm" v-if="isAlarm" @click="toggleAlarm">
-          <img src="@/assets/notification_icon.svg" alt="알림 설정" />
+        <button class="btn-alarm" v-if="isAlarm" @click="offNotification">
+          <img src="@/assets/notification_icon.svg" alt="알림 ON" />
         </button>
-         <button class="btn-alarm" v-if="!isAlarm" @click="toggleAlarm">
-          <img src="@/assets/unnotification_icon.svg" alt="알림 설정" />
+         <button class="btn-alarm" v-if="!isAlarm" @click="onNotification">
+          <img src="@/assets/unnotification_icon.svg" alt="알림 OFF" />
         </button>
         <button class="btn-follow" v-if="isFollowing" @click="unfollow">
           팔로우 취소
@@ -67,9 +67,19 @@ export default {
         }&follower=${this.getEmail()}`
       );
     },
-    toggleAlarm(){
+    onNotification(){
       this.isAlarm =!this.isAlarm;
+      axios.delete(`${SERVER_URL}/api/notification/on?actionuser=${this.data.email}&targetuser=${this.getEmail()}`,
+      { withCredentials: true });
+    },
+    offNotification(){
+      this.isAlarm =!this.isAlarm;
+      axios.get(`${SERVER_URL}/api/notification/off?actionuser=${this.data.email}&targetuser=${this.getEmail()}`,
+      { withCredentials: true });
     }
+  },
+  created(){
+    this.isAlarm = this.data.notification;
   }
 };
 </script>
