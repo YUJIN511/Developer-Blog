@@ -7,13 +7,16 @@
     </div>
     <div class="right">
       <div class="name">{{ data.nickname }}</div>
-      <div class="blog-name" v-if="data.blogname">{{ data.blogname }}</div>
+      <button class="blog-name" v-if="data.blogname" @click="$router.push(`/${data.email}`)">{{ data.blogname }}</button>
       <div class="blog-name blog-name-empty" v-if="!data.blogname">
         이름 없음
       </div>
       <div class="footer">
-        <button class="btn-alarm">
+        <button class="btn-alarm" v-if="isAlarm" @click="toggleAlarm">
           <img src="@/assets/notification_icon.svg" alt="알림 설정" />
+        </button>
+         <button class="btn-alarm" v-if="!isAlarm" @click="toggleAlarm">
+          <img src="@/assets/unnotification_icon.svg" alt="알림 설정" />
         </button>
         <button class="btn-follow" v-if="isFollowing" @click="unfollow">
           팔로우 취소
@@ -40,6 +43,7 @@ export default {
   },
   data() {
     return {
+      isAlarm : true,
       isFollowing: true
     };
   },
@@ -62,6 +66,9 @@ export default {
           this.data.email
         }&follower=${this.getEmail()}`
       );
+    },
+    toggleAlarm(){
+      this.isAlarm =!this.isAlarm;
     }
   }
 };
@@ -69,4 +76,5 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/common/Profile.scss";
+
 </style>
