@@ -30,7 +30,7 @@
         </div>
         <div class="container-tabs">
           <button class="btn btn-article" @click="clickArticle">
-            내 게시물
+            게시물
           </button>
           <button class="btn btn-Info" @click="clickInfo">정보</button>
         </div>
