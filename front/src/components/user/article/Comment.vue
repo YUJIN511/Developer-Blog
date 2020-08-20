@@ -103,7 +103,7 @@ export default {
   components: {
     ReplyList,
     CommentMenu,
-    LevelIcon,
+    LevelIcon
   },
   data: function() {
     return {
@@ -115,13 +115,13 @@ export default {
       replyListKey: 0,
       isEditing: false,
       contentBeforeEdit: "",
-      isMenuShow: false,
+      isMenuShow: false
     };
   },
   methods: {
     ...mapGetters({
       getUserInfo: "user/getUserInfo",
-      getIsLogin: "user/getIsLogin",
+      getIsLogin: "user/getIsLogin"
     }),
     toggleMenu() {
       this.$refs.commentMenu.toggleMenu();
@@ -140,7 +140,7 @@ export default {
       try {
         axios.put(`${this.$apiServer}/comment`, {
           content: main.innerHTML,
-          id: this.commentData.id,
+          id: this.commentData.id
         });
       } catch (error) {
         console.log(error);
@@ -235,7 +235,7 @@ export default {
           content: this.$refs.textarea.innerHTML,
           email: this.getUserInfo().email,
           postid: this.$route.query.id,
-          replyto,
+          replyto
         });
         this.reloadReply();
         if (this.isReply) {
@@ -263,15 +263,15 @@ export default {
     moveToBlog() {
       this.$router.push({
         name: "Blog",
-        params: { email: this.commentData.email },
+        params: { email: this.commentData.email }
       });
-    },
+    }
   },
   mounted() {
     this.isLike = this.commentData.islike;
     this.setLikeBtn();
     this.$refs.main.innerHTML = this.commentData.content;
-  },
+  }
 };
 </script>
 

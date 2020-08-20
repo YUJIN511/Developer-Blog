@@ -1,5 +1,5 @@
 <template>
-  <div ref="commentMenu" class="container-comment-menu" v-show="isShow">
+  <div ref="commentMenu" class="container-comment-menu hide">
     <div class="absolute">
       <button @click="editStart">
         수정 📝
@@ -15,11 +15,6 @@
 import axios from "axios";
 export default {
   props: ["content", "commentId", "btnMore"],
-  data: function() {
-    return {
-      isShow: false
-    };
-  },
   methods: {
     async deleteComment() {
       if (confirm("정말 삭제하시겠습니까")) {
@@ -29,34 +24,25 @@ export default {
     },
     editStart() {
       this.$emit("editStart");
-      this.isShow = false;
+      this.closeMenu();
     },
     toggleMenu() {
-      this.isShow = !this.isShow;
+      this.$refs.commentMenu.classList.toggle("hide");
     },
     showMenu() {
-      this.isShow = true;
+      this.$refs.commentMenu.classList.remove("hide");
     },
     closeMenu() {
-      this.isShow = false;
+      this.$refs.commentMenu.classList.add("hide");
     }
-  },
-  mounted() {
-    const commentMenu = this.$refs.commentMenu;
-
-    window.addEventListener("click", e => {
-      if (
-        !commentMenu.contains(e.target) &&
-        e.target !== document.querySelector(".container-comment .btn-more")
-      ) {
-        this.closeMenu();
-      }
-    });
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.hide {
+  display: none;
+}
 .container-comment-menu {
   position: relative;
   width: 0;
