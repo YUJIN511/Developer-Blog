@@ -244,6 +244,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      this.toggleReplyTextarea();
     },
     emitReload() {
       this.$emit("reload");
