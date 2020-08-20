@@ -22,18 +22,22 @@
         <hr />
       </div>
       <div class="level-icon">
-        <span>레벨 / 경험치</span>
-
-        <button class="btn-circle btn-level-icon">
-          <img
-            class="level-icon"
-            width="20px"
-            height="20px"
-            viewBox="0 0 24 24"
-            src="@/assets/tree.svg"
-            alt="level icon"
-          />
-        </button>
+        <span class="level-title">레벨 / 경험치</span>
+        <div class="level-icon-contents">
+          <div class="score">
+            다음 레벨까지
+            <span> {{ totalScore - getUserInfo().score }}</span> 점 남았습니다!
+          </div>
+          <div class="levelicon-and-bar">
+            <button>
+              <LevelIcon :score="getUserInfo().score" />
+            </button>
+            <span>{{ (getUserInfo().score / totalScore) * 100 }}%</span>
+            <div class="meter">
+              <span class="meter-gage"></span>
+            </div>
+          </div>
+        </div>
       </div>
       <!-- <div class="level-icon">
         <span>연동된 SNS계정</span>
@@ -93,9 +97,14 @@
 </template>
 
 <script>
+import LevelIcon from "@/components/user/LevelIcon.vue";
+
 import { mapActions, mapGetters } from "vuex";
 
 export default {
+  components: {
+    LevelIcon,
+  },
   data() {
     return {
       email: this.getUserInfo().email,
@@ -104,10 +113,11 @@ export default {
       newpassword: "",
       newpasswordConfirm: "",
       dom: {
-        passwordConfirmErrMsg: ""
+        passwordConfirmErrMsg: "",
       },
       file: "",
-      profileURL: ""
+      profileURL: "",
+      totalScore: "",
     };
   },
   methods: {
@@ -116,12 +126,12 @@ export default {
       UpdateNickname: "user/updateNickname",
       UpdatePassword: "user/updatePassword",
       Unregister: "user/unregister",
-      UploadFile: "user/uploadFile"
+      UploadFile: "user/uploadFile",
     }),
     ...mapGetters({
       getUserInfo: "user/getUserInfo",
       getEmail: "user/getEmail",
-      getIsLogin: "user/getIsLogin"
+      getIsLogin: "user/getIsLogin",
     }),
     enableNickname() {
       document.querySelector(".p-nickname").classList.add("hide");
@@ -146,13 +156,13 @@ export default {
       this.UpdatePassword({
         email: this.email,
         password: this.password,
-        newpassword: this.newpassword
+        newpassword: this.newpassword,
       })
         .then(() => {
           alert("비밀번호가 변경되었습니다.");
           this.$router.go();
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     passwordEqualCheck() {
       if (!(this.newpassword === this.newpasswordConfirm)) {
@@ -167,7 +177,7 @@ export default {
     },
     openProfilePic() {
       document.querySelector(".container-profilepic").classList.remove("hide");
-    }
+    },
   },
   mounted() {
     this.dom.passwordConfirmErrMsg = document.querySelector(
@@ -182,7 +192,22 @@ export default {
         this.getUserInfo().profile
       }')`;
     }
-  }
+    if (this.getUserInfo().score < 200) {
+      this.totalScore = 200;
+    } else if (this.getUserInfo().score < 1000) {
+      this.totalScore = 1000;
+    } else if (this.getUserInfo().score < 3000) {
+      this.totalScore = 3000;
+    } else if (this.getUserInfo().score < 6000) {
+      this.totalScore = 6000;
+    } else if (this.getUserInfo().score < 10000) {
+      this.totalScore = 10000;
+    }
+    document.querySelector(".meter-gage").style.width = `${(this.getUserInfo()
+      .score /
+      this.totalScore) *
+      100}%`;
+  },
 };
 </script>
 
