@@ -1,9 +1,7 @@
 <template>
   <aside class="container-navbar-setting">
     <header>
-      <div class="profile-image">
-        <img :src="getUserInfo().profile" />
-      </div>
+      <div class="profile-image"></div>
       <div class="icon-and-name">
         <LevelIcon :score="getUserInfo().score" />
         <span class="name">{{ getUserInfo().nickname }}</span>

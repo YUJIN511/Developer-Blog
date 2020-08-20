@@ -1,49 +1,48 @@
 !<template>
   <div class="container-levelabout hide">
-    <div class="background-levelabout">
-      <div class="modal-levelabout">
-        <div class="modal-head">
-          <h3>포인트 제도</h3>
-        </div>
-        <div class="modal-body">
-          <div class="container-points">
-            <div>
-              <h4>포스팅</h4>
-              <h4>댓글</h4>
-              <h4>게시물 공유</h4>
-              <h4>좋아요</h4>
-            </div>
-            <div>
-              <h4>100점</h4>
-              <h4>4점</h4>
-              <h4>4점</h4>
-              <h4>2점</h4>
-            </div>
+    <div class="background-levelabout"></div>
+    <div class="modal-levelabout">
+      <div class="modal-head">
+        <h3>포인트 제도</h3>
+      </div>
+      <div class="modal-body">
+        <div class="container-points">
+          <div>
+            <h4>포스팅</h4>
+            <h4>댓글</h4>
+            <h4>게시물 공유</h4>
+            <h4>좋아요</h4>
           </div>
-          <br />
-          <p>※포인트 1일 활동 포인트 최대치 150</p>
+          <div>
+            <h4>100점</h4>
+            <h4>4점</h4>
+            <h4>4점</h4>
+            <h4>2점</h4>
+          </div>
         </div>
-        <div class="modal-head">
-          <h3>레벨업 기준</h3>
-        </div>
-        <div class="modal-body">
-          <div class="container-points">
-            <div class="container-levelicon">
-              <LevelIcon :score="100" />
-              <LevelIcon :score="500" />
-              <LevelIcon :score="2000" />
-              <LevelIcon :score="4000" />
-              <LevelIcon :score="8000" />
-              <LevelIcon :score="11000" />
-            </div>
-            <div class="levelup">
-              <h4>초기 레벨</h4>
-              <h4>200점 달성</h4>
-              <h4>1000점 달성</h4>
-              <h4>3000점 달성</h4>
-              <h4>6000점 달성</h4>
-              <h4>10000점 달성</h4>
-            </div>
+        <br />
+        <p>※포인트 1일 활동 포인트 최대치 150</p>
+      </div>
+      <div class="modal-head">
+        <h3>레벨업 기준</h3>
+      </div>
+      <div class="modal-body">
+        <div class="container-points">
+          <div class="container-levelicon">
+            <LevelIcon :score="100" />
+            <LevelIcon :score="500" />
+            <LevelIcon :score="2000" />
+            <LevelIcon :score="4000" />
+            <LevelIcon :score="8000" />
+            <LevelIcon :score="11000" />
+          </div>
+          <div class="levelup">
+            <h4>초기 레벨</h4>
+            <h4>200점 달성</h4>
+            <h4>1000점 달성</h4>
+            <h4>3000점 달성</h4>
+            <h4>6000점 달성</h4>
+            <h4>10000점 달성</h4>
           </div>
         </div>
       </div>
@@ -63,6 +62,7 @@ export default {
 
 <style scoped lang="scss">
 .container-levelabout {
+  opacity: 90%;
   position: fixed;
   z-index: 3;
   top: 0;
@@ -79,6 +79,8 @@ export default {
   }
   .modal-levelabout {
     margin: 0;
+    border-radius: 5px;
+    overflow: hidden;
     width: 280px;
     height: 430px;
     background: white;
@@ -87,7 +89,6 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    /* border-radius: 3px; */
     .modal-head {
       text-align: left;
       padding: 4px 12px;
