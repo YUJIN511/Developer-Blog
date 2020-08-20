@@ -265,7 +265,7 @@
           </router-link>
         </div>
         <div class="navbar-item" @click="closeNavbar">
-          <router-link tag="button" to="/About">
+          <router-link tag="button" to="/main/About">
             <div>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path
