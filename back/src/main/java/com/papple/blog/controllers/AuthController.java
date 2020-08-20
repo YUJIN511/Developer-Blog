@@ -488,7 +488,7 @@ public class AuthController {
 			checkUser.setUsercertification(1);
 			userRepository.save(checkUser);
 			BlogConfig config = new BlogConfig(user.getEmail(), "개발자의 블로그", "개발자의 블로그 입니다.", 
-			"http://i3a604.p.ssafy.io/images/profile/blog_basic.jpg");
+			"http://i3a604.p.ssafy.io/images/blogRep/blog_basic.jpg");
 			configRepository.save(config);
 
 			return new RedirectView("http://i3a604.p.ssafy.io/account/setNickname/"+user.getEmail());
