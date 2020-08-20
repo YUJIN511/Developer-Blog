@@ -77,7 +77,7 @@ export default {
     height: 100vh;
   }
   .modal-levelabout {
-    filter: opacity(90%);
+    filter: opacity(95%);
     margin: 0;
     border-radius: 5px;
     overflow: hidden;
