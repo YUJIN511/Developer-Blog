@@ -6,6 +6,7 @@
         :email="userEmail"
         @select-tag="onSelectTag"
         @select-all="onSelectAll"
+        @click-article="clickArticle"
       />
       <div class="content">
         <div class="content-header">
