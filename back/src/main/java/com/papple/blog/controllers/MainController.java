@@ -223,7 +223,7 @@ public class MainController {
 		
 		Map<Long, Boolean> check = new HashMap<>();	 // postid 중복 체크
 		List<PostList> resultList = new ArrayList<>();
-		for(int i=0;i<5;i++) {
+		for(int i=0;i<30;i++) {
 			if(pq.isEmpty()) break;
 			List<Long> list = algoRepository.getPostidByTag((String)pq.poll()[0]);	//태그를 가진 postid list
 			for(Long postid : list) {
