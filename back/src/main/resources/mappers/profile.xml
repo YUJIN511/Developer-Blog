@@ -34,7 +34,7 @@
 		where exists(select * from follow f where f.follower = #{email} and u.email = f.followed)
 	</select>
 	
-	<select id="searchUser">
+	<select id="searchUser" resultType="FollowList">
 		select u.email, u.nickname, u.profile, u.score, c.name blogname
 		from user u left join config c on u.email = c.email 
 		where u.nickname like '%#{word}%'
