@@ -114,7 +114,7 @@ public class NotificationController {
 
         return new ResponseEntity<String>("success", HttpStatus.OK);
     }
-    @GetMapping(value = "/on")
+    @DeleteMapping(value = "/on")
     @ApiOperation(value = "actionuser(followed)의 알람 다시 켜기")
     public ResponseEntity<?> OffNotification (@RequestParam String targetuser, @RequestParam String actionuser){
 
