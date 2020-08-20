@@ -34,34 +34,34 @@ export default {
     return {
       title: "",
       description: "",
-      bannerImg: ""
+      bannerImg: "",
     };
   },
   components: {
-    ImgModal
+    ImgModal,
   },
   methods: {
     ...mapGetters({
-      getUserInfo: "user/getUserInfo"
+      getUserInfo: "user/getUserInfo",
     }),
     async updateBlogInfo() {
       console.log(this.description);
       console.log(this.getUserInfo().email);
       console.log(this.title);
       try {
-        const res = await axios.post(`${this.$apiServer}/blog`, {
+        await axios.post(`${this.$apiServer}/blog`, {
           description: this.description,
           email: this.getUserInfo().email,
-          name: this.title
+          name: this.title,
         });
-        console.log(res);
+        alert("수정이 완료되었습니다.");
       } catch (error) {
         console.log(error);
       }
     },
     openImgModal() {
       this.$refs.imgModal.showModal();
-    }
+    },
   },
   async created() {
     try {
@@ -75,7 +75,7 @@ export default {
     } catch (error) {
       console.log(error);
     }
-  }
+  },
 };
 </script>
 

@@ -22,31 +22,38 @@
         <hr />
       </div>
       <div class="level-icon">
-        <span class="level-title">레벨 / 경험치</span>
+        <span class="level-title"
+          >레벨 / 경험치<button
+            class="btn-aboutlevel"
+            @mouseenter="showLevelAbout"
+            @mouseleave="hideLevelAbout"
+          >
+            ❔
+          </button></span
+        >
+
         <div class="level-icon-contents">
           <div class="score">
             다음 레벨까지
             <span> {{ totalScore - getUserInfo().score }}</span> 점 남았습니다!
           </div>
           <div class="levelicon-and-bar">
-            <button>
-              <LevelIcon :score="getUserInfo().score" />
-            </button>
-            <span>{{ (getUserInfo().score / totalScore) * 100 }}%</span>
+            <LevelIcon :score="getUserInfo().score" />
+            <span>{{ levelPercentage }}%</span>
             <div class="meter">
               <span class="meter-gage"></span>
             </div>
           </div>
         </div>
       </div>
-      <div class="level-icon">
+      <!-- <div class="level-icon">
         <span>연동된 SNS계정</span>
         <div class="container-btn-social">
           <button class="btn-circle btn-google"></button>
           <button class="btn-circle btn-facebook"></button>
           <button class="btn-circle btn-github"></button>
         </div>
-      </div>
+      </div> -->
       <div class="level-icon">
         <span class="span-password" @click="enablePassword()"
           >비밀번호 바꾸기</span
@@ -117,7 +124,9 @@ export default {
       },
       file: "",
       profileURL: "",
-      totalScore: "",
+      totalScore: null,
+      showModal: false,
+      levelPercentage: null,
     };
   },
   methods: {
@@ -178,6 +187,14 @@ export default {
     openProfilePic() {
       document.querySelector(".container-profilepic").classList.remove("hide");
     },
+    showLevelAbout() {
+      this.showModal = true;
+      document.querySelector(".container-levelabout").classList.remove("hide");
+    },
+    hideLevelAbout() {
+      this.showModal = false;
+      document.querySelector(".container-levelabout").classList.add("hide");
+    },
   },
   mounted() {
     this.dom.passwordConfirmErrMsg = document.querySelector(
@@ -207,6 +224,18 @@ export default {
       .score /
       this.totalScore) *
       100}%`;
+    this.levelPercentage = Math.ceil(
+      (this.getUserInfo().score / this.totalScore) * 100
+    );
+    var levelAbout = document.querySelector(".modal-levelabout");
+    var hoverButton = document.querySelector(".btn-aboutlevel");
+    var viewportOffset = hoverButton.getBoundingClientRect();
+    var top = viewportOffset.top;
+    var left = viewportOffset.left;
+    levelAbout.style.top = `${top - 430}px`;
+    levelAbout.style.left = `${left + 30}px`;
+    console.log(top);
+    console.log(left);
   },
 };
 </script>
