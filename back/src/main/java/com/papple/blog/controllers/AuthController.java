@@ -491,11 +491,11 @@ public class AuthController {
 			"http://i3a604.p.ssafy.io/images/profile/blog_basic.jpg");
 			configRepository.save(config);
 
-			return new RedirectView("http://localhost:8080/account/setNickname/"+user.getEmail());
+			return new RedirectView("http://i3a604.p.ssafy.io/account/setNickname/"+user.getEmail());
 
 		} else{
 
-			return new RedirectView("http://localhost:8080/main/home/"+user.getEmail());
+			return new RedirectView("http://i3a604.p.ssafy.io/main/home/"+user.getEmail());
 			
 		}	
 		
