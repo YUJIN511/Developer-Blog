@@ -100,6 +100,7 @@
     flex-wrap: wrap;
     width: 100%;
     height: 500px;
+    padding-left: 60px;
     .element__people {
       display: flex;
       align-items: center;
