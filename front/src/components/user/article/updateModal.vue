@@ -22,12 +22,13 @@ export default {
   },
   methods: {
     async deletePost() {
-      alert("정말 삭제 하시겠습니까?");
-      try {
-        await axios.delete(`${this.$apiServer}/post?id=${this.articleId}`);
-        location.href = "/";
-      } catch (error) {
-        console.log(error);
+      if (confirm("정말 삭제 하시겠습니까?")) {
+        try {
+          await axios.delete(`${this.$apiServer}/post?id=${this.articleId}`);
+          location.href = "/";
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
     updatePost() {
@@ -70,17 +71,17 @@ export default {
     background-color: white;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.19), 0 1px 1px rgba(0, 0, 0, 0.23);
     width: 110px;
-    height:70px;
+    height: 70px;
     border-radius: 2px;
     border: 1px solid #c0c0c0;
     button {
       font-weight: 500;
-      color: #727272 ;
+      color: #727272;
       padding: 7.5px 10px;
       width: 100%;
 
       &:hover {
-          span {
+        span {
           color: #c0c0c0;
         }
       }
