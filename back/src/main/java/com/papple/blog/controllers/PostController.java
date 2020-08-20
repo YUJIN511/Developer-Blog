@@ -148,10 +148,10 @@ public class PostController {
 		
 		Post temp = postService.findById(id).get();		//조회수, history
 		temp.setViews(temp.getViews()+1);
-		Post post = postService.save(temp);
+		postService.save(temp);
 		
 		// history에 담기
-		if(email != null && !email.equals("")) {	//email이 있을 때만
+		if(email != null && !email.equals("") && !email.equals(detail.getWriter())) {	//email이 있을 때만 && 자신의 게시물 아닐
 			if(historyRepository.isHistory(email, id) > 0) historyRepository.deleteByEmailAndPostid(email, id);
 			History history = new History(new PKSet(email, id));
 			historyRepository.save(history);
