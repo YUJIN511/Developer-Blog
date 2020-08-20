@@ -36,16 +36,23 @@
       display: flex;
       flex-grow: 1;
       .editor--left {
-        width: 50%;
+        width: 100%;
         padding: 24px;
         padding-top: 54px;
         background-color: #f9fbff;
+        @media (min-width: 1100px) {
+          width: 50%;
+        }
       }
       .preview--right {
+        display: none;
         width: 50%;
         padding: 24px;
         padding-top: 54px;
         background-color: white;
+        @media (min-width: 1100px) {
+          display: block;
+        }
       }
     }
   }
