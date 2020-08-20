@@ -17,12 +17,14 @@
         </div>
       </div>
     </button>
-    <button class="btn-follow" v-if="!isFollowed" @click="addFollow()">
-      팔로우
-    </button>
-    <button class="btn-follow" v-else @click="cancelFollow()">
-      팔로우 취소
-    </button>
+    <template v-if="articleData.writer !== getUserInfo().email">
+      <button class="btn-follow" v-if="!isFollowed" @click="addFollow()">
+        팔로우
+      </button>
+      <button class="btn-follow" v-else @click="cancelFollow()">
+        팔로우 취소
+      </button>
+    </template>
   </div>
 </template>
 
@@ -34,15 +36,15 @@ import LevelIcon from "@/components/user/LevelIcon.vue";
 export default {
   props: {
     articleData: {
-      type: Object,
-    },
+      type: Object
+    }
   },
   components: {
-    LevelIcon,
+    LevelIcon
   },
   data: function() {
     return {
-      isFollowed: false,
+      isFollowed: false
     };
   },
   created() {
@@ -51,7 +53,7 @@ export default {
   methods: {
     ...mapGetters({
       getUserInfo: "user/getUserInfo",
-      getIsLogin: "user/getIsLogin",
+      getIsLogin: "user/getIsLogin"
     }),
     addFollow() {
       if (this.getIsLogin() === false) {
@@ -67,7 +69,7 @@ export default {
         .then(() => {
           this.isFollowed = true;
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
         });
     },
@@ -81,7 +83,7 @@ export default {
         .then(() => {
           this.isFollowed = false;
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
         });
     },
@@ -103,8 +105,8 @@ export default {
           }
         }
       }, 300);
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -161,14 +163,14 @@ button:hover {
     }
   }
   .btn-follow {
-        color: white;
-        background: cornflowerblue;
-        padding: 8px;
-        width: 120px;
-        border-radius: 5px;
-        margin-right: 8px;
-        font-weight: 400;
-        font-size: 1rem;
-      }
+    color: white;
+    background: cornflowerblue;
+    padding: 8px;
+    width: 120px;
+    border-radius: 5px;
+    margin-right: 8px;
+    font-weight: 400;
+    font-size: 1rem;
+  }
 }
 </style>

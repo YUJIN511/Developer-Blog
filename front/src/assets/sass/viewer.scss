@@ -9,6 +9,12 @@
 .viewer {
   text-align: left;
   width: 800px;
+  &.viewer--flexable {
+    width: 100%;
+  }
+  .viewer__header {
+    height: auto !important;
+  }
 }
 
 .title-line {
@@ -91,7 +97,7 @@
     overflow: hidden;
     font-size: 3em;
     color: white;
-    width: 600px;
+    width: 80%;
     height: 400px;
   }
 }

@@ -278,7 +278,7 @@
           />
         </div>
         <div class="preview--right">
-          <Viewer :previewData="previewData" :isPreview="true" />
+          <Viewer ref="preview" :previewData="previewData" :isPreview="true" />
         </div>
       </main>
     </div>
@@ -332,6 +332,14 @@ export default {
     SummaryModal,
     Viewer
   },
+  watch: {
+    title: function(newTitle) {
+      this.previewData.title = newTitle;
+    },
+    tagList: function(newTagList) {
+      this.previewData.tagList = newTagList;
+    }
+  },
   data() {
     return {
       isEdit: false,
@@ -344,7 +352,11 @@ export default {
       isUpdated: false,
       picture: "",
       summary: "",
-      previewData: {},
+      previewData: {
+        title: "",
+        content: "",
+        tagList: []
+      },
       editor: new Editor({
         autoFocus: true,
         extensions: [
@@ -388,6 +400,10 @@ export default {
         onUpdate: ({ getHTML }) => {
           this.isUpdated = true;
           this.html = getHTML();
+          setTimeout(() => {
+            const content = this.$refs.editorContent.editor.view.dom.innerHTML;
+            this.$refs.preview.updatePreviewContent(content);
+          }, 100);
         }
       })
     };
@@ -563,56 +579,57 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    async initEditorData() {
+      // 기존 글 수정
+      if (Object.keys(this.$route.params).length === 1) {
+        this.isEdit = true;
+        this.getEditData();
+      }
+      // 새 글
+      else {
+        const res = await axios.get(
+          `${this.$apiServer}/temppost/is?email=${this.getUserInfo().email}`
+        );
+
+        // 임시저장 있을 때
+        if (res.data) {
+          if (
+            confirm(
+              "임시 저장된 글을 불러오시겠습니까? (취소할 경우 임시 저장된 글은 삭제됩니다.)"
+            )
+          ) {
+            try {
+              const { data } = await axios.get(
+                `${this.$apiServer}/temppost?email=${this.getUserInfo().email}`
+              );
+              this.title = data.title;
+              this.content = data.content;
+              this.editor.setContent(this.content);
+              this.tagSetting(data.tag);
+              this.picture = data.picture;
+              this.summary = data.summary;
+            } catch (error) {
+              console.log(error);
+            }
+          } else {
+            try {
+              axios.delete(
+                `${this.$apiServer}/temppost?email=${this.getUserInfo().email}`
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }
+        this.isEdit = false;
+      }
     }
   },
   beforeDestroy() {
     this.editor.destroy();
   },
-  async initEditorData() {
-    // 기존 글 수정
-    if (Object.keys(this.$route.params).length === 1) {
-      this.isEdit = true;
-      this.getEditData();
-    }
-    // 새 글
-    else {
-      const res = await axios.get(
-        `${this.$apiServer}/temppost/is?email=${this.getUserInfo().email}`
-      );
 
-      // 임시저장 있을 때
-      if (res.data) {
-        if (
-          confirm(
-            "임시 저장된 글을 불러오시겠습니까? (취소할 경우 임시 저장된 글은 삭제됩니다.)"
-          )
-        ) {
-          try {
-            const { data } = await axios.get(
-              `${this.$apiServer}/temppost?email=${this.getUserInfo().email}`
-            );
-            this.title = data.title;
-            this.content = data.content;
-            this.editor.setContent(this.content);
-            this.tagSetting(data.tag);
-            this.picture = data.picture;
-            this.summary = data.summary;
-          } catch (error) {
-            console.log(error);
-          }
-        } else {
-          try {
-            axios.delete(
-              `${this.$apiServer}/temppost?email=${this.getUserInfo().email}`
-            );
-          } catch (error) {
-            console.log(error);
-          }
-        }
-      }
-      this.isEdit = false;
-    }
-  },
   async created() {
     this.initEditorData();
   }

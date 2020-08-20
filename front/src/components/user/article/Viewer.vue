@@ -1,15 +1,16 @@
 <template>
-  <div class="viewer">
-    <header>
+  <div class="viewer" :class="{ 'viewer--flexable': isPreview }">
+    <div class="viewer__header">
       <div class="title-line">
         <h1 type="text" class="view-title" placeholder="제목" readonly>
-          {{ articleData.title }}
+          {{ isPreview ? previewData.title : articleData.title }}
         </h1>
         <UpdateModal :articleId="postId" ref="updateModal" />
         <button
           class="btn-more"
           @click="toggleUpdateModal"
           v-if="getUserInfo().email === articleData.writer"
+          :disabled="isPreview"
         >
           ...
         </button>
@@ -28,13 +29,15 @@
         <button
           class="btn-tag"
           :key="idx"
-          v-for="(tag, idx) in articleData.tag"
+          v-for="(tag, idx) in isPreview
+            ? previewData.tagList
+            : articleData.tag"
           @click="$router.push(`/main/search?tag=${tag}`)"
         >
           #{{ tag }}
         </button>
       </div>
-      <div class="article-nav">
+      <div class="article-nav" v-if="!isPreview">
         <div ref="navContent" class="article-nav-content">
           <span>책갈피</span>
         </div>
@@ -42,11 +45,15 @@
       <div class="introduction">
         <img :src="thumbnail" v-if="thumbnail !== ''" />
         <div ref="defaultThumbnail" class="default-thumbnail" v-else>
-          {{ articleData.title }}
+          {{ isPreview ? previewData.title : articleData.title }}
         </div>
       </div>
-    </header>
-    <editor-content class="editor__content" :editor="editor" />
+    </div>
+    <editor-content
+      ref="editorContent"
+      class="editor__content"
+      :editor="editor"
+    />
     <template v-if="!isPreview">
       <div class="container-small-buttons">
         <div class="small-buttons">
@@ -102,8 +109,8 @@
         </div>
         <ShareModal v-if="isShowShareModal" :articleData="articleData" />
       </div>
+      <BlogInfo :articleData="articleData" />
     </template>
-    <BlogInfo :articleData="articleData" />
 
     <template v-if="!isPreview">
       <Comment @reRender="reRender" :key="commentModuleKey" :postId="postId" />
@@ -203,7 +210,6 @@ export default {
         content: "",
         onUpdate: ({ getHTML }) => {
           this.html = getHTML();
-          console.log(this.html);
         }
       }),
       postId: "",
@@ -222,6 +228,9 @@ export default {
       getUserInfo: "user/getUserInfo",
       getIsLogin: "user/getIsLogin"
     }),
+    updatePreviewContent(content) {
+      this.$refs.editorContent.editor.view.dom.innerHTML = content;
+    },
     reRender() {
       this.commentModuleKey++;
     },
@@ -254,19 +263,49 @@ export default {
       }
     },
     async getPreviewData() {
+      // 글쓴이 정보
       try {
         const { data } = await axios.get(
           `${this.$apiServer}/auth/userInfo?email=${this.getUserInfo().email}`
         );
-        this.nickname = data.nickname;
+        this.articleData.nickname = data.nickname;
+        this.articleData.profile = data.profile;
+        this.articleData.score = data.score;
+        this.articleData.writer = data.email;
       } catch (error) {
         console.log(error);
       }
-      this.title = this.previewData.title;
+
+      // 글쓴이 블로그 정보
+      try {
+        const { data } = await axios.get(
+          `${this.$apiServer}/blog?email=${this.getUserInfo().email}`
+        );
+
+        this.articleData.blogName = data.name;
+        this.articleData.blogDescription = data.description;
+        this.articleData.blogPicture = data.picture;
+      } catch (error) {
+        console.log(error);
+      }
+
+      // 블로그 팔로워 수
+      try {
+        const { data } = await axios.get(
+          `${this.$apiServer}/follow/cnt/${this.getUserInfo().email}`
+        );
+
+        this.articleData.followerNum = data;
+      } catch (error) {
+        console.log(error);
+      }
+      this.articleData.title = this.previewData.title;
       this.editor.setContent(this.previewData.content);
-      this.tagList = this.previewData.tagList;
+      this.articleData.tag = this.previewData.tagList;
+      this.createDate = new Date().toLocaleDateString();
     },
     initNav() {
+      if (this.isPreview) return;
       const navContent = this.$refs.navContent;
       document.addEventListener("scroll", function() {
         const yOffset = window.pageYOffset;
