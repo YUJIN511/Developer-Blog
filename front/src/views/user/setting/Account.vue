@@ -46,14 +46,14 @@
           </div>
         </div>
       </div>
-      <div class="level-icon" v-if="false">
+      <!-- <div class="level-icon">
         <span>연동된 SNS계정</span>
         <div class="container-btn-social">
           <button class="btn-circle btn-google"></button>
           <button class="btn-circle btn-facebook"></button>
           <button class="btn-circle btn-github"></button>
         </div>
-      </div>
+      </div> -->
       <div class="level-icon">
         <span class="span-password" @click="enablePassword()"
           >비밀번호 바꾸기</span

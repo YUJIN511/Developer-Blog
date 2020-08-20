@@ -153,7 +153,6 @@ export default {
   overflow-y: auto;
   background-color: #fafafa;
   min-height: 400px;
-  max-height: 650px;
 
   .default {
     color: #727272;
