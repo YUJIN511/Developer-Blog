@@ -62,7 +62,6 @@ export default {
 
 <style scoped lang="scss">
 .container-levelabout {
-  opacity: 90%;
   position: fixed;
   z-index: 3;
   top: 0;
@@ -78,6 +77,7 @@ export default {
     height: 100vh;
   }
   .modal-levelabout {
+    filter: opacity(90%);
     margin: 0;
     border-radius: 5px;
     overflow: hidden;
