@@ -361,6 +361,7 @@ public class PostController {
 	@ApiOperation(value = "포스트 수정 (+해시태그 수정 - 해당 글의 해시태그를 모두 지우고, 다시 생성하는 로직)")
 	public ResponseEntity<String> modify(@RequestBody Post post, HashtagList tag) {
 		System.out.println("글 수정");
+		
 		Optional<Post> tem = postService.findById(post.getId());
 		if(tem != null) {
 			tem.ifPresent(selectPost -> {
@@ -373,9 +374,17 @@ public class PostController {
 			});
 			
 			hashtagService.deleteHashtagByPostid(post.getId());	//해당 글의 해시태그 모두 삭제
-			for(int i=0;i<tag.getTag().size();i++) {	//다시 생성
-				Hashtag ht = new Hashtag(new HashtagPK(post.getId(), tag.getTag().get(i)));
-				hashtagService.save(ht);
+			
+			if(tag.getTag().size() == 1 && tag.getTag().get(0).equals("none")) {
+				System.out.println("태그 없음");
+			}
+			else {
+				for(int i=0;i<tag.getTag().size();i++) {	//다시 생성
+					Hashtag ht = new Hashtag(new HashtagPK(post.getId(), tag.getTag().get(i)));
+					hashtagService.save(ht);
+					// 해시태그 점수 등록
+					if(tagscoreRepository.isExist(tag.getTag().get(i)) == 0) tagscoreRepository.save(new TagScore(tag.getTag().get(i), 0l));
+				}
 			}
 			
 			return new ResponseEntity<>("success", HttpStatus.OK);
