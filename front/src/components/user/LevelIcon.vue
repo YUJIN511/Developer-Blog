@@ -18,5 +18,6 @@ export default {
 <style scoped lang="scss">
 .level-icon {
   font-size: 20px;
+  margin: 0;
 }
 </style>
