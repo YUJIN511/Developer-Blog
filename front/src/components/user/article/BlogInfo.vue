@@ -18,7 +18,11 @@
       </div>
     </button>
     <template v-if="articleData.writer !== getUserInfo().email">
-      <button class="btn-follow" v-if="!isFollowed" @click="addFollow()">
+      <button
+        class="btn-follow"
+        v-if="!getIsLogin() || !isFollowed"
+        @click="addFollow()"
+      >
         팔로우
       </button>
       <button class="btn-follow" v-else @click="cancelFollow()">
