@@ -99,8 +99,9 @@ public class FollowController {
 		String actionName = userRepository.getUserByEmail(follower).getNickname();
 		User user = userRepository.getUserByEmail(followed);
         int setting = Integer.parseInt(user.getNotification(),2);
-        // 알림 ON 했는지
-        if( (setting& (1<<4)) != 0){
+        // 알림 ON 했는지 && targetuser가 내 알림 껐는지
+		if( (setting& (1<<4)) != 0
+				&& unnotificationRepository.findByTargetuserAndActionuser(followed, follower) == null){
 			Notification notification = Notification.builder()
 				.message(actionName +"님이 당신을 팔로우 합니다.")
 				.actionuser(follower)

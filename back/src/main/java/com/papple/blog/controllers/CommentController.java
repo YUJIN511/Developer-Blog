@@ -8,11 +8,13 @@ import com.papple.blog.models.LikeComment;
 import com.papple.blog.models.Notification;
 import com.papple.blog.models.Post;
 import com.papple.blog.models.User;
+import com.papple.blog.models.unNotification;
 import com.papple.blog.payload.request.CommentRequest;
 import com.papple.blog.payload.response.CommentResponse;
 import com.papple.blog.payload.response.MessageResponse;
 import com.papple.blog.repository.PostAlgorithmRepository;
 import com.papple.blog.repository.UserRepository;
+import com.papple.blog.repository.unNotificationRepository;
 import com.papple.blog.security.services.CommentService;
 import com.papple.blog.security.services.NotificationService;
 import com.papple.blog.security.services.PostService;
@@ -48,6 +50,8 @@ public class CommentController {
     private NotificationService notificationService;
     @Autowired
     private PostAlgorithmRepository algoRepository;
+    @Autowired
+    private unNotificationRepository unnotificationRepository;
 
     @GetMapping("/allComment")
 	@ApiOperation(value = "해당 포스트의 모든 댓글 보기")
@@ -104,8 +108,9 @@ public class CommentController {
                 // 알림 발생(000010)
                 User user = userRepository.getUserByEmail(post.getWriter());
                 int setting = Integer.parseInt(user.getNotification(),2);
-                // 알림 ON 했는지
-                if( (setting& (1<<1)) != 0){
+                // 알림 ON 했는지 && targetuser가 내 알림 껐는지
+                if( (setting& (1<<1)) != 0 
+                        && unnotificationRepository.findByTargetuserAndActionuser(post.getWriter(), comment.getEmail()) == null){
                     Notification notification = Notification.builder()
                         .message(actionName +"님이 회원님의 게시물에 댓글을 남겼습니다. "+comment.getContent())
                         .actionuser(comment.getEmail())
@@ -127,9 +132,10 @@ public class CommentController {
                 // 알림 발생(001000)
                 User user = userRepository.getUserByEmail(comm.getEmail());
                 int setting = Integer.parseInt(user.getNotification(),2);
-                // 알림 ON 했는지
+                // 알림 ON 했는지 && targetuser가 내 알림 껐는지
                 System.out.println(setting);
-                if( (setting & (1<<3)) != 0){
+                if( (setting & (1<<3)) != 0
+                        && unnotificationRepository.findByTargetuserAndActionuser(comm.getEmail(), comment.getEmail()) == null){
                     Notification notification = Notification.builder()
                         .message(actionName +"님이 답글에서 회원님을 언급했습니다. "+comment.getContent())
                         .actionuser(comment.getEmail())
@@ -196,8 +202,9 @@ public class CommentController {
 
             User user = userRepository.getUserByEmail(comment.getEmail());
             int setting = Integer.parseInt(user.getNotification(),2);
-            // 알림 ON 했는지
-            if( (setting& (1<<2)) != 0){
+            // 알림 ON 했는지 && targetuser가 내 알림 껐는지
+            if( (setting& (1<<2)) != 0
+                    && unnotificationRepository.findByTargetuserAndActionuser(comment.getEmail(), email) == null){
                 Notification notification = Notification.builder()
                     .message(actionName +"님이 회원님의 댓글을 좋아합니다.")
                     .actionuser(email)
