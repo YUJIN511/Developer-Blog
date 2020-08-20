@@ -50,6 +50,7 @@ import com.papple.blog.models.Post;
 import com.papple.blog.models.Storage;
 import com.papple.blog.models.TagScore;
 import com.papple.blog.models.User;
+import com.papple.blog.models.unNotification;
 import com.papple.blog.payload.response.HashtagList;
 import com.papple.blog.payload.response.PopularScore;
 import com.papple.blog.payload.response.PostDetail;
@@ -63,6 +64,7 @@ import com.papple.blog.repository.PostListRepository;
 import com.papple.blog.repository.StorageRepository;
 import com.papple.blog.repository.TagScoreRepository;
 import com.papple.blog.repository.UserRepository;
+import com.papple.blog.repository.unNotificationRepository;
 import com.papple.blog.security.services.CommentService;
 import com.papple.blog.security.services.FollowService;
 import com.papple.blog.security.services.HashtagService;
@@ -100,6 +102,8 @@ public class PostController {
 	private GoodRepository goodRepository;
 	@Autowired
 	private TagScoreRepository tagscoreRepository;
+	@Autowired
+	private unNotificationRepository unnotificationRepository;
 
 	@GetMapping("/all")
 	@ApiOperation(value = "모든 포스트 보기")
@@ -295,8 +299,9 @@ public class PostController {
 			User user = userRepository.getUserByEmail(f.getFollowPK().getFollower());
 			if(user == null) continue;
             int setting = Integer.parseInt(user.getNotification(),2);
-            // 알림 ON 했는지
-            if( (setting& (1<<5)) != 0){
+            // 알림 ON 했는지 && targetuser가 내 알림 껐는지
+			if( (setting& (1<<5)) != 0
+					&& unnotificationRepository.findByTargetuserAndActionuser(f.getFollowPK().getFollower(), post.getWriter()) == null){
 				Notification notification = Notification.builder()
 					.message(actionName +"님의 블로그에 새로운 게시물이 등록되었습니다. 가장 먼저 방문해 게시물을 확인해보세요.")
 					.actionuser(post.getWriter())
@@ -408,11 +413,13 @@ public class PostController {
 				
 				if(!newPost.getWriter().equals(email)){	//자신의 글은 보관함, 알림 반영 X
 					// 알람 발생(0000001)
-					// 이전에 좋아요 눌렀었었는지 확인 , 알림 ON 해놨는지 확인
+					// 1)이전에 좋아요 눌렀었었는지 확인 2)알림 ON 해놨는지 확인 3)targetuser가 내 알림 껐는지
 					User user = userRepository.getUserByEmail(newPost.getWriter());
 					int setting = Integer.parseInt(user.getNotification(),2);
+
 					if(notificationService.findByActionuserAndPostidAndType(email, id, 1) == null
-						&& ( (setting& (1<<0)) != 0)){
+						&& ( (setting& (1<<0)) != 0) 
+						&& unnotificationRepository.findByTargetuserAndActionuser(newPost.getWriter(), email) == null){
 						String actionName = userRepository.getUserByEmail(email).getNickname();
 						Notification notification = Notification.builder()
 									.message(actionName +"님이 회원님의 게시물을 좋아합니다.")
