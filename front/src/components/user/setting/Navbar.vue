@@ -3,14 +3,6 @@
     <header>
       <div class="profile-image"></div>
       <div class="icon-and-name">
-        <!-- <img
-          class="level-icon"
-          width="16px"
-          height="16px"
-          viewBox="0 0 18 18"
-          src="@/assets/tree.svg"
-          alt="level icon"
-        /> -->
         <LevelIcon :score="getUserInfo().score" />
         <span class="name">{{ getUserInfo().nickname }}</span>
       </div>
