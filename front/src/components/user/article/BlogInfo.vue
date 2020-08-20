@@ -134,6 +134,7 @@ button:hover {
     img {
       width: 130px;
       height: 130px;
+      object-fit: cover;
       border-radius: 50%;
       margin-right: 30px;
     }
