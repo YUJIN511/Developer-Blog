@@ -413,8 +413,8 @@ export default {
               this.getUserInfo().email
             }&postid=${this.$route.query.id}`
           )
-          .then(res => console.log(res))
-          .catch(err => console.log(err));
+          .then(() => alert("보관함에 등록되었습니다."))
+          .catch((err) => console.log(err));
       } else {
         axios
           .delete(

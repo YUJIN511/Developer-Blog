@@ -11,8 +11,12 @@
 
 <script>
 export default {
-  props: ["score"]
+  props: ["score"],
 };
 </script>
 
-<style></style>
+<style scoped lang="scss">
+.level-icon {
+  font-size: 20px;
+}
+</style>

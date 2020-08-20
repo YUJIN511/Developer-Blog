@@ -3,14 +3,15 @@
     <header>
       <div class="profile-image"></div>
       <div class="icon-and-name">
-        <img
+        <!-- <img
           class="level-icon"
           width="16px"
           height="16px"
           viewBox="0 0 18 18"
           src="@/assets/tree.svg"
           alt="level icon"
-        />
+        /> -->
+        <LevelIcon :score="getUserInfo().score" />
         <span class="name">{{ getUserInfo().nickname }}</span>
       </div>
       <div class="email">{{ getUserInfo().email }}</div>
@@ -31,15 +32,20 @@
 </template>
 
 <script>
+import LevelIcon from "@/components/user/LevelIcon.vue";
+
 import { mapActions, mapGetters } from "vuex";
 
 export default {
+  components: {
+    LevelIcon,
+  },
   methods: {
     ...mapActions({
-      Logout: "user/logout"
+      Logout: "user/logout",
     }),
     ...mapGetters({
-      getUserInfo: "user/getUserInfo"
+      getUserInfo: "user/getUserInfo",
     }),
     logout() {
       if (confirm("로그아웃 하시겠습니까?")) {
@@ -47,8 +53,8 @@ export default {
           location.href = "/";
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

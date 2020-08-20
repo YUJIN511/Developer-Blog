@@ -4,7 +4,7 @@
       class="btn-moveto-info"
       @click="$router.push(`/${articleData.writer}`)"
     >
-      <img :src="articleData.blogPicture" alt />
+      <img :src="articleData.profile" alt />
       <div class="main-info">
         <div class="user-info">
           <LevelIcon :score="articleData.score" />
