@@ -124,7 +124,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .modal {
   display: flex;
   align-items: center;
@@ -142,10 +142,13 @@ export default {
   background-color: #fff;
   padding: 30px;
   border-radius: 8px;
+  h1{
+    margin-bottom: 20px;
+  }
 }
 
 .modal-footer {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 label {
