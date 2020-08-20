@@ -2,10 +2,10 @@
   <div ref="commentMenu" class="container-comment-menu hide">
     <div class="absolute">
       <button @click="editStart">
-        수정 📝
+        수정
       </button>
       <button @click="deleteComment">
-        삭제 ❌
+        삭제
       </button>
     </div>
   </div>
@@ -47,20 +47,21 @@ export default {
   position: relative;
   width: 0;
   height: 0;
-  left: -10px;
+  left: 5px;
   top: 30px;
   .absolute {
-    background-color: white;
+    border-radius: 2px;
+    border: 1px solid #c0c0c0;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.19), 0 1px 1px rgba(0, 0, 0, 0.23);
-    width: 80px;
+    width: 90px;
     position: absolute;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     button {
+      color: #727272;
       font-size: 0.8em;
       padding: 7px 10px;
-      text-align: left;
       &:hover {
         background-color: aliceblue;
       }

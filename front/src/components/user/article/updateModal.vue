@@ -58,8 +58,8 @@ export default {
 <style lang="scss" scoped>
 .container-update-modal {
   position: relative;
-  top: -65px;
-  left: 20px;
+  top: 14px;
+  left: 30px;
   width: 0;
   height: 0;
   .update-modal {
