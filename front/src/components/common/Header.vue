@@ -182,6 +182,7 @@
     <UnregisterModal />
     <ProfilePicModal />
     <NotificationModal :notifications="notifications" />
+    <LevelAbout />
   </div>
 </template>
 
@@ -197,6 +198,7 @@ import UnregisterModal from "@/components/user/setting/UnregisterModal.vue";
 import ProfilePicModal from "@/components/user/setting/ProfilePicModal.vue";
 import NotificationModal from "@/components/notification/notification.vue";
 import NavbarUserInfo from "@/components/common/NavbarUserInfo.vue";
+import LevelAbout from "@/components/user/setting/LevelAbout.vue";
 
 import { mapActions, mapGetters } from "vuex";
 
@@ -214,6 +216,7 @@ export default {
     ProfilePicModal,
     NotificationModal,
     NavbarUserInfo,
+    LevelAbout,
   },
   data() {
     return {
