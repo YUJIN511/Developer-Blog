@@ -1,4 +1,4 @@
-<p align="center"><img src="README_image/mainlogo.PNG"  width="300" height="120"></p>
+<p align="center"><img src="README_images/mainlogo.PNG"  width="300" height="120"></p>
 
 
 # LOGDOT [ 개발자 블로그 ]
