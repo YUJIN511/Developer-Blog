@@ -13,34 +13,34 @@ LOG. 는 블로그의 기록과 SNS의 소통을 융합한 서비스 입니다.
 ## 기능
 1. 추천 게시글 조회 <br>
 -사용자의 행동 패턴에 따라 게시물을 분류하여 사용자의 관심사에 맞는 주제의 게시물을 추천
-<img src="README_image/추천게시글1.PNG"  width="600" height="300">
-<img src="README_image/추천게시글2.PNG"  width="600" height="300">
-<img src="README_image/추천게시글3.PNG"  width="600" height="300">
+<img src="README_images/추천게시글1.PNG"  width="600" height="300">
+<img src="README_images/추천게시글2.PNG"  width="600" height="300">
+<img src="README_images/추천게시글3.PNG"  width="600" height="300">
 
 2. 인기 게시글 조회 <br>
 -모든 사용자들의 사용 패턴, 레벨, 검색기록 등을 분석하여 게시물을 분류하고 기간에 따른 인기 게시물 제공 <br>
 -각 태그마다 점수를 부여하여 인기태그를 워드 클라우드 형태로 제공
-<img src="README_image/인기게시글.PNG"  width="600" height="300">
+<img src="README_images/인기게시글.PNG"  width="600" height="300">
 
 3. 포스팅 기능 <br>
 -블로그의 기록 행위를 도울 수 있도록 편리하고 다양한 포스팅 기능 제공 <br>
 -게시물의 주제 분류와 추천 알고리즘 설계를 위한 태그 기능 제공
-<img src="README_image/포스팅1.PNG"  width="600" height="300">
-<img src="README_image/포스팅2.PNG"  width="600" height="300">
-<img src="README_image/포스팅3.PNG"  width="600" height="300">
-<img src="README_image/포스팅4.PNG"  width="600" height="300">
-<img src="README_image/포스팅5.PNG"  width="600" height="300">
-<img src="README_image/포스팅6.PNG"  width="600" height="300">
-<img src="README_image/포스팅7.PNG"  width="600" height="300">
+<img src="README_images/포스팅1.PNG"  width="600" height="300">
+<img src="README_images/포스팅2.PNG"  width="600" height="300">
+<img src="README_images/포스팅3.PNG"  width="600" height="300">
+<img src="README_images/포스팅4.PNG"  width="600" height="300">
+<img src="README_images/포스팅5.PNG"  width="600" height="300">
+<img src="README_images/포스팅6.PNG"  width="600" height="300">
+<img src="README_images/포스팅7.PNG"  width="600" height="300">
 
 4. 알림<br>
 사용자들의 원활한 소통을 위한 SNS 요소
-<img src="README_image/알림.PNG"  width="600" height="300">
+<img src="README_images/알림.PNG"  width="600" height="300">
 
 5. 레벨 시스템 <br>
 -경험치와 레벨시스템을 도입하여 사용자의 블로그 활동 동기를 부여 <br>
 -레벨이 증가함에 따라 아이콘도 성장하는 재미요소
-<img src="README_image/레벨.PNG"  width="600" height="300">
+<img src="README_images/레벨.PNG"  width="600" height="300">
 
 6. 그 외
     - 사용자 간 팔로우 기능
