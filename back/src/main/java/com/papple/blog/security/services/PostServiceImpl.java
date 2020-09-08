@@ -5,16 +5,16 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.papple.blog.models.Post;
+import com.papple.blog.payload.response.PostList;
 import com.papple.blog.repository.PostRepository;
 
 @Service
-public class PostServiceImpl implements PostService{
+public class PostServiceImpl implements PostService {
 
 	@Autowired
 	private PostRepository postRepository;
-	
+
 	@Override
 	public List<Post> findAll() {
 		return postRepository.findAll();
@@ -34,11 +34,6 @@ public class PostServiceImpl implements PostService{
 	public Optional<Post> findById(Long id) {
 		return postRepository.findById(id);
 	}
-	
-	@Override
-	public List<Post> searchByWord(String word) {
-		return postRepository.searchByWord(word);
-	}
 
 	@Override
 	public void deleteById(Long id) {
@@ -47,27 +42,8 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public List<Post> findHistoryByUser(String email) {
-		return postRepository.findHistoryByUser(email);
-	}
-
-	@Override
-	public List<Post> findMyHashPost(String hashtag, String email) {
-		return postRepository.findMyHashPost(hashtag, email);
-	}
-
-	@Override
-	public List<Post> findStorageByUser(String email) {
-		return postRepository.findStorageByUser(email);
-	}
-
-	@Override
 	public List<Post> findFollowLatestByUser(String email) {
 		return postRepository.findFollowLatestByUser(email);
-	}
-	
-	public List<Post> searchByHashtag(String word) {
-		return postRepository.searchByHashtag(word);
 	}
 
 	@Override
@@ -94,5 +70,15 @@ public class PostServiceImpl implements PostService{
 	@Override
 	public void deletePicture(Long id) {
 		postRepository.deletePicture(id);
+	}
+	
+	@Override
+	public int cntCategory(String email, String hashtag) {
+		return postRepository.cntCategory(email, hashtag);
+	}
+
+	@Override
+	public int cntMyPost(String email) {
+		return postRepository.cntMyPost(email);
 	}
 }

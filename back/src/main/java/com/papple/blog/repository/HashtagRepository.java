@@ -27,4 +27,9 @@ public interface HashtagRepository extends JpaRepository<Hashtag, Long>{
 	@Modifying
 	@Query(value = "delete h from hashtag h where exists(select * from post p where h.postid = p.id and p.writer = ?1)", nativeQuery = true)
 	void deleteHashtagByEmail(String email);	//아이디 삭제시, 관련 해시태그 삭제
+	
+	@Transactional
+	@Modifying
+	@Query(value = "delete from hashtag where postid = ?1", nativeQuery = true)
+	void deleteHashtagByPostid(Long postid);
 }

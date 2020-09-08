@@ -41,7 +41,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 	// 프로필 사진 삭제
 	@Transactional
 	@Modifying
-	@Query(value = "update user set profile = null where email = ?1", nativeQuery = true)
+	@Query(value = "update user set profile = 'http://i3a604.p.ssafy.io/images/profile/basic.svg' where email = ?1", nativeQuery = true)
 	void deleteProfile(String email);
 }
 

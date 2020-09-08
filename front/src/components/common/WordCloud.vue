@@ -25,8 +25,11 @@ export default {
     },
     onWordClick: {
       type: Function,
-      default: word => {
-        window.alert(`You clicked ${word.text}`);
+      default: function(word) {
+        this.$router.push({
+          name: "Search",
+          query: { tag: word.text }
+        });
       }
     },
     onWordHover: {

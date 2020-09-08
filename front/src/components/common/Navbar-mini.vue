@@ -1,5 +1,5 @@
 <template>
-  <div class="container-navbar-mini">
+  <div class="container-navbar-mini" v-if="$route.meta.header !== 0">
     <div class="item-list">
       <div class="item">
         <router-link tag="button" class="btn-icon" to="/" id="btn-home">
@@ -175,6 +175,7 @@ export default {
   width: 100vw;
   height: 62px;
   background-color: white;
+  z-index: 1;
 }
 .item-list {
   display: flex;
@@ -184,8 +185,8 @@ export default {
   width: auto;
   height: 100%;
   svg {
-    width: 26px;
-    height: 26px;
+    width: 22px;
+    height: 22px;
     fill: #555555;
   }
 }
@@ -195,8 +196,8 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 62px;
-  margin: 10px 0px;
+  height: 74px;
+  margin: 4px 0px;
   .btn-icon {
     width: 100%;
     height: 100%;

@@ -1,68 +1,78 @@
 <template>
-  <div class="container-base">
-    <span class="title">방문 기록</span>
-    <FlexArticles :datas="articleData" />
+  <div>
+    <LimitedAccess v-if="!getIsLogin()" />
+    <div class="container-base" v-if="getIsLogin()">
+      <span class="title">방문 기록</span>
+      <FlexArticles :datas="articleData" />
+      <infinite-loading
+        slot="append"
+        @infinite="infiniteHandler"
+        force-use-infinite-wrapper=".el-table__body-wrapper"
+      >
+      </infinite-loading>
+    </div>
   </div>
 </template>
 
 <script>
-/*
-썸네일 URL
-글 제목
-내용
-프로필사진
-레벨아이콘
-블로그 or 유저 이름
-좋아요 눌렀었는지 여부
-좋아요 숫자
-*/
-
 import FlexArticles from "@/components/common/FlexArticles.vue";
-import { mapMutations } from "vuex";
+import LimitedAccess from "@/components/user/LimitedAccess.vue";
+import InfiniteLoading from "vue-infinite-loading";
+import axios from "axios";
+
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   components: {
-    FlexArticles
+    FlexArticles,
+    LimitedAccess,
+    InfiniteLoading
   },
   data: function() {
     return {
-      articleData: []
+      articleData: [],
+      page: 1
     };
   },
   methods: {
     ...mapMutations({
       paintBtn: "navbarMini/paintBtn"
-    })
+    }),
+    ...mapGetters({
+      getIsLogin: "user/getIsLogin",
+      getUserInfo: "user/getUserInfo"
+    }),
+    infiniteHandler($state) {
+      axios
+        .get(
+          `${this.$apiServer}/main/historyList?email=${
+            this.getUserInfo().email
+          }&page=${this.page}`
+        )
+        .then(response => {
+          if (response.data.length) {
+            this.articleData = this.articleData.concat(response.data);
+            $state.loaded();
+            this.page += 1;
+            if (this.articleData.length / 10 == 0) {
+              $state.complete();
+            }
+          } else {
+            $state.complete();
+          }
+        })
+        .catch(err => console.log(err));
+    }
   },
-  created() {
-    this.articleData = [
-      {
-        thumbUrl:
-          "https://images.unsplash.com/photo-1519052537078-e6302a4968d4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-        title: "글 제목1",
-        desc:
-          "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea voluptates eos laboriosam quo eaque earum laudantium modi natus, mollitia animi tempore, sint iste velit voluptatum. Est possimus rem, nostrum numquam totam natus eaque, enim sit nisi earum accusantium aliquid tenetur?",
-        profileUrl:
-          "https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-        iconUrl: "@/assets/tree.svg",
-        name: "닉네임1",
-        isLiked: true,
-        likeCnt: 10
-      },
-      {
-        thumbUrl:
-          "https://images.unsplash.com/photo-1519052537078-e6302a4968d4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-        title: "글 제목2",
-        desc:
-          "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea voluptates eos laboriosam quo eaque earum laudantium modi natus, mollitia animi tempore, sint iste velit voluptatum. Est possimus rem, nostrum numquam totam natus eaque, enim sit nisi earum accusantium aliquid tenetur?",
-        profileUrl:
-          "https://images.unsplash.com/photo-1494256997604-768d1f608cac?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-        iconUrl: "@/assets/tree.svg",
-        name: "닉네임2",
-        isLiked: false,
-        likeCnt: 9
-      }
-    ];
+  async created() {
+    try {
+      const res = await axios.get(
+        `${this.$apiServer}/main/historyList?email=${this.getUserInfo().email}`
+      );
+      this.articleData = res.data;
+    } catch (error) {
+      console.log(error);
+    }
   },
   mounted() {
     this.paintBtn(document.querySelector("#btn-history"));

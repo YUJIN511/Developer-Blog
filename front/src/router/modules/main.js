@@ -35,8 +35,23 @@ export default [
     component: () => import("@/views/Library.vue"),
   },
   {
+    path: "likelist",
+    name: "LikeList",
+    component: () => import("@/views/LikeList.vue"),
+  },
+  {
     path: "search",
     name: "Search",
     component: () => import("@/views/Search.vue"),
+  },
+  {
+    path: "notification",
+    name: "Notification",
+    component: () => import("@/views/notificationDetail.vue"),
+  },
+  {
+    path: "home/:email",
+    name: "SocialLoginDelay",
+    component: () => import("@/views/SocialLoginDelay.vue"),
   },
 ];
